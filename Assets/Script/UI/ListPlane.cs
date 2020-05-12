@@ -1,0 +1,146 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public class ListPlane : BaseUI
+{
+    public struct Parameters<T> where T : BaseUI
+    {
+        public int rowCount;//reset
+        public Vector2 elementSize;//reset
+        public Vector2 elementInterval;//reset
+        public string elementName;
+        public Vector2 planeSize;
+        public List<Action<T>> inits;
+
+        public Parameters(int rowCount, string elementName, (float x, float y) elementSize, (float x, float y) elementInterval, (float x, float y) planeSize, List<Action<T>> inits)
+        {
+            this.rowCount = rowCount;
+            this.elementSize = new Vector2(elementSize.x, elementSize.y);
+            this.elementInterval = new Vector2(elementInterval.x, elementInterval.y);
+            this.elementName = elementName;
+            this.planeSize = new Vector2(planeSize.x, planeSize.y);
+            this.inits = inits;
+        }
+    }
+
+    protected const string ELEMENT = "element";
+    protected const string PREFAB_PATH = "prefabs\\ui";
+    protected Vector2 scrollRange;
+    protected (Scrollbar x, Scrollbar y) scrollbar;
+    protected RectTransform maskTrans;
+    protected RectTransform elementsTrans;
+
+    protected List<BaseUI> elements = new List<BaseUI>();
+    protected Queue<RectTransform> elementContainers = new Queue<RectTransform>();
+
+    public override void Awake()
+    {
+        base.Awake();
+        scrollbar.y = rectTrans.Find("ScrollbarY").GetComponent<Scrollbar>();
+        scrollbar.x = rectTrans.Find("ScrollbarX").GetComponent<Scrollbar>();
+        maskTrans = rectTrans.Find("Mask").GetComponent<RectTransform>();
+        elementsTrans = maskTrans.Find("Elements").GetComponent<RectTransform>();
+    }
+
+    public T[] Init<T>(Parameters<T> arg) where T : BaseUI
+    {
+        ClearElements();
+        return CreateElements(arg);
+    }
+
+    public void ClearElements()
+    {
+        scrollbar.y.size = 1;
+        scrollbar.y.value = 0;
+        scrollbar.x.size = 1;
+        scrollbar.x.value = 0;
+
+        foreach (var item in elements)
+            PublicVar.objectPool.Recycle(item);
+        elements.Clear();
+
+        foreach (RectTransform item in elementsTrans)
+        {
+            item.gameObject.SetActive(false);
+            elementContainers.Enqueue(item);
+        }
+    }
+
+    protected T[] CreateElements<T>(Parameters<T> parameters) where T : BaseUI
+    {
+        scrollbar.x.gameObject.SetActive(parameters.planeSize.x != 0f);
+        scrollbar.y.gameObject.SetActive(parameters.planeSize.y != 0f);
+
+        elementsTrans.anchoredPosition = Vector3.zero;
+
+        Vector2 interval = new Vector2(parameters.elementInterval.x + parameters.elementSize.x, parameters.elementInterval.y + parameters.elementSize.y);
+        int temp = (parameters.inits.Count - 1) / parameters.rowCount + 1;
+        Vector2 planeSize = new Vector2(parameters.rowCount * parameters.elementSize.x + parameters.elementInterval.x * (parameters.rowCount - 1),
+            temp * parameters.elementSize.y + parameters.elementInterval.y * (temp - 1));
+
+        if (scrollbar.x.gameObject.activeSelf)
+        {
+            rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.planeSize.x);
+            scrollRange.x = planeSize.x - maskTrans.rect.width;
+            scrollRange.x = scrollRange.x < 0 ? 0 : scrollRange.x;
+            scrollbar.y.value = 0;
+            scrollbar.y.size = maskTrans.rect.width / planeSize.x;
+        }
+        else
+            rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, planeSize.x + maskTrans.offsetMin.x - maskTrans.offsetMax.x);
+
+        if (scrollbar.y.gameObject.activeSelf)
+        {
+            rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.planeSize.y);
+            scrollRange.y = planeSize.y - maskTrans.rect.height;
+            scrollRange.y = scrollRange.y < 0 ? 0 : scrollRange.y;
+            scrollbar.y.value = 0;
+            scrollbar.y.size = maskTrans.rect.height / planeSize.y;
+        }
+        else
+            rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, planeSize.y + maskTrans.offsetMin.y - maskTrans.offsetMax.y);
+
+        float tempx = parameters.elementSize.x / 2;
+        float tempy = parameters.elementSize.y / 2;
+        for (int i = 0; i < parameters.inits.Count; i++)
+        {
+            int x = i % parameters.rowCount;
+            int y = i / parameters.rowCount;
+            Vector2 position = new Vector2(x * interval.x + tempx, -y * interval.y - tempy);
+
+            RectTransform elementContainer;
+            if (elementContainers.Count != 0)
+                elementContainer = elementContainers.Dequeue();
+            else
+                elementContainer = new GameObject(ELEMENT).AddComponent<RectTransform>();
+
+            elementContainer.anchorMax = Vector2.zero;
+            elementContainer.anchorMin = Vector2.zero;
+            elementContainer.SetParent(elementsTrans);
+            elementContainer.anchoredPosition = position;
+            elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
+            elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
+
+            RectTransform rectTransform = PublicVar.objectPool.Alloc(PREFAB_PATH, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
+
+            elements.Add(rectTransform.GetComponent<BaseUI>());
+        }
+
+        return elements.Cast<T>().ToArray();
+    }
+
+    public void ScrollBarChangedY()
+    {
+        elementsTrans.anchoredPosition = new Vector2(elementsTrans.anchoredPosition.x, scrollbar.y.value * scrollRange.y);
+    }
+
+    public void ScrollBarChangedX()
+    {
+        elementsTrans.anchoredPosition = new Vector2(scrollbar.x.value * scrollRange.x, elementsTrans.anchoredPosition.y);
+    }
+}
