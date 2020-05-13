@@ -67,12 +67,11 @@ public abstract class BaseGameMode:MonoBehaviour
 
     protected Vector3 centerPos;
 
-    //todo 模式结束
     public delegate void ModeComplete(BaseGameMode mode);
     public event ModeComplete OnModeComplete;
 
     public abstract void Reset();
     public abstract void Start();
     public abstract void Pause();
-    public abstract void UnInstall();
+    public abstract void BeforeUnInstall();
 }

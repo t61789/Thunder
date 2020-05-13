@@ -120,7 +120,7 @@ namespace Tool.ObjectPool
             return result;
         }
 
-        public void Update()
+        protected virtual void Update()
         {
             if (Time.time - clearTimeStart >= ClearTime)
             {

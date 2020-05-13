@@ -7,10 +7,6 @@ public struct DataTable
 
     private readonly Dictionary<string, int> fields;
 
-    private List<object[]> rows;
-    private List<object> row;
-    private SortedList<int, string> fieldsIndex;
-
     public Row[] Rows { get; }
 
     public DataTable(List<string> fields, List<object[]> rows)
@@ -26,9 +22,9 @@ public struct DataTable
         for (int i = 0; i < rows.Count; i++)
             Rows[i] = new Row(rows[i], this.fields);
 
-        this.rows = new List<object[]>();
-        row = new List<object>();
-        fieldsIndex = new SortedList<int, string>();
+        this.rows = null;
+        row = null;
+        fieldsIndex = null;
 
         IsNotEmpty = rows.Count!=0;
     }
@@ -46,9 +42,9 @@ public struct DataTable
         for (int i = 0; i < rows.Count; i++)
             Rows[i] = new Row(rows[i], this.fields);
 
-        this.rows = new List<object[]>();
-        row = new List<object>();
-        fieldsIndex = new SortedList<int, string>();
+        this.rows = null;
+        row = null;
+        fieldsIndex = null;
 
         IsNotEmpty = rows.Count != 0;
     }
@@ -56,7 +52,7 @@ public struct DataTable
     public struct Row
     {
         public object[] Cells { get; }
-        private Dictionary<string, int> fields;
+        private readonly Dictionary<string, int> fields;
 
         public Row(object[] cells, Dictionary<string, int> fields)
         {
@@ -96,8 +92,16 @@ public struct DataTable
         return fields[field];
     }
 
+    private List<object[]> rows;
+    private List<object> row;
+    private SortedList<int, string> fieldsIndex;
+
     public DataTable Select(string[] fields = null, (string, object)[] where = null)
     {
+        if (rows == null) rows = new List<object[]>();
+        if (fieldsIndex == null) fieldsIndex = new SortedList<int, string>();
+        if (row == null) row = new List<object>();
+
         rows.Clear();
         fieldsIndex.Clear();
 
@@ -130,5 +134,26 @@ public struct DataTable
                 rows.Add(row.ToArray());
         }
         return new DataTable(fieldsIndex.Values.ToArray(), rows);
+    }
+
+    public object SelectOnce(string field, (string, object)[] where = null)
+    {
+        if (rows == null) rows = new List<object[]>();
+        if (fieldsIndex == null) fieldsIndex = new SortedList<int, string>();
+        if (this.row == null) this.row = new List<object>();
+
+        Row row = Rows.Where(x =>
+        {
+            if (where != null)
+                foreach (var i in where)
+                    if (!x[i.Item1].Equals(i.Item2))
+                        return false;
+            return true;
+        }).FirstOrDefault();
+
+        if (row.Cells.Length == 0)
+            return null;
+
+        return row[fields[field]];
     }
 }

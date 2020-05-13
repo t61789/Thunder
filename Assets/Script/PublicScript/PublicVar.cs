@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.IO;
 using Tool;
@@ -41,24 +42,7 @@ public class PublicVar : MonoBehaviour
 
     private void Awake()
     {
-        //publicVar = gameObject;
-
-        // bundleManager = new BundleManager();
-        // dataBaseManager = new DataBaseManager();
-        // objectPool = GetComponent<ObjectPool>();
-        // container = GameObject.Find("Container").transform;
-        // mainCamera = GameObject.Find("MainCamera").GetComponent<CameraController>();
-        //player = GameObject.Find("Player");
-        // valueManager = new ValueManager();
-        // skillManager = new SkillManager();
-        // controlManager = new ControlManager();
-        // campManager = new CampManager();
-        
-        //{
-        //    uiManager = GetComponent<UIManager>();
-        //    uiManager.Init();
-        //}
-        // gameModeManager = new GameModeManager();
+        Debug.Log(JsonConvert.DeserializeObject<SerializableVector3>("{x:1,y:2,z:3}"));
 
         switch (SceneManager.GetActiveScene().buildIndex)
         {

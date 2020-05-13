@@ -48,17 +48,17 @@ public class UIManager : MonoBehaviour
             item.SetParent(uiRecycleContainer);
     }
 
-    public BaseUI OpenUI(string uiName,OpenUIAction act=0, Action<BaseUI> init = null)
+    public BaseUI OpenUI(string uiName,UIInitAction act=0, Action<BaseUI> init = null)
     {
         return OpenUI<BaseUI>(uiName, act, init);
     }
 
-    public T OpenUI<T>(string uiName, OpenUIAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUI<T>(string uiName, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
         return OpenUI(uiName, true, act, init);
     }
 
-    public T OpenUI<T>(string uiName, string after, bool dialog = false, OpenUIAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUI<T>(string uiName, string after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
         UIUnit find = activeUi.Where(x => x.uiObj.name == after).FirstOrDefault();
 
@@ -71,7 +71,7 @@ public class UIManager : MonoBehaviour
         return OpenUI(uiName, activeUi.IndexOf(find) + 1, dialog?find.uiObj:null, act, init);
     }
 
-    public T OpenUI<T>(string uiName, BaseUI after, bool dialog = false, OpenUIAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUI<T>(string uiName, BaseUI after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
         UIUnit find = activeUi.Where(x => x.uiObj == after).FirstOrDefault();
         if (find == null)
@@ -83,7 +83,7 @@ public class UIManager : MonoBehaviour
         return OpenUI(uiName, activeUi.IndexOf(find) + 1, dialog?after:null, act, init);
     }
 
-    public T OpenUI<T>(string uiName, bool last, OpenUIAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUI<T>(string uiName, bool last, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
         if (last)
             return OpenUI(uiName, uiContainer.transform.childCount, null, act, init);
@@ -91,7 +91,7 @@ public class UIManager : MonoBehaviour
             return OpenUI(uiName, 0, null, act, init);
     }
 
-    public T OpenUI<T>(string uiName, int siblingIndex, BaseUI dialog = null,OpenUIAction act=0, Action<T> init = null) where T : BaseUI
+    public T OpenUI<T>(string uiName, int siblingIndex, BaseUI dialog = null,UIInitAction act=0, Action<T> init = null) where T : BaseUI
     {
         if (siblingIndex < 0 || siblingIndex > uiContainer.childCount)
         {
@@ -117,7 +117,7 @@ public class UIManager : MonoBehaviour
         if (dialog != null)
             dialog.dialog = newPlane;
 
-        OpenUIAct(newPlane,act);
+        newPlane.InitRect(act);
 
         T result = newPlane as T;
         init?.Invoke(result);
@@ -193,22 +193,5 @@ public class UIManager : MonoBehaviour
             CloseUI(planeName);
         else
             OpenUI<BaseUI>(planeName);
-    }
-
-    private void OpenUIAct(BaseUI ui,OpenUIAction act)
-    {
-        if ((act & OpenUIAction.FillParent) !=0)
-        {
-            ui.rectTrans.anchorMin = Vector2.zero;
-            ui.rectTrans.anchorMax = Vector2.one;
-            ui.rectTrans.offsetMin = ui.rectTrans.offsetMax = Vector2.zero;
-        }
-
-        if((act & OpenUIAction.MiddleOfParent) != 0)
-        {
-            ui.rectTrans.anchorMin = Vector2.one/2;
-            ui.rectTrans.anchorMax = Vector2.one/2;
-            ui.rectTrans.anchoredPosition = Vector2.zero;
-        }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class SurvivalLi : BaseGameMode
+public class SurvivalLi : Survival
 {
     private const string TABLE_NAME = "difficulty_li";
     private const string UI_NAME = "survivalLi";
@@ -13,24 +13,22 @@ public class SurvivalLi : BaseGameMode
     private Vector2[] _difficultyList;
 
     private int leftDiffIndex;
-    private float w;//(y2-y1)/(x2-x1)
 
     protected SurvivalLiUI ui;
 
-    public void Init(Transform target, string difficulty, float generateRange)
+    public override void Init(Transform target, string diffId, float generateRange)
     {
-        this.target = target;
-        this.generateRange = generateRange;
+        base.Init(target,diffId,generateRange);
 
         List<Vector2> difficultyList = new List<Vector2>();
         string time = "time";
         string baseline = "baseline";
-        foreach (var item in PublicVar.dataBaseManager[TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", difficulty) }).Rows)
+        foreach (var item in PublicVar.dataBaseManager[TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
             difficultyList.Add(new Vector2((float)item[time], (float)item[baseline]));
         _difficultyList = difficultyList.ToArray();
 
         List<AircraftUnit> units = new List<AircraftUnit>();
-        foreach (var item in PublicVar.dataBaseManager[AIRCRAFT_TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", difficulty) }).Rows)
+        foreach (var item in PublicVar.dataBaseManager[AIRCRAFT_TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
             units.Add(new AircraftUnit((string)item[AIRCRAFT_ID], (int)item[MAX], (float)item[BASELINE_MIN], (float)item[BASELINE_MAX], (float)item[INTERVAL]));
         _aircraftUnits = units.ToArray();
 
@@ -123,7 +121,7 @@ public class SurvivalLi : BaseGameMode
         w = (difficultyList[leftIndex + 1].y - difficultyList[leftIndex].y)/(difficultyList[leftIndex + 1].x - difficultyList[leftIndex].x);
     }
 
-    public override void UnInstall()
+    public override void BeforeUnInstall()
     {
         PublicVar.uiManager.CloseUI(ui);
         ui = null;

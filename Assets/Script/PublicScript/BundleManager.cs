@@ -6,8 +6,15 @@ using UnityEngine;
 public class BundleManager
 {
     public static readonly string DllBundle = @"dll";
+    public static readonly string DllBundleD = @"dll\";
     public static readonly string PrefabBundle = @"prefabs";
+    public static readonly string PrefabBundleD = @"prefabs\";
     public static readonly string UIBundle = @"prefabs\ui";
+    public static readonly string UIBundleD = @"prefabs\ui\";
+    public static readonly string ValuesBundle = @"values";
+    public static readonly string ValuesBundleD = @"values\";
+    public static readonly string DatabaseBundle = @"values";
+    public static readonly string DatabaseBundleD = @"values\";
     public static readonly char PathDivider = '\\';
 
     public static string BundleBasePath = @"E:\AssetBundles\StandaloneWindows";

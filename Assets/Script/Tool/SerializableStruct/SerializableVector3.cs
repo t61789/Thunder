@@ -1,58 +1,50 @@
-﻿using System.Xml;
+﻿using Newtonsoft.Json;
+using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using UnityEngine;
 
 namespace Tool
 {
-    public struct SerializableVector3 : IXmlSerializable
+    [JsonObject]
+    public struct SerializableVector3
     {
         public float x;
         public float y;
         public float z;
+        [JsonIgnore]
+        public Vector3 inner;
 
         public SerializableVector3(float x, float y, float z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
+            inner = Vector3.positiveInfinity;
         }
 
-        public XmlSchema GetSchema()
+        public override string ToString()
         {
-            return null;
+            if (!inner.Equals(Vector3.positiveInfinity))
+                inner = new Vector3(x, y, z);
+
+            return inner.ToString();
         }
 
-        public void ReadXml(XmlReader reader)
+        public static implicit operator Vector3(SerializableVector3 s)
         {
-            reader.Read();
-            reader.ReadStartElement("x");
-            x = reader.ReadContentAsFloat();
-            reader.ReadEndElement();
-            reader.ReadStartElement("y");
-            y = reader.ReadContentAsFloat();
-            reader.ReadEndElement();
-            reader.ReadStartElement("z");
-            z = reader.ReadContentAsFloat();
-            reader.ReadEndElement();
-            reader.ReadEndElement();
+            if (!s.inner.Equals(Vector3.positiveInfinity) )
+                return s.inner;
+            else
+            {
+                s.inner = new Vector3(s.x,s.y,s.z);
+                return s.inner;
+            }
         }
 
-        public void WriteXml(XmlWriter writer)
+        public static implicit operator SerializableVector3(Vector3 v)
         {
-            writer.WriteElementString("x", x.ToString());
-            writer.WriteElementString("y", y.ToString());
-            writer.WriteElementString("z", z.ToString());
-        }
-
-        public static implicit operator SerializableVector3(Vector3 vector)
-        {
-            return new SerializableVector3(vector.x, vector.y, vector.z);
-        }
-
-        public static implicit operator Vector3(SerializableVector3 svector)
-        {
-            return new Vector3(svector.x, svector.y, svector.z);
+            return new SerializableVector3(v.x, v.y, v.z);
         }
     }
 }

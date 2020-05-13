@@ -16,7 +16,7 @@ public class SurvivalLiUI : BaseUI
         this.maxTime = maxTime;
     }
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         surviveTime = transform.Find("surviveTime").GetComponent<Text>();

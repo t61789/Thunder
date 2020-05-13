@@ -25,7 +25,7 @@ public class PlayerRocket : Bullet
     private BoxCollider2D contactCollider2d;
     private BehaviorTree behaviorTree;
 
-    public new void Awake()
+    protected new void Awake()
     {
         base.Awake();
         detectCollider2d = GetComponent<CircleCollider2D>();

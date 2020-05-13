@@ -9,7 +9,7 @@ public class SurvivalNoliUI : BaseUI
     private Text surviveTime;
     private Text score;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         surviveTime = transform.Find("surviveTime").GetComponent<Text>();

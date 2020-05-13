@@ -29,7 +29,7 @@ public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointer
 
     public BaseUI dialog;
 
-    public virtual void Awake()
+    protected virtual void Awake()
     {
         if (uiId == null)
             uiId = name;
@@ -127,5 +127,29 @@ public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointer
     public void Close()
     {
         PublicVar.uiManager.CloseUI(this);
+    }
+
+    public void InitRect(UIInitAction action)
+    {
+        if((action & UIInitAction.MiddleAnchor) != 0)
+        {
+            rectTrans.anchorMin = rectTrans.anchorMax = Vector2.one / 2;
+        }
+
+        if ((action & UIInitAction.FillAnchor) != 0)
+        {
+            rectTrans.anchorMax = Vector2.one;
+            rectTrans.anchorMin = Vector2.zero;
+        }
+
+        if ((action & UIInitAction.FillSize) != 0)
+        {
+            rectTrans.offsetMin = rectTrans.offsetMax = Vector2.zero;
+        }
+
+        if ((action & UIInitAction.PositionMiddleOfAnchor) != 0)
+        {
+            rectTrans.anchoredPosition = Vector2.zero;
+        }
     }
 }

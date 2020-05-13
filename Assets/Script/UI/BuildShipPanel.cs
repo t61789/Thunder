@@ -36,7 +36,7 @@ public class BuildShipPanel : BaseUI
 
     private string[] attachResult;
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
 
@@ -164,7 +164,7 @@ public class BuildShipPanel : BaseUI
         for (int i = 0; i < attachResult.Length; i++)
         {
             if (attachResult[i] == null) continue;
-            ship.AttachTurret(attachResult[i], i, (string)PublicVar.dataBaseManager.SelectOnce("turret",  "control_class" , new (string, string)[] { ("name", attachResult[i]) }));
+            ship.AttachTurret(attachResult[i], i, (string)PublicVar.dataBaseManager["turret"].SelectOnce(  "control_class" , new (string, object)[] { ("name", attachResult[i]) }));
         }
 
         //PublicVar.SetCurPlayer(ship.gameObject);

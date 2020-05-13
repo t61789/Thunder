@@ -38,7 +38,7 @@ public class ListPlane : BaseUI
     protected List<BaseUI> elements = new List<BaseUI>();
     protected Queue<RectTransform> elementContainers = new Queue<RectTransform>();
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         scrollbar.y = rectTrans.Find("ScrollbarY").GetComponent<Scrollbar>();

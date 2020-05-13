@@ -19,7 +19,7 @@ public class InputDialog:BaseUI
         inputField.text = text;
     }
 
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         inputField = transform.Find("InputField").GetComponent<InputField>();

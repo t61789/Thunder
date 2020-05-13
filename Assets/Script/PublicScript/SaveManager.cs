@@ -12,7 +12,7 @@ public class SaveManager
 {
     public List<int> levelComplete;
 
-    private static readonly string saveBasePath;
+    public static readonly string saveBasePath;
 
     static SaveManager()
     {
@@ -22,6 +22,8 @@ public class SaveManager
             Path.DirectorySeparatorChar +
             "Thunder" +
             Path.DirectorySeparatorChar;
+        if (!Directory.Exists(saveBasePath))
+            Directory.CreateDirectory(saveBasePath);
     }
 
     private SaveManager()

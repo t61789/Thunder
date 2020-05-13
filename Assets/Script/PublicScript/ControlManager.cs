@@ -34,6 +34,7 @@ public class ControlManager
     private Dictionary<KeyCode, Stack<Unit>> unitStacks = new Dictionary<KeyCode, Stack<Unit>>();
     private Dictionary<KeyCode, List<Unit>> unitLists = new Dictionary<KeyCode, List<Unit>>();
 
+    [Newtonsoft.Json.JsonObject]
     public struct Values
     {
         public string[] bases;
@@ -41,7 +42,7 @@ public class ControlManager
 
     public ControlManager()
     {
-        Values values = PublicVar.valueManager.GetValue<Values>("input/priority");
+        Values values = PublicVar.valueManager.LoadValue<Values>("input\\priority");
 
         string[] temp = values.bases;
         for (int i = 0; i < temp.Length; i++)
@@ -55,8 +56,7 @@ public class ControlManager
         Unit unit = units[name];
         if (!unitLists.TryGetValue(keyCode, out List<Unit> list))
         {
-            list = new List<Unit>();
-            list.Add(unit);
+            list = new List<Unit>() { unit};
 
             unitLists.Add(keyCode, list);
             return true;

@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class SurvivalNoli : BaseGameMode
+public class SurvivalNoli : Survival
 {
     private const string TABLE_NAME = "difficulty_noli";
     private const string DIFF_ID = "diff_id";
@@ -13,14 +13,11 @@ public class SurvivalNoli : BaseGameMode
     private float risingCoefficient;
     private float interval;
 
-    private float w;
-
     protected SurvivalNoliUI ui;
 
-    public void Init(Transform target, string diffId, float generateRange)
+    public override void Init(Transform target, string diffId, float generateRange)
     {
-        this.target = target;
-        this.generateRange = generateRange;
+        base.Init(target,diffId,generateRange);
 
         DataTable.Row row = PublicVar.dataBaseManager[TABLE_NAME].Select( null, new (string, object)[] { (DIFF_ID, diffId) }).Rows.FirstOrDefault();
         risingCoefficient = (float)row["rising_coefficient"];
@@ -116,7 +113,7 @@ public class SurvivalNoli : BaseGameMode
         running = false;
     }
 
-    public override void UnInstall()
+    public override void BeforeUnInstall()
     {
         PublicVar.uiManager.CloseUI(ui);
         ui = null;
