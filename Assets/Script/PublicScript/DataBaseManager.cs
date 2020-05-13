@@ -39,6 +39,11 @@ public class DataBaseManager
         }
     }
 
+    public DataTable GetTableNormal(string tableName)
+    {
+        return GetTable(BundleManager.NormalD+tableName);
+    }
+
     public DataTable GetTable(string tablePath)
     {
         if (tables.TryGetValue(tablePath, out DataTable value))

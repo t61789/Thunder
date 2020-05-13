@@ -13,8 +13,11 @@ public class BundleManager
     public static readonly string UIBundleD = @"prefabs\ui\";
     public static readonly string ValuesBundle = @"values";
     public static readonly string ValuesBundleD = @"values\";
-    public static readonly string DatabaseBundle = @"values";
-    public static readonly string DatabaseBundleD = @"values\";
+    public static readonly string DatabaseBundle = @"database";
+    public static readonly string DatabaseBundleD = @"database\";
+
+    public static readonly string Normal = @"normal";
+    public static readonly string NormalD = @"normal\";
     public static readonly char PathDivider = '\\';
 
     public static string BundleBasePath = @"E:\AssetBundles\StandaloneWindows";

@@ -9,37 +9,43 @@ namespace Tool
     [JsonObject]
     public struct SerializableVector3
     {
-        public float x;
-        public float y;
-        public float z;
+        public float[] pos;
         [JsonIgnore]
         public Vector3 inner;
 
         public SerializableVector3(float x, float y, float z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            inner = Vector3.positiveInfinity;
+            pos = new float[3];
+            pos[0] = x;
+            pos[1] = y;
+            pos[2] = z;
+            inner = Vector3.zero;
         }
 
         public override string ToString()
         {
-            if (!inner.Equals(Vector3.positiveInfinity))
-                inner = new Vector3(x, y, z);
+            if (inner.Equals(Vector3.zero))
+            {
+                if (pos == null)
+                    inner = Vector3.zero;
+                else
+                    inner = new Vector3(pos[0], pos[1], pos[2]);
+            }
 
             return inner.ToString();
         }
 
         public static implicit operator Vector3(SerializableVector3 s)
         {
-            if (!s.inner.Equals(Vector3.positiveInfinity) )
-                return s.inner;
-            else
+            if (s.inner.Equals(Vector3.zero) )
             {
-                s.inner = new Vector3(s.x,s.y,s.z);
-                return s.inner;
+                if (s.pos == null)
+                    s.inner = Vector3.zero;
+                else
+                    s.inner = new Vector3(s.pos[0], s.pos[1], s.pos[2]);
             }
+
+            return s.inner;
         }
 
         public static implicit operator SerializableVector3(Vector3 v)

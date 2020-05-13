@@ -74,12 +74,17 @@ public class ValueManager
 
     #endregion
 
-    private Dictionary<string, string> unDeserializedBuffer = new Dictionary<string, string>();
-    private Dictionary<string, object> buffer = new Dictionary<string, object>();
+    private readonly Dictionary<string, string> unDeserializedBuffer = new Dictionary<string, string>();
+    private readonly Dictionary<string, object> buffer = new Dictionary<string, object>();
 
     public T LoadValue<T>(string bundlePath,string valueName)
     {
         return LoadValue<T>(bundlePath+BundleManager.PathDivider+valueName);
+    }
+
+    public T LoadValueNormal<T>(string valueName)
+    {
+        return LoadValue<T>(BundleManager.NormalD+valueName);
     }
 
     public T LoadValue<T>(string valuePath)

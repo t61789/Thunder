@@ -42,8 +42,6 @@ public class PublicVar : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log(JsonConvert.DeserializeObject<SerializableVector3>("{x:1,y:2,z:3}"));
-
         switch (SceneManager.GetActiveScene().buildIndex)
         {
             case 0:

@@ -37,14 +37,14 @@ public class ControlManager
     [Newtonsoft.Json.JsonObject]
     public struct Values
     {
-        public string[] bases;
+        public string[] priority;
     }
 
     public ControlManager()
     {
-        Values values = PublicVar.valueManager.LoadValue<Values>("input\\priority");
+        Values values = PublicVar.valueManager.LoadValueNormal<Values>("input_priority");
 
-        string[] temp = values.bases;
+        string[] temp = values.priority;
         for (int i = 0; i < temp.Length; i++)
             units.Add(temp[i], new Unit(temp[i], i));
     }
