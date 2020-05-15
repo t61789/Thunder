@@ -12,14 +12,31 @@ public class GameModeManager
 {
     private BaseGameMode curGameMode;
 
+    public struct Param<T>
+    {
+        public string modeTypeName;
+        public Action<T> initAction;
+        public Param(string modeTypeName, Action<T> initAction=null)
+        {
+            this.modeTypeName = modeTypeName;
+            this.initAction = initAction;
+        }
+    }
+
     public BaseGameMode SetupMode(string modeTypeName,Action<BaseGameMode> initAction = null)
     {
         return SetupMode<BaseGameMode>(modeTypeName,initAction);
     }
 
-    public T SetupMode<T>(string modeTypeName, Action<T> initAction=null) where T : BaseGameMode
+    public T SetupMode<T>(Param<T> param) where T:BaseGameMode
     {
+        return SetupMode(param.modeTypeName,param.initAction);
+    }
+
+    public T SetupMode<T>(string modeTypeName, Action<T> initAction=null) where T : BaseGameMode
+    { 
         Type t = Assembly.GetExecutingAssembly().GetType(modeTypeName);
+        
         return SetupMode(t, initAction);
     }
 

@@ -7,7 +7,6 @@ public class UIManager : MonoBehaviour
 {
     private Transform uiContainer;
     private Transform uiRecycleContainer;
-    private const string PREFAB_BASE_FOLDER = "prefabs\\ui";
 
     private class UIUnit
     {
@@ -21,9 +20,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private List<UIUnit> activeUi = new List<UIUnit>();
-    private List<UIUnit> hideStableUi = new List<UIUnit>();
-    private Stack<UIUnit> closeStack = new Stack<UIUnit>();
+    private readonly List<UIUnit> activeUi = new List<UIUnit>();
+    private readonly List<UIUnit> hideStableUi = new List<UIUnit>();
+    private readonly Stack<UIUnit> closeStack = new Stack<UIUnit>();
+
+    private void Awake()
+    {
+        Init();
+    }
 
     public void Init()
     {
@@ -60,7 +64,7 @@ public class UIManager : MonoBehaviour
 
     public T OpenUI<T>(string uiName, string after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
-        UIUnit find = activeUi.Where(x => x.uiObj.name == after).FirstOrDefault();
+        UIUnit find = activeUi.Where(x => x.uiObj.UIName == after).FirstOrDefault();
 
         if (find == null)
         {
@@ -99,13 +103,13 @@ public class UIManager : MonoBehaviour
             return null;
         }
 
-        UIUnit unit = hideStableUi.Where(x => x.uiObj.name == uiName).FirstOrDefault();
+        UIUnit unit = hideStableUi.Where(x =>  x.uiObj.UIName == uiName).FirstOrDefault();
         if (unit != null)
             hideStableUi.Remove(unit);
 
         BaseUI newPlane = unit?.uiObj;
         if (newPlane == null)
-            newPlane = PublicVar.objectPool.Alloc<BaseUI>(PREFAB_BASE_FOLDER, uiName);
+            newPlane = PublicVar.objectPool.Alloc<BaseUI>(BundleManager.UIBundle, uiName);
 
         newPlane.transform.SetParent(uiContainer);
         newPlane.transform.SetSiblingIndex(siblingIndex);
@@ -114,7 +118,7 @@ public class UIManager : MonoBehaviour
         activeUi.Insert(siblingIndex, unit);
 
         newPlane.gameObject.SetActive(true);
-        if (dialog != null)
+        if (dialog!=null)
             dialog.dialog = newPlane;
 
         newPlane.InitRect(act);
@@ -128,7 +132,7 @@ public class UIManager : MonoBehaviour
 
     public void CloseUI(string uiName)
     {
-        CloseUI(activeUi.Where(x => x.uiObj.name == uiName).FirstOrDefault());
+        CloseUI(activeUi.Where(x => x.uiObj.UIName == uiName).FirstOrDefault());
     }
 
     public void CloseUI(BaseUI ui)
@@ -140,7 +144,7 @@ public class UIManager : MonoBehaviour
     {
         if (unit == null)
         {
-            Debug.LogError("No such ui named " + unit.uiObj.name);
+            Debug.LogError("No such ui named " + unit.uiObj.UIName);
             return;
         }
 
@@ -172,7 +176,7 @@ public class UIManager : MonoBehaviour
                 continue;
             }
 
-            if (curUnit.uiObj.dialog != null)
+            if (DialogOpened(curUnit.uiObj.dialog))
             {
                 closeStack.Push(activeUi.Where(x => x.uiObj == curUnit.uiObj.dialog).FirstOrDefault());
                 continue;
@@ -184,7 +188,7 @@ public class UIManager : MonoBehaviour
 
     public bool IsUIOpened(string planeName)
     {
-        return activeUi.Find(x => x.uiObj.name == planeName) != null;
+        return activeUi.Find(x => x.uiObj.UIName == planeName) != null;
     }
 
     public void SwitchUI(string planeName)
@@ -193,5 +197,11 @@ public class UIManager : MonoBehaviour
             CloseUI(planeName);
         else
             OpenUI<BaseUI>(planeName);
+    }
+
+    public static bool DialogOpened(BaseUI dialog)
+    {
+        if (dialog == null) return false;
+        return dialog.gameObject.activeSelf;
     }
 }

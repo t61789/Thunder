@@ -42,7 +42,7 @@ public class ControlManager
 
     public ControlManager()
     {
-        Values values = PublicVar.valueManager.LoadValueNormal<Values>("input_priority");
+        Values values = PublicVar.value.LoadValue<Values>("input_priority");
 
         string[] temp = values.priority;
         for (int i = 0; i < temp.Length; i++)

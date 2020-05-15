@@ -5,7 +5,7 @@ using Tool.BuffData;
 using Tool.ObjectPool;
 using UnityEngine;
 
-public class Aircraft : MonoBehaviour, IObjectPool
+public class Aircraft : Controller, IObjectPool
 {
     public bool DrawPathPos;
 
@@ -14,19 +14,19 @@ public class Aircraft : MonoBehaviour, IObjectPool
     public float Drag = 5;
     public float TurnDegree = 110;
     public string Camp;
-    public string AircraftName;
     public float AccelerationFront = 20;
     public float AccelerationBack = 10;
     public float AccelerationLeft = 5;
     public float AccelerationRight = 5;
 
     public float MaxHealth = 100;
-    public float Health;
 
     public BuffData drag;
 
     public Aircraft Target;
     public Aircraft GuardTarget;
+
+    protected float Health;
 
     protected Transform targetTrans;
     protected Transform guardTargetTrans;
@@ -44,15 +44,44 @@ public class Aircraft : MonoBehaviour, IObjectPool
     public event DestroyedDel OnDestroyed;
 
     protected bool SpeedUpFrontControl { get; set; }
-    protected bool SpeedUpBackControl { get; set; }
-    protected bool SpeedUpLeftControl { get; set; }
-    protected bool SpeedUpRightControl { get; set; }
-    protected bool TurnRightControl { get; set; }
-    protected bool TurnLeftControl { get; set; }
-    protected Vector3 StaringAtControl { get; set; } = Vector3.positiveInfinity;
-
-    protected virtual void Awake()
+    public void SetSpeedUpFrontControl(bool b)
     {
+        SpeedUpFrontControl = b;
+    }
+    protected bool SpeedUpBackControl { get; set; }
+    public void SetSpeedUpBackControl(bool b)
+    {
+        SpeedUpBackControl = b;
+    }
+    protected bool SpeedUpLeftControl { get; set; }
+    public void SetSpeedUpLeftControl(bool b)
+    {
+        SpeedUpLeftControl = b;
+    }
+    protected bool SpeedUpRightControl { get; set; }
+    public void SetSpeedUpRightControl(bool b)
+    {
+        SpeedUpRightControl = b;
+    }
+    protected bool TurnRightControl { get; set; }
+    public void SetTurnRightControl(bool b)
+    {
+        TurnRightControl = b;
+    }
+    protected bool TurnLeftControl { get; set; }
+    public void SetTurnLeftControl(bool b)
+    {
+        TurnLeftControl = b;
+    }
+    protected Vector3 StaringAtControl { get; set; } = Vector3.positiveInfinity;
+    public void SetStaringAtControl(Vector3 v)
+    {
+        StaringAtControl = v;
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
         rb2d = GetComponent<Rigidbody2D>();
         trans = transform;
         Health = MaxHealth;

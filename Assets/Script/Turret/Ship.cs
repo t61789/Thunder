@@ -4,48 +4,39 @@ using System.Xml.Serialization;
 using Tool;
 using UnityEngine;
 
-/// <summary>
-/// 数据库：搭载点
-/// 炮塔
-/// </summary>
 public class Ship : Aircraft
 {
-    [Serializable]
-    public class AttachPoint
+    public struct AttachPoint
     {
         public int index;
-        public SerializableVector3 position;
-        public SerializableVector3 rotation;
-        public string attachType;
-        [XmlIgnore]
+        public Vector3 position;
+        public Vector3 rotation;
+        public string type;
         public Turret turret;
 
-        public AttachPoint(int index, SerializableVector3 position, SerializableVector3 rotation, string attachType, Turret turret)
+        public AttachPoint(int index, Vector3 position, Vector3 rotation, string attachType, Turret turret)
         {
             this.index = index;
             this.position = position;
             this.rotation = rotation;
-            this.attachType = attachType;
+            this.type = attachType;
             this.turret = turret;
         }
     }
 
-    protected List<AttachPoint> attachPoints = null;
-
-    protected Turret[] turrets;
+    public AttachPoint[] attachPoints;
 
     protected override void Awake()
     {
         base.Awake();
-        if (attachPoints == null)
-            SetAttachPoints();
+        attachPoints = GetAttachPoints(ControllerName);
     }
 
-    private void SetAttachPoints()
+    public static AttachPoint[] GetAttachPoints(string shipId)
     {
-        attachPoints = new List<AttachPoint>();
+        List<AttachPoint> attachPoints = new List<AttachPoint>();
         int index = 0;
-        foreach (var item in PublicVar.dataBaseManager["attachPoints"].Select( null, new (string, object)[]{ ("ship_name", AircraftName) }).Rows)
+        foreach (var item in PublicVar.dataBase["ship_attach_points"].Select(null, new (string, object)[] { ("ship_id", shipId) }))
         {
             AttachPoint a = new AttachPoint(
                 index,
@@ -56,31 +47,23 @@ public class Ship : Aircraft
             attachPoints.Add(a);
             index++;
         }
+        return attachPoints.ToArray();
     }
 
-    public GameObject AttachTurret<T>(string prefabPath, int pointIndex)
+    public GameObject AttachTurret(string turretPath, int pointIndex, bool controlable)
     {
-        return AttachTurret(prefabPath, pointIndex, typeof(T).Name);
-    }
-
-    public GameObject AttachTurret(string prefabPath, int pointIndex, Type turretType)
-    {
-        return AttachTurret(prefabPath, pointIndex, turretType.Name);
-    }
-
-    public GameObject AttachTurret(string prefabPath, int pointIndex, string turretType)
-    {
-        GameObject turret = AttachTurret(prefabPath, pointIndex);
-        AircraftController.AttachTo(turret, turretType);
+        GameObject turret = AttachTurret(turretPath, pointIndex);
+        if(controlable)
+            ControllerInput.AttachTo(turret);
         return turret;
     }
 
-    public GameObject AttachTurret(string prefabPath, int pointIndex)
+    public GameObject AttachTurret(string turretPath, int pointIndex)
     {
         if (attachPoints[pointIndex].turret != null)
             RemoveTurret(pointIndex);
 
-        GameObject turret = Instantiate(PublicVar.objectPool.GetPrefab(prefabPath));
+        GameObject turret = Instantiate(PublicVar.objectPool.GetPrefab(turretPath));
 
         attachPoints[pointIndex].turret = turret.GetComponent<Turret>();
         attachPoints[pointIndex].turret.Install(this, attachPoints[pointIndex].position, attachPoints[pointIndex].rotation);
@@ -94,10 +77,37 @@ public class Ship : Aircraft
         attachPoints[pointIndex].turret = null;
     }
 
-    public List<AttachPoint> GetAttachPoints()
+    public struct CreateShipParam
     {
-        if (attachPoints == null)
-            SetAttachPoints();
-        return attachPoints;
+        public string shipId;
+        public string camp;
+        public string[] turrets;
+        public bool controlable;
+
+        public CreateShipParam(string shipId, string camp, string[] turrets, bool controlable)
+        {
+            this.shipId = shipId;
+            this.camp = camp;
+            this.turrets = turrets;
+            this.controlable = controlable;
+        }
+    }
+
+    public static Ship CreateShip(CreateShipParam param)
+    {
+        Ship ship = PublicVar.objectPool.Alloc<Ship>(param.shipId);
+        ship.Camp = param.camp;
+        param.turrets = param.turrets ?? new string[0];
+
+        for (int i = 0; i < param.turrets.Length; i++)
+        {
+            if (param.turrets[i] == null) continue;
+            ship.AttachTurret(param.turrets[i], i, param.controlable);
+        }
+
+        if(param.controlable)
+            ControllerInput.AttachTo(ship.gameObject);
+
+        return ship;
     }
 }

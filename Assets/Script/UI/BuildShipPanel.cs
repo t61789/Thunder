@@ -5,49 +5,35 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-/// <summary>
-/// 与ui管理器通信
-///		显示
-///		隐藏
-/// 与自身组件通信
-///		可用元素列表
-///		搭载点
-///		框架图片
-/// 创建ship
-///		TODO:重复创建飞船
-///		调用
-/// </summary>
 public class BuildShipPanel : BaseUI
 {
-    private Button setFrameButton;
-    private Button confirmButton;
-    private Button cancelButton;
     private InputField shipFrameInput;
-    private Image frameImage;
-    private Transform attachPoints;
+    private Transform attachPointsTrans;
     private GameObject attachPoint;
+    private Image frameImage;
+
     private ListPlane listPlane;
-
-    private string frameName;
-
+    private string shipId;
     private BaseUI selectedAttachPoint;
-    private List<GameObject> listElements = new List<GameObject>();
-    private Dictionary<BaseUI, Ship.AttachPoint> attachPointInfo = new Dictionary<BaseUI, Ship.AttachPoint>();
+    private readonly Dictionary<BaseUI, Ship.AttachPoint> attachPointInfo = new Dictionary<BaseUI, Ship.AttachPoint>();
 
     private string[] attachResult;
+    private Vector2 imageScale;
+
+    public Ship.CreateShipParam buildResult;
+
+    public delegate void BuildShipCompleteDel(BuildShipPanel buildShipPanel);
+    public event BuildShipCompleteDel OnBuildShipComplete;
 
     protected override void Awake()
     {
         base.Awake();
 
-        setFrameButton = transform.Find("SetFrameButton").GetComponent<Button>();
-        confirmButton = transform.Find("ConfirmButton").GetComponent<Button>();
-        cancelButton = transform.Find("CancelButton").GetComponent<Button>();
         shipFrameInput = transform.Find("ShipFrameInput").GetComponent<InputField>();
         frameImage = transform.Find("FrameImage").GetComponent<Image>();
-        attachPoints = transform.Find("AttachPoints");
-        attachPoint = attachPoints.Find("AttachPoint").gameObject;
-        listPlane = transform.Find("ListPlane").GetComponent<ListPlane>();
+        attachPointsTrans = transform.Find("AttachPoints");
+        attachPoint = attachPointsTrans.Find("AttachPoint").gameObject;
+        listPlane = transform.Find("listPlane").GetComponent<ListPlane>();
     }
 
     public override void AfterOpen()
@@ -61,35 +47,37 @@ public class BuildShipPanel : BaseUI
     {
         Clear();
 
-        frameName = shipFrameInput.text;
-        Ship frame = PublicVar.objectPool.GetPrefab(frameName).GetComponent<Ship>();
-        Sprite tempSprite = frame.GetComponent<SpriteRenderer>().sprite;
+        shipId = shipFrameInput.text;
 
-        Vector3 extents = tempSprite.bounds.extents;
+        Ship.AttachPoint[] attachPoints = Ship.GetAttachPoints(shipId);
+        Sprite frameSprite = PublicVar.objectPool.GetPrefab(shipId).GetComponent<SpriteRenderer>().sprite;
 
-        frameImage.sprite = tempSprite;
-        frameImage.SetNativeSize();
+        Vector2 baseSize = frameSprite.bounds.size;
+
+        frameImage.sprite = frameSprite;
 
         Rect rect = frameImage.rectTransform.rect;
 
-        float i = (rect.width / 2) / extents.x;
-        float j = (rect.height / 2) / extents.y;
+        imageScale.x = rect.width / baseSize.x;
+        imageScale.y = rect.height / baseSize.y;
 
-        foreach (var item in frame.GetAttachPoints())
+        foreach (var item in attachPoints)
         {
             GameObject newAttachPoint = Instantiate(attachPoint);
             newAttachPoint.SetActive(true);
-            newAttachPoint.transform.SetParent(attachPoints);
+            newAttachPoint.transform.SetParent(attachPointsTrans);
+            RectTransform naTrans = (newAttachPoint.transform as RectTransform);
+            naTrans.anchoredPosition = item.position * imageScale;
 
-            Vector3 temp = item.position;
-            newAttachPoint.GetComponent<RectTransform>().localPosition = new Vector2(temp.x * i, temp.y * j);
+            naTrans.SetSizeWithCurrentAnchors( RectTransform.Axis.Horizontal, imageScale.x);
+            naTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
 
             BaseUI b = newAttachPoint.GetComponent<BaseUI>();
             b.PointerClick += AttachPointClick;
             attachPointInfo.Add(b, item);
         }
 
-        attachResult = new string[frame.GetAttachPoints().Count];
+        attachResult = new string[attachPoints.Length];
     }
 
     private void ClearCurAttachPoints()
@@ -107,69 +95,75 @@ public class BuildShipPanel : BaseUI
         {
             Clear();
             shipFrameInput.text = "";
-            frameName = "";
+            shipId = "";
         }
         return result;
     }
 
     private void Clear()
     {
-        listPlane.ClearElements();
+        listPlane.Clear();
         ClearCurAttachPoints();
-        listElements.Clear();
         selectedAttachPoint = null;
         frameImage.sprite = null;
-        attachResult = null;
     }
 
     private void AttachPointClick(BaseUI baseUI, PointerEventData eventData)
     {
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            baseUI.GetComponent<Image>().sprite = PublicVar.objectPool.GetPrefab(BundleManager.UIBundle,"emptyUI").GetComponent<Image>().sprite;
+
+            baseUI.rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
+            baseUI.rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
+
+            attachResult[attachPointInfo[selectedAttachPoint].index] = null;
+
+            return;
+        }
+        else if (selectedAttachPoint == baseUI)
+            return;
+
+        listPlane.Clear();
+
         selectedAttachPoint = baseUI;
         Ship.AttachPoint info = attachPointInfo[baseUI];
-        DataTable select = PublicVar.dataBaseManager["turret"].Select( new string[] { "name" }, new (string, object)[] { ( "type", info.attachType ) });
+        DataTable select = PublicVar.dataBase["turret"].Select( new string[] { "name" }, new (string, object)[] { ( "type", info.type ) });
         List<Action<BaseUI>> inits = new List<Action<BaseUI>>();
-        listElements.Clear();
+
         foreach (var item in select.Rows)
         {
-            GameObject prefab = PublicVar.objectPool.GetPrefab((string)item["name"]);
-            listElements.Add(prefab);
+            string turretName = (string)item["name"];
+
+            GameObject prefab = PublicVar.objectPool.GetPrefab(turretName);
             Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
-            inits.Add(x => x.GetComponent<Image>().sprite = sprite);
+            inits.Add(x => {
+                x.GetComponent<Image>().sprite = sprite;
+                x.InitRect( UIInitAction.FillParent);
+                x.GetComponent<Button>().onClick.AddListener(()=>ElementClick(turretName,sprite));
+            });
         }
 
-        listPlane.Init(
-            new ListPlane.Parameters<BaseUI>(
-                3,
-                "listElement",
-                (67,67),
-                (10,10),
-                (0, rectTrans.rect.height),
-                inits));
+        listPlane.Init(new ListPlane.Parameters<BaseUI>(3,"normalButton",(0,0),(10,10),(0, rectTrans.rect.height),inits));
     }
 
-    private void ElementClick(int index)
+    private void ElementClick(string turretName,Sprite sprite)
     {
         Image i = selectedAttachPoint.GetComponent<Image>();
         Ship.AttachPoint info = attachPointInfo[selectedAttachPoint];
-        attachResult[info.index] = listElements[index].name;
-        i.sprite = listElements[index].GetComponent<SpriteRenderer>().sprite;
+        attachResult[info.index] = turretName;
+        i.sprite = sprite;
         i.color = Color.white;
-        i.SetNativeSize();
+
+        i.rectTransform.SetSizeWithCurrentAnchors( RectTransform.Axis.Horizontal,sprite.bounds.size.x*imageScale.x);
+        i.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, sprite.bounds.size.y * imageScale.y);
     }
 
-    public void CreateShip()
+    public void CompleteBuildShip()
     {
-        Ship ship = PublicVar.objectPool.DefaultAlloc<Ship>(frameName);
+        buildResult = new Ship.CreateShipParam(shipId,"player",attachResult,true);
 
-        for (int i = 0; i < attachResult.Length; i++)
-        {
-            if (attachResult[i] == null) continue;
-            ship.AttachTurret(attachResult[i], i, (string)PublicVar.dataBaseManager["turret"].SelectOnce(  "control_class" , new (string, object)[] { ("name", attachResult[i]) }));
-        }
-
-        //PublicVar.SetCurPlayer(ship.gameObject);
-
-        AircraftController.AttachTo<Ship>(ship.gameObject);
+        OnBuildShipComplete?.Invoke(this);
 
         PublicVar.uiManager.CloseUI(name);
     }

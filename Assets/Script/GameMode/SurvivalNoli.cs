@@ -15,23 +15,24 @@ public class SurvivalNoli : Survival
 
     protected SurvivalNoliUI ui;
 
-    public override void Init(Transform target, string diffId, float generateRange)
+    public override void Init(Transform target, string diffId)
     {
-        base.Init(target,diffId,generateRange);
+        base.Init(target,diffId);
 
-        DataTable.Row row = PublicVar.dataBaseManager[TABLE_NAME].Select( null, new (string, object)[] { (DIFF_ID, diffId) }).Rows.FirstOrDefault();
+        DataTable.Row row = PublicVar.dataBase[TABLE_NAME].Select( null, new (string, object)[] { (DIFF_ID, diffId) }).Rows.FirstOrDefault();
         risingCoefficient = (float)row["rising_coefficient"];
         interval = (float)row["time_interval"];
+        generateRange = (float)row["generate_range"];
 
         float temp = (float)row["base_baseline"];
         _curNodes = (new Vector2(0, temp), new Vector2(interval, temp));
 
         List<AircraftUnit> units = new List<AircraftUnit>();
-        foreach (var item in PublicVar.dataBaseManager[AIRCRAFT_TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
+        foreach (var item in PublicVar.dataBase[AIRCRAFT_TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
             units.Add(new AircraftUnit((string)item[AIRCRAFT_ID], (int)item[MAX], (float)item[BASELINE_MIN], (float)item[BASELINE_MAX], (float)item[INTERVAL]));
         _aircraftUnits = units.ToArray();
 
-        ui = PublicVar.uiManager.OpenUI<SurvivalNoliUI>(UI_NAME);
+        ui = PublicVar.uiManager.OpenUI<SurvivalNoliUI>(UI_NAME, UIInitAction.FillParent);
 
         Reset();
     }
@@ -56,33 +57,30 @@ public class SurvivalNoli : Survival
                 CalculateW();
             }
             curDiffculty = (x - curNodes.left.x) * w + curNodes.left.y;
-
             for (int i = 0; i < aircraftUnits.Length; i++)
             {
                 if (!aircraftUnits[i].active)
                     continue;
-
                 if (curDiffculty > aircraftUnits[i].baselineMax)
                 {
                     aircraftUnits[i].active = false;
                     continue;
                 }
-
                 if (curDiffculty < aircraftUnits[i].baselineMin)
                     continue;
-
                 if (aircraftUnits[i].AddAircraft())
                 {
                     centerPos = target ? target.position : centerPos;
                     Vector2 temp = Tool.Tools.RandomVectorInCircle(1).normalized * generateRange + centerPos;
 
-                    Aircraft a = PublicVar.objectPool.DefaultAlloc<Aircraft>(aircraftUnits[i].aircraftId, item =>
+                    Aircraft a = PublicVar.objectPool.Alloc<Aircraft>(aircraftUnits[i].aircraftId, item =>
                     {
                         item.ObjectPoolInit(temp, Quaternion.identity, null, null, "enemy");
                     });
 
                     a.OnDestroyed += aircraftUnits[i].AircraftDestroyed;
                 }
+
             }
 
             ui.Refresh(x,0);

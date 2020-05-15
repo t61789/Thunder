@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -768,7 +769,7 @@ namespace Tool
         }
 
         /// <summary>
-        /// 首字母小
+        /// 首字母小写
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -778,6 +779,11 @@ namespace Tool
                 return str;
             if (char.IsLower(str[0])) return str;
             return char.ToLower(str[0]) + str.Substring(1);
+        }
+
+        public static void LogTime(object label = null)
+        {
+            Debug.Log("["+label.ToString()+"] "+DateTime.Now.Minute+"m:"+DateTime.Now.Second+"s:"+DateTime.Now.Millisecond+"mi");
         }
     }
 }

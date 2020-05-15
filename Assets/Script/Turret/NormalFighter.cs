@@ -25,7 +25,7 @@ public class NormalFighter : Fighter
             if ((Time.time - fireIntervalCount > fireInterval) && Shooting)
             {
                 fireIntervalCount = Time.time;
-                PublicVar.objectPool.DefaultAlloc<NormalBullet>(Bullet, x=> {
+                PublicVar.objectPool.Alloc<NormalBullet>(Bullet, x=> {
                     x.ObjectPoolInit(trans,trans.position,trans.rotation,rb2d);
                 });
             }

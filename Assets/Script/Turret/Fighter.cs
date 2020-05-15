@@ -216,7 +216,7 @@ public class Fighter : Aircraft
 
         Aircraft camp = other.GetComponent<Aircraft>();
         if (camp == null) return;
-        if (!PublicVar.campManager.IsHostile(camp, this))return ;
+        if (!PublicVar.camp.IsHostile(camp, this))return ;
 
         SetTarget(camp as Aircraft);
     }

@@ -9,8 +9,8 @@ public class BundleManager
     public static readonly string DllBundleD = @"dll\";
     public static readonly string PrefabBundle = @"prefabs";
     public static readonly string PrefabBundleD = @"prefabs\";
-    public static readonly string UIBundle = @"prefabs\ui";
-    public static readonly string UIBundleD = @"prefabs\ui\";
+    public static readonly string UIBundle = @"ui";
+    public static readonly string UIBundleD = @"ui\";
     public static readonly string ValuesBundle = @"values";
     public static readonly string ValuesBundleD = @"values\";
     public static readonly string DatabaseBundle = @"database";
@@ -40,13 +40,12 @@ public class BundleManager
 
     private readonly Dictionary<string, Bundle> bundles = new Dictionary<string, Bundle>();
     private readonly AssetBundleManifest manifest;
-
-    private StringBuilder pathConverter = new StringBuilder();
+    private readonly AssetBundle mainfestBundle;
 
     public BundleManager()
     {
-        AssetBundle b = AssetBundle.LoadFromFile(BundleBasePath + "\\" + Path.GetFileName(BundleBasePath));
-        manifest = b.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+        mainfestBundle = AssetBundle.LoadFromFile(BundleBasePath + "\\" + Path.GetFileName(BundleBasePath));
+        manifest = mainfestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
     }
 
     public T GetAsset<T>(string assetPath) where T : Object
@@ -83,7 +82,7 @@ public class BundleManager
 
             if (!bundles.TryGetValue(curBundle, out Bundle temp))
             {
-                AssetBundle assetBundle = AssetBundle.LoadFromFile(BundleBasePath + "\\" + curBundle);
+                AssetBundle assetBundle = AssetBundle.LoadFromFile(BundleBasePath + PathDivider + curBundle);
                 Bundle newBundle = new Bundle(assetBundle, !first);
                 first = false;
                 bundles.Add(curBundle, newBundle);
@@ -140,6 +139,16 @@ public class BundleManager
         }
 
         return true;
+    }
+
+    public void ReleaseAllBundle(bool force)
+    {
+        foreach (var item in bundles.Values)
+            item.bundle.Unload(true);
+        if (force)
+            mainfestBundle.Unload(true);
+
+        bundles.Clear();
     }
 }
 

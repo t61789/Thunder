@@ -13,20 +13,23 @@ public class LevelPlane:ListPlane
     {
         base.Awake();
 
-        int completeLevelIndex = 3;
-        DataTable levelData = PublicVar.dataBaseManager["level"].Select();
+        DataTable levelData = PublicVar.dataBase["level"].Select();
 
-        Load(completeLevelIndex,levelData);
+        Load(PublicVar.saveManager.levelComplete.ToArray(), levelData);
     }
 
-    private Dictionary<BaseButton, string> pairs = new Dictionary<BaseButton, string>(); 
+    private const string MODE_TYPE = "mode_type";
+    private const string ARG = "arg";
+    private const string NAME = "name";
+    private readonly Dictionary<BaseButton, (string modeType,string arg)> pairs = new Dictionary<BaseButton, (string,string)>(); 
 
-    public void Load(int completeLevelIndex,DataTable levelData)
+    public void Load(int[] completeLevels,DataTable levelData)
     {
         List<Action<BaseButton>> inits = new List<Action<BaseButton>>();
-        List<string> diffNames = new List<string>();
+        List<(string,string)> arg = new List<(string, string)>();
 
         int count = 0;
+        int index = 0;
         foreach (var item in levelData.Rows)
         {
             inits.Add(x=> {
@@ -35,31 +38,35 @@ public class LevelPlane:ListPlane
                 Button but = x.GetComponent<Button>();
 
                 Action temp = null;
-                if (count > completeLevelIndex)
-                    but.interactable = false;
-                else
+                if (index<completeLevels.Length && completeLevels[index]==count)
+                {
                     temp = () => StartLevel(x);
+                    index++;
+                }
+                else
+                    but.interactable = false;
 
-                x.Init(item["name"] as string,temp);
+                x.Init(item[NAME] as string, temp);
 
                 count++;
             });
 
-            diffNames.Add(item["diff_id"] as string);
+            arg.Add((item[MODE_TYPE] as string, item[ARG] as string));
         }
 
-        BaseButton[] b= Init(new Parameters<BaseButton>(10, "normalButton", (100, 100), (10, 10), (0, 200), inits));
+        BaseButton[] b= Init(new Parameters<BaseButton>(10, "normalButton", (0, 0), (5, 5), (0, 200), inits));
         for (int i = 0; i < b.Length; i++)
-            pairs.Add(b[i],diffNames[i]);
+            pairs.Add(b[i],arg[i]);
 
         InitRect( UIInitAction.CenterParent);
     }
 
     public void StartLevel(BaseButton b)
     {
-        Debug.Log(pairs[b]);
+        var t = PublicVar.saveManager.playerShipParam;
+        Ship player = PublicVar.player.SetPlayer(t);
 
-        //PublicVar.gameModeManager.SetupMode<SurvivalNoli>(x=>x.Init(null,pairs[b],20)).Start();
+        PublicVar.gameMode.SetupMode(pairs[b].modeType, x => x.Init(player.transform, pairs[b].arg)).Start();
 
         pairs.Clear();
         PublicVar.uiManager.CloseUI(this);

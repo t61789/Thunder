@@ -35,34 +35,12 @@ public class LoadOrCreateSaveUI:BaseUI
 
     public void StartCreateSave()
     {
-        PublicVar.uiManager.OpenUI<InputDialog>("inputDialog",this,true, UIInitAction.CenterParent, x => {
-            x.Init("");
-            x.OnCloseCheck += (BaseUI baseUi, ref bool result) =>
-            {
-                if (!result) return;
-
-                InputDialog id = baseUi as InputDialog;
-                if (id.dialogResult == DialogResult.OK)
-                {
-                    result = SaveManager.CreateSaveDir(id.Text);
-                    if (!result)
-                        PublicVar.uiManager.OpenUI<MessageDialog>("messageDialog", x, true, UIInitAction.CenterParent,message=> {
-                            message.Init("存档已存在");
-                            message.rectTrans.anchoredPosition = Vector2.zero;
-                        });
-                    else
-                    {
-                        PublicVar.dataDeliver.Add("saveName", id.Text);
-                        SceneManager.LoadScene(1);
-                    }
-                }
-            };
-        });
+        PublicVar.instance.LoadSceneAsync("CreateSaveScene");
     }
 
     public void LoadSave(Button button)
     {
-        PublicVar.dataDeliver.Add("saveName", button.transform.Find("Text").GetComponent<Text>().text);
-        SceneManager.LoadScene(1);
+        PublicVar.saveManager = SaveManager.LoadSave(button.transform.Find("Text").GetComponent<Text>().text);
+        PublicVar.instance.LoadSceneAsync("MainScene");
     }
 }

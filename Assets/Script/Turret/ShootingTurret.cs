@@ -12,10 +12,19 @@ public class ShootingTurret : Turret
     protected float fireIntervalCount;
 
     protected bool FireControl { get; set; } = false;
-    protected Vector3 TargetPosition { get; set; } = Vector3.positiveInfinity;
-
-    protected void Awake()
+    public void SetFireControl(bool b)
     {
+        FireControl = b;
+    }
+    protected Vector3 TargetPosition { get; set; } = Vector3.positiveInfinity;
+    public void SetTargetPosition(Vector3 v)
+    {
+        TargetPosition = v;
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
         trans = transform;
         fireIntervalCount = Time.time;
         SetBullet(Bullet);
@@ -28,7 +37,7 @@ public class ShootingTurret : Turret
             if ((Time.time - fireIntervalCount > fireInterval) && FireControl)
             {
                 fireIntervalCount = Time.time;
-                PublicVar.objectPool.DefaultAlloc<NormalBullet>(Bullet, x=> {
+                PublicVar.objectPool.Alloc<NormalBullet>(Bullet, x=> {
                     x.ObjectPoolInit(shipTrans,trans.position,trans.rotation);
                 });
             }

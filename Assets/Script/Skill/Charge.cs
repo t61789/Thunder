@@ -34,10 +34,10 @@ public class Charge : Skill
         //playerController = GetComponent<PlayerController>();
         insideObject = false;
 
-        Values values = PublicVar.valueManager.LoadValue<Values>("skill\\charge");
+        Values values = PublicVar.value.LoadValue<Values>("skill\\charge");
 
         damageCoeffient = values.damageCoeffient;
-        protonSword = Instantiate(PublicVar.bundleManager.GetAsset<GameObject>(values.protonSwordPrefab));
+        protonSword = Instantiate(PublicVar.bundle.GetAsset<GameObject>(values.protonSwordPrefab));
         protonSword.transform.SetParent(transform);
         protonSword.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
         protonSword.transform.localPosition = values.protonSwordPosition;
@@ -50,20 +50,20 @@ public class Charge : Skill
 
     private void Update()
     {
-        if (PublicVar.controlManager.RequestUp(KeyCode.Space, "playerControl"))
+        if (PublicVar.control.RequestUp(KeyCode.Space, "playerControl"))
         {
             if (!insideObject)
                 EndSkill();
 
-            PublicVar.controlManager.Release(KeyCode.Space, "playerControl");
+            PublicVar.control.Release(KeyCode.Space, "playerControl");
         }
 
-        if (PublicVar.controlManager.RequestDown(KeyCode.Space, "playerControl"))
+        if (PublicVar.control.RequestDown(KeyCode.Space, "playerControl"))
         {
             if (!insideObject)
                 StartSkill();
 
-            PublicVar.controlManager.Release(KeyCode.Space, "playerControl");
+            PublicVar.control.Release(KeyCode.Space, "playerControl");
         }
     }
 

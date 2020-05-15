@@ -19,7 +19,7 @@ public class CircleShoot : Skill
     {
         skillCdCount = 0;
 
-        Values values = PublicVar.valueManager.LoadValue<Values>("skill\\circleShoot");
+        Values values = PublicVar.value.LoadValue<Values>("skill\\circleShoot");
 
         SkillCd = values.skillCd;
         BulletNum = values.bulletNum;
@@ -37,7 +37,7 @@ public class CircleShoot : Skill
 
     protected virtual void Update()
     {
-        if (Time.time - skillCdCount >= SkillCd && PublicVar.controlManager.RequestDown(KeyCode.Space, "playerControl"))
+        if (Time.time - skillCdCount >= SkillCd && PublicVar.control.RequestDown(KeyCode.Space, "playerControl"))
         {
             StartCoroutine(Shoot());
             skillCdCount = Time.time;

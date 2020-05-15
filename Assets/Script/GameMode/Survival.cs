@@ -9,9 +9,10 @@ public abstract class Survival:BaseGameMode
 {
     protected float w;//(y2-y1)/(x2-x1)
 
-    public virtual void Init(Transform target, string diffId, float generateRange)
+    protected float generateRange;
+
+    public override void Init(Transform target, string arg)
     {
         this.target = target;
-        this.generateRange = generateRange;
     }
 }

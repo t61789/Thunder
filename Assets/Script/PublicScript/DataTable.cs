@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
-public struct DataTable
+public struct DataTable: IEnumerable<DataTable.Row>
 {
-    public bool IsNotEmpty;
+    public bool IsEmpty;
 
     private readonly Dictionary<string, int> fields;
 
@@ -26,7 +28,7 @@ public struct DataTable
         row = null;
         fieldsIndex = null;
 
-        IsNotEmpty = rows.Count!=0;
+        IsEmpty = rows.Count==0;
     }
 
     public DataTable(string[] fields, List<object[]> rows)
@@ -46,7 +48,7 @@ public struct DataTable
         row = null;
         fieldsIndex = null;
 
-        IsNotEmpty = rows.Count != 0;
+        IsEmpty = rows.Count == 0;
     }
 
     public struct Row
@@ -155,5 +157,18 @@ public struct DataTable
             return null;
 
         return row[fields[field]];
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return Rows.GetEnumerator();
+    }
+
+    IEnumerator<Row> IEnumerable<Row>.GetEnumerator()
+    {
+        foreach (var item in Rows)
+        {
+            yield return item;
+        }
     }
 }

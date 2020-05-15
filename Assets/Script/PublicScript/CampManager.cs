@@ -2,6 +2,8 @@
 
 public class CampManager
 {
+    public static readonly string PlayerCamp = "player";
+
     private struct CampUnit
     {
         public string campName;
@@ -30,23 +32,23 @@ public class CampManager
 
     public CampManager()
     {
-        foreach (var item in PublicVar.dataBaseManager["camp"].Select(null,null).Rows)
+        foreach (var item in PublicVar.dataBase["camp"].Select(null,null).Rows)
             camps.Add((string)item[0], new CampUnit((string)item[0]));
-        PublicVar.dataBaseManager.DeleteTable("camp");
+        PublicVar.dataBase.DeleteTable("camp");
 
-        foreach (var item in PublicVar.dataBaseManager["camp_hostile"].Select( null, null).Rows)
+        foreach (var item in PublicVar.dataBase["camp_hostile"].Select( null, null).Rows)
         {
             camps[(string)item[0]].AddHostile((string)item[1]);
             camps[(string)item[1]].AddHostile((string)item[0]);
         }
-        PublicVar.dataBaseManager.DeleteTable("camp_hostile");
+        PublicVar.dataBase.DeleteTable("camp_hostile");
 
-        foreach (var item in PublicVar.dataBaseManager["camp_ally"].Select( null, null).Rows)
+        foreach (var item in PublicVar.dataBase["camp_ally"].Select( null, null).Rows)
         {
             camps[(string)item[0]].AddAlly((string)item[1]);
             camps[(string)item[1]].AddAlly((string)item[0]);
         }
-        PublicVar.dataBaseManager.DeleteTable("camp_ally");
+        PublicVar.dataBase.DeleteTable("camp_ally");
     }
 
     public bool IsHostile(Aircraft aircraft1, Aircraft aircraft2)

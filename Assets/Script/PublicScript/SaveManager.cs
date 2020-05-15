@@ -4,15 +4,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityPlayerPrefs;
 using Newtonsoft.Json;
 using UnityEngine;
 
 [JsonObject(MemberSerialization.OptOut)]
 public class SaveManager
 {
+    [JsonIgnore]
+    public string CurSaveName;
+    [JsonIgnore]
+    public static readonly string saveBasePath;
+
     public List<int> levelComplete;
 
-    public static readonly string saveBasePath;
+    public Ship.CreateShipParam playerShipParam;
 
     static SaveManager()
     {
@@ -28,7 +34,7 @@ public class SaveManager
 
     private SaveManager()
     {
-        
+        levelComplete = new List<int>();
     }
 
     public static SaveManager LoadSave(string saveName)
@@ -37,7 +43,12 @@ public class SaveManager
 
         string path = saveBasePath + saveName + saveJsonRPath;
 
-        return JsonConvert.DeserializeObject<SaveManager>(File.ReadAllText(path));
+        SaveManager result = JsonConvert.DeserializeObject<SaveManager>(File.ReadAllText(path));
+
+        if (result == null) result = new SaveManager();
+        result.CurSaveName = saveName;
+
+        return result;
     }
 
     public static bool CreateSaveDir(string saveName)
@@ -46,7 +57,7 @@ public class SaveManager
         if (Directory.Exists(savePath))
             return false;
 
-        DataTable dirStruct = PublicVar.dataBaseManager["directory_struct"].Select(null,new (string, object)[] {("id","save") });
+        DataTable dirStruct = PublicVar.dataBase["directory_struct"].Select(null,new (string, object)[] {("id","save") });
 
         Stack<string> stack = new Stack<string>();
         stack.Push("");
@@ -62,9 +73,8 @@ public class SaveManager
             string node = stack.Pop();
 
             DataTable curTable = dirStruct.Select(null,new (string, object)[] {(PARENT, Path.GetFileName(node)) });
-            if(curTable.IsNotEmpty)
-                foreach (var item in curTable.Rows)
-                    stack.Push(node + Path.DirectorySeparatorChar + item[NAME] as string + item[EXTENSION] as string);
+            foreach (var item in curTable)
+                stack.Push(node + Path.DirectorySeparatorChar + item[NAME] as string + item[EXTENSION] as string);
             result.Add(node);
         }
 
@@ -78,5 +88,10 @@ public class SaveManager
         }
 
         return true;
+    }
+
+    public void Save()
+    {
+        File.WriteAllText(saveBasePath + CurSaveName + Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar + "save.json", JsonConvert.SerializeObject(this));
     }
 }

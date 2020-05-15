@@ -7,8 +7,26 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(RectTransform))]
 public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter
 {
-    public string uiId;
     public bool Stable = false;
+
+    public string UIName
+    {
+        set
+        {
+            _UIName = value;
+        }
+
+        get
+        {
+            if (_UIName == null||_UIName=="")
+                return name;
+            else
+                return _UIName;
+        }
+    }
+
+    [SerializeField]
+    private string _UIName;
 
     [HideInInspector]
     public RectTransform rectTrans;
@@ -31,8 +49,8 @@ public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointer
 
     protected virtual void Awake()
     {
-        if (uiId == null)
-            uiId = name;
+        if (UIName == null)
+            UIName = name;
         rectTrans = GetComponent<RectTransform>();
     }
 
@@ -121,7 +139,8 @@ public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointer
 
     public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
     {
-        return dialog == null;
+        if (dialog == null) return true;
+        return !dialog.gameObject.activeSelf;
     }
 
     public void Close()

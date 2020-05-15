@@ -1,0 +1,4 @@
+﻿[*.{cs,vb}]
+
+# IDE0054: 使用复合分配
+dotnet_style_prefer_compound_assignment = true:silent

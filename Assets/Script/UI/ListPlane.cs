@@ -10,9 +10,9 @@ public class ListPlane : BaseUI
 {
     public struct Parameters<T> where T : BaseUI
     {
-        public int rowCount;//reset
-        public Vector2 elementSize;//reset
-        public Vector2 elementInterval;//reset
+        public int rowCount;
+        public Vector2 elementSize;
+        public Vector2 elementInterval;
         public string elementName;
         public Vector2 planeSize;
         public List<Action<T>> inits;
@@ -29,7 +29,6 @@ public class ListPlane : BaseUI
     }
 
     protected const string ELEMENT = "element";
-    protected const string PREFAB_PATH = "prefabs\\ui";
     protected Vector2 scrollRange;
     protected (Scrollbar x, Scrollbar y) scrollbar;
     protected RectTransform maskTrans;
@@ -49,11 +48,11 @@ public class ListPlane : BaseUI
 
     public T[] Init<T>(Parameters<T> arg) where T : BaseUI
     {
-        ClearElements();
+        Clear();
         return CreateElements(arg);
     }
 
-    public void ClearElements()
+    public void Clear()
     {
         scrollbar.y.size = 1;
         scrollbar.y.value = 0;
@@ -73,6 +72,14 @@ public class ListPlane : BaseUI
 
     protected T[] CreateElements<T>(Parameters<T> parameters) where T : BaseUI
     {
+        if (parameters.elementSize.x == 0)
+        {
+            parameters.elementSize.x = (maskTrans.rect.width - (parameters.rowCount - 1) * parameters.elementInterval.x) / parameters.rowCount;
+            parameters.planeSize.x = 0;
+        }
+        if (parameters.elementSize.y == 0)
+            parameters.elementSize.y = parameters.elementSize.x;
+
         scrollbar.x.gameObject.SetActive(parameters.planeSize.x != 0f);
         scrollbar.y.gameObject.SetActive(parameters.planeSize.y != 0f);
 
@@ -126,7 +133,7 @@ public class ListPlane : BaseUI
             elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
             elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-            RectTransform rectTransform = PublicVar.objectPool.Alloc(PREFAB_PATH, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
+            RectTransform rectTransform = PublicVar.objectPool.Alloc(BundleManager.UIBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
 
             elements.Add(rectTransform.GetComponent<BaseUI>());
         }

@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public abstract class BaseGameMode:MonoBehaviour
+public abstract class BaseGameMode : MonoBehaviour
 {
-    protected const string AIRCRAFT_TABLE_NAME = "difficulty_aircraft";
+    protected const string AIRCRAFT_TABLE_NAME = "difficulty";
     protected const string AIRCRAFT_ID = "aircraft_id";
     protected const string MAX = "max";
     protected const string BASELINE_MIN = "baseline_min";
@@ -30,8 +30,14 @@ public abstract class BaseGameMode:MonoBehaviour
         {
             this.aircraftId = aircraftId;
             this.max = max;
-            this.baselineMin = baselineMin;
-            this.baselineMax = baselineMin;
+            if (baselineMin == -1)
+                this.baselineMin = 0;
+            else
+                this.baselineMin = baselineMin;
+            if (baselineMax == -1)
+                this.baselineMax = Mathf.Infinity;
+            else
+                this.baselineMax = baselineMin;
             this.interval = interval;
             active = true;
         }
@@ -63,7 +69,6 @@ public abstract class BaseGameMode:MonoBehaviour
     protected AircraftUnit[] _aircraftUnits;
 
     protected Transform target;
-    protected float generateRange;
 
     protected Vector3 centerPos;
 
@@ -74,4 +79,5 @@ public abstract class BaseGameMode:MonoBehaviour
     public abstract void Start();
     public abstract void Pause();
     public abstract void BeforeUnInstall();
+    public abstract void Init(Transform target, string arg);
 }

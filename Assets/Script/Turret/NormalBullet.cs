@@ -33,7 +33,7 @@ public class NormalBullet : Bullet
         Aircraft camp = other.gameObject.GetComponent<Aircraft>();
         if (camp == null)
             return;
-        if (!PublicVar.campManager.IsHostile(releaser, camp))
+        if (!PublicVar.camp.IsHostile(releaser, camp))
             return;
 
         (camp as Aircraft).GetDamage(Damage);

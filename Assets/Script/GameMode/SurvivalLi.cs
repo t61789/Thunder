@@ -16,19 +16,20 @@ public class SurvivalLi : Survival
 
     protected SurvivalLiUI ui;
 
-    public override void Init(Transform target, string diffId, float generateRange)
+    public override void Init(Transform target, string diffId)
     {
-        base.Init(target,diffId,generateRange);
+        base.Init(target,diffId);
+        this.generateRange = 20;
 
         List<Vector2> difficultyList = new List<Vector2>();
         string time = "time";
         string baseline = "baseline";
-        foreach (var item in PublicVar.dataBaseManager[TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
+        foreach (var item in PublicVar.dataBase[TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
             difficultyList.Add(new Vector2((float)item[time], (float)item[baseline]));
         _difficultyList = difficultyList.ToArray();
 
         List<AircraftUnit> units = new List<AircraftUnit>();
-        foreach (var item in PublicVar.dataBaseManager[AIRCRAFT_TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
+        foreach (var item in PublicVar.dataBase[AIRCRAFT_TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
             units.Add(new AircraftUnit((string)item[AIRCRAFT_ID], (int)item[MAX], (float)item[BASELINE_MIN], (float)item[BASELINE_MAX], (float)item[INTERVAL]));
         _aircraftUnits = units.ToArray();
 
@@ -102,7 +103,7 @@ public class SurvivalLi : Survival
                     centerPos = target?target.position:centerPos;
                     Vector2 temp = Tool.Tools.RandomVectorInCircle(1).normalized * generateRange + centerPos;
 
-                    Aircraft a = PublicVar.objectPool.DefaultAlloc<Aircraft>(aircraftUnits[i].aircraftId,x=> {
+                    Aircraft a = PublicVar.objectPool.Alloc<Aircraft>(aircraftUnits[i].aircraftId,x=> {
                         x.ObjectPoolInit(temp, Quaternion.identity,null,null,"enemy");
                     });
 

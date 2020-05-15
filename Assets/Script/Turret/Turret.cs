@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Turret : MonoBehaviour
+public class Turret : Controller
 {
     [HideInInspector]
     public Ship ship;

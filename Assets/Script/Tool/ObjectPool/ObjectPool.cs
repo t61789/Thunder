@@ -9,8 +9,6 @@ namespace Tool.ObjectPool
 {
     public class ObjectPool : MonoBehaviour
     {
-        private const char DIVIDER = '\\';
-
         private class Pool
         {
             public Queue<IObjectPool> objectQueue = new Queue<IObjectPool>();
@@ -47,17 +45,22 @@ namespace Tool.ObjectPool
             }
         }
 
-        public string DefaultPrefabBundle;
-        public float ClearTime;
+        public float ClearTime = 5;
 
         private float clearTimeStart;
         private readonly Dictionary<string, Pool> objectQueueMap = new Dictionary<string, Pool>();
         private readonly Dictionary<string, GameObject> prefabBuff = new Dictionary<string, GameObject>();
         private readonly StringBuilder pathConverter = new StringBuilder();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bundlePath">不包含基础路径</param>
+        /// <param name="objName"></param>
+        /// <returns></returns>
         private GameObject GetAsset(string bundlePath,string objName)
         {
-            GameObject go = PublicVar.bundleManager.GetAsset<GameObject>(bundlePath, objName);
+            GameObject go = PublicVar.bundle.GetAsset<GameObject>(BundleManager.PrefabBundleD+ bundlePath, objName);
             if (go == null)
             {
                 Debug.LogError(objName + " is not in prefabs");
@@ -73,22 +76,59 @@ namespace Tool.ObjectPool
             return go;
         }
 
-        public T DefaultAlloc<T>(string prefabName, Action<T> init = null, Transform container = null) where T : MonoBehaviour
-        {
-            return Alloc(DefaultPrefabBundle,prefabName,init,container);
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="prefabPath">不包含normal</param>
+        /// <param name="init"></param>
+        /// <param name="container"></param>
+        /// <returns></returns>
         public T Alloc<T>(string prefabPath, Action<T> init = null, Transform container = null) where T : MonoBehaviour
         {
-            int split = prefabPath.LastIndexOf('\\');
+            string prefabName;
+            string bundlePath;
 
-            return Alloc(prefabPath.Substring(0, split), prefabPath.Substring(split + 1, prefabPath.Length), init, container);
+            int index = prefabPath.LastIndexOf(BundleManager.PathDivider);
+            if (index == -1)
+            {
+                prefabName = prefabPath;
+                bundlePath = BundleManager.Normal;
+                prefabPath = bundlePath+ BundleManager.PathDivider + prefabPath;
+            }
+            else
+            {
+                prefabName = prefabPath.Substring(index + 1);
+                bundlePath = prefabPath.Substring(0, index);
+            }
+
+            return Alloc(bundlePath, prefabName, prefabPath, init, container);
         }
 
-        public T Alloc<T>(string bundlePath,string prefabName, Action<T> init=null, Transform container = null) where T:MonoBehaviour
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="prefabPath">包含normal</param>
+        /// <param name="init"></param>
+        /// <param name="container"></param>
+        /// <returns></returns>
+        public T Alloc<T>(string bundlePath, string prefabName, Action<T> init=null, Transform container = null) where T : MonoBehaviour
         {
-            string prefabPath = ConvertPath(bundlePath,prefabName);
+            return Alloc(bundlePath,prefabName,bundlePath+BundleManager.PathDivider+prefabName,init,container);
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="bundlePath">包含normal</param>
+        /// <param name="prefabName"></param>
+        /// <param name="init"></param>
+        /// <param name="container"></param>
+        /// <returns></returns>
+        private T Alloc<T>(string bundlePath, string prefabName,string prefabPath, Action<T> init, Transform container) where T:MonoBehaviour
+        {
             if (!objectQueueMap.TryGetValue(prefabPath, out Pool pool))
             {
                 GameObject go = GetAsset(bundlePath, prefabName);
@@ -140,20 +180,30 @@ namespace Tool.ObjectPool
             objectQueueMap[obj.GetGameObject().name].Enqueue(obj);
         }
 
-        public GameObject GetPrefab(string prefabName)
+        public GameObject GetPrefab(string prefabPath)
         {
-            return GetPrefab(DefaultPrefabBundle,prefabName);
+            if (prefabBuff.TryGetValue(prefabPath, out GameObject go))
+                return go;
+
+            int index = prefabPath.LastIndexOf('\\');
+            string result = index == -1 ? BundleManager.Normal : prefabPath.Substring(0, index);
+            string result2 = index == -1 ? prefabPath : prefabPath.Substring(index + 1);
+
+            go = PublicVar.bundle.GetAsset<GameObject>(BundleManager.PrefabBundleD+result, result2);
+            prefabBuff.Add(prefabPath, go);
+
+            return go;
         }
 
-        public GameObject GetPrefab(string bundle, string prefabName)
+        public GameObject GetPrefab(string bundlePath,string prefabName)
         {
-            string prefabPath = ConvertPath(bundle,prefabName);
+            string prefabPath = bundlePath + BundleManager.PathDivider + prefabName;
+            if (prefabBuff.TryGetValue(prefabPath, out GameObject go))
+                return go;
 
-            if (!prefabBuff.TryGetValue(prefabPath, out GameObject go))
-            {
-                go = PublicVar.bundleManager.GetAsset<GameObject>(bundle, prefabName);
-                prefabBuff.Add(prefabPath, go);
-            }
+            go = PublicVar.bundle.GetAsset<GameObject>(bundlePath, prefabName);
+            prefabBuff.Add(prefabPath, go);
+
             return go;
         }
 
@@ -161,7 +211,7 @@ namespace Tool.ObjectPool
         {
             pathConverter.Clear();
             pathConverter.Append(bundle);
-            pathConverter.Append(DIVIDER);
+            pathConverter.Append(BundleManager.PathDivider);
             pathConverter.Append(prefabName);
             return pathConverter.ToString();
         }

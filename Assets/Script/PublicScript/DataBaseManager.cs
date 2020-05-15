@@ -39,11 +39,34 @@ public class DataBaseManager
         }
     }
 
+    public DataBaseManager()
+    {
+        LoadAllSerializerDll();
+    }
+
+    private void LoadAllSerializerDll()
+    {
+        Assembly assembly = Assembly.Load(PublicVar.bundle.GetAsset<TextAsset>(BundleManager.DllBundle, PROTOBUF_DLL).bytes);
+        foreach (var item in assembly.GetTypes())
+        {
+            if (item.Name.Contains("Excel_"))
+            {
+                string classname = item.Name.Replace("Excel_", "");
+                serializers.Add(classname, new Serializer(assembly.GetType(PROTOBUF_DLL + "." + classname), item));
+            }
+        }
+    }
+
     public DataTable GetTableNormal(string tableName)
     {
         return GetTable(BundleManager.NormalD+tableName);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tablePath">不包含normal</param>
+    /// <returns></returns>
     public DataTable GetTable(string tablePath)
     {
         if (tables.TryGetValue(tablePath, out DataTable value))
@@ -59,7 +82,13 @@ public class DataBaseManager
 
         int index = tablePath.LastIndexOf(BundleManager.PathDivider);
 
-        foreach (var item in LoadBundle(tablePath.Substring(0, index)))
+        string bundlePath;
+        if (index == -1)
+            bundlePath = null;
+        else
+            bundlePath = tablePath.Substring(0, index);
+
+        foreach (var item in LoadBundle(bundlePath))
         {
             if (!unDeserializedTables.TryGetValue(item.Item1, out _))
                 unDeserializedTables.Add(item.Item1, item.Item2);
@@ -74,42 +103,38 @@ public class DataBaseManager
         return GetTable(tablePath);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="bundlePath">不包含normal</param>
+    /// <returns></returns>
     private List<(string, byte[])> LoadBundle(string bundlePath)
     {
         List<(string, byte[])> result = new List<(string, byte[])>();
 
         StringBuilder pathBuilder = new StringBuilder();
-        foreach (var item in PublicVar.bundleManager.GetAllAsset<TextAsset>(bundlePath))
+
+        string temp;
+        if (bundlePath == null)
+            temp = BundleManager.DatabaseBundleD + BundleManager.Normal;
+        else
+            temp = BundleManager.DatabaseBundleD + bundlePath;
+
+        foreach (var item in PublicVar.bundle.GetAllAsset<TextAsset>(temp))
         {
             pathBuilder.Clear();
-            pathBuilder.Append(BundleManager.BundleBasePath);
-            pathBuilder.Append(bundlePath);
-            pathBuilder.Append(BundleManager.PathDivider);
+            if (bundlePath != null)
+            {
+                pathBuilder.Append(bundlePath);
+                pathBuilder.Append(BundleManager.PathDivider);
+            }
             pathBuilder.Append(item.name);
             result.Add((pathBuilder.ToString(), item.bytes));
         }
 
-        PublicVar.bundleManager.ReleaseBundle(bundlePath);
+        PublicVar.bundle.ReleaseBundle(temp);
 
         return result;
-    }
-
-    public DataBaseManager()
-    {
-        LoadAllSerializerDll();
-    }
-
-    private void LoadAllSerializerDll()
-    {
-        Assembly assembly = Assembly.Load(PublicVar.bundleManager.GetAsset<TextAsset>(BundleManager.DllBundle, PROTOBUF_DLL).bytes);
-        foreach (var item in assembly.GetTypes())
-        {
-            if (item.Name.Contains("Excel_"))
-            {
-                string classname = item.Name.Replace("Excel_", "");
-                serializers.Add(classname, new Serializer(assembly.GetType(PROTOBUF_DLL + "." + classname), item));
-            }
-        }
     }
 
     public bool DeleteTable(string tablePath)

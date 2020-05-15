@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using UnityEngine;
 using Newtonsoft.Json;
 using System.Text;
+using Google.Protobuf.WellKnownTypes;
 
 public class ValueManager
 {
@@ -77,32 +78,60 @@ public class ValueManager
     private readonly Dictionary<string, string> unDeserializedBuffer = new Dictionary<string, string>();
     private readonly Dictionary<string, object> buffer = new Dictionary<string, object>();
 
-    public T LoadValue<T>(string bundlePath,string valueName)
-    {
-        return LoadValue<T>(bundlePath+BundleManager.PathDivider+valueName);
-    }
-
-    public T LoadValueNormal<T>(string valueName)
-    {
-        return LoadValue<T>(BundleManager.NormalD+valueName);
-    }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="valuePath">不包含normal</param>
+    /// <returns></returns>
     public T LoadValue<T>(string valuePath)
     {
-        if(buffer.TryGetValue(valuePath,out object target))
+        string bundlePath;
+
+        int index = valuePath.LastIndexOf(BundleManager.PathDivider);
+        if (index == -1)
+        {
+            bundlePath = BundleManager.Normal;
+            valuePath = bundlePath+ BundleManager.PathDivider + valuePath;
+        }
+        else
+            bundlePath = valuePath.Substring(0, index);
+
+        return LoadValueBase<T>(bundlePath, valuePath);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="valuePath">包含normal</param>
+    /// <returns></returns>
+    public T LoadValue<T>(string bundlePath,string valueName)
+    {
+        return LoadValueBase<T>(bundlePath, bundlePath+BundleManager.PathDivider+valueName);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="bundlePath">包含normal</param>
+    /// <param name="valuePath"></param>
+    /// <returns></returns>
+    private T LoadValueBase<T>(string bundlePath,string valuePath)
+    {
+        if (buffer.TryGetValue(valuePath, out object target))
             return (T)target;
 
-        if(unDeserializedBuffer.TryGetValue(valuePath,out string json))
+        if(unDeserializedBuffer.TryGetValue(valuePath, out string json))
         {
             T result = JsonConvert.DeserializeObject<T>(json);
             unDeserializedBuffer.Remove(valuePath);
-            buffer.Add(valuePath,result);
+            buffer.Add(valuePath, result);
             return result;
         }
 
-        int index = valuePath.LastIndexOf(BundleManager.PathDivider);
-
-        foreach (var item in LoadBundle(valuePath.Substring(0, index)))
+        foreach (var item in LoadBundle(bundlePath))
         {
             if(!unDeserializedBuffer.TryGetValue(item.Item1, out _))
                 unDeserializedBuffer.Add(item.Item1, item.Item2);
@@ -114,25 +143,30 @@ public class ValueManager
             throw new Exception();
         }
 
-        return LoadValue<T>(valuePath);
+        return LoadValueBase<T>(bundlePath,valuePath);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="bundlePath">包含normal，不包含基础文件夹</param>
+    /// <returns>包含normal，不包含基础文件夹</returns>
     private List<(string,string)> LoadBundle(string bundlePath)
     {
         List<(string, string)> result = new List<(string, string)>();
 
         StringBuilder pathBuilder = new StringBuilder();
-        foreach (var item in PublicVar.bundleManager.GetAllAsset<TextAsset>(bundlePath))
+        string temp = BundleManager.ValuesBundleD + bundlePath;
+        foreach (var item in PublicVar.bundle.GetAllAsset<TextAsset>(temp))
         {
             pathBuilder.Clear();
-            pathBuilder.Append(BundleManager.ValuesBundleD);
             pathBuilder.Append(bundlePath);
             pathBuilder.Append(BundleManager.PathDivider);
             pathBuilder.Append(item.name);
             result.Add((pathBuilder.ToString(), item.text));
         }
 
-        PublicVar.bundleManager.ReleaseBundle(bundlePath);
+        PublicVar.bundle.ReleaseBundle(temp);
 
         return result;
     }
