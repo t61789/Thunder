@@ -15,6 +15,9 @@ public class SurvivalNoli : Survival
 
     protected SurvivalNoliUI ui;
 
+    protected const float testTime = 5;
+    protected float testTimeCount = 0;
+
     public override void Init(Transform target, string diffId)
     {
         base.Init(target,diffId);
@@ -35,6 +38,8 @@ public class SurvivalNoli : Survival
         ui = PublicVar.uiManager.OpenUI<SurvivalNoliUI>(UI_NAME, UIInitAction.FillParent);
 
         Reset();
+
+        testTimeCount = Time.time;
     }
 
     private void NextNode()
@@ -50,6 +55,13 @@ public class SurvivalNoli : Survival
     {
         if (running)
         {
+            if(Time.time-testTimeCount>=testTime)
+            {
+                running = false;
+                Complete();
+                return;
+            }
+
             float x = Time.time - startTime;
             if (x >= curNodes.right.x)
             {

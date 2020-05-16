@@ -149,7 +149,10 @@ namespace Tool.ObjectPool
                 aop = go.GetComponent<IObjectPool>();
             }
             else
+            {
                 aop = pool.Dequeue();
+                aop.GetGameObject().transform.SetParent(container);
+            }
 
             aop.GetGameObject().SetActive(true);
             aop.ObjectPoolReset();

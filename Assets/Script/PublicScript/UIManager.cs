@@ -80,7 +80,7 @@ public class UIManager : MonoBehaviour
         UIUnit find = activeUi.Where(x => x.uiObj == after).FirstOrDefault();
         if (find == null)
         {
-            Debug.LogError("No such ui which you want to insert " + uiName + " after");
+            Debug.LogError("No such ui named ["+after.UIName+"] which you want to insert [" + uiName + "] after");
             return null;
         }
 

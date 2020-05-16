@@ -80,4 +80,8 @@ public abstract class BaseGameMode : MonoBehaviour
     public abstract void Pause();
     public abstract void BeforeUnInstall();
     public abstract void Init(Transform target, string arg);
+    public virtual void Complete()
+    {
+        OnModeComplete?.Invoke(this);
+    }
 }

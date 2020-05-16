@@ -122,7 +122,10 @@ public class ListPlane : BaseUI
 
             RectTransform elementContainer;
             if (elementContainers.Count != 0)
+            {
                 elementContainer = elementContainers.Dequeue();
+                elementContainer.gameObject.SetActive(true);
+            }
             else
                 elementContainer = new GameObject(ELEMENT).AddComponent<RectTransform>();
 

@@ -16,7 +16,7 @@ public class SaveManager
     [JsonIgnore]
     public static readonly string saveBasePath;
 
-    public List<int> levelComplete;
+    public SortedSet<int> levelComplete;
 
     public Ship.CreateShipParam playerShipParam;
 
@@ -34,7 +34,7 @@ public class SaveManager
 
     private SaveManager()
     {
-        levelComplete = new List<int>();
+        levelComplete = new SortedSet<int>();
     }
 
     public static SaveManager LoadSave(string saveName)
