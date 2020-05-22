@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Controller:MonoBehaviour
+public class Controller : MonoBehaviour
 {
-    
+
     public string ControllerName
     {
         set
@@ -17,13 +12,13 @@ public class Controller:MonoBehaviour
 
         get
         {
-            if (_ControllerName == null||_ControllerName=="")
+            if (_ControllerName == null || _ControllerName == "")
                 return name;
             else
                 return _ControllerName;
         }
     }
-    
+
     public string InputId
     {
         set
@@ -47,6 +42,6 @@ public class Controller:MonoBehaviour
 
     protected virtual void Awake()
     {
-        
+
     }
 }

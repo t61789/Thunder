@@ -1,5 +1,4 @@
 ﻿using BehaviorDesigner.Runtime.Tasks;
-using System.Collections;
 using UnityEngine;
 
 public class NormalFighter : Fighter
@@ -25,8 +24,9 @@ public class NormalFighter : Fighter
             if ((Time.time - fireIntervalCount > fireInterval) && Shooting)
             {
                 fireIntervalCount = Time.time;
-                PublicVar.objectPool.Alloc<NormalBullet>(Bullet, x=> {
-                    x.ObjectPoolInit(trans,trans.position,trans.rotation,rb2d);
+                PublicVar.objectPool.Alloc<NormalBullet>(Bullet, x =>
+                {
+                    x.ObjectPoolInit(trans, trans.position, trans.rotation, rb2d);
                 });
             }
         }

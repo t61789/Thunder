@@ -28,8 +28,8 @@ public class SurvivalLiUI : BaseUI
 
     public void Refresh(float surviveTime, int score)
     {
-        surviveTime = Mathf.Floor(surviveTime*100)*0.01f;
-        this.surviveTime.text = surviveTimePreText+surviveTime.ToString("0.00")+"/"+maxTime;
+        surviveTime = Mathf.Floor(surviveTime * 100) * 0.01f;
+        this.surviveTime.text = surviveTimePreText + surviveTime.ToString("0.00") + "/" + maxTime;
         this.score.text = scorePreText + score;
     }
 }

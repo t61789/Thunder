@@ -1,12 +1,9 @@
-﻿using BehaviorDesigner.Runtime.Tasks.Unity.UnityPlayerPrefs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LoadOrCreateSaveUI:BaseUI
+public class LoadOrCreateSaveUI : BaseUI
 {
     public void StartLoadSave()
     {
@@ -17,19 +14,21 @@ public class LoadOrCreateSaveUI:BaseUI
         }
 
         List<Action<BaseUI>> inits = new List<Action<BaseUI>>();
-        foreach (var item in Directory.GetDirectories( SaveManager.saveBasePath))
+        foreach (var item in Directory.GetDirectories(Paths.DocumentPath))
         {
-            inits.Add(x=> {
+            inits.Add(x =>
+            {
                 Button b = x.GetComponent<Button>();
                 b.transform.Find("Text").GetComponent<Text>().text = Path.GetFileName(item);
-                b.onClick.AddListener(()=> LoadSave(b));
+                b.onClick.AddListener(() => LoadSave(b));
 
-                x.InitRect( UIInitAction.FillParent);
+                x.InitRect(UIInitAction.FillParent);
             });
         }
 
-        PublicVar.uiManager.OpenUI<ListPlane>("listPlane",this,true,UIInitAction.CenterParent,x=> {
-            x.Init(new ListPlane.Parameters<BaseUI>(1, "normalButton", (200, 50), (10, 10),(0, 0),inits));
+        PublicVar.uiManager.OpenUI<ListPlane>("listPlane", this, true, UIInitAction.CenterParent, x =>
+        {
+            x.Init(new ListPlane.Parameters<BaseUI>(1, "normalButton", (500, 150), (50, 50), (0, 0), inits));
         });
     }
 
@@ -41,6 +40,6 @@ public class LoadOrCreateSaveUI:BaseUI
     public void LoadSave(Button button)
     {
         PublicVar.saveManager = SaveManager.LoadSave(button.transform.Find("Text").GetComponent<Text>().text);
-        PublicVar.instance.LoadSceneAsync("MainScene");
+        PublicVar.instance.LoadSceneAsync("LevelScene");
     }
 }

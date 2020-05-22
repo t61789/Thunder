@@ -1,12 +1,4 @@
-﻿using BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-
-public class PlayerManager
+﻿public class PlayerManager
 {
     private Ship player;
 

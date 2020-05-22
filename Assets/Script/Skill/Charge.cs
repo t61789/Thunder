@@ -34,7 +34,7 @@ public class Charge : Skill
         //playerController = GetComponent<PlayerController>();
         insideObject = false;
 
-        Values values = PublicVar.value.LoadValue<Values>("skill\\charge");
+        Values values = PublicVar.value.LoadValue<Values>("skill" + Paths.Div + "charge");
 
         damageCoeffient = values.damageCoeffient;
         protonSword = Instantiate(PublicVar.bundle.GetAsset<GameObject>(values.protonSwordPrefab));

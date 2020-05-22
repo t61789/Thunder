@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Collections.Generic;
 using Tool;
 using UnityEngine;
 
@@ -14,12 +12,12 @@ public class Ship : Aircraft
         public string type;
         public Turret turret;
 
-        public AttachPoint(int index, Vector3 position, Vector3 rotation, string attachType, Turret turret)
+        public AttachPoint(int index, Vector3 position, Vector3 rotation, string type, Turret turret)
         {
             this.index = index;
             this.position = position;
             this.rotation = rotation;
-            this.type = attachType;
+            this.type = type;
             this.turret = turret;
         }
     }
@@ -53,7 +51,7 @@ public class Ship : Aircraft
     public GameObject AttachTurret(string turretPath, int pointIndex, bool controlable)
     {
         GameObject turret = AttachTurret(turretPath, pointIndex);
-        if(controlable)
+        if (controlable)
             ControllerInput.AttachTo(turret);
         return turret;
     }
@@ -105,7 +103,7 @@ public class Ship : Aircraft
             ship.AttachTurret(param.turrets[i], i, param.controlable);
         }
 
-        if(param.controlable)
+        if (param.controlable)
             ControllerInput.AttachTo(ship.gameObject);
 
         return ship;

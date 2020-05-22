@@ -32,6 +32,7 @@ public class UIManager : MonoBehaviour
     public void Init()
     {
         uiContainer = GameObject.Find("Canvas").transform.Find("UI");
+
         uiRecycleContainer = GameObject.Find("Canvas").transform.Find("Recycle");
 
         int count = 0;
@@ -52,7 +53,7 @@ public class UIManager : MonoBehaviour
             item.SetParent(uiRecycleContainer);
     }
 
-    public BaseUI OpenUI(string uiName,UIInitAction act=0, Action<BaseUI> init = null)
+    public BaseUI OpenUI(string uiName, UIInitAction act = 0, Action<BaseUI> init = null)
     {
         return OpenUI<BaseUI>(uiName, act, init);
     }
@@ -72,7 +73,7 @@ public class UIManager : MonoBehaviour
             return null;
         }
 
-        return OpenUI(uiName, activeUi.IndexOf(find) + 1, dialog?find.uiObj:null, act, init);
+        return OpenUI(uiName, activeUi.IndexOf(find) + 1, dialog ? find.uiObj : null, act, init);
     }
 
     public T OpenUI<T>(string uiName, BaseUI after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
@@ -80,22 +81,23 @@ public class UIManager : MonoBehaviour
         UIUnit find = activeUi.Where(x => x.uiObj == after).FirstOrDefault();
         if (find == null)
         {
-            Debug.LogError("No such ui named ["+after.UIName+"] which you want to insert [" + uiName + "] after");
+            Debug.LogError("No such ui named [" + after.UIName + "] which you want to insert [" + uiName + "] after");
             return null;
         }
 
-        return OpenUI(uiName, activeUi.IndexOf(find) + 1, dialog?after:null, act, init);
+        return OpenUI(uiName, activeUi.IndexOf(find) + 1, dialog ? after : null, act, init);
     }
 
     public T OpenUI<T>(string uiName, bool last, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
+
         if (last)
             return OpenUI(uiName, uiContainer.transform.childCount, null, act, init);
         else
             return OpenUI(uiName, 0, null, act, init);
     }
 
-    public T OpenUI<T>(string uiName, int siblingIndex, BaseUI dialog = null,UIInitAction act=0, Action<T> init = null) where T : BaseUI
+    public T OpenUI<T>(string uiName, int siblingIndex, BaseUI dialog = null, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
         if (siblingIndex < 0 || siblingIndex > uiContainer.childCount)
         {
@@ -103,7 +105,7 @@ public class UIManager : MonoBehaviour
             return null;
         }
 
-        UIUnit unit = hideStableUi.Where(x =>  x.uiObj.UIName == uiName).FirstOrDefault();
+        UIUnit unit = hideStableUi.Where(x => x.uiObj.UIName == uiName).FirstOrDefault();
         if (unit != null)
             hideStableUi.Remove(unit);
 
@@ -118,7 +120,7 @@ public class UIManager : MonoBehaviour
         activeUi.Insert(siblingIndex, unit);
 
         newPlane.gameObject.SetActive(true);
-        if (dialog!=null)
+        if (dialog != null)
             dialog.dialog = newPlane;
 
         newPlane.InitRect(act);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -783,7 +782,38 @@ namespace Tool
 
         public static void LogTime(object label = null)
         {
-            Debug.Log("["+label.ToString()+"] "+DateTime.Now.Minute+"m:"+DateTime.Now.Second+"s:"+DateTime.Now.Millisecond+"mi");
+            Debug.Log("[" + label.ToString() + "] " + DateTime.Now.Minute + "m:" + DateTime.Now.Second + "s:" + DateTime.Now.Millisecond + "mi");
+        }
+
+        /// <summary>
+        /// 创建一个圆环mesh，宽度1，半径1
+        /// </summary>
+        /// <param name="detail"></param>
+        /// <returns></returns>
+        public static Mesh CreateRingMesh(int detail)
+        {
+            Mesh mesh = new Mesh();
+
+            float angle = 360 / detail;
+            List<Vector3> vertex = new List<Vector3>();
+            for (int i = 0; i < detail; i++)
+            {
+                float radius = angle * Mathf.Deg2Rad * i;
+                Vector3 temp = new Vector3(Mathf.Cos(radius), Mathf.Sin(radius));
+                vertex.Add(temp * 0.5f);
+                vertex.Add(temp * 1.5f);
+            }
+
+            int[] baseSqu = new int[] { 0, 2, 1, 2, 3, 1 };
+            List<int> triangles = new List<int>();
+            for (int i = 0; i < detail; i++)
+                for (int j = 0; j < baseSqu.Length; j++)
+                    triangles.Add((i * 2 + baseSqu[j]) % (detail * 2));
+
+            mesh.vertices = vertex.ToArray();
+            mesh.triangles = triangles.ToArray();
+
+            return mesh;
         }
     }
 }

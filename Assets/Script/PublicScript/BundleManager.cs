@@ -1,26 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEngine;
 
 public class BundleManager
 {
     public static readonly string DllBundle = @"dll";
-    public static readonly string DllBundleD = @"dll\";
+    public static readonly string DllBundleD = @"dll" + Paths.Div;
     public static readonly string PrefabBundle = @"prefabs";
-    public static readonly string PrefabBundleD = @"prefabs\";
+    public static readonly string PrefabBundleD = @"prefabs" + Paths.Div;
     public static readonly string UIBundle = @"ui";
-    public static readonly string UIBundleD = @"ui\";
+    public static readonly string UIBundleD = @"ui" + Paths.Div;
     public static readonly string ValuesBundle = @"values";
-    public static readonly string ValuesBundleD = @"values\";
+    public static readonly string ValuesBundleD = @"values" + Paths.Div;
     public static readonly string DatabaseBundle = @"database";
-    public static readonly string DatabaseBundleD = @"database\";
+    public static readonly string DatabaseBundleD = @"database" + Paths.Div;
 
     public static readonly string Normal = @"normal";
-    public static readonly string NormalD = @"normal\";
-    public static readonly char PathDivider = '\\';
-
-    public static string BundleBasePath = @"E:\AssetBundles\StandaloneWindows";
+    public static readonly string NormalD = @"normal" + Paths.Div;
 
     private struct Bundle
     {
@@ -44,15 +40,15 @@ public class BundleManager
 
     public BundleManager()
     {
-        mainfestBundle = AssetBundle.LoadFromFile(BundleBasePath + "\\" + Path.GetFileName(BundleBasePath));
+        mainfestBundle = AssetBundle.LoadFromFile(Paths.BundleBasePathD + Path.GetFileName(Paths.BundleBasePath));
         manifest = mainfestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
     }
 
     public T GetAsset<T>(string assetPath) where T : Object
     {
-        int split = assetPath.LastIndexOf('\\');
+        int split = assetPath.LastIndexOf(Paths.Div);
 
-        return GetAsset<T>(assetPath.Substring(0,split), assetPath.Substring(split+1, assetPath.Length));
+        return GetAsset<T>(assetPath.Substring(0, split), assetPath.Substring(split + 1, assetPath.Length));
     }
 
     public T GetAsset<T>(string bundlePath, string asset) where T : Object
@@ -82,7 +78,7 @@ public class BundleManager
 
             if (!bundles.TryGetValue(curBundle, out Bundle temp))
             {
-                AssetBundle assetBundle = AssetBundle.LoadFromFile(BundleBasePath + PathDivider + curBundle);
+                AssetBundle assetBundle = AssetBundle.LoadFromFile(Paths.BundleBasePath + Paths.Div + curBundle);
                 Bundle newBundle = new Bundle(assetBundle, !first);
                 first = false;
                 bundles.Add(curBundle, newBundle);

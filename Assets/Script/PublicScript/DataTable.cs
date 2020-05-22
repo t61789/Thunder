@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
-public struct DataTable: IEnumerable<DataTable.Row>
+public struct DataTable : IEnumerable<DataTable.Row>
 {
     public bool IsEmpty;
 
@@ -28,7 +27,7 @@ public struct DataTable: IEnumerable<DataTable.Row>
         row = null;
         fieldsIndex = null;
 
-        IsEmpty = rows.Count==0;
+        IsEmpty = rows.Count == 0;
     }
 
     public DataTable(string[] fields, List<object[]> rows)
@@ -119,7 +118,7 @@ public struct DataTable: IEnumerable<DataTable.Row>
                 count++;
             }
         }
-        
+
         foreach (var item in Rows.Where(x =>
         {
             if (where != null)
@@ -132,7 +131,7 @@ public struct DataTable: IEnumerable<DataTable.Row>
             row.Clear();
             foreach (var i in fieldsIndex.Values)
                 row.Add(item[i]);
-            if(row.Count!=0)
+            if (row.Count != 0)
                 rows.Add(row.ToArray());
         }
         return new DataTable(fieldsIndex.Values.ToArray(), rows);

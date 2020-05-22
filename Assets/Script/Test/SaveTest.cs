@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using UnityEngine;
 
-public class SaveTest
+public class SaveTest : MonoBehaviour
 {
-    public void CreateDirTest()
+    private void Awake()
     {
-
+        ControllerInput.AttachTo(GameObject.Find("battleShip"), true);
     }
 }

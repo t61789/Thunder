@@ -32,18 +32,18 @@ public class CampManager
 
     public CampManager()
     {
-        foreach (var item in PublicVar.dataBase["camp"].Select(null,null).Rows)
+        foreach (var item in PublicVar.dataBase["camp"].Select(null, null).Rows)
             camps.Add((string)item[0], new CampUnit((string)item[0]));
         PublicVar.dataBase.DeleteTable("camp");
 
-        foreach (var item in PublicVar.dataBase["camp_hostile"].Select( null, null).Rows)
+        foreach (var item in PublicVar.dataBase["camp_hostile"].Select(null, null).Rows)
         {
             camps[(string)item[0]].AddHostile((string)item[1]);
             camps[(string)item[1]].AddHostile((string)item[0]);
         }
         PublicVar.dataBase.DeleteTable("camp_hostile");
 
-        foreach (var item in PublicVar.dataBase["camp_ally"].Select( null, null).Rows)
+        foreach (var item in PublicVar.dataBase["camp_ally"].Select(null, null).Rows)
         {
             camps[(string)item[0]].AddAlly((string)item[1]);
             camps[(string)item[1]].AddAlly((string)item[0]);

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Tool.BuffData;
+﻿using Tool.BuffData;
 using Tool.ObjectPool;
 using UnityEngine;
 
@@ -64,7 +63,7 @@ public abstract class Bullet : MonoBehaviour, IObjectPool
         PublicVar.objectPool.Recycle(this);
     }
 
-    public virtual void ObjectPoolInit(Transform releaser,Vector3 pos,Quaternion rotate)
+    public virtual void ObjectPoolInit(Transform releaser, Vector3 pos, Quaternion rotate)
     {
         releaserTrans = releaser;
         this.releaser = releaser.GetComponent<Aircraft>();

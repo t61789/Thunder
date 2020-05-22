@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -69,7 +68,7 @@ public class BuildShipPanel : BaseUI
             RectTransform naTrans = (newAttachPoint.transform as RectTransform);
             naTrans.anchoredPosition = item.position * imageScale;
 
-            naTrans.SetSizeWithCurrentAnchors( RectTransform.Axis.Horizontal, imageScale.x);
+            naTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
             naTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
 
             BaseUI b = newAttachPoint.GetComponent<BaseUI>();
@@ -112,7 +111,7 @@ public class BuildShipPanel : BaseUI
     {
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            baseUI.GetComponent<Image>().sprite = PublicVar.objectPool.GetPrefab(BundleManager.UIBundle,"emptyUI").GetComponent<Image>().sprite;
+            baseUI.GetComponent<Image>().sprite = PublicVar.objectPool.GetPrefab(BundleManager.UIBundle, "emptyUI").GetComponent<Image>().sprite;
 
             baseUI.rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
             baseUI.rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
@@ -128,7 +127,7 @@ public class BuildShipPanel : BaseUI
 
         selectedAttachPoint = baseUI;
         Ship.AttachPoint info = attachPointInfo[baseUI];
-        DataTable select = PublicVar.dataBase["turret"].Select( new string[] { "name" }, new (string, object)[] { ( "type", info.type ) });
+        DataTable select = PublicVar.dataBase["turret"].Select(new string[] { "name" }, new (string, object)[] { ("type", info.type) });
         List<Action<BaseUI>> inits = new List<Action<BaseUI>>();
 
         foreach (var item in select.Rows)
@@ -137,17 +136,18 @@ public class BuildShipPanel : BaseUI
 
             GameObject prefab = PublicVar.objectPool.GetPrefab(turretName);
             Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
-            inits.Add(x => {
+            inits.Add(x =>
+            {
                 x.GetComponent<Image>().sprite = sprite;
-                x.InitRect( UIInitAction.FillParent);
-                x.GetComponent<Button>().onClick.AddListener(()=>ElementClick(turretName,sprite));
+                x.InitRect(UIInitAction.FillParent);
+                x.GetComponent<Button>().onClick.AddListener(() => ElementClick(turretName, sprite));
             });
         }
 
-        listPlane.Init(new ListPlane.Parameters<BaseUI>(3,"normalButton",(0,0),(10,10),(0, rectTrans.rect.height),inits));
+        listPlane.Init(new ListPlane.Parameters<BaseUI>(3, "normalButton", (0, 0), (10, 10), (0, rectTrans.rect.height), inits));
     }
 
-    private void ElementClick(string turretName,Sprite sprite)
+    private void ElementClick(string turretName, Sprite sprite)
     {
         Image i = selectedAttachPoint.GetComponent<Image>();
         Ship.AttachPoint info = attachPointInfo[selectedAttachPoint];
@@ -155,13 +155,13 @@ public class BuildShipPanel : BaseUI
         i.sprite = sprite;
         i.color = Color.white;
 
-        i.rectTransform.SetSizeWithCurrentAnchors( RectTransform.Axis.Horizontal,sprite.bounds.size.x*imageScale.x);
+        i.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, sprite.bounds.size.x * imageScale.x);
         i.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, sprite.bounds.size.y * imageScale.y);
     }
 
     public void CompleteBuildShip()
     {
-        buildResult = new Ship.CreateShipParam(shipId,"player",attachResult,true);
+        buildResult = new Ship.CreateShipParam(shipId, "player", attachResult, true);
 
         OnBuildShipComplete?.Invoke(this);
 

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ShootingTurret : Turret
 {
@@ -15,11 +14,6 @@ public class ShootingTurret : Turret
     public void SetFireControl(bool b)
     {
         FireControl = b;
-    }
-    protected Vector3 TargetPosition { get; set; } = Vector3.positiveInfinity;
-    public void SetTargetPosition(Vector3 v)
-    {
-        TargetPosition = v;
     }
 
     protected override void Awake()
@@ -37,8 +31,9 @@ public class ShootingTurret : Turret
             if ((Time.time - fireIntervalCount > fireInterval) && FireControl)
             {
                 fireIntervalCount = Time.time;
-                PublicVar.objectPool.Alloc<NormalBullet>(Bullet, x=> {
-                    x.ObjectPoolInit(shipTrans,trans.position,trans.rotation);
+                PublicVar.objectPool.Alloc<NormalBullet>(Bullet, x =>
+                {
+                    x.ObjectPoolInit(shipTrans, trans.position, trans.rotation);
                 });
             }
         }
@@ -48,11 +43,8 @@ public class ShootingTurret : Turret
     {
         if (Controllable)
         {
-            if (!TargetPosition.Equals(Vector3.positiveInfinity))
-            {
-                Vector3 vector = TargetPosition - trans.position;
-                trans.rotation = Quaternion.RotateTowards(trans.rotation, Quaternion.FromToRotation(Vector3.up, vector), TurnDegree);
-            }
+            Vector3 vector = ship.aimmingPos - trans.position;
+            trans.rotation = Quaternion.RotateTowards(trans.rotation, Quaternion.FromToRotation(Vector3.up, vector), TurnDegree);
         }
     }
 

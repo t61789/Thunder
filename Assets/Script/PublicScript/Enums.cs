@@ -25,7 +25,7 @@ public enum UIInitAction
     /// <summary>
     /// 充满父容器并居中
     /// </summary>
-    FillParent = FillAnchor| PositionMiddleOfAnchor | FillSize,
+    FillParent = FillAnchor | PositionMiddleOfAnchor | FillSize,
     /// <summary>
     /// 在父容器居中
     /// </summary>

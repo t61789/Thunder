@@ -42,7 +42,8 @@ public class ControlManager
 
     public ControlManager()
     {
-        Values values = PublicVar.value.LoadValue<Values>("input_priority");
+        var a = PublicVar.value;
+        Values values = a.LoadValue<Values>("input_priority");
 
         string[] temp = values.priority;
         for (int i = 0; i < temp.Length; i++)
@@ -56,7 +57,7 @@ public class ControlManager
         Unit unit = units[name];
         if (!unitLists.TryGetValue(keyCode, out List<Unit> list))
         {
-            list = new List<Unit>() { unit};
+            list = new List<Unit>() { unit };
 
             unitLists.Add(keyCode, list);
             return true;

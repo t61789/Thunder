@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class LogPanel : BaseUI
 {
@@ -23,8 +17,8 @@ public class LogPanel : BaseUI
 
     private void Resize()
     {
-        rectTrans.SetSizeWithCurrentAnchors( RectTransform.Axis.Horizontal,textMesh.rectTransform.rect.width+Interval.x);
-        rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, textMesh.rectTransform.rect.height+Interval.y);
+        rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width + Interval.x);
+        rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, textMesh.rectTransform.rect.height + Interval.y);
     }
 
     public string GetText()

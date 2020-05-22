@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using UnityEngine;
-using Newtonsoft.Json;
 using System.Text;
-using Google.Protobuf.WellKnownTypes;
+using UnityEngine;
 
 public class ValueManager
 {
@@ -88,11 +85,11 @@ public class ValueManager
     {
         string bundlePath;
 
-        int index = valuePath.LastIndexOf(BundleManager.PathDivider);
+        int index = valuePath.LastIndexOf(Paths.Div);
         if (index == -1)
         {
             bundlePath = BundleManager.Normal;
-            valuePath = bundlePath+ BundleManager.PathDivider + valuePath;
+            valuePath = bundlePath + Paths.Div + valuePath;
         }
         else
             bundlePath = valuePath.Substring(0, index);
@@ -106,9 +103,9 @@ public class ValueManager
     /// <typeparam name="T"></typeparam>
     /// <param name="valuePath">包含normal</param>
     /// <returns></returns>
-    public T LoadValue<T>(string bundlePath,string valueName)
+    public T LoadValue<T>(string bundlePath, string valueName)
     {
-        return LoadValueBase<T>(bundlePath, bundlePath+BundleManager.PathDivider+valueName);
+        return LoadValueBase<T>(bundlePath, bundlePath + Paths.Div + valueName);
     }
 
     /// <summary>
@@ -118,12 +115,12 @@ public class ValueManager
     /// <param name="bundlePath">包含normal</param>
     /// <param name="valuePath"></param>
     /// <returns></returns>
-    private T LoadValueBase<T>(string bundlePath,string valuePath)
+    private T LoadValueBase<T>(string bundlePath, string valuePath)
     {
         if (buffer.TryGetValue(valuePath, out object target))
             return (T)target;
 
-        if(unDeserializedBuffer.TryGetValue(valuePath, out string json))
+        if (unDeserializedBuffer.TryGetValue(valuePath, out string json))
         {
             T result = JsonConvert.DeserializeObject<T>(json);
             unDeserializedBuffer.Remove(valuePath);
@@ -133,7 +130,7 @@ public class ValueManager
 
         foreach (var item in LoadBundle(bundlePath))
         {
-            if(!unDeserializedBuffer.TryGetValue(item.Item1, out _))
+            if (!unDeserializedBuffer.TryGetValue(item.Item1, out _))
                 unDeserializedBuffer.Add(item.Item1, item.Item2);
         }
 
@@ -143,7 +140,7 @@ public class ValueManager
             throw new Exception();
         }
 
-        return LoadValueBase<T>(bundlePath,valuePath);
+        return LoadValueBase<T>(bundlePath, valuePath);
     }
 
     /// <summary>
@@ -151,7 +148,7 @@ public class ValueManager
     /// </summary>
     /// <param name="bundlePath">包含normal，不包含基础文件夹</param>
     /// <returns>包含normal，不包含基础文件夹</returns>
-    private List<(string,string)> LoadBundle(string bundlePath)
+    private List<(string, string)> LoadBundle(string bundlePath)
     {
         List<(string, string)> result = new List<(string, string)>();
 
@@ -161,7 +158,7 @@ public class ValueManager
         {
             pathBuilder.Clear();
             pathBuilder.Append(bundlePath);
-            pathBuilder.Append(BundleManager.PathDivider);
+            pathBuilder.Append(Paths.Div);
             pathBuilder.Append(item.name);
             result.Add((pathBuilder.ToString(), item.text));
         }

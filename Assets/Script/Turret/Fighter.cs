@@ -1,9 +1,6 @@
 ﻿using BehaviorDesigner.Runtime.Tasks;
-using System.Collections;
-using System.Collections.Generic;
 using Tool.BuffData;
 using UnityEngine;
-using UnityEditor;
 
 public class Fighter : Aircraft
 {
@@ -92,7 +89,7 @@ public class Fighter : Aircraft
     {
         return (guardTargetTrans.position - trans.position).sqrMagnitude > guardDistance ? TaskStatus.Success : TaskStatus.Failure;
     }
-    
+
     public TaskStatus PathPosLessThanLimit()
     {
         return pathPos.Count < PathPosSize ? TaskStatus.Success : TaskStatus.Failure;
@@ -205,7 +202,7 @@ public class Fighter : Aircraft
     public TaskStatus AddNewPatrolPos()
     {
         for (int i = pathPos.Count; i < PathPosSize; i++)
-            pathPos.Add(Tool.Tools.RandomVectorInCircle(patrolRange)+stayPos);
+            pathPos.Add(Tool.Tools.RandomVectorInCircle(patrolRange) + stayPos);
         return TaskStatus.Success;
     }
 
@@ -216,7 +213,7 @@ public class Fighter : Aircraft
 
         Aircraft camp = other.GetComponent<Aircraft>();
         if (camp == null) return;
-        if (!PublicVar.camp.IsHostile(camp, this))return ;
+        if (!PublicVar.camp.IsHostile(camp, this)) return;
 
         SetTarget(camp as Aircraft);
     }

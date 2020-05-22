@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// releaser应有rigidbody2d和继承了aircraft的控制器
@@ -11,7 +10,7 @@ public class NormalBullet : Bullet
 
     protected Rigidbody2D releaserRb2d;
 
-    public void ObjectPoolInit(Transform releaser, Vector3 pos, Quaternion rotate,Rigidbody2D releaserRb2d)
+    public void ObjectPoolInit(Transform releaser, Vector3 pos, Quaternion rotate, Rigidbody2D releaserRb2d)
     {
         base.ObjectPoolInit(releaser, pos, rotate);
         this.releaserRb2d = releaserRb2d;

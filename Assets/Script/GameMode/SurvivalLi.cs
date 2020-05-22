@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class SurvivalLi : Survival
@@ -16,24 +14,27 @@ public class SurvivalLi : Survival
 
     protected SurvivalLiUI ui;
 
-    public override void Init(Transform target, string diffId)
+    public override void Init(string arg)
     {
-        base.Init(target,diffId);
-        this.generateRange = 20;
+        base.Init(arg);
+
+        Param tempArg = JsonConvert.DeserializeObject<Param>(arg, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Populate });
+        string diffId = tempArg.diffId;
+        generateRange = tempArg.generateRange;
 
         List<Vector2> difficultyList = new List<Vector2>();
         string time = "time";
         string baseline = "baseline";
-        foreach (var item in PublicVar.dataBase[TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
+        foreach (var item in PublicVar.dataBase[TABLE_NAME].Select(null, new (string, object)[] { ("diff_id", diffId) }).Rows)
             difficultyList.Add(new Vector2((float)item[time], (float)item[baseline]));
         _difficultyList = difficultyList.ToArray();
 
         List<AircraftUnit> units = new List<AircraftUnit>();
-        foreach (var item in PublicVar.dataBase[AIRCRAFT_TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
+        foreach (var item in PublicVar.dataBase[AIRCRAFT_TABLE_NAME].Select(null, new (string, object)[] { ("diff_id", diffId) }).Rows)
             units.Add(new AircraftUnit((string)item[AIRCRAFT_ID], (int)item[MAX], (float)item[BASELINE_MIN], (float)item[BASELINE_MAX], (float)item[INTERVAL]));
         _aircraftUnits = units.ToArray();
 
-        ui = PublicVar.uiManager.OpenUI<SurvivalLiUI>(UI_NAME,0,x=>x.Init(_difficultyList[_difficultyList.Length-1].x));
+        ui = PublicVar.uiManager.OpenUI<SurvivalLiUI>(UI_NAME, 0, x => x.Init(_difficultyList[_difficultyList.Length - 1].x));
 
         Reset();
     }
@@ -64,7 +65,7 @@ public class SurvivalLi : Survival
         {
             float curTime = Time.time - startTime;
 
-            if(leftDiffIndex != difficultyList.Length - 1)
+            if (leftDiffIndex != difficultyList.Length - 1)
             {
                 for (int i = leftDiffIndex; i < difficultyList.Length; i++)
                 {
@@ -89,7 +90,7 @@ public class SurvivalLi : Survival
                 if (!aircraftUnits[i].active)
                     continue;
 
-                if(curDiffculty>aircraftUnits[i].baselineMax)
+                if (curDiffculty > aircraftUnits[i].baselineMax)
                 {
                     aircraftUnits[i].active = false;
                     continue;
@@ -100,14 +101,17 @@ public class SurvivalLi : Survival
 
                 if (aircraftUnits[i].AddAircraft())
                 {
-                    centerPos = target?target.position:centerPos;
+                    centerPos = player ? player.trans.position : centerPos;
                     Vector2 temp = Tool.Tools.RandomVectorInCircle(1).normalized * generateRange + centerPos;
 
-                    Aircraft a = PublicVar.objectPool.Alloc<Aircraft>(aircraftUnits[i].aircraftId,x=> {
-                        x.ObjectPoolInit(temp, Quaternion.identity,null,null,"enemy");
+                    Aircraft a = PublicVar.objectPool.Alloc<Aircraft>(aircraftUnits[i].aircraftId, x =>
+                    {
+                        x.ObjectPoolInit(temp, Quaternion.identity, null, null, "enemy");
                     });
 
-                    a.OnDestroyed += aircraftUnits[i].AircraftDestroyed;
+                    enemys.Add(a);
+                    a.OnDead += EnemyDead;
+                    a.OnDead += aircraftUnits[i].AircraftDestroyed;
                 }
             }
 
@@ -119,7 +123,7 @@ public class SurvivalLi : Survival
     {
         if (leftIndex == difficultyList.Length - 1)
             return;
-        w = (difficultyList[leftIndex + 1].y - difficultyList[leftIndex].y)/(difficultyList[leftIndex + 1].x - difficultyList[leftIndex].x);
+        w = (difficultyList[leftIndex + 1].y - difficultyList[leftIndex].y) / (difficultyList[leftIndex + 1].x - difficultyList[leftIndex].x);
     }
 
     public override void BeforeUnInstall()

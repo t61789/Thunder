@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Xml.Linq;
-using UnityEngine;
-using Google.Protobuf;
-using Tool;
 using System.Text;
+using UnityEngine;
 
 public class DataBaseManager
 {
@@ -59,7 +54,7 @@ public class DataBaseManager
 
     public DataTable GetTableNormal(string tableName)
     {
-        return GetTable(BundleManager.NormalD+tableName);
+        return GetTable(BundleManager.NormalD + tableName);
     }
 
     /// <summary>
@@ -74,13 +69,13 @@ public class DataBaseManager
 
         if (unDeserializedTables.TryGetValue(tablePath, out byte[] bytes))
         {
-            DataTable result = LoadFromProtobuf(serializers[tablePath],bytes);
+            DataTable result = LoadFromProtobuf(serializers[tablePath], bytes);
             unDeserializedTables.Remove(tablePath);
             tables.Add(tablePath, result);
             return result;
         }
 
-        int index = tablePath.LastIndexOf(BundleManager.PathDivider);
+        int index = tablePath.LastIndexOf(Paths.Div);
 
         string bundlePath;
         if (index == -1)
@@ -94,9 +89,9 @@ public class DataBaseManager
                 unDeserializedTables.Add(item.Item1, item.Item2);
         }
 
-        if(!unDeserializedTables.TryGetValue(tablePath,out _))
+        if (!unDeserializedTables.TryGetValue(tablePath, out _))
         {
-            Debug.LogError("No such table named "+tablePath);
+            Debug.LogError("No such table named " + tablePath);
             throw new Exception();
         }
 
@@ -126,7 +121,7 @@ public class DataBaseManager
             if (bundlePath != null)
             {
                 pathBuilder.Append(bundlePath);
-                pathBuilder.Append(BundleManager.PathDivider);
+                pathBuilder.Append(Paths.Div);
             }
             pathBuilder.Append(item.name);
             result.Add((pathBuilder.ToString(), item.bytes));
@@ -188,10 +183,27 @@ public class DataBaseManager
         }
 
         tempRows.Clear();
-        dynamic temp = serializer.serializer.GetProperty("Parser").GetValue(null, null);
-        temp = temp.ParseFrom(data);
-        foreach (var item in temp.Data)
+        //dynamic temp = serializer.serializer.GetProperty("Parser").GetValue(null, null);
+        //temp = temp.ParseFrom(data);
+        //foreach (var item in temp.Data)
+        //{
+        //    tempRow.Clear();
+        //    foreach (var i in serializer.fieldsInfo)
+        //        tempRow.Add(i.GetValue(item, null));
+
+        //    tempRows.Add(tempRow.ToArray());
+        //}
+
+        object parser = serializer.serializer.GetProperty("Parser").GetValue(null, null);
+        object temp = parser.GetType().GetMethod("ParseFrom", new Type[] { typeof(byte[]) }).Invoke(parser, new object[] { data });
+
+        //Type repeatedFieldType = typeof(Google.Protobuf.Collections.RepeatedField<>);
+        parser = serializer.serializer.GetProperty("Data").GetValue(temp, null);
+        System.Collections.IEnumerator enumerator = (System.Collections.IEnumerator)parser.GetType().GetMethod("GetEnumerator").Invoke(parser, null);
+
+        while (enumerator.MoveNext())
         {
+            object item = enumerator.Current;
             tempRow.Clear();
             foreach (var i in serializer.fieldsInfo)
                 tempRow.Add(i.GetValue(item, null));
@@ -199,9 +211,19 @@ public class DataBaseManager
             tempRows.Add(tempRow.ToArray());
         }
 
+        parser = serializer.serializer.GetProperty("Fields").GetValue(temp, null);
+        enumerator = (System.Collections.IEnumerator)parser.GetType().GetMethod("GetEnumerator").Invoke(parser, null);
+
         tempFields.Clear();
-        foreach (var item in temp.Fields)
-            tempFields.Add(item);
+        while (enumerator.MoveNext())
+        {
+            object item = enumerator.Current;
+            tempFields.Add(item as string);
+        }
+
+        //tempFields.Clear();
+        //foreach (var item in temp.Fields)
+        //    tempFields.Add(item);
 
         return new DataTable(tempFields, tempRows);
     }

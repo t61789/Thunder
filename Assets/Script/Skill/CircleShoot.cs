@@ -19,7 +19,7 @@ public class CircleShoot : Skill
     {
         skillCdCount = 0;
 
-        Values values = PublicVar.value.LoadValue<Values>("skill\\circleShoot");
+        Values values = PublicVar.value.LoadValue<Values>("skill" + Paths.Div + "circleShoot");
 
         SkillCd = values.skillCd;
         BulletNum = values.bulletNum;

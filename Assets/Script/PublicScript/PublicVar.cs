@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
-using System.IO;
+using TMPro;
 using Tool;
 using Tool.ObjectPool;
 using UnityEngine;
@@ -29,21 +28,13 @@ public class PublicVar : MonoBehaviour
     public static GameModeManager gameMode;
     public static SaveManager saveManager;
     public static PlayerManager player;
-
-    public static string gameDocument;
+    public static LevelManager level;
 
     private bool loading;
     private AsyncOperation loadingAO;
     private LogPanel loadingLoadPanel;
 
-    static PublicVar()
-    {
-        gameDocument = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-            Path.DirectorySeparatorChar +
-            "MyGames" +
-            Path.DirectorySeparatorChar +
-            "Thunder";
-    }
+    public TextMeshProUGUI Log;
 
     private void Awake()
     {
@@ -68,7 +59,26 @@ public class PublicVar : MonoBehaviour
                 uiManager = GetComponent<UIManager>();
                 break;
 
-            case "MainScene":
+            case "LevelScene":
+                publicVar = gameObject;
+                objectPool = GetComponent<ObjectPool>();
+                container = GameObject.Find("Container").transform;
+                value = new ValueManager();
+                uiManager = GetComponent<UIManager>();
+                gameMode = new GameModeManager();
+                level = new LevelManager();
+                break;
+            case "TestScene":
+                publicVar = gameObject;
+                bundle = new BundleManager();
+                objectPool = GetComponent<ObjectPool>();
+                container = GameObject.Find("Container").transform;
+                uiManager = GetComponent<UIManager>();
+                dataBase = new DataBaseManager();
+                value = new ValueManager();
+                control = new ControlManager();
+                break;
+            case "BattleScene":
                 publicVar = gameObject;
                 objectPool = GetComponent<ObjectPool>();
                 container = GameObject.Find("Container").transform;
@@ -80,8 +90,8 @@ public class PublicVar : MonoBehaviour
                 camp = new CampManager();
                 uiManager = GetComponent<UIManager>();
                 gameMode = new GameModeManager();
+                level = new LevelManager();
                 break;
-
             default:
                 break;
         }
@@ -99,7 +109,7 @@ public class PublicVar : MonoBehaviour
     {
         if (loading)
         {
-            loadingLoadPanel.SetText("loading: "+loadingAO.progress);
+            loadingLoadPanel.SetText("loading: " + loadingAO.progress);
         }
     }
 
@@ -114,9 +124,17 @@ public class PublicVar : MonoBehaviour
     private IEnumerator LoadScene(AsyncOperation ao)
     {
         ao.allowSceneActivation = false;
-        while (ao.progress<0.9f)
+        while (ao.progress < 0.9f)
             yield return null;
         ao.allowSceneActivation = true;
+    }
+
+    public static void DepCheck(Type name, object target, bool exists)
+    {
+        if (exists && target == null)
+            throw new Exception("System " + name + " dependence on " + target.ToString() + " but it doesn't exist");
+        else if (!exists && target != null)
+            throw new Exception("System " + name + " needs " + target.ToString() + " to be empty, but it exist");
     }
 }
 

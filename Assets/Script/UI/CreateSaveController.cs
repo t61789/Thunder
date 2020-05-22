@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CreateSaveController:MonoBehaviour
+public class CreateSaveController : MonoBehaviour
 {
     private void Awake()
     {
-        PublicVar.uiManager.OpenUI<InputDialog>("inputDialog",  UIInitAction.CenterParent, x => {
+        PublicVar.uiManager.OpenUI<InputDialog>("inputDialog", UIInitAction.CenterParent, x =>
+        {
             x.Init("");
             x.OnCloseCheck += (BaseUI baseUi, ref bool result) =>
             {
@@ -38,7 +34,7 @@ public class CreateSaveController:MonoBehaviour
 
     private void StartBuildShip()
     {
-        PublicVar.uiManager.OpenUI<BuildShipPanel>("buildShipPanel").OnBuildShipComplete+=BuildShipClosed;
+        PublicVar.uiManager.OpenUI<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
     }
 
     private void BuildShipClosed(BuildShipPanel b)
@@ -46,7 +42,7 @@ public class CreateSaveController:MonoBehaviour
         PublicVar.saveManager.playerShipParam = b.buildResult;
         PublicVar.saveManager.Save();
 
-        PublicVar.instance.LoadSceneAsync("MainScene");
+        PublicVar.instance.LoadSceneAsync("LevelScene");
     }
 
     public void GoBack()

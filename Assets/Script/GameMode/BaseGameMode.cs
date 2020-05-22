@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class BaseGameMode : MonoBehaviour
 {
@@ -61,6 +56,11 @@ public abstract class BaseGameMode : MonoBehaviour
         }
     }
 
+    public struct CompleteParam
+    {
+        public int levelIndex;
+    }
+
     protected float startTime;
     protected float curDiffculty;
     protected bool running;
@@ -68,20 +68,19 @@ public abstract class BaseGameMode : MonoBehaviour
     protected AircraftUnit[] aircraftUnits;
     protected AircraftUnit[] _aircraftUnits;
 
-    protected Transform target;
-
     protected Vector3 centerPos;
 
-    public delegate void ModeComplete(BaseGameMode mode);
+    public delegate void ModeComplete(BaseGameMode mode, CompleteParam completeParam);
     public event ModeComplete OnModeComplete;
 
     public abstract void Reset();
     public abstract void Start();
     public abstract void Pause();
     public abstract void BeforeUnInstall();
-    public abstract void Init(Transform target, string arg);
+    public abstract void Init(string arg);
     public virtual void Complete()
     {
-        OnModeComplete?.Invoke(this);
+        OnModeComplete?.Invoke(this, default);
+        Pause();
     }
 }

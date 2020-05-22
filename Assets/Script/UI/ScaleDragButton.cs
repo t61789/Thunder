@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ScaleDragButton : MonoBehaviour,IBeginDragHandler,IDragHandler
+public class ScaleDragButton : MonoBehaviour, IBeginDragHandler, IDragHandler
 {
     public Vector2 maxSize = Vector2.positiveInfinity;
     public Vector2 minSize = Vector2.negativeInfinity;
@@ -32,7 +27,7 @@ public class ScaleDragButton : MonoBehaviour,IBeginDragHandler,IDragHandler
     {
         Vector3 delta = Input.mousePosition - recordMousePos;
 
-        float temp  = recordParentSize.x + delta.x;
+        float temp = recordParentSize.x + delta.x;
         if (temp > maxSize.x)
         {
             temp = maxSize.x;
@@ -43,7 +38,7 @@ public class ScaleDragButton : MonoBehaviour,IBeginDragHandler,IDragHandler
             temp = minSize.x;
             delta.x = minSize.x - recordParentSize.x;
         }
-        parentRect.SetSizeWithCurrentAnchors( RectTransform.Axis.Horizontal, temp);
+        parentRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, temp);
 
         temp = recordParentSize.y - delta.y;
         if (temp > maxSize.y)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -18,20 +19,23 @@ public class SurvivalNoli : Survival
     protected const float testTime = 5;
     protected float testTimeCount = 0;
 
-    public override void Init(Transform target, string diffId)
+    public override void Init(string arg)
     {
-        base.Init(target,diffId);
+        base.Init(arg);
 
-        DataTable.Row row = PublicVar.dataBase[TABLE_NAME].Select( null, new (string, object)[] { (DIFF_ID, diffId) }).Rows.FirstOrDefault();
+        Param tempArg = JsonConvert.DeserializeObject<Param>(arg, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Populate });
+        string diffId = tempArg.diffId;
+        generateRange = tempArg.generateRange;
+
+        DataTable.Row row = PublicVar.dataBase[TABLE_NAME].Select(null, new (string, object)[] { (DIFF_ID, diffId) }).Rows.FirstOrDefault();
         risingCoefficient = (float)row["rising_coefficient"];
         interval = (float)row["time_interval"];
-        generateRange = (float)row["generate_range"];
 
         float temp = (float)row["base_baseline"];
         _curNodes = (new Vector2(0, temp), new Vector2(interval, temp));
 
         List<AircraftUnit> units = new List<AircraftUnit>();
-        foreach (var item in PublicVar.dataBase[AIRCRAFT_TABLE_NAME].Select( null, new (string, object)[] { ("diff_id", diffId) }).Rows)
+        foreach (var item in PublicVar.dataBase[AIRCRAFT_TABLE_NAME].Select(null, new (string, object)[] { ("diff_id", diffId) }).Rows)
             units.Add(new AircraftUnit((string)item[AIRCRAFT_ID], (int)item[MAX], (float)item[BASELINE_MIN], (float)item[BASELINE_MAX], (float)item[INTERVAL]));
         _aircraftUnits = units.ToArray();
 
@@ -55,10 +59,10 @@ public class SurvivalNoli : Survival
     {
         if (running)
         {
-            if(Time.time-testTimeCount>=testTime)
+            if (Time.time - testTimeCount >= testTime)
             {
                 running = false;
-                Complete();
+                PlayerDead(player);
                 return;
             }
 
@@ -82,7 +86,7 @@ public class SurvivalNoli : Survival
                     continue;
                 if (aircraftUnits[i].AddAircraft())
                 {
-                    centerPos = target ? target.position : centerPos;
+                    centerPos = player ? player.trans.position : centerPos;
                     Vector2 temp = Tool.Tools.RandomVectorInCircle(1).normalized * generateRange + centerPos;
 
                     Aircraft a = PublicVar.objectPool.Alloc<Aircraft>(aircraftUnits[i].aircraftId, item =>
@@ -90,12 +94,13 @@ public class SurvivalNoli : Survival
                         item.ObjectPoolInit(temp, Quaternion.identity, null, null, "enemy");
                     });
 
-                    a.OnDestroyed += aircraftUnits[i].AircraftDestroyed;
+                    enemys.Add(a);
+                    a.OnDead += EnemyDead;
+                    a.OnDead += aircraftUnits[i].AircraftDestroyed;
                 }
-
             }
 
-            ui.Refresh(x,0);
+            ui.Refresh(x, 0);
         }
     }
 

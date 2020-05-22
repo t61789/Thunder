@@ -1,16 +1,33 @@
 ﻿using BehaviorDesigner.Runtime;
-using System.Collections;
 using System.Collections.Generic;
 using Tool.BuffData;
 using Tool.ObjectPool;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Collider2D))]
 public class Aircraft : Controller, IObjectPool
 {
+    public enum ControlTypes
+    {
+        absoluteJoystick,
+        relativeJoystick
+    }
+
     public bool DrawPathPos;
 
     public bool Controllable = true;
     public bool ForceTurn = false;
+
+    [Space]
+    public ControlTypes ControlType = ControlTypes.absoluteJoystick;
+    public float AccFrontAngle = 30;
+    public float TranslationAngle = 60;
+    public float TurnAngle = 150;
+    public float AimmingPosAcce = 10;
+    public float AimmingPosRange = 10;
+    [Space]
+
     public float Drag = 5;
     public float TurnDegree = 110;
     public string Camp;
@@ -26,57 +43,75 @@ public class Aircraft : Controller, IObjectPool
     public Aircraft Target;
     public Aircraft GuardTarget;
 
+    [HideInInspector]
+    public Transform trans;
     protected float Health;
-
     protected Transform targetTrans;
     protected Transform guardTargetTrans;
     protected BuffData maxSpeed;
     protected Rigidbody2D rb2d;
-    protected Transform trans;
     protected BuffData accelerationFront;
     protected BuffData accelerationBack;
     protected BuffData accelerationLeft;
     protected BuffData accelerationRight;
 
     protected List<Vector3> pathPos = new List<Vector3>();
+    [HideInInspector]
+    public Vector3 aimmingPos;
 
-    public delegate void DestroyedDel(Aircraft aircraft);
-    public event DestroyedDel OnDestroyed;
+    public delegate void DeadDel(Aircraft aircraft);
+    public event DeadDel OnDead;
 
-    protected bool SpeedUpFrontControl { get; set; }
+    //控制变量
+    protected bool SpeedUpFrontControl;
     public void SetSpeedUpFrontControl(bool b)
     {
         SpeedUpFrontControl = b;
     }
-    protected bool SpeedUpBackControl { get; set; }
+    protected bool SpeedUpBackControl;
     public void SetSpeedUpBackControl(bool b)
     {
         SpeedUpBackControl = b;
     }
-    protected bool SpeedUpLeftControl { get; set; }
+    protected bool SpeedUpLeftControl;
     public void SetSpeedUpLeftControl(bool b)
     {
         SpeedUpLeftControl = b;
     }
-    protected bool SpeedUpRightControl { get; set; }
+    protected bool SpeedUpRightControl;
     public void SetSpeedUpRightControl(bool b)
     {
         SpeedUpRightControl = b;
     }
-    protected bool TurnRightControl { get; set; }
+    protected bool TurnRightControl;
     public void SetTurnRightControl(bool b)
     {
         TurnRightControl = b;
     }
-    protected bool TurnLeftControl { get; set; }
+    protected bool TurnLeftControl;
     public void SetTurnLeftControl(bool b)
     {
         TurnLeftControl = b;
     }
-    protected Vector3 StaringAtControl { get; set; } = Vector3.positiveInfinity;
+    protected Vector3 StaringAtControl = Vector3.positiveInfinity;
     public void SetStaringAtControl(Vector3 v)
     {
         StaringAtControl = v;
+    }
+    protected Vector3 AccelerationVector = Vector3.positiveInfinity;
+    public void SetAccelerationVector(Vector3 v)
+    {
+        AccelerationVector = v;
+    }
+    protected Vector3 JoystickDir;
+    public void SetJoystickDir(Vector3 dir)
+    {
+        JoystickDir = dir;
+    }
+    protected Vector3 ShootingJoystick;
+    public void SetShootingJoystick(Vector3 dir)
+    {
+        ShootingJoystick = dir;
     }
 
     protected override void Awake()
@@ -94,7 +129,7 @@ public class Aircraft : Controller, IObjectPool
         accelerationRight = AccelerationRight;
         SetTarget(Target);
         SetGuardTarget(GuardTarget);
-        GetComponent<BehaviorTree>()?.SetVariableValue("controller",this);
+        GetComponent<BehaviorTree>()?.SetVariableValue("controller", this);
     }
 
     public void GetDamage(float damage)
@@ -106,36 +141,32 @@ public class Aircraft : Controller, IObjectPool
 
     public void Dead()
     {
-        OnDestroyed?.Invoke(this);
+        OnDead?.Invoke(this);
     }
 
     protected void FixedUpdate()
     {
         if (Controllable)
         {
+            if (!JoystickDir.Equals(Vector3.positiveInfinity))
+                ParseDir(JoystickDir);
+
+            if (!ShootingJoystick.Equals(Vector3.positiveInfinity))
+                aimmingPos += ShootingJoystick * AimmingPosAcce * Time.fixedDeltaTime;
+
             Vector3 curPos = trans.position;
             Quaternion curRot = trans.rotation;
 
             if (StaringAtControl.Equals(Vector3.positiveInfinity))
             {
                 if (TurnRightControl)
-                {
                     curRot = TurnRight(curRot);
-                    TurnRightControl = false;
-                }
                 if (TurnLeftControl)
-                {
                     curRot = Turnleft(curRot);
-                    TurnLeftControl = false;
-                }
             }
             else
-            {
                 curRot = StaringAt(curRot, StaringAtControl, curPos);
-                StaringAtControl = Vector3.positiveInfinity;
-            }
             trans.rotation = curRot;
-
 
             Vector3 curDir = (curRot * Vector3.up).normalized;
             Vector3 curVelocity = rb2d.velocity;
@@ -143,34 +174,57 @@ public class Aircraft : Controller, IObjectPool
             curVelocity -= drag * Time.fixedDeltaTime * rb2d.velocity.magnitude * curVelocity.normalized;
 
             if (SpeedUpFrontControl)
-            {
                 curVelocity = SpeedUpFront(curVelocity, curDir);
-                SpeedUpFrontControl = false;
-            }
 
             if (SpeedUpBackControl)
-            {
                 curVelocity = SpeedUpBack(curVelocity, curDir);
-                SpeedUpBackControl = false;
-            }
 
             if (SpeedUpLeftControl)
-            {
                 curVelocity = SpeedUpLeft(curVelocity, curDir);
-                SpeedUpLeftControl = false;
-            }
 
             if (SpeedUpRightControl)
-            {
                 curVelocity = SpeedUpRight(curVelocity, curDir);
-                SpeedUpRightControl = false;
-            }
 
             if (ForceTurn)
                 curVelocity = trans.rotation * (Quaternion.FromToRotation(curVelocity, Vector3.up) * curVelocity);
 
             rb2d.velocity = curVelocity;
         }
+    }
+
+    private void ParseDir(Vector3 joystickDir)
+    {
+        if (joystickDir.Equals(Vector3.zero)) return;
+
+        Vector3 baseDir;
+        if (ControlType == ControlTypes.absoluteJoystick)
+            baseDir = trans.rotation * Vector3.up;
+        else
+            baseDir = Vector3.up;
+
+        float angle = Vector3.Angle(baseDir, joystickDir);
+        if (angle <= AccFrontAngle)
+        {
+            SpeedUpFrontControl = true;
+        }
+        else if (angle <= TranslationAngle && !ForceTurn)
+        {
+            Vector3 temp = Vector3.Cross(baseDir, joystickDir);
+            if (temp.z < 0)
+                SpeedUpRightControl = true;
+            else
+                SpeedUpLeftControl = true;
+        }
+        else if (angle <= TurnAngle || ForceTurn)
+        {
+            Vector3 temp = Vector3.Cross(baseDir, joystickDir);
+            if (temp.z < 0)
+                TurnRightControl = true;
+            else
+                TurnLeftControl = true;
+        }
+        else
+            SpeedUpBackControl = true;
     }
 
     protected virtual Quaternion StaringAt(Quaternion curRot, Vector3 staringPos, Vector3 curPos)
@@ -241,8 +295,8 @@ public class Aircraft : Controller, IObjectPool
     {
         Destroy(gameObject);
     }
-    
-    public virtual void ObjectPoolInit(Vector3 position,Quaternion rotation,Aircraft target,Aircraft guardTarget,string camp=null)
+
+    public virtual void ObjectPoolInit(Vector3 position, Quaternion rotation, Aircraft target, Aircraft guardTarget, string camp = null)
     {
         trans.position = position;
         trans.rotation = rotation;
@@ -258,7 +312,7 @@ public class Aircraft : Controller, IObjectPool
             Vector3 left = trans.position;
             foreach (var item in pathPos)
             {
-                Gizmos.DrawLine(left,item);
+                Gizmos.DrawLine(left, item);
                 left = item;
             }
         }

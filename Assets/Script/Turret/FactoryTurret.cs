@@ -27,9 +27,10 @@ public class FactoryTurret : Turret
 
     public void MakeFighter()
     {
-        Fighter fighter = PublicVar.objectPool.Alloc<Fighter>(fighterName, x=> {
+        Fighter fighter = PublicVar.objectPool.Alloc<Fighter>(fighterName, x =>
+        {
             x.ObjectPoolInit(trans.position, trans.rotation, null, ship);
-            x.OnDestroyed += FighterDestroyed;
+            x.OnDead += FighterDestroyed;
             fighters.Add(x);
         });
     }
@@ -42,7 +43,7 @@ public class FactoryTurret : Turret
 
     private void FighterDestroyed(Aircraft aircraft)
     {
-        aircraft.OnDestroyed -= FighterDestroyed;
+        aircraft.OnDead -= FighterDestroyed;
         fighters.Remove(aircraft);
     }
 }

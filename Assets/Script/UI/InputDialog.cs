@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using System.Collections;
 using UnityEngine.UI;
 
-public class InputDialog:BaseUI
+public class InputDialog : BaseUI
 {
     public string Text;
     public DialogResult dialogResult;
@@ -32,7 +26,7 @@ public class InputDialog:BaseUI
 
     public void InputEndOK()
     {
-        dialogResult =  DialogResult.OK;
+        dialogResult = DialogResult.OK;
         PublicVar.uiManager.CloseUI(this);
     }
 

@@ -1,35 +1,24 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BehaviorDesigner.Runtime.Tasks.Unity.UnityPlayerPrefs;
-using Newtonsoft.Json;
-using UnityEngine;
 
 [JsonObject(MemberSerialization.OptOut)]
 public class SaveManager
 {
     [JsonIgnore]
-    public string CurSaveName;
+    public string curSaveName;
+
     [JsonIgnore]
-    public static readonly string saveBasePath;
+    private string savedJson;
 
     public SortedSet<int> levelComplete;
 
     public Ship.CreateShipParam playerShipParam;
 
-    static SaveManager()
+    public void Init(string curSaveName, string savedJson)
     {
-        saveBasePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-            Path.DirectorySeparatorChar +
-            "MyGames" +
-            Path.DirectorySeparatorChar +
-            "Thunder" +
-            Path.DirectorySeparatorChar;
-        if (!Directory.Exists(saveBasePath))
-            Directory.CreateDirectory(saveBasePath);
+        this.curSaveName = curSaveName;
+        this.savedJson = savedJson;
     }
 
     private SaveManager()
@@ -41,23 +30,25 @@ public class SaveManager
     {
         string saveJsonRPath = Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar + "save.json";
 
-        string path = saveBasePath + saveName + saveJsonRPath;
+        string path = Paths.DocumentPathD + saveName + saveJsonRPath;
 
-        SaveManager result = JsonConvert.DeserializeObject<SaveManager>(File.ReadAllText(path));
+        string json = File.ReadAllText(path);
+
+        SaveManager result = JsonConvert.DeserializeObject<SaveManager>(json);
 
         if (result == null) result = new SaveManager();
-        result.CurSaveName = saveName;
+        result.Init(saveName, json);
 
         return result;
     }
 
     public static bool CreateSaveDir(string saveName)
     {
-        string savePath = saveBasePath + Path.DirectorySeparatorChar + saveName;
+        string savePath = Paths.DocumentPathD + saveName;
         if (Directory.Exists(savePath))
             return false;
 
-        DataTable dirStruct = PublicVar.dataBase["directory_struct"].Select(null,new (string, object)[] {("id","save") });
+        DataTable dirStruct = PublicVar.dataBase["directory_struct"].Select(null, new (string, object)[] { ("id", "save") });
 
         Stack<string> stack = new Stack<string>();
         stack.Push("");
@@ -68,21 +59,21 @@ public class SaveManager
         const string EXTENSION = "extension";
         const string PARENT = "parent";
 
-        while(stack.Count!=0)
+        while (stack.Count != 0)
         {
             string node = stack.Pop();
 
-            DataTable curTable = dirStruct.Select(null,new (string, object)[] {(PARENT, Path.GetFileName(node)) });
+            DataTable curTable = dirStruct.Select(null, new (string, object)[] { (PARENT, Path.GetFileName(node)) });
             foreach (var item in curTable)
                 stack.Push(node + Path.DirectorySeparatorChar + item[NAME] as string + item[EXTENSION] as string);
             result.Add(node);
         }
 
-        
+
         foreach (var item in result)
         {
             if (Path.GetExtension(item) == "")
-                Directory.CreateDirectory(savePath+item);
+                Directory.CreateDirectory(savePath + item);
             else
                 File.Create(savePath + item).Close();
         }
@@ -90,8 +81,20 @@ public class SaveManager
         return true;
     }
 
-    public void Save()
+    public void Save(string json = null)
     {
-        File.WriteAllText(saveBasePath + CurSaveName + Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar + "save.json", JsonConvert.SerializeObject(this));
+        if (json != null && !json.Equals(string.Empty))
+            File.WriteAllText(Paths.DocumentPathD + curSaveName + Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar + "save.json", json);
+        else
+            File.WriteAllText(Paths.DocumentPathD + curSaveName + Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar + "save.json", JsonConvert.SerializeObject(this));
+    }
+
+    public string Check()
+    {
+        string unsavedJson = JsonConvert.SerializeObject(this);
+        if (unsavedJson.GetHashCode() != savedJson.GetHashCode())
+            return unsavedJson;
+        else
+            return null;
     }
 }

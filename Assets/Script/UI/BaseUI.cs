@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Tool.ObjectPool;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(RectTransform))]
-public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter
+public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     public bool Stable = false;
 
@@ -18,7 +17,7 @@ public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointer
 
         get
         {
-            if (_UIName == null||_UIName=="")
+            if (_UIName == null || _UIName == "")
                 return name;
             else
                 return _UIName;
@@ -37,21 +36,25 @@ public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointer
     public event PointerDel PointerClick;
     public event PointerDel PointerExit;
     public event PointerDel PointerUp;
+    public event PointerDel DragStart;
+    public event PointerDel DragEnd;
+    public event PointerDel Dragging;
 
     public delegate void AfterOpenDel(BaseUI baseUI);
     public event AfterOpenDel OnAfterOpen;
     public delegate void BeforeCloseDel(BaseUI baseUI);
     public event BeforeCloseDel OnBeforeClose;
-    public delegate void CloseCheck(BaseUI baseUI,ref bool result);
+    public delegate void CloseCheck(BaseUI baseUI, ref bool result);
     public event CloseCheck OnCloseCheck;
 
+    [HideInInspector]
     public BaseUI dialog;
 
     protected virtual void Awake()
     {
         if (UIName == null)
             UIName = name;
-        rectTrans = GetComponent<RectTransform>();
+        rectTrans = transform as RectTransform;
     }
 
     public virtual void AfterOpen()
@@ -62,7 +65,7 @@ public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointer
     public virtual bool BeforeClose()
     {
         bool result = true;
-        OnCloseCheck?.Invoke(this,ref result);
+        OnCloseCheck?.Invoke(this, ref result);
         if (!result)
             return false;
 
@@ -115,6 +118,21 @@ public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointer
         PointerUp?.Invoke(this, eventData);
     }
 
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        DragStart?.Invoke(this, eventData);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        DragEnd?.Invoke(this, eventData);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        Dragging?.Invoke(this, eventData);
+    }
+
     public void ObjectPoolReset()
     {
 
@@ -150,7 +168,7 @@ public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointer
 
     public void InitRect(UIInitAction action)
     {
-        if((action & UIInitAction.MiddleAnchor) != 0)
+        if ((action & UIInitAction.MiddleAnchor) != 0)
         {
             rectTrans.anchorMin = rectTrans.anchorMax = Vector2.one / 2;
         }
@@ -171,4 +189,5 @@ public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointer
             rectTrans.anchoredPosition = Vector2.zero;
         }
     }
+
 }

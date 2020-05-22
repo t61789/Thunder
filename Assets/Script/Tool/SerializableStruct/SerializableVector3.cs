@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 using UnityEngine;
 
 namespace Tool
@@ -37,7 +34,7 @@ namespace Tool
 
         public static implicit operator Vector3(SerializableVector3 s)
         {
-            if (s.inner.Equals(Vector3.zero) )
+            if (s.inner.Equals(Vector3.zero))
             {
                 if (s.pos == null)
                     s.inner = Vector3.zero;
