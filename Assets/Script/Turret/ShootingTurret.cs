@@ -10,11 +10,7 @@ public class ShootingTurret : Turret
     protected float fireInterval;
     protected float fireIntervalCount;
 
-    protected bool FireControl { get; set; } = false;
-    public void SetFireControl(bool b)
-    {
-        FireControl = b;
-    }
+    private const string FIRE = "Fire";
 
     protected override void Awake()
     {
@@ -28,7 +24,7 @@ public class ShootingTurret : Turret
     {
         if (Controllable)
         {
-            if ((Time.time - fireIntervalCount > fireInterval) && FireControl)
+            if ((Time.time - fireIntervalCount > fireInterval) && ControlKeys.GetBool(FIRE))
             {
                 fireIntervalCount = Time.time;
                 PublicVar.objectPool.Alloc<NormalBullet>(Bullet, x =>

@@ -29,6 +29,12 @@ public class AimRing : BaseUI
 
     private void FixedUpdate()
     {
+        if(aircraft==null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         rectTrans.position = aircraft.trans.position;
         if (!aircraft.aimmingPos.Equals(preAimPos))
         {

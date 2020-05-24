@@ -9,18 +9,16 @@ public class FactoryTurret : Turret
 
     protected List<Aircraft> fighters = new List<Aircraft>();
 
-    protected bool MakeFighterControl { get; set; }
+    private const string MAKE_FIGHTER = "MakeFighter";
 
     protected void Update()
     {
         if (Time.time - makeIntervalCount >= makeInterval)
         {
-            if (MakeFighterControl)
+            if (ControlKeys.GetBool(MAKE_FIGHTER))
             {
-
                 MakeFighter();
                 makeIntervalCount = Time.time;
-                MakeFighterControl = false;
             }
         }
     }

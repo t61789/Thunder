@@ -104,7 +104,7 @@ public class Ship : Aircraft
         }
 
         if (param.controlable)
-            ControllerInput.AttachTo(ship.gameObject);
+            ControllerInput.AttachTo(ship.gameObject,true);
 
         return ship;
     }

@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class LevelPlane : ListPlane
 {
-    [SerializeField]
-    private BaseUI menuPanel;
+    public BaseUI menuPanel;
     private readonly Dictionary<BaseButton, int> pairs = new Dictionary<BaseButton, int>();
     private string unsavedJson;
 

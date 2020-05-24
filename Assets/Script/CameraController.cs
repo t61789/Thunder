@@ -2,12 +2,29 @@
 
 public class CameraController : MonoBehaviour
 {
-    public GameObject FollowTarget;
+    public Ship FollowTarget
+    {
+        get => followTarget;
+        set 
+        {
+            if (value != null)
+                curCamera.orthographicSize = value.GetComponent<SpriteRenderer>().bounds.size.y*SizeCoe;
+            followTarget = value;
+        }
+    }
     public bool OffsetFollow;
     public float OffsetLerp;
     public float MoveDampTime;
+    public float SizeCoe = 1;
 
     private Vector3 targetPrePosition = Vector2.zero;
+    private Ship followTarget;
+    private Camera curCamera;
+
+    private void Awake()
+    {
+        curCamera = GetComponent<Camera>();
+    }
 
     public void LateUpdate()
     {
@@ -15,20 +32,20 @@ public class CameraController : MonoBehaviour
         if (OffsetFollow)
         {
             Vector3 tempPosition = transform.position;
-            tempPosition += FollowTarget.transform.position - targetPrePosition;
+            tempPosition += FollowTarget.trans.position - targetPrePosition;
 
-            Vector3 newPosition = Vector2.Lerp(FollowTarget.transform.position, Tool.Tools.GetMousePosition(), OffsetLerp);
+            Vector3 newPosition = Vector2.Lerp(FollowTarget.trans.position, FollowTarget.aimmingPos, OffsetLerp);
 
             Vector3 temp = new Vector3();
             tempPosition = Vector3.SmoothDamp(tempPosition, newPosition, ref temp, MoveDampTime);
             tempPosition.z = -10;
             transform.position = tempPosition;
 
-            targetPrePosition = FollowTarget.transform.position;
+            targetPrePosition = FollowTarget.trans.position;
         }
         else
         {
-            transform.position = FollowTarget.transform.position + Vector3.forward * (-10);
+            transform.position = FollowTarget.trans.position + Vector3.forward * (-10);
         }
     }
 }

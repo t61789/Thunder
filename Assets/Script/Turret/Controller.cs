@@ -39,6 +39,8 @@ public class Controller : MonoBehaviour
     private string _InputId;
     [SerializeField]
     private string _ControllerName;
+    [HideInInspector]
+    public Tool.DisposableDictionary ControlKeys = new Tool.DisposableDictionary();
 
     protected virtual void Awake()
     {

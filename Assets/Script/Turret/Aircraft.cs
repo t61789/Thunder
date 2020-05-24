@@ -62,57 +62,16 @@ public class Aircraft : Controller, IObjectPool
     public delegate void DeadDel(Aircraft aircraft);
     public event DeadDel OnDead;
 
-    //控制变量
-    protected bool SpeedUpFrontControl;
-    public void SetSpeedUpFrontControl(bool b)
-    {
-        SpeedUpFrontControl = b;
-    }
-    protected bool SpeedUpBackControl;
-    public void SetSpeedUpBackControl(bool b)
-    {
-        SpeedUpBackControl = b;
-    }
-    protected bool SpeedUpLeftControl;
-    public void SetSpeedUpLeftControl(bool b)
-    {
-        SpeedUpLeftControl = b;
-    }
-    protected bool SpeedUpRightControl;
-    public void SetSpeedUpRightControl(bool b)
-    {
-        SpeedUpRightControl = b;
-    }
-    protected bool TurnRightControl;
-    public void SetTurnRightControl(bool b)
-    {
-        TurnRightControl = b;
-    }
-    protected bool TurnLeftControl;
-    public void SetTurnLeftControl(bool b)
-    {
-        TurnLeftControl = b;
-    }
-    protected Vector3 StaringAtControl = Vector3.positiveInfinity;
-    public void SetStaringAtControl(Vector3 v)
-    {
-        StaringAtControl = v;
-    }
-    protected Vector3 AccelerationVector = Vector3.positiveInfinity;
-    public void SetAccelerationVector(Vector3 v)
-    {
-        AccelerationVector = v;
-    }
-    protected Vector3 JoystickDir;
-    public void SetJoystickDir(Vector3 dir)
-    {
-        JoystickDir = dir;
-    }
-    protected Vector3 ShootingJoystick;
-    public void SetShootingJoystick(Vector3 dir)
-    {
-        ShootingJoystick = dir;
-    }
+    protected const string ACC_FRONT = "AccFront";
+    protected const string ACC_BACK = "AccBack";
+    protected const string ACC_LEFT = "AccLeft";
+    protected const string ACC_RIGHT = "AccRight";
+    protected const string ACC_DIR = "AccDir";
+    protected const string TURN_RIGHT = "TurnRight";
+    protected const string TURN_LEFT = "TurnLeft";
+    protected const string STARING_AT = "StaringAt";
+    protected const string JOYSTICK = "Joystick";
+    protected const string SHOOTING_JOYSTICK = "ShootingJoystick";
 
     protected override void Awake()
     {
@@ -148,24 +107,28 @@ public class Aircraft : Controller, IObjectPool
     {
         if (Controllable)
         {
-            if (!JoystickDir.Equals(Vector3.positiveInfinity))
-                ParseDir(JoystickDir);
-
-            if (!ShootingJoystick.Equals(Vector3.positiveInfinity))
-                aimmingPos += ShootingJoystick * AimmingPosAcce * Time.fixedDeltaTime;
+            
+            Vector3 tempControlVector = ControlKeys.GetVector(JOYSTICK, Vector3.positiveInfinity);
+            if(!tempControlVector.Equals(Vector3.positiveInfinity))
+                ParseDir(tempControlVector);
+            tempControlVector = ControlKeys.GetVector(SHOOTING_JOYSTICK, Vector3.positiveInfinity);
+            if (!tempControlVector.Equals(Vector3.positiveInfinity))
+                aimmingPos += tempControlVector * AimmingPosAcce * Time.fixedDeltaTime;
+            
 
             Vector3 curPos = trans.position;
             Quaternion curRot = trans.rotation;
 
-            if (StaringAtControl.Equals(Vector3.positiveInfinity))
+            tempControlVector = ControlKeys.GetVector(STARING_AT, Vector3.positiveInfinity);
+            if (tempControlVector.Equals(Vector3.positiveInfinity))
             {
-                if (TurnRightControl)
+                if (ControlKeys.GetBool(TURN_RIGHT))
                     curRot = TurnRight(curRot);
-                if (TurnLeftControl)
+                if (ControlKeys.GetBool(TURN_LEFT))
                     curRot = Turnleft(curRot);
             }
             else
-                curRot = StaringAt(curRot, StaringAtControl, curPos);
+                curRot = StaringAt(curRot, tempControlVector, curPos);
             trans.rotation = curRot;
 
             Vector3 curDir = (curRot * Vector3.up).normalized;
@@ -173,16 +136,16 @@ public class Aircraft : Controller, IObjectPool
 
             curVelocity -= drag * Time.fixedDeltaTime * rb2d.velocity.magnitude * curVelocity.normalized;
 
-            if (SpeedUpFrontControl)
+            if (ControlKeys.GetBool(ACC_FRONT))
                 curVelocity = SpeedUpFront(curVelocity, curDir);
 
-            if (SpeedUpBackControl)
+            if (ControlKeys.GetBool(ACC_BACK))
                 curVelocity = SpeedUpBack(curVelocity, curDir);
 
-            if (SpeedUpLeftControl)
+            if (ControlKeys.GetBool(ACC_LEFT))
                 curVelocity = SpeedUpLeft(curVelocity, curDir);
 
-            if (SpeedUpRightControl)
+            if (ControlKeys.GetBool(ACC_RIGHT))
                 curVelocity = SpeedUpRight(curVelocity, curDir);
 
             if (ForceTurn)
@@ -205,26 +168,26 @@ public class Aircraft : Controller, IObjectPool
         float angle = Vector3.Angle(baseDir, joystickDir);
         if (angle <= AccFrontAngle)
         {
-            SpeedUpFrontControl = true;
+            ControlKeys.SetBool(ACC_FRONT,true);
         }
         else if (angle <= TranslationAngle && !ForceTurn)
         {
             Vector3 temp = Vector3.Cross(baseDir, joystickDir);
             if (temp.z < 0)
-                SpeedUpRightControl = true;
+                ControlKeys.SetBool(ACC_RIGHT, true);
             else
-                SpeedUpLeftControl = true;
+                ControlKeys.SetBool(ACC_LEFT, true);
         }
         else if (angle <= TurnAngle || ForceTurn)
         {
             Vector3 temp = Vector3.Cross(baseDir, joystickDir);
             if (temp.z < 0)
-                TurnRightControl = true;
+                ControlKeys.SetBool(TURN_RIGHT, true);
             else
-                TurnLeftControl = true;
+                ControlKeys.SetBool(TURN_LEFT, true);
         }
         else
-            SpeedUpBackControl = true;
+            ControlKeys.SetBool(ACC_BACK, true);
     }
 
     protected virtual Quaternion StaringAt(Quaternion curRot, Vector3 staringPos, Vector3 curPos)

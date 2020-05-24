@@ -9,7 +9,7 @@
 
         player = Ship.CreateShip(param);
 
-        PublicVar.mainCamera.FollowTarget = player.gameObject;
+        PublicVar.mainCamera.FollowTarget = player;
 
         return player;
     }

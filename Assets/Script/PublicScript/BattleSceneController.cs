@@ -2,8 +2,7 @@
 
 public class BattleSceneController : MonoBehaviour
 {
-    [SerializeField]
-    private CheckoutPanel checkoutPanel;
+    public CheckoutPanel checkoutPanel;
 
     private LevelManager.LevelParam levelParam;
 

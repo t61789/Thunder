@@ -14,25 +14,11 @@ public class ControllerInput : MonoBehaviour
 
     public static bool Controlable = true;
 
-    public enum ControlType
-    {
-        keyStay,
-        keyDown,
-        keyUp,
-        mousePosition,
-        vJoystick,
-        vJoystickClick,
-        vJoystickDoubleClick,
-        vJoystickHolding
-    }
-
     [Serializable]
     public struct ControlStruct
     {
         public int key;
-        public ControlType controlType;
-        public Control control;
-        public Inject inject;
+        public string propName;
         public Act act;
     }
 
@@ -43,9 +29,7 @@ public class ControllerInput : MonoBehaviour
 
     private Controller controller;
 
-    public delegate void Inject(Vector3 vector3);
-    public delegate void Control(bool value);
-    public delegate void Act(ControlStruct c, bool clear);
+    public delegate void Act(ControlStruct c);
 
     private AimRing aimRing;
 
@@ -83,7 +67,14 @@ public class ControllerInput : MonoBehaviour
             Debug.LogWarning("No input named " + name + " in database, input will be invalid");
 
         foreach (var item in i)
-            controlStructs.Add(GetControlStruct((int)item[KEY_FIELD], (ControlType)Enum.Parse(typeof(ControlType), (string)item[CONTROL_TYPE_FIELD]), item[PROPERTY_FIELD] as string));
+        {
+            controlStructs.Add(new ControlStruct()
+            {
+                key = (int)item[KEY_FIELD],
+                propName = (string)item[PROPERTY_FIELD],
+                act = (Act)Delegate.CreateDelegate(typeof(Act), this, (string)item[CONTROL_TYPE_FIELD])
+            });
+        }
 
         if (aimRing)
             this.aimRing = PublicVar.uiManager.OpenUI<AimRing>("aimRing", UIInitAction.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
@@ -100,68 +91,7 @@ public class ControllerInput : MonoBehaviour
         }
 
         foreach (var item in controlStructs)
-            item.act(item, false);
-    }
-
-    private void LateUpdate()
-    {
-        if (!Controlable) return;
-
-        if (controller == null)
-        {
-            Remove();
-            return;
-        }
-
-        foreach (var item in controlStructs)
-            item.act(item, true);
-    }
-
-    public ControlStruct GetControlStruct(int key, ControlType controlType, string fieldName)
-    {
-        ControlStruct result = new ControlStruct
-        {
-            key = key,
-            controlType = controlType
-        };
-        switch (controlType)
-        {
-            case ControlType.keyStay:
-                result.control = (Control)Delegate.CreateDelegate(typeof(Control), controller, SET + fieldName);
-                result.act = KeyStay;
-                break;
-            case ControlType.keyDown:
-                result.control = (Control)Delegate.CreateDelegate(typeof(Control), controller, SET + fieldName);
-                result.act = KeyDown;
-                break;
-            case ControlType.keyUp:
-                result.control = (Control)Delegate.CreateDelegate(typeof(Control), controller, SET + fieldName);
-                result.act = KeyUp;
-                break;
-            case ControlType.mousePosition:
-                result.inject = (Inject)Delegate.CreateDelegate(typeof(Inject), controller, SET + fieldName);
-                result.act = MousePosition;
-                break;
-            case ControlType.vJoystick:
-                result.inject = (Inject)Delegate.CreateDelegate(typeof(Inject), controller, SET + fieldName);
-                result.act = VJoystick;
-                break;
-            case ControlType.vJoystickClick:
-                result.control = (Control)Delegate.CreateDelegate(typeof(Control), controller, SET + fieldName);
-                result.act = VJoystickClick;
-                break;
-            case ControlType.vJoystickDoubleClick:
-                result.control = (Control)Delegate.CreateDelegate(typeof(Control), controller, SET + fieldName);
-                result.act = VJoystickDoubleClick;
-                break;
-            case ControlType.vJoystickHolding:
-                result.control = (Control)Delegate.CreateDelegate(typeof(Control), controller, SET + fieldName);
-                result.act = VJoystickHolding;
-                break;
-            default:
-                break;
-        }
-        return result;
+            item.act(item);
     }
 
     private void FixedUpdate()
@@ -171,106 +101,58 @@ public class ControllerInput : MonoBehaviour
         Update();
     }
 
-    private void KeyStay(ControlStruct c, bool clear)
+    private void KeyStay(ControlStruct c)
     {
-        if (clear)
-        {
-            c.control(false);
-            return;
-        }
-
         KeyCode k = (KeyCode)c.key;
         if (PublicVar.control.RequestStay(k, REQUEST_TYPE))
         {
-            c.control(true);
+            controller.ControlKeys.SetBool(c.propName,true);
             PublicVar.control.Release(k, REQUEST_TYPE);
         }
     }
 
-    private void KeyDown(ControlStruct c, bool clear)
+    private void KeyDown(ControlStruct c)
     {
-        if (clear)
-        {
-            c.control(false);
-            return;
-        }
-
         KeyCode k = (KeyCode)c.key;
         if (PublicVar.control.RequestDown(k, REQUEST_TYPE))
         {
-            c.control(true);
+            controller.ControlKeys.SetBool(c.propName, true);
             PublicVar.control.Release(k, REQUEST_TYPE);
         }
     }
 
-    private void KeyUp(ControlStruct c, bool clear)
+    private void KeyUp(ControlStruct c)
     {
-        if (clear)
-        {
-            c.control(false);
-            return;
-        }
-
         KeyCode k = (KeyCode)c.key;
         if (PublicVar.control.RequestUp(k, REQUEST_TYPE))
         {
-            c.control(true);
+            controller.ControlKeys.SetBool(c.propName, true);
             PublicVar.control.Release(k, REQUEST_TYPE);
         }
     }
 
-    private void MousePosition(ControlStruct c, bool clear)
+    private void MousePosition(ControlStruct c)
     {
-        if (clear)
-        {
-            c.inject(Vector3.positiveInfinity);
-            return;
-        }
-
-        c.inject(Tool.Tools.GetMousePosition());
+        controller.ControlKeys.SetVector(c.propName, Tool.Tools.GetMousePosition());
     }
 
-    private void VJoystick(ControlStruct c, bool clear)
+    private void VJoystick(ControlStruct c)
     {
-        if (clear)
-        {
-            c.inject(Vector3.positiveInfinity);
-            return;
-        }
-
-        c.inject(Joystick.GetValue(c.key).val);
+        controller.ControlKeys.SetVector(c.propName, Joystick.GetValue(c.key).val);
     }
 
-    private void VJoystickClick(ControlStruct c, bool clear)
+    private void VJoystickClick(ControlStruct c)
     {
-        if (clear)
-        {
-            c.control(false);
-            return;
-        }
-
-        c.control(Joystick.GetValue(c.key).click);
+        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).click);
     }
 
     private void VJoystickDoubleClick(ControlStruct c, bool clear)
     {
-        if (clear)
-        {
-            c.control(false);
-            return;
-        }
-
-        c.control(Joystick.GetValue(c.key).doubleClick);
+        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).doubleClick);
     }
 
     private void VJoystickHolding(ControlStruct c, bool clear)
     {
-        if (clear)
-        {
-            c.control(false);
-            return;
-        }
-
-        c.control(Joystick.GetValue(c.key).holding);
+        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).holding);
     }
 }

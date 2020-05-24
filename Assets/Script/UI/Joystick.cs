@@ -150,6 +150,8 @@ public class Joystick : BaseUI
 
     private void CapClick(BaseUI baseUI, PointerEventData eventData)
     {
+        if (dragging) return;
+
         if (eventData.clickCount == 1)
             values[Index].click = true;
         else

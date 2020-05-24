@@ -2,8 +2,9 @@
 using Tool.BuffData;
 using UnityEngine;
 
-public class Fighter : Aircraft
+public class Fighter : Ship
 {
+    //todo 整合 fighter 和 ship
     public float MakeInterval = 2f;
 
     public bool GuardClock = true;
@@ -103,7 +104,7 @@ public class Fighter : Aircraft
 
     public TaskStatus TurnToPathPos()
     {
-        StaringAtControl = pathPos[0];
+        ControlKeys.SetVector(STARING_AT, pathPos[0]);
         return TaskStatus.Success;
     }
 
@@ -119,7 +120,7 @@ public class Fighter : Aircraft
 
     public TaskStatus MoveBack()
     {
-        SpeedUpBackControl = true;
+        ControlKeys.SetBool(ACC_BACK,true);
         return TaskStatus.Success;
     }
 
@@ -146,7 +147,7 @@ public class Fighter : Aircraft
 
     public TaskStatus SpeedUp()
     {
-        SpeedUpFrontControl = true;
+        ControlKeys.SetBool(ACC_FRONT, true);
         return TaskStatus.Success;
     }
 
@@ -163,7 +164,7 @@ public class Fighter : Aircraft
 
     public TaskStatus TurnToTarget()
     {
-        StaringAtControl = targetTrans.position;
+        ControlKeys.SetVector(STARING_AT, targetTrans.position);
         return TaskStatus.Success;
     }
 
