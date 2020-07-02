@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Assets.Script.System;
+using Assets.Script.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Script.System;
-using Assets.Script.UI;
 using UnityEngine;
 
-public class UIManager : IBaseSystem
+public class UIManager : MonoBehaviour,IBaseSystem
 {
     private Transform uiContainer;
     private Transform uiRecycleContainer;
@@ -25,6 +25,8 @@ public class UIManager : IBaseSystem
     private readonly List<UIUnit> activeUi = new List<UIUnit>();
     private readonly List<UIUnit> hideStableUi = new List<UIUnit>();
     private readonly Stack<UIUnit> closeStack = new Stack<UIUnit>();
+
+    public static string DefaultUiBundle = BundleManager.PrefabBundleD+BundleManager.UIBundle;
 
     private void Awake()
     {
@@ -107,13 +109,13 @@ public class UIManager : IBaseSystem
             return null;
         }
 
-        UIUnit unit = hideStableUi.Where(x => x.uiObj.UIName == uiName).FirstOrDefault();
+        UIUnit unit = hideStableUi.FirstOrDefault(x => x.uiObj.UIName == uiName);
         if (unit != null)
             hideStableUi.Remove(unit);
 
         BaseUI newPlane = unit?.uiObj;
         if (newPlane == null)
-            newPlane = PublicVar.objectPool.Alloc<BaseUI>(BundleManager.UIBundle, uiName);
+            newPlane = PublicVar.objectPool.Alloc<BaseUI>(null, DefaultUiBundle, uiName);
 
         newPlane.transform.SetParent(uiContainer);
         newPlane.transform.SetSiblingIndex(siblingIndex);

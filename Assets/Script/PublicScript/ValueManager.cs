@@ -163,7 +163,7 @@ public class ValueManager
             result.Add((pathBuilder.ToString(), item.text));
         }
 
-        PublicVar.bundle.ReleaseBundle(temp);
+        PublicVar.bundle.ReleaseBundle(null,temp);
 
         return result;
     }

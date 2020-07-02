@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Script.Turret;
+using System.Collections.Generic;
 using System.ComponentModel;
-using Assets.Script.Turret;
 
 public abstract class Survival : BaseGameMode
 {

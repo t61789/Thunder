@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Assets.Script.Turret;
+using Assets.Script.UI;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Script.Turret;
-using Assets.Script.UI;
 using UnityEngine;
 
 public class SurvivalNoli : Survival

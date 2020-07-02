@@ -113,9 +113,9 @@ public class PlayerRocket : Bullet
         rb2d.velocity = tempVelocity;
     }
 
-    public override void ObjectPoolReset()
+    public override void BeforeOpReset()
     {
-        //base.ObjectPoolReset(arg);
+        //base.BeforeOpReset(arg);
         //startEngineCount = Time.time;
         //SetCollider(true);
         //animator.Play("playerRocketIdle");

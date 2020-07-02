@@ -84,7 +84,7 @@ namespace Assets.Script.Turret
 
         public TaskStatus TurnOnSlowCruise()
         {
-            accelerationFront.AddBuff(slowCurise,"slowCurise", BuffData.Operator.Mul,0 );
+            accelerationFront.AddBuff(slowCurise, "slowCurise", BuffData.Operator.Mul, 0);
             return TaskStatus.Success;
         }
 
@@ -122,7 +122,7 @@ namespace Assets.Script.Turret
 
         public TaskStatus MoveBack()
         {
-            ControlKeys.SetBool(ACC_BACK,true);
+            ControlKeys.SetBool(ACC_BACK, true);
             return TaskStatus.Success;
         }
 

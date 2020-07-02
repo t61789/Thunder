@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
+using System.Collections.Generic;
 using Tool;
 using Tool.ObjectPool;
 using UnityEngine;
@@ -82,7 +82,7 @@ namespace Assets.Script.Turret
             Health = MaxHealth;
             drag = Drag;
             maxSpeed = Mathf.Max(AccelerationLeft, AccelerationRight, AccelerationFront, AccelerationBack);
-            maxSpeed.AddBuff(drag, "dragCoefficient",  BuffData.Operator.Mul, 0);
+            maxSpeed.AddBuff(drag, "dragCoefficient", BuffData.Operator.Mul, 0);
             accelerationFront = AccelerationFront;
             accelerationLeft = AccelerationLeft;
             accelerationBack = AccelerationBack;
@@ -111,8 +111,8 @@ namespace Assets.Script.Turret
                 float accMultiply = 1;
 
                 Vector3 tempControlVector = ControlKeys.GetVector(JOYSTICK, Vector3.positiveInfinity);
-                if(!tempControlVector.Equals(Vector3.positiveInfinity))
-                    ParseDir(tempControlVector,ref accMultiply);
+                if (!tempControlVector.Equals(Vector3.positiveInfinity))
+                    ParseDir(tempControlVector, ref accMultiply);
                 tempControlVector = ControlKeys.GetVector(SHOOTING_JOYSTICK, Vector3.positiveInfinity);
                 if (!tempControlVector.Equals(Vector3.positiveInfinity))
                     aimmingPos += tempControlVector * AimmingPosAcce * Time.fixedDeltaTime;
@@ -138,16 +138,16 @@ namespace Assets.Script.Turret
                 curVelocity -= drag * Time.fixedDeltaTime * rb2d.velocity.magnitude * curVelocity.normalized;
 
                 if (ControlKeys.GetBool(ACC_FRONT))
-                    curVelocity = SpeedUpFront(curVelocity, curDir,accMultiply);
+                    curVelocity = SpeedUpFront(curVelocity, curDir, accMultiply);
 
                 if (ControlKeys.GetBool(ACC_BACK))
-                    curVelocity = SpeedUpBack(curVelocity, curDir,accMultiply);
+                    curVelocity = SpeedUpBack(curVelocity, curDir, accMultiply);
 
                 if (ControlKeys.GetBool(ACC_LEFT))
-                    curVelocity = SpeedUpLeft(curVelocity, curDir,accMultiply);
+                    curVelocity = SpeedUpLeft(curVelocity, curDir, accMultiply);
 
                 if (ControlKeys.GetBool(ACC_RIGHT))
-                    curVelocity = SpeedUpRight(curVelocity, curDir,accMultiply);
+                    curVelocity = SpeedUpRight(curVelocity, curDir, accMultiply);
 
                 if (ForceTurn)
                     curVelocity = ForceTurnParse(curVelocity);
@@ -159,13 +159,13 @@ namespace Assets.Script.Turret
         private Vector3 ForceTurnParse(Vector3 curVelocity)
         {
             Vector3 curDir = trans.rotation * Vector3.up;
-            float angle = Vector3.Angle(curDir,curVelocity);
+            float angle = Vector3.Angle(curDir, curVelocity);
             if (angle <= 90) curVelocity = Quaternion.FromToRotation(curVelocity, curDir) * curVelocity;
             else curVelocity = Quaternion.FromToRotation(curVelocity, -curDir) * curVelocity;
             return curVelocity;
         }
 
-        private void ParseDir(Vector3 joystickDir,ref float accMultiply)
+        private void ParseDir(Vector3 joystickDir, ref float accMultiply)
         {
             if (joystickDir.Equals(Vector3.zero)) return;
 
@@ -178,9 +178,9 @@ namespace Assets.Script.Turret
             float angle = Vector3.Angle(baseDir, joystickDir);
             if (angle <= AccFrontAngle)
             {
-                ControlKeys.SetBool(ACC_FRONT,true);
-            } 
-            else if ( angle <=TurnAngle)
+                ControlKeys.SetBool(ACC_FRONT, true);
+            }
+            else if (angle <= TurnAngle)
             {
                 ControlKeys.SetBool(ACC_FRONT, true);
 
@@ -212,7 +212,7 @@ namespace Assets.Script.Turret
             return Quaternion.RotateTowards(curRot, Quaternion.FromToRotation(Vector3.up, temp), TurnDegree * Time.fixedDeltaTime);
         }
 
-        protected virtual Vector3 SpeedUpFront(Vector3 curVelocity, Vector3 curDir,float multiply)
+        protected virtual Vector3 SpeedUpFront(Vector3 curVelocity, Vector3 curDir, float multiply)
         {
             return curVelocity + curDir * accelerationFront * Time.fixedDeltaTime * multiply;
         }
@@ -249,20 +249,22 @@ namespace Assets.Script.Turret
             return gameObject;
         }
 
-        public virtual void ObjectPoolReset()
+        public virtual void BeforeOpReset()
         {
             pathPos.Clear();
         }
 
-        public virtual void ObjectPoolRecycle()
+        public virtual void BeforeOpRecycle()
         {
 
         }
 
-        public virtual void ObjectPoolDestroy()
+        public virtual void AfterOpDestroy()
         {
             Destroy(gameObject);
         }
+
+        public AssetId AssetId { get; set; }
 
         public virtual void ObjectPoolInit(Vector3 position, Quaternion rotation, Aircraft target, Aircraft guardTarget, string camp = null)
         {

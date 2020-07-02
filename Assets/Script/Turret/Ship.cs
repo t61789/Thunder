@@ -107,7 +107,7 @@ namespace Assets.Script.Turret
             }
 
             if (param.controlable)
-                ControllerInput.AttachTo(ship.gameObject,true);
+                ControllerInput.AttachTo(ship.gameObject, true);
 
             return ship;
         }

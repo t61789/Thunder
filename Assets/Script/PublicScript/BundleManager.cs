@@ -2,10 +2,11 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Experimental.AssetBundlePatching;
 
 public class BundleManager
 {
+    // todo 数据相关测试
+
     public static readonly string DllBundle = @"dll";
     public static readonly string DllBundleD = @"dll" + Paths.Div;
     public static readonly string PrefabBundle = @"prefabs";
@@ -170,11 +171,16 @@ public class BundleManager
         public void Release()
         {
             foreach (var item in Bundles.Values)
-                item.Bundle.Unload(true);
-            _MainfestBundle.Unload(true);
+                item.Bundle.Unload(false);
+            _MainfestBundle.Unload(false);
             Mainfest = null;
             _MainfestBundle = null;
         }
+    }
+
+    public BundleManager()
+    {
+        LoadBundleGroup(Paths.BundleBasePath);
     }
 
     private readonly Dictionary<string, BundleGroup> _BundleGroups = new Dictionary<string, BundleGroup>();
@@ -191,9 +197,16 @@ public class BundleManager
         _BundleGroups.Remove(bundleGroupDir);
     }
 
+    public void ReleaseAllBundleGroup()
+    {
+        foreach (var bundleGroup in _BundleGroups.Values)
+            bundleGroup.Release();
+        _BundleGroups.Clear();
+    }
+
     private readonly Queue<string> _LoadQueue = new Queue<string>();
 
-    private BundleUnit GetBundle(string bundleGroup,string bundle )
+    private BundleUnit GetBundle(string bundleGroup, string bundle)
     {
         // 非递归地加载所有依赖的bundle
 
@@ -228,11 +241,11 @@ public class BundleManager
 
         return groupUnit.Bundles[bundle];
     }
-    
-    public void ReleaseBundle(string bundleGroup,string bundle)
+
+    public void ReleaseBundle(string bundleGroup, string bundle)
     {
         BundleGroup groupUnit = BundleGroupCheck(ref bundleGroup);
-        Assert.IsTrue(groupUnit.Bundles.TryGetValue(bundle,out _), bundleGroup+" 中不存在名为 " + bundle +" 的bundle");
+        Assert.IsTrue(groupUnit.Bundles.TryGetValue(bundle, out _), bundleGroup + " 中不存在名为 " + bundle + " 的bundle");
 
         _LoadQueue.Clear();
         _LoadQueue.Enqueue(bundle);
@@ -242,14 +255,14 @@ public class BundleManager
         {
             string curBundle = _LoadQueue.Dequeue();
             BundleUnit b = groupUnit.Bundles[curBundle];
-            Assert.IsFalse(first && b.DependencyByCount==0,curBundle+" 仍有 "+b.DependencyByCount+" 个bundle依赖于它，不能释放");
+            Assert.IsFalse(first && b.DependencyByCount != 0, curBundle + " 仍有 " + b.DependencyByCount + " 个bundle依赖于它，不能释放");
 
             b.DependencyByCount--;
             if (b.DependencyByCount < 1)
             {
                 foreach (var item in b.Dependencies)
                     _LoadQueue.Enqueue(item);
-                b.Bundle.Unload(true);
+                b.Bundle.Unload(false);
                 groupUnit.Bundles.Remove(curBundle);
             }
 
@@ -259,9 +272,10 @@ public class BundleManager
 
     private BundleGroup BundleGroupCheck(ref string bundleGroup)
     {
-        bundleGroup ??= Paths.BundleBasePath;
+        bundleGroup = bundleGroup ?? Paths.BundleBasePath;
         bundleGroup = Path.GetFullPath(bundleGroup);
-        Assert.IsTrue(_BundleGroups.TryGetValue(bundleGroup, out BundleGroup groupUnit), "未加载名为 " + bundleGroup + " 的bundleGroup");
+        bool temp = _BundleGroups.TryGetValue(bundleGroup, out BundleGroup groupUnit);
+        Assert.IsTrue(temp, "未加载名为 " + bundleGroup + " 的bundleGroup");
         return groupUnit;
     }
 
@@ -274,13 +288,13 @@ public class BundleManager
 
     public T GetAsset<T>(string bundle, string asset) where T : Object
     {
-        return GetAsset<T>(Paths.BundleBasePath,bundle,asset);
+        return GetAsset<T>(Paths.BundleBasePath, bundle, asset);
     }
 
     public T GetAsset<T>(string bundleGroup, string bundle, string asset) where T : Object
     {
-        T result = GetBundle(bundleGroup,bundle).Bundle.LoadAsset<T>(asset);
-        Assert.IsNotNull(result,"未在bundle "+bundle+" 中找到名为 "+asset+" 的asset");
+        T result = GetBundle(bundleGroup, bundle).Bundle.LoadAsset<T>(asset);
+        Assert.IsNotNull(result, "未在bundle " + bundle + " 中找到名为 " + asset + " 的asset");
         return result;
     }
 
@@ -293,7 +307,19 @@ public class BundleManager
     {
         BundleGroupCheck(ref bundleGroup);
 
-        return GetBundle(bundleGroup,bundle).Bundle.LoadAllAssets<T>();
+        return GetBundle(bundleGroup, bundle).Bundle.LoadAllAssets<T>();
     }
 }
+public struct AssetId
+{
+    public readonly string BundleGroup;
+    public readonly string Bundle;
+    public string Name;
 
+    public AssetId(string bundleGroup, string bundle, string name)
+    {
+        BundleGroup = Path.GetFullPath(bundleGroup ?? Paths.BundleBasePath);
+        Bundle = bundle;
+        Name = name;
+    }
+}

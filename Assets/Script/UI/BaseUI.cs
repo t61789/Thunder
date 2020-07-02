@@ -80,12 +80,14 @@ namespace Assets.Script.UI
             return gameObject;
         }
 
-        public void ObjectPoolDestroy()
+        public void AfterOpDestroy()
         {
             Destroy(gameObject);
         }
 
-        public void ObjectPoolRecycle()
+        public AssetId AssetId { get; set; }
+
+        public void BeforeOpRecycle()
         {
 
         }
@@ -135,7 +137,7 @@ namespace Assets.Script.UI
             Dragging?.Invoke(this, eventData);
         }
 
-        public void ObjectPoolReset()
+        public void BeforeOpReset()
         {
 
         }

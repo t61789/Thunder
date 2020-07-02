@@ -32,7 +32,7 @@ namespace Assets.Script.UI
 
         private void FixedUpdate()
         {
-            if(aircraft==null)
+            if (aircraft == null)
             {
                 Destroy(gameObject);
                 return;

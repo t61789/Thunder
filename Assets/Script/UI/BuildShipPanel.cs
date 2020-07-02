@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Assets.Script.Turret;
+using System;
 using System.Collections.Generic;
-using Assets.Script.Turret;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -114,7 +114,7 @@ namespace Assets.Script.UI
         {
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                baseUI.GetComponent<Image>().sprite = PublicVar.objectPool.GetPrefab(BundleManager.UIBundle, "emptyUI").GetComponent<Image>().sprite;
+                baseUI.GetComponent<Image>().sprite = PublicVar.objectPool.GetPrefab(null,BundleManager.UIBundle,"emptyUI").GetComponent<Image>().sprite;
 
                 baseUI.rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
                 baseUI.rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Tool
@@ -27,7 +25,7 @@ namespace Tool
             public float Priority;
             public BuffData BuffData;
 
-            public Unit(string name,Operator op, float priority, BuffData buffData)
+            public Unit(string name, Operator op, float priority, BuffData buffData)
             {
                 Name = name;
                 Op = op;
@@ -97,10 +95,10 @@ namespace Tool
             CurData = newData;
         }
 
-        public void AddBuff(BuffData newBuff,string name, Operator op, float priority)
+        public void AddBuff(BuffData newBuff, string name, Operator op, float priority)
         {
             newBuff.Parent = this;
-            _child.Add(new Unit(name,op, priority, newBuff));
+            _child.Add(new Unit(name, op, priority, newBuff));
             for (int i = _child.Count - 1; i > 0; i--)
             {
                 if (_child[i - 1].Priority > _child[i].Priority)

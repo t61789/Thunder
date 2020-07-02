@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Assets.Script.Turret;
+﻿using Assets.Script.Turret;
+using System.Collections.Generic;
 
 public class CampManager
 {
@@ -35,21 +35,21 @@ public class CampManager
     {
         foreach (var item in PublicVar.dataBase["camp"].Select(null, null).Rows)
             camps.Add((string)item[0], new CampUnit((string)item[0]));
-        PublicVar.dataBase.DeleteTable("camp");
+        PublicVar.dataBase.DeleteTable(null,null,"camp");
 
         foreach (var item in PublicVar.dataBase["camp_hostile"].Select(null, null).Rows)
         {
             camps[(string)item[0]].AddHostile((string)item[1]);
             camps[(string)item[1]].AddHostile((string)item[0]);
         }
-        PublicVar.dataBase.DeleteTable("camp_hostile");
+        PublicVar.dataBase.DeleteTable(null, null, "camp_hostile");
 
         foreach (var item in PublicVar.dataBase["camp_ally"].Select(null, null).Rows)
         {
             camps[(string)item[0]].AddAlly((string)item[1]);
             camps[(string)item[1]].AddAlly((string)item[0]);
         }
-        PublicVar.dataBase.DeleteTable("camp_ally");
+        PublicVar.dataBase.DeleteTable(null, null, "camp_ally");
     }
 
     public bool IsHostile(Aircraft aircraft1, Aircraft aircraft2)

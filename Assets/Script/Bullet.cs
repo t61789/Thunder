@@ -19,6 +19,8 @@ public abstract class Bullet : MonoBehaviour, IObjectPool
     protected Transform releaserTrans;
     protected Transform trans;
     protected Aircraft releaser;
+    public AssetId AssetId { get; set; }
+
 
     protected void Awake()
     {
@@ -34,10 +36,11 @@ public abstract class Bullet : MonoBehaviour, IObjectPool
             LifeTimeEnd();
     }
 
-    public virtual void ObjectPoolDestroy()
+    public virtual void AfterOpDestroy()
     {
         Destroy(gameObject);
     }
+
 
     public void SetObjectPool(ObjectPool objectPool)
     {
@@ -49,12 +52,12 @@ public abstract class Bullet : MonoBehaviour, IObjectPool
         return gameObject;
     }
 
-    public virtual void ObjectPoolReset()
+    public virtual void BeforeOpReset()
     {
         lifeTimeStart = Time.time;
     }
 
-    public virtual void ObjectPoolRecycle()
+    public virtual void BeforeOpRecycle()
     {
 
     }

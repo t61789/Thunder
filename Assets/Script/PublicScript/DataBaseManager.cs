@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 public class DataBaseManager
 {
-    // 按照组(Group)读取
+    // 按照组(Group)读取，一个bundle内只包含一个dll和多张表
     // 每个组包含一个dll和一个bundle，bundle由多张表构成
     // 序列工具(Serializer)与组一一对应，dll的组织结构如下
     // Excel_Test
@@ -20,7 +18,6 @@ public class DataBaseManager
     //  D1
     //  D2
     //  ..
-    // 
 
     #region oldCode
 
@@ -247,7 +244,7 @@ public class DataBaseManager
     #endregion
 
 
-    private readonly Dictionary<TableId, TableUnit> _Tables = new Dictionary<TableId, TableUnit>();
+    private readonly Dictionary<AssetId, TableUnit> _Tables = new Dictionary<AssetId, TableUnit>();
 
     private readonly struct Serializer
     {
@@ -261,27 +258,13 @@ public class DataBaseManager
         }
     }
 
-    private struct TableId
-    {
-        private readonly string _BundleGroup;
-        private readonly string _Bundle;
-        public string Name;
-
-        public TableId(string bundleGroup, string bundle, string name)
-        {
-            _BundleGroup = Path.GetFullPath(bundleGroup ?? Paths.BundleBasePath);
-            _Bundle = bundle ?? BundleManager.DatabaseBundle;
-            Name = name;
-        }
-    }
-
     private struct TableUnit
     {
         public DataTable Deserialized;
         public byte[] UnDeserialized;
         public readonly Serializer Deserializer;
 
-        public TableUnit(DataTable deserialized,byte[] unDeserialized, Serializer deserializer)
+        public TableUnit(DataTable deserialized, byte[] unDeserialized, Serializer deserializer)
         {
             Deserialized = deserialized;
             UnDeserialized = unDeserialized;
@@ -289,13 +272,13 @@ public class DataBaseManager
         }
     }
 
-    public DataTable this[string table] => GetTable(null,null,table);
-    public DataTable this[string bundle,string table] => GetTable(null, bundle, table);
-    public DataTable this[string bundleGroup,string bundle, string table] => GetTable(bundleGroup, bundle, table);
+    public DataTable this[string table] => GetTable(null, null, table);
+    public DataTable this[string bundle, string table] => GetTable(null, bundle, table);
+    public DataTable this[string bundleGroup, string bundle, string table] => GetTable(bundleGroup, bundle, table);
 
     public DataTable GetTable(string bundleGroup, string bundle, string name)
     {
-        TableId id = new TableId(bundleGroup, bundle, name);
+        AssetId id = CreateId(bundleGroup, bundle, name);
 
         for (int i = 0; i < 2; i++)
         {
@@ -309,16 +292,16 @@ public class DataBaseManager
                 return value.Deserialized;
             }
 
-            LoadBundle(bundleGroup, bundle);
+            LoadBundle(id.BundleGroup, id.Bundle);
 
             id.Name = name;
-            Assert.IsTrue(_Tables.TryGetValue(id, out _), "未在bundleGroup " + bundleGroup + " 的bundle " + bundle + " 内找到名为 " + name + " 的table");
+            Assert.IsTrue(_Tables.TryGetValue(id, out _), $"未在 {bundleGroup}!{bundle} 内找到名为 {name} 的table");
         }
 
         return default;
     }
 
-    private readonly Dictionary<TableId, Serializer> _SerializersBuffer = new Dictionary<TableId, Serializer>();
+    private readonly Dictionary<AssetId, Serializer> _SerializersBuffer = new Dictionary<AssetId, Serializer>();
 
     private void LoadBundle(string bundleGroup, string bundle)
     {
@@ -327,22 +310,45 @@ public class DataBaseManager
         const string ser = "serializer";
 
         TextAsset[] assets = PublicVar.bundle.GetAllAsset<TextAsset>(bundleGroup, bundle);
-        byte[] dllBytes = assets.First(x => x.name == ser)?.bytes;
-        Assert.IsNotNull(dllBytes,$"未在bundleGroup {bundleGroup} 的bundle {bundle} 中找到解析dll");
+        byte[] dllBytes = assets.FirstOrDefault(x => x.name == ser)?.bytes;
+        Assert.IsNotNull(dllBytes, $"未在 {bundleGroup}!{bundle} 中找到解析dll");
         var serializers = Dll2Serializer(bundleGroup, bundle, dllBytes);
 
         foreach (var item in assets.Where(x => x.name != ser))
         {
-            TableId id = new TableId(bundleGroup,bundle,item.name);
-            _Tables.Add(id, new TableUnit(default,item.bytes, serializers[id]));
+            AssetId id = CreateId(bundleGroup, bundle, item.name);
+            if (_Tables.ContainsKey(id)) continue;
+            _Tables.Add(id, new TableUnit(default, item.bytes, serializers[id]));
         }
-        
-        PublicVar.bundle.ReleaseBundle(bundleGroup,bundle);
+
+        PublicVar.bundle.ReleaseBundle(bundleGroup, bundle);
+    }
+
+    /// <summary>
+    /// 谨慎使用，若删除表后再获取会引起大量的重复载入
+    /// </summary>
+    public bool DeleteTable(string bundleGroup, string bundle, string name)
+    {
+        return _Tables.Remove(CreateId(bundleGroup, bundle, name));
+    }
+
+    /// <summary>
+    /// 删除指定bundle的所有表
+    /// </summary>
+    /// <param name="bundleGroup"></param>
+    /// <param name="bundle"></param>
+    public void DeleteTable(string bundleGroup, string bundle)
+    {
+        AssetId id = CreateId(bundleGroup, bundle, null);
+        var keys = _Tables.Keys.Where(x => x.Bundle == id.Bundle && x.BundleGroup == id.BundleGroup).ToArray();
+
+        foreach (var tableId in keys)
+            _Tables.Remove(tableId);
     }
 
     private readonly List<PropertyInfo> _FieldsInfoBuffer = new List<PropertyInfo>();
 
-    private Dictionary<TableId, Serializer> Dll2Serializer(string bundleGroup, string bundle,byte[] bytes)
+    private Dictionary<AssetId, Serializer> Dll2Serializer(string bundleGroup, string bundle, byte[] bytes)
     {
         Assembly assembly = Assembly.Load(bytes);
         string assemblyName = assembly.GetName().Name;
@@ -362,7 +368,7 @@ public class DataBaseManager
             foreach (var prop in container.GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 _FieldsInfoBuffer.Add(prop);
 
-            _SerializersBuffer.Add(new TableId(bundleGroup,bundle,classname), new Serializer(item, _FieldsInfoBuffer.ToArray()));
+            _SerializersBuffer.Add(CreateId(bundleGroup, bundle, classname), new Serializer(item, _FieldsInfoBuffer.ToArray()));
         }
 
         return _SerializersBuffer;
@@ -453,4 +459,12 @@ public class DataBaseManager
 
         return new DataTable(_TempFields, _TempRows);
     }
+
+    private static readonly string DefaultBundle = BundleManager.DatabaseBundleD + BundleManager.Normal;
+    private static AssetId CreateId(string bundleGroup,string bundle,string name)
+    {
+        bundle = bundle ?? DefaultBundle;
+        return new AssetId(bundleGroup,bundle,name);
+    }
 }
+

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Assets.Script.UI;
+using System;
 using System.Collections;
-using Assets.Script.UI;
 using TMPro;
 using Tool;
 using Tool.ObjectPool;
@@ -45,8 +45,7 @@ public class PublicVar : MonoBehaviour
         {
             case "StartScene":
                 publicVar = gameObject;
-                if (bundle != null)
-                    bundle.ReleaseAllBundle(true);
+                bundle?.ReleaseAllBundleGroup();
                 bundle = new BundleManager();
                 objectPool = GetComponent<ObjectPool>();
                 container = GameObject.Find("Container").transform;

@@ -6,10 +6,10 @@ public class CameraController : MonoBehaviour
     public Ship FollowTarget
     {
         get => followTarget;
-        set 
+        set
         {
             if (value != null)
-                curCamera.orthographicSize = value.GetComponent<SpriteRenderer>().bounds.size.y*SizeCoe;
+                curCamera.orthographicSize = value.GetComponent<SpriteRenderer>().bounds.size.y * SizeCoe;
             followTarget = value;
         }
     }
