@@ -1,43 +1,46 @@
 ﻿using TMPro;
 
-public class ConfirmDialog : BaseUI
+namespace Assets.Script.UI
 {
-    public TextMeshProUGUI textMesh;
-
-    public DialogResult dialogResult;
-
-    private string tempText;
-
-    protected override void Awake()
+    public class ConfirmDialog : BaseUI
     {
-        base.Awake();
-        textMesh = transform.Find("Text").GetComponent<TextMeshProUGUI>();
-        tempText = textMesh.text;
-    }
+        public TextMeshProUGUI textMesh;
 
-    public void Init(string text)
-    {
-        textMesh.SetText(text);
-    }
+        public DialogResult dialogResult;
 
-    public void OK()
-    {
-        dialogResult = DialogResult.OK;
-        PublicVar.uiManager.CloseUI(this);
-    }
+        private string tempText;
 
-    public void Cancel()
-    {
-        dialogResult = DialogResult.Cancel;
-        PublicVar.uiManager.CloseUI(this);
-    }
-
-    public void Update()
-    {
-        if (textMesh.text != tempText)
+        protected override void Awake()
         {
+            base.Awake();
+            textMesh = transform.Find("Text").GetComponent<TextMeshProUGUI>();
             tempText = textMesh.text;
-            rectTrans.SetSizeWithCurrentAnchors(UnityEngine.RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width);
+        }
+
+        public void Init(string text)
+        {
+            textMesh.SetText(text);
+        }
+
+        public void OK()
+        {
+            dialogResult = DialogResult.OK;
+            PublicVar.uiManager.CloseUI(this);
+        }
+
+        public void Cancel()
+        {
+            dialogResult = DialogResult.Cancel;
+            PublicVar.uiManager.CloseUI(this);
+        }
+
+        public void Update()
+        {
+            if (textMesh.text != tempText)
+            {
+                tempText = textMesh.text;
+                rectTrans.SetSizeWithCurrentAnchors(UnityEngine.RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width);
+            }
         }
     }
 }

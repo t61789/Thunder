@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using Assets.Script.Turret;
 
 [JsonObject(MemberSerialization.OptOut)]
 public class SaveManager

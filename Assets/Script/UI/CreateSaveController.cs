@@ -1,52 +1,55 @@
 ﻿using UnityEngine;
 
-public class CreateSaveController : MonoBehaviour
+namespace Assets.Script.UI
 {
-    private void Awake()
+    public class CreateSaveController : MonoBehaviour
     {
-        PublicVar.uiManager.OpenUI<InputDialog>("inputDialog", UIInitAction.CenterParent, x =>
+        private void Awake()
         {
-            x.Init("");
-            x.OnCloseCheck += (BaseUI baseUi, ref bool result) =>
+            PublicVar.uiManager.OpenUI<InputDialog>("inputDialog", UIInitAction.CenterParent, x =>
             {
-                if (!result) return;
-
-                InputDialog id = baseUi as InputDialog;
-                if (id.dialogResult == DialogResult.OK)
+                x.Init("");
+                x.OnCloseCheck += (BaseUI baseUi, ref bool result) =>
                 {
-                    result = SaveManager.CreateSaveDir(id.Text);
-                    if (!result)
-                        PublicVar.uiManager.OpenUI<MessageDialog>("messageDialog", x, true, UIInitAction.CenterParent, message =>
-                        {
-                            message.Init("存档已存在");
-                        });
-                    else
+                    if (!result) return;
+
+                    InputDialog id = baseUi as InputDialog;
+                    if (id.dialogResult == DialogResult.OK)
                     {
-                        PublicVar.saveManager = SaveManager.LoadSave(id.Text);
-                        StartBuildShip();
+                        result = SaveManager.CreateSaveDir(id.Text);
+                        if (!result)
+                            PublicVar.uiManager.OpenUI<MessageDialog>("messageDialog", x, true, UIInitAction.CenterParent, message =>
+                            {
+                                message.Init("存档已存在");
+                            });
+                        else
+                        {
+                            PublicVar.saveManager = SaveManager.LoadSave(id.Text);
+                            StartBuildShip();
+                        }
                     }
-                }
-                else
-                    GoBack();
-            };
-        });
-    }
+                    else
+                        GoBack();
+                };
+            });
+        }
 
-    private void StartBuildShip()
-    {
-        PublicVar.uiManager.OpenUI<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
-    }
+        private void StartBuildShip()
+        {
+            PublicVar.uiManager.OpenUI<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
+        }
 
-    private void BuildShipClosed(BuildShipPanel b)
-    {
-        PublicVar.saveManager.playerShipParam = b.buildResult;
-        PublicVar.saveManager.Save();
+        private void BuildShipClosed(BuildShipPanel b)
+        {
+            PublicVar.saveManager.playerShipParam = b.buildResult;
+            PublicVar.saveManager.Save();
 
-        PublicVar.instance.LoadSceneAsync("LevelScene");
-    }
+            PublicVar.instance.LoadSceneAsync("LevelScene");
+        }
 
-    public void GoBack()
-    {
-        PublicVar.instance.LoadSceneAsync("StartScene");
+        public void GoBack()
+        {
+            PublicVar.instance.LoadSceneAsync("StartScene");
+        }
     }
 }

@@ -1,44 +1,47 @@
 ﻿using System.Collections;
 using UnityEngine.UI;
 
-public class InputDialog : BaseUI
+namespace Assets.Script.UI
 {
-    public string Text;
-    public DialogResult dialogResult;
-
-    private InputField inputField;
-
-    public void Init(string text)
+    public class InputDialog : BaseUI
     {
-        inputField.text = text;
-    }
+        public string Text;
+        public DialogResult dialogResult;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        inputField = transform.Find("InputField").GetComponent<InputField>();
-    }
+        private InputField inputField;
 
-    public void TextChange()
-    {
-        Text = inputField.text;
-    }
+        public void Init(string text)
+        {
+            inputField.text = text;
+        }
 
-    public void InputEndOK()
-    {
-        dialogResult = DialogResult.OK;
-        PublicVar.uiManager.CloseUI(this);
-    }
+        protected override void Awake()
+        {
+            base.Awake();
+            inputField = transform.Find("InputField").GetComponent<InputField>();
+        }
 
-    public void InputEndCancel()
-    {
-        dialogResult = DialogResult.Cancel;
-        PublicVar.uiManager.CloseUI(this);
-    }
+        public void TextChange()
+        {
+            Text = inputField.text;
+        }
 
-    public override void ObjectPoolReset(Hashtable arg)
-    {
-        base.ObjectPoolReset(arg);
-        inputField.text = null;
+        public void InputEndOK()
+        {
+            dialogResult = DialogResult.OK;
+            PublicVar.uiManager.CloseUI(this);
+        }
+
+        public void InputEndCancel()
+        {
+            dialogResult = DialogResult.Cancel;
+            PublicVar.uiManager.CloseUI(this);
+        }
+
+        public override void ObjectPoolReset(Hashtable arg)
+        {
+            base.ObjectPoolReset(arg);
+            inputField.text = null;
+        }
     }
 }

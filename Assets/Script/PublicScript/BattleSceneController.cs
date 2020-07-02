@@ -1,43 +1,47 @@
-﻿using UnityEngine;
+﻿using Assets.Script.UI;
+using UnityEngine;
 
-public class BattleSceneController : MonoBehaviour
+namespace Thunder.PublicScript
 {
-    public CheckoutPanel checkoutPanel;
-
-    private LevelManager.LevelParam levelParam;
-
-    private void Start()
+    public class BattleSceneController : MonoBehaviour
     {
-        LoadLevel();
-    }
+        public CheckoutPanel checkoutPanel;
 
-    public void LoadLevel()
-    {
-        var (levelParam, init) = GlobalBuffer.battleSceneParam;
-        this.levelParam = levelParam;
+        private LevelManager.LevelParam levelParam;
 
-        BaseGameMode gameMode = PublicVar.gameMode.SetupMode(levelParam.modeType, levelParam.arg, init);
+        private void Start()
+        {
+            LoadLevel();
+        }
 
-        gameMode.OnModeComplete += GameModeComplete;
-    }
+        public void LoadLevel()
+        {
+            var (levelParam, init) = GlobalBuffer.battleSceneParam;
+            this.levelParam = levelParam;
 
-    private void GameModeComplete(BaseGameMode gameMode, BaseGameMode.CompleteParam completeParam)
-    {
-        ControllerInput.Controlable = false;
-        checkoutPanel.Init(completeParam);
-        PublicVar.uiManager.OpenUI(checkoutPanel.UIName);
-        GlobalBuffer.battleSceneParam = (PublicVar.level.LevelComplete(levelParam.index), null);
-    }
+            BaseGameMode gameMode = PublicVar.gameMode.SetupMode(levelParam.modeType, levelParam.arg, init);
 
-    public void NextLevel()
-    {
-        ControllerInput.Controlable = true;
-        PublicVar.instance.LoadSceneAsync("BattleScene");
-    }
+            gameMode.OnModeComplete += GameModeComplete;
+        }
 
-    public void GoBack()
-    {
-        ControllerInput.Controlable = true;
-        PublicVar.instance.LoadSceneAsync("LevelScene");
+        private void GameModeComplete(BaseGameMode gameMode, BaseGameMode.CompleteParam completeParam)
+        {
+            ControllerInput.Controlable = false;
+            checkoutPanel.Init(completeParam);
+            PublicVar.uiManager.OpenUI(checkoutPanel.UIName);
+            GlobalBuffer.battleSceneParam = (PublicVar.level.LevelComplete(levelParam.index), null);
+        }
+
+        public void NextLevel()
+        {
+            ControllerInput.Controlable = true;
+            PublicVar.instance.LoadSceneAsync("BattleScene");
+        }
+
+        public void GoBack()
+        {
+            ControllerInput.Controlable = true;
+            PublicVar.instance.LoadSceneAsync("LevelScene");
+        }
     }
 }

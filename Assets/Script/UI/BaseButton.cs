@@ -2,12 +2,15 @@
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BaseButton : BaseUI
+namespace Assets.Script.UI
 {
-    public void Init(string text, Action onClick = null)
+    public class BaseButton : BaseUI
     {
-        rectTrans.Find("Text").GetComponent<Text>().text = text;
-        if (onClick != null)
-            GetComponent<Button>().onClick.AddListener(new UnityAction(onClick));
+        public void Init(string text, Action onClick = null)
+        {
+            rectTrans.Find("Text").GetComponent<Text>().text = text;
+            if (onClick != null)
+                GetComponent<Button>().onClick.AddListener(new UnityAction(onClick));
+        }
     }
 }

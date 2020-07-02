@@ -123,7 +123,7 @@ public class PlayerRocket : Bullet
         //contactEnemy = null;
         //target = null;
         //behaviorTree.enabled = true;
-        //playerRb2d = releaser.GetComponent<Rigidbody2D>();
+        //playerRb2d = _Releaser.GetComponent<Rigidbody2D>();
         //rb2d.velocity = playerRb2d.velocity * InheritVelocityPercent;
     }
 

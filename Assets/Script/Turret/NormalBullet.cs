@@ -1,44 +1,47 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// releaser应有rigidbody2d和继承了aircraft的控制器
-/// </summary>
-public class NormalBullet : Bullet
+namespace Assets.Script.Turret
 {
-    [Range(0, 1)]
-    public float InheritVelocity;
-
-    protected Rigidbody2D releaserRb2d;
-
-    public void ObjectPoolInit(Transform releaser, Vector3 pos, Quaternion rotate, Rigidbody2D releaserRb2d)
+    /// <summary>
+    /// releaser应有rigidbody2d和继承了aircraft的控制器
+    /// </summary>
+    public class NormalBullet : Bullet
     {
-        base.ObjectPoolInit(releaser, pos, rotate);
-        this.releaserRb2d = releaserRb2d;
-        rb2d.velocity = trans.rotation * Vector3.up * MaxSpeed + (Vector3)releaserRb2d.velocity * InheritVelocity;
-        animator.Play("idle");
-    }
+        [Range(0, 1)]
+        public float InheritVelocity;
 
-    protected void BulletExploded()
-    {
-        animator.SetBool("contactEnemy", false);
-        PublicVar.objectPool.Recycle(this);
-    }
+        protected Rigidbody2D releaserRb2d;
 
-    protected void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.isTrigger)
-            return;
+        public void ObjectPoolInit(Transform releaser, Vector3 pos, Quaternion rotate, Rigidbody2D releaserRb2d)
+        {
+            base.ObjectPoolInit(releaser, pos, rotate);
+            this.releaserRb2d = releaserRb2d;
+            rb2d.velocity = trans.rotation * Vector3.up * MaxSpeed + (Vector3)releaserRb2d.velocity * InheritVelocity;
+            animator.Play("idle");
+        }
 
-        Aircraft camp = other.gameObject.GetComponent<Aircraft>();
-        if (camp == null)
-            return;
-        if (!PublicVar.camp.IsHostile(releaser, camp))
-            return;
+        protected void BulletExploded()
+        {
+            animator.SetBool("contactEnemy", false);
+            PublicVar.objectPool.Recycle(this);
+        }
 
-        (camp as Aircraft).GetDamage(Damage);
+        protected void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.isTrigger)
+                return;
 
-        rb2d.velocity = Vector2.zero;
+            Aircraft camp = other.gameObject.GetComponent<Aircraft>();
+            if (camp == null)
+                return;
+            if (!PublicVar.camp.IsHostile(releaser, camp))
+                return;
 
-        animator.SetBool("contactEnemy", true);
+            camp.GetDamage(Damage);
+
+            rb2d.velocity = Vector2.zero;
+
+            animator.SetBool("contactEnemy", true);
+        }
     }
 }

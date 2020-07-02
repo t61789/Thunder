@@ -1,79 +1,83 @@
-﻿using Tool;
+﻿using Assets.Script.Turret;
+using Tool;
 using UnityEngine;
 
-public class AimRing : BaseUI
+namespace Assets.Script.UI
 {
-    [Range(3, 35)]
-    public int Detail = 50;
-    public float Width = 0.5f;
-
-    private MeshFilter meshFilter;
-    private MeshRenderer meshRenderer;
-    private Material ringMaterial;
-    private Color color;
-    private Aircraft aircraft;
-    private Transform aimPoint;
-    private Vector3 preAimPos;
-
-    protected override void Awake()
+    public class AimRing : BaseUI
     {
-        base.Awake();
-        meshFilter = GetComponent<MeshFilter>();
-        meshRenderer = GetComponent<MeshRenderer>();
-        aimPoint = rectTrans.Find("aimPoint");
-        ringMaterial = meshRenderer.material;
-        color = ringMaterial.GetColor("_Color");
+        [Range(3, 35)]
+        public int Detail = 50;
+        public float Width = 0.5f;
 
-        if (Detail > 2) SetMesh(Detail);
-    }
+        private MeshFilter meshFilter;
+        private MeshRenderer meshRenderer;
+        private Material ringMaterial;
+        private Color color;
+        private Aircraft aircraft;
+        private Transform aimPoint;
+        private Vector3 preAimPos;
 
-    private void FixedUpdate()
-    {
-        if(aircraft==null)
+        protected override void Awake()
         {
-            Destroy(gameObject);
-            return;
+            base.Awake();
+            meshFilter = GetComponent<MeshFilter>();
+            meshRenderer = GetComponent<MeshRenderer>();
+            aimPoint = rectTrans.Find("aimPoint");
+            ringMaterial = meshRenderer.material;
+            color = ringMaterial.GetColor("_Color");
+
+            if (Detail > 2) SetMesh(Detail);
         }
 
-        rectTrans.position = aircraft.trans.position;
-        if (!aircraft.aimmingPos.Equals(preAimPos))
+        private void FixedUpdate()
         {
-            preAimPos = aircraft.aimmingPos;
-            SetColor(1);
-            SetPreference(aircraft.aimmingPos.magnitude, Width);
-            aimPoint.localPosition = aircraft.aimmingPos;
+            if(aircraft==null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            rectTrans.position = aircraft.trans.position;
+            if (!aircraft.aimmingPos.Equals(preAimPos))
+            {
+                preAimPos = aircraft.aimmingPos;
+                SetColor(1);
+                SetPreference(aircraft.aimmingPos.magnitude, Width);
+                aimPoint.localPosition = aircraft.aimmingPos;
+            }
+            else
+            {
+                SetColor(0);
+            }
         }
-        else
+
+        public void Init(Aircraft aircraft)
         {
-            SetColor(0);
+            this.aircraft = aircraft;
         }
-    }
 
-    public void Init(Aircraft aircraft)
-    {
-        this.aircraft = aircraft;
-    }
+        public void SetMesh(int detail)
+        {
+            meshFilter.mesh = Tools.CreateRingMesh(detail);
+        }
 
-    public void SetMesh(int detail)
-    {
-        meshFilter.mesh = Tools.CreateRingMesh(detail);
-    }
+        public void SetPreference(float radius, float width)
+        {
+            ringMaterial.SetFloat("_Radius", radius);
+            ringMaterial.SetFloat("_Width", width);
+        }
 
-    public void SetPreference(float radius, float width)
-    {
-        ringMaterial.SetFloat("_Radius", radius);
-        ringMaterial.SetFloat("_Width", width);
-    }
+        public void SetColor(Color color)
+        {
+            this.color = color;
+            ringMaterial.SetColor("_Color", color);
+        }
 
-    public void SetColor(Color color)
-    {
-        this.color = color;
-        ringMaterial.SetColor("_Color", color);
-    }
-
-    public void SetColor(float alpha)
-    {
-        color.a = alpha;
-        ringMaterial.SetColor("_Color", color);
+        public void SetColor(float alpha)
+        {
+            color.a = alpha;
+            ringMaterial.SetColor("_Color", color);
+        }
     }
 }

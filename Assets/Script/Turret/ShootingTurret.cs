@@ -1,58 +1,61 @@
 ﻿using UnityEngine;
 
-public class ShootingTurret : Turret
+namespace Assets.Script.Turret
 {
-    public string Bullet;
-    public bool Controllable;
-    public float TurnDegree;
-
-    protected Transform shipTrans;
-    protected float fireInterval;
-    protected float fireIntervalCount;
-
-    private const string FIRE = "Fire";
-
-    protected override void Awake()
+    public class ShootingTurret : Turret
     {
-        base.Awake();
-        trans = transform;
-        fireIntervalCount = Time.time;
-        SetBullet(Bullet);
-    }
+        public string Bullet;
+        public bool Controllable;
+        public float TurnDegree;
 
-    protected void Update()
-    {
-        if (Controllable)
+        protected Transform shipTrans;
+        protected float fireInterval;
+        protected float fireIntervalCount;
+
+        private const string FIRE = "Fire";
+
+        protected override void Awake()
         {
-            if ((Time.time - fireIntervalCount > fireInterval) && ControlKeys.GetBool(FIRE))
+            base.Awake();
+            trans = transform;
+            fireIntervalCount = Time.time;
+            SetBullet(Bullet);
+        }
+
+        protected void Update()
+        {
+            if (Controllable)
             {
-                fireIntervalCount = Time.time;
-                PublicVar.objectPool.Alloc<NormalBullet>(Bullet, x =>
+                if ((Time.time - fireIntervalCount > fireInterval) && ControlKeys.GetBool(FIRE))
                 {
-                    x.ObjectPoolInit(shipTrans, trans.position, trans.rotation);
-                });
+                    fireIntervalCount = Time.time;
+                    PublicVar.objectPool.Alloc<NormalBullet>(Bullet, x =>
+                    {
+                        x.ObjectPoolInit(shipTrans, trans.position, trans.rotation);
+                    });
+                }
             }
         }
-    }
 
-    protected void FixedUpdate()
-    {
-        if (Controllable)
+        protected void FixedUpdate()
         {
-            Vector3 vector = ship.aimmingPos - trans.position;
-            trans.rotation = Quaternion.RotateTowards(trans.rotation, Quaternion.FromToRotation(Vector3.up, vector), TurnDegree);
+            if (Controllable)
+            {
+                Vector3 vector = ship.aimmingPos - trans.position;
+                trans.rotation = Quaternion.RotateTowards(trans.rotation, Quaternion.FromToRotation(Vector3.up, vector), TurnDegree);
+            }
         }
-    }
 
-    public override void Install(Ship ship, Vector3 position, Vector3 rotaion)
-    {
-        base.Install(ship, position, rotaion);
-        shipTrans = ship.transform;
-    }
+        public override void Install(Ship ship, Vector3 position, Vector3 rotaion)
+        {
+            base.Install(ship, position, rotaion);
+            shipTrans = ship.transform;
+        }
 
-    public void SetBullet(string bullet)
-    {
-        fireInterval = PublicVar.objectPool.GetPrefab(bullet).GetComponent<Bullet>().FireInterval;
-        Bullet = bullet;
+        public void SetBullet(string bullet)
+        {
+            fireInterval = PublicVar.objectPool.GetPrefab(bullet).GetComponent<Bullet>().FireInterval;
+            Bullet = bullet;
+        }
     }
 }

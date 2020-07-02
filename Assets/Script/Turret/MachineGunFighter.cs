@@ -1,24 +1,27 @@
 ﻿using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-public class MachineGunFighter : Fighter
+namespace Assets.Script.Turret
 {
-    protected ParticleSystem machineGun;
+    public class MachineGunFighter : Fighter
+    {
+        protected ParticleSystem machineGun;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        machineGun = trans.Find("machineGun").GetComponent<ParticleSystem>();
-    }
+        protected override void Awake()
+        {
+            base.Awake();
+            machineGun = trans.Find("machineGun").GetComponent<ParticleSystem>();
+        }
 
-    public TaskStatus StopShoot()
-    {
-        machineGun.Stop();
-        return TaskStatus.Success;
-    }
-    public TaskStatus Shoot()
-    {
-        machineGun.Play();
-        return TaskStatus.Success;
+        public TaskStatus StopShoot()
+        {
+            machineGun.Stop();
+            return TaskStatus.Success;
+        }
+        public TaskStatus Shoot()
+        {
+            machineGun.Play();
+            return TaskStatus.Success;
+        }
     }
 }

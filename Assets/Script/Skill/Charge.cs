@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using Tool.BuffData;
+using Tool;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]

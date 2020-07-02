@@ -1,12 +1,16 @@
-﻿using UnityEngine;
+﻿using Thunder.PublicScript;
+using UnityEngine;
 
-public class CheckoutPanel : BaseUI
+namespace Assets.Script.UI
 {
-    [SerializeField]
-    private BattleSceneController battleSceneController;
-
-    public void Init(BaseGameMode.CompleteParam completeParam)
+    public class CheckoutPanel : BaseUI
     {
+        [SerializeField]
+        private BattleSceneController battleSceneController;
 
+        public void Init(BaseGameMode.CompleteParam completeParam)
+        {
+
+        }
     }
 }

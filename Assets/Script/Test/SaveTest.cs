@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Thunder.PublicScript;
+using UnityEngine;
 
 public class SaveTest : MonoBehaviour
 {

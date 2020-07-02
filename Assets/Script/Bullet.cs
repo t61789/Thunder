@@ -1,4 +1,5 @@
-﻿using Tool.BuffData;
+﻿using Assets.Script.Turret;
+using Tool;
 using Tool.ObjectPool;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public abstract class Bullet : MonoBehaviour, IObjectPool
 
     protected Quaternion direction;
     protected BuffData damage;
-    protected float lifeTimeStart = 0;
+    protected float lifeTimeStart;
     protected Rigidbody2D rb2d;
     protected ObjectPool objectPool;
     protected Animator animator;

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Script.System;
+using Assets.Script.UI;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : IBaseSystem
 {
     private Transform uiContainer;
     private Transform uiRecycleContainer;
@@ -205,5 +207,10 @@ public class UIManager : MonoBehaviour
     {
         if (dialog == null) return false;
         return dialog.gameObject.activeSelf;
+    }
+
+    public void Reset()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Assets.Script.UI;
 using TMPro;
 using Tool;
 using Tool.ObjectPool;
@@ -97,12 +98,6 @@ public class PublicVar : MonoBehaviour
         }
 
         GC.Collect();
-
-
-#if UNITY_EDITOR_WIN
-#else
-		consoleWindow = new ConsoleWindow();
-#endif
     }
 
     private void Update()

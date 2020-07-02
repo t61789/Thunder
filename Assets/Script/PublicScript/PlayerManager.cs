@@ -1,4 +1,6 @@
-﻿public class PlayerManager
+﻿using Assets.Script.Turret;
+
+public class PlayerManager
 {
     private Ship player;
 

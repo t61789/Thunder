@@ -1,34 +1,37 @@
 ﻿using TMPro;
 using UnityEngine;
 
-public class LogPanel : BaseUI
+namespace Assets.Script.UI
 {
-    [HideInInspector]
-    public TextMeshProUGUI textMesh;
-
-    public bool ResizeWithText;
-    public Vector2 Interval;
-
-    protected override void Awake()
+    public class LogPanel : BaseUI
     {
-        base.Awake();
-        textMesh = transform.Find("Text").GetComponent<TextMeshProUGUI>();
-    }
+        [HideInInspector]
+        public TextMeshProUGUI textMesh;
 
-    private void Resize()
-    {
-        rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width + Interval.x);
-        rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, textMesh.rectTransform.rect.height + Interval.y);
-    }
+        public bool ResizeWithText;
+        public Vector2 Interval;
 
-    public string GetText()
-    {
-        return textMesh.text;
-    }
+        protected override void Awake()
+        {
+            base.Awake();
+            textMesh = transform.Find("Text").GetComponent<TextMeshProUGUI>();
+        }
 
-    public void SetText(string text)
-    {
-        textMesh.SetText(text);
-        Resize();
+        private void Resize()
+        {
+            rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width + Interval.x);
+            rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, textMesh.rectTransform.rect.height + Interval.y);
+        }
+
+        public string GetText()
+        {
+            return textMesh.text;
+        }
+
+        public void SetText(string text)
+        {
+            textMesh.SetText(text);
+            Resize();
+        }
     }
 }

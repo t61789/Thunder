@@ -1,28 +1,31 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class SurvivalNoliUI : BaseUI
+namespace Assets.Script.UI
 {
-    private string surviveTimePreText = "";
-    private string scorePreText = "";
-
-    private Text surviveTime;
-    private Text score;
-
-    protected override void Awake()
+    public class SurvivalNoliUI : BaseUI
     {
-        base.Awake();
-        surviveTime = transform.Find("surviveTime").GetComponent<Text>();
-        score = transform.Find("score").GetComponent<Text>();
+        private string surviveTimePreText = "";
+        private string scorePreText = "";
 
-        surviveTimePreText = surviveTime.text;
-        scorePreText = score.text;
-    }
+        private Text surviveTime;
+        private Text score;
 
-    public void Refresh(float surviveTime, int score)
-    {
-        surviveTime = Mathf.Floor(surviveTime * 100) * 0.01f;
-        this.surviveTime.text = surviveTimePreText + surviveTime.ToString("0.00");
-        this.score.text = scorePreText + score;
+        protected override void Awake()
+        {
+            base.Awake();
+            surviveTime = transform.Find("surviveTime").GetComponent<Text>();
+            score = transform.Find("score").GetComponent<Text>();
+
+            surviveTimePreText = surviveTime.text;
+            scorePreText = score.text;
+        }
+
+        public void Refresh(float surviveTime, int score)
+        {
+            surviveTime = Mathf.Floor(surviveTime * 100) * 0.01f;
+            this.surviveTime.text = surviveTimePreText + surviveTime.ToString("0.00");
+            this.score.text = scorePreText + score;
+        }
     }
 }
