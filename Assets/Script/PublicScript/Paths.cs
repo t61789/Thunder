@@ -5,7 +5,7 @@ public class Paths
 {
     public static string DocumentPath;
     public static string DocumentPathD;
-    public static char Div = Path.DirectorySeparatorChar;
+    public static char Div = '/';
 
 #if UNITY_STANDALONE || UNITY_EDITOR
     public static string BundleBasePath = @"E:\AssetBundles" + Div + "StandaloneWindows";
