@@ -1,7 +1,4 @@
-﻿
-*.meta
-
-/.vs/Thunder
+﻿/.vs/Thunder
 
 /Assets/Bundle
 /Build
@@ -18,3 +15,5 @@
 /Assets/Script
 /Luajit
 /Luajit64
+/Assets/Lib/ToLua/Source/Generate
+/Assets/Lib/ToLua/Source/Generate.meta
