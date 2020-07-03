@@ -3,9 +3,7 @@
 
 /.vs/Thunder
 
-/Assets/*
-
-!/Assets/Script
+/Assets/Bundle
 /Build
 /Library
 /Logs

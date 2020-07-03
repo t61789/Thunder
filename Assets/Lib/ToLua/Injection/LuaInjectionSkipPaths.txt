@@ -1,0 +1,7 @@
+Assets/Lib/ToLua/Core/
+Assets/Lib/ToLua/Injection/
+Assets/Lib/ToLua/Misc/
+Assets/Lib/ToLua/Reflection/
+Assets/Plugins/
+Assets/Lib/ToLua/BaseType/
+Assets/Lib/ToLua/Source/Generate/
