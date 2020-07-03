@@ -319,8 +319,8 @@ namespace Assets.Script.System
 
             const string ser = "serializer";
 
-            TextAsset[] assets = System.bundle.GetAllAsset<TextAsset>(bundleGroup, bundle);
-            byte[] dllBytes = assets.FirstOrDefault(x => x.name == ser)?.bytes;
+            var assets = System.bundle.GetAllAsset<TextAsset>(bundleGroup, bundle);
+            var dllBytes = assets.FirstOrDefault(x => x.name == ser)?.bytes;
             Assert.IsNotNull(dllBytes, $"未在 {bundleGroup}!{bundle} 中找到解析dll");
             var serializers = Dll2Serializer(bundleGroup, bundle, dllBytes);
 
@@ -438,7 +438,7 @@ namespace Assets.Script.System
 
             //Type repeatedFieldType = typeof(Google.Protobuf.Collections.RepeatedField<>);
             parser = serializer.Ser.GetProperty("Data")?.GetValue(temp, null);  // 获取原始数据，由容器组成的数组
-            global::System.Collections.IEnumerator enumerator = (global::System.Collections.IEnumerator)parser?.GetType().GetMethod("GetEnumerator")?.Invoke(parser, null); // 获取数组的迭代器
+            IEnumerator enumerator = (IEnumerator)parser?.GetType().GetMethod("GetEnumerator")?.Invoke(parser, null); // 获取数组的迭代器
 
             while (enumerator != null && enumerator.MoveNext())
             {
@@ -454,7 +454,7 @@ namespace Assets.Script.System
 
             // 获取序列类中的field值
             parser = serializer.Ser.GetProperty("Fields")?.GetValue(temp, null);
-            enumerator = (global::System.Collections.IEnumerator)parser?.GetType().GetMethod("GetEnumerator")?.Invoke(parser, null);
+            enumerator = (IEnumerator)parser?.GetType().GetMethod("GetEnumerator")?.Invoke(parser, null);
 
             _TempFields.Clear();
             while (enumerator != null && enumerator.MoveNext())
@@ -481,59 +481,39 @@ namespace Assets.Script.System
     {
         public bool IsEmpty;
 
-        private readonly Dictionary<string, int> fields;
+        private readonly Dictionary<string, int> _Fields;
 
         public Row[] Rows { get; }
 
-        public DataTable(List<string> fields, List<object[]> rows)
+        public DataTable(IEnumerable<string> fields, IReadOnlyList<object[]> rows)
         {
-            this.fields = new Dictionary<string, int>();
-            int count = 0;
+            _Fields = new Dictionary<string, int>();
+            var count = 0;
             foreach (var item in fields)
             {
-                this.fields.Add(item, count);
+                _Fields.Add(item, count);
                 count++;
             }
             Rows = new Row[rows.Count];
-            for (int i = 0; i < rows.Count; i++)
-                Rows[i] = new Row(rows[i], this.fields);
+            for (var i = 0; i < rows.Count; i++)
+                Rows[i] = new Row(rows[i], _Fields);
 
-            this.rows = null;
-            row = null;
-            fieldsIndex = null;
+            _Rows = null;
+            _Row = null;
+            _FieldsIndex = null;
 
             IsEmpty = rows.Count == 0;
         }
 
-        public DataTable(string[] fields, List<object[]> rows)
-        {
-            this.fields = new Dictionary<string, int>();
-            int count = 0;
-            foreach (var item in fields)
-            {
-                this.fields.Add(item, count);
-                count++;
-            }
-            Rows = new Row[rows.Count];
-            for (int i = 0; i < rows.Count; i++)
-                Rows[i] = new Row(rows[i], this.fields);
-
-            this.rows = null;
-            row = null;
-            fieldsIndex = null;
-
-            IsEmpty = rows.Count == 0;
-        }
-
-        public struct Row
+        public readonly struct Row
         {
             public object[] Cells { get; }
-            private readonly Dictionary<string, int> fields;
+            private readonly Dictionary<string, int> _Fields;
 
             public Row(object[] cells, Dictionary<string, int> fields)
             {
                 Cells = cells;
-                this.fields = fields;
+                _Fields = fields;
             }
 
             public object this[int index]
@@ -546,91 +526,66 @@ namespace Assets.Script.System
                 }
             }
 
-            public object this[string field]
-            {
-                get
-                {
-                    if (fields.TryGetValue(field, out int value))
-                        return Cells[value];
-                    else
-                        return null;
-                }
-            }
+            public object this[string field] => _Fields.TryGetValue(field, out var value) ? Cells[value] : null;
         }
 
-        public IEnumerable<string> Fields
-        {
-            get { return fields.Keys; }
-        }
+        public IEnumerable<string> Fields => _Fields.Keys;
 
         public int GetFieldIndex(string field)
         {
-            return fields[field];
+            return _Fields[field];
         }
 
-        private List<object[]> rows;
-        private List<object> row;
-        private SortedList<int, string> fieldsIndex;
+        private List<object[]> _Rows;
+        private List<object> _Row;
+        private SortedList<int, string> _FieldsIndex;
 
         public DataTable Select(string[] fields = null, (string, object)[] where = null)
         {
-            if (rows == null) rows = new List<object[]>();
-            if (fieldsIndex == null) fieldsIndex = new SortedList<int, string>();
-            if (row == null) row = new List<object>();
+            _Rows = _Rows ?? new List<object[]>();
+            _FieldsIndex = _FieldsIndex ?? new SortedList<int, string>();
+            _Row = _Row ?? new List<object>();
 
-            rows.Clear();
-            fieldsIndex.Clear();
+            _Rows.Clear();
+            _FieldsIndex.Clear();
 
             if (fields != null)
+            {
                 foreach (var item in fields)
-                    fieldsIndex.Add(GetFieldIndex(item), item);
+                    _FieldsIndex.Add(GetFieldIndex(item), item);
+            }
             else
             {
-                int count = 0;
+                var count = 0;
                 foreach (var item in Fields)
                 {
-                    fieldsIndex.Add(count, item);
+                    _FieldsIndex.Add(count, item);
                     count++;
                 }
             }
 
-            foreach (var item in Rows.Where(x =>
+            foreach (var item in Rows.Where(x => 
+                @where == null || @where.All(i => x[i.Item1].Equals(i.Item2))))
             {
-                if (where != null)
-                    foreach (var i in where)
-                        if (!x[i.Item1].Equals(i.Item2))
-                            return false;
-                return true;
-            }))
-            {
-                row.Clear();
-                foreach (var i in fieldsIndex.Values)
-                    row.Add(item[i]);
-                if (row.Count != 0)
-                    rows.Add(row.ToArray());
+                _Row.Clear();
+                foreach (var i in _FieldsIndex.Values)
+                    _Row.Add(item[i]);
+                if (_Row.Count != 0)
+                    _Rows.Add(_Row.ToArray());
             }
-            return new DataTable(fieldsIndex.Values.ToArray(), rows);
+            return new DataTable(_FieldsIndex.Values.ToArray(), _Rows);
         }
 
         public object SelectOnce(string field, (string, object)[] where = null)
         {
-            if (rows == null) rows = new List<object[]>();
-            if (fieldsIndex == null) fieldsIndex = new SortedList<int, string>();
-            if (this.row == null) this.row = new List<object>();
+            _Rows =_Rows?? new List<object[]>();
+            _FieldsIndex = _FieldsIndex?? new SortedList<int, string>();
+            _Row = _Row??new List<object>();
 
-            Row row = Rows.Where(x =>
-            {
-                if (where != null)
-                    foreach (var i in where)
-                        if (!x[i.Item1].Equals(i.Item2))
-                            return false;
-                return true;
-            }).FirstOrDefault();
+            var row = Rows.FirstOrDefault(x=>
+                @where == null || @where.All(i => x[i.Item1].Equals(i.Item2)));
 
-            if (row.Cells.Length == 0)
-                return null;
-
-            return row[fields[field]];
+            return row.Cells.Length == 0 ? null : row[_Fields[field]];
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -640,10 +595,7 @@ namespace Assets.Script.System
 
         IEnumerator<Row> IEnumerable<Row>.GetEnumerator()
         {
-            foreach (var item in Rows)
-            {
-                yield return item;
-            }
+            return ((IEnumerable<Row>) Rows).GetEnumerator();
         }
     }
 }
