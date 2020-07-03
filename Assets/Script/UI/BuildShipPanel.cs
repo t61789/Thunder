@@ -168,7 +168,7 @@ namespace Assets.Script.UI
 
             OnBuildShipComplete?.Invoke(this);
 
-            PublicVar.uiManager.CloseUI(name);
+            PublicVar.uiManager.CloseUi(name);
         }
     }
 }

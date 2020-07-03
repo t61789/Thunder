@@ -36,7 +36,7 @@ public class SurvivalLi : Survival
             units.Add(new AircraftUnit((string)item[AIRCRAFT_ID], (int)item[MAX], (float)item[BASELINE_MIN], (float)item[BASELINE_MAX], (float)item[INTERVAL]));
         _aircraftUnits = units.ToArray();
 
-        ui = PublicVar.uiManager.OpenUI<SurvivalLiUI>(UI_NAME, 0, x => x.Init(_difficultyList[_difficultyList.Length - 1].x));
+        ui = PublicVar.uiManager.OpenUi<SurvivalLiUI>(UI_NAME, 0, x => x.Init(_difficultyList[_difficultyList.Length - 1].x));
 
         Reset();
     }
@@ -130,7 +130,7 @@ public class SurvivalLi : Survival
 
     public override void BeforeUnInstall()
     {
-        PublicVar.uiManager.CloseUI(ui);
+        PublicVar.uiManager.CloseUi(ui);
         ui = null;
     }
 }

@@ -25,13 +25,13 @@ namespace Assets.Script.UI
         public void OK()
         {
             dialogResult = DialogResult.OK;
-            PublicVar.uiManager.CloseUI(this);
+            PublicVar.uiManager.CloseUi(this);
         }
 
         public void Cancel()
         {
             dialogResult = DialogResult.Cancel;
-            PublicVar.uiManager.CloseUI(this);
+            PublicVar.uiManager.CloseUi(this);
         }
 
         public void Update()

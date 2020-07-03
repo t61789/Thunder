@@ -167,7 +167,7 @@ namespace Assets.Script.UI
 
         public void Close()
         {
-            PublicVar.uiManager.CloseUI(this);
+            PublicVar.uiManager.CloseUi(this);
         }
 
         public void InitRect(UIInitAction action)

@@ -6,7 +6,7 @@ namespace Assets.Script.UI
     {
         private void Awake()
         {
-            PublicVar.uiManager.OpenUI<InputDialog>("inputDialog", UIInitAction.CenterParent, x =>
+            PublicVar.uiManager.OpenUi<InputDialog>("inputDialog", UIInitAction.CenterParent, x =>
             {
                 x.Init("");
                 x.OnCloseCheck += (BaseUI baseUi, ref bool result) =>
@@ -18,7 +18,7 @@ namespace Assets.Script.UI
                     {
                         result = SaveManager.CreateSaveDir(id.Text);
                         if (!result)
-                            PublicVar.uiManager.OpenUI<MessageDialog>("messageDialog", x, true, UIInitAction.CenterParent, message =>
+                            PublicVar.uiManager.OpenUi<MessageDialog>("messageDialog", x, true, UIInitAction.CenterParent, message =>
                             {
                                 message.Init("存档已存在");
                             });
@@ -36,7 +36,7 @@ namespace Assets.Script.UI
 
         private void StartBuildShip()
         {
-            PublicVar.uiManager.OpenUI<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
+            PublicVar.uiManager.OpenUi<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
         }
 
         private void BuildShipClosed(BuildShipPanel b)

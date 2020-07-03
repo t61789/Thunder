@@ -41,7 +41,7 @@ public class SurvivalNoli : Survival
             units.Add(new AircraftUnit((string)item[AIRCRAFT_ID], (int)item[MAX], (float)item[BASELINE_MIN], (float)item[BASELINE_MAX], (float)item[INTERVAL]));
         _aircraftUnits = units.ToArray();
 
-        ui = PublicVar.uiManager.OpenUI<SurvivalNoliUI>(UI_NAME, UIInitAction.FillParent);
+        ui = PublicVar.uiManager.OpenUi<SurvivalNoliUI>(UI_NAME, UIInitAction.FillParent);
 
         Reset();
 
@@ -132,7 +132,7 @@ public class SurvivalNoli : Survival
 
     public override void BeforeUnInstall()
     {
-        PublicVar.uiManager.CloseUI(ui);
+        PublicVar.uiManager.CloseUi(ui);
         ui = null;
     }
 }

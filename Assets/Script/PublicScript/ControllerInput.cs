@@ -55,7 +55,7 @@ namespace Thunder.PublicScript
         public void Remove()
         {
             if (aimRing != null)
-                PublicVar.uiManager.CloseUI(aimRing);
+                PublicVar.uiManager.CloseUi(aimRing);
             Destroy(this);
         }
 
@@ -80,7 +80,7 @@ namespace Thunder.PublicScript
             }
 
             if (aimRing)
-                this.aimRing = PublicVar.uiManager.OpenUI<AimRing>("aimRing", UIInitAction.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
+                this.aimRing = PublicVar.uiManager.OpenUi<AimRing>("aimRing", UIInitAction.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
         }
 
         private void Update()

@@ -29,13 +29,13 @@ namespace Assets.Script.UI
         public void InputEndOK()
         {
             dialogResult = DialogResult.OK;
-            PublicVar.uiManager.CloseUI(this);
+            PublicVar.uiManager.CloseUi(this);
         }
 
         public void InputEndCancel()
         {
             dialogResult = DialogResult.Cancel;
-            PublicVar.uiManager.CloseUI(this);
+            PublicVar.uiManager.CloseUi(this);
         }
 
         public override void ObjectPoolReset(Hashtable arg)

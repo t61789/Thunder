@@ -23,7 +23,7 @@ public class PublicVar : MonoBehaviour
     public static SkillManager skill;
     public static ConsoleWindow consoleWindow;
     public static CampManager camp;
-    public static UIManager uiManager;
+    public static UiManager uiManager;
     public static DataBaseManager dataBase;
     public static CameraController mainCamera;
     public static GameModeManager gameMode;
@@ -49,14 +49,14 @@ public class PublicVar : MonoBehaviour
                 bundle = new BundleManager();
                 objectPool = GetComponent<ObjectPool>();
                 container = GameObject.Find("Container").transform;
-                uiManager = GetComponent<UIManager>();
+                uiManager = GetComponent<UiManager>();
                 dataBase = new DataBaseManager();
                 break;
 
             case "CreateSaveScene":
                 objectPool = GetComponent<ObjectPool>();
                 container = GameObject.Find("Container").transform;
-                uiManager = GetComponent<UIManager>();
+                uiManager = GetComponent<UiManager>();
                 break;
 
             case "LevelScene":
@@ -64,7 +64,7 @@ public class PublicVar : MonoBehaviour
                 objectPool = GetComponent<ObjectPool>();
                 container = GameObject.Find("Container").transform;
                 value = new ValueManager();
-                uiManager = GetComponent<UIManager>();
+                uiManager = GetComponent<UiManager>();
                 gameMode = new GameModeManager();
                 level = new LevelManager();
                 break;
@@ -73,7 +73,7 @@ public class PublicVar : MonoBehaviour
                 bundle = new BundleManager();
                 objectPool = GetComponent<ObjectPool>();
                 container = GameObject.Find("Container").transform;
-                uiManager = GetComponent<UIManager>();
+                uiManager = GetComponent<UiManager>();
                 dataBase = new DataBaseManager();
                 value = new ValueManager();
                 control = new ControlManager();
@@ -88,7 +88,7 @@ public class PublicVar : MonoBehaviour
                 skill = new SkillManager();
                 control = new ControlManager();
                 camp = new CampManager();
-                uiManager = GetComponent<UIManager>();
+                uiManager = GetComponent<UiManager>();
                 gameMode = new GameModeManager();
                 level = new LevelManager();
                 break;
@@ -111,7 +111,7 @@ public class PublicVar : MonoBehaviour
     {
         loading = true;
         loadingAO = SceneManager.LoadSceneAsync(sceneName);
-        loadingLoadPanel = uiManager.OpenUI<LogPanel>("logPanel", UIInitAction.CenterParent);
+        loadingLoadPanel = uiManager.OpenUi<LogPanel>("logPanel", UIInitAction.CenterParent);
         StartCoroutine(LoadScene(loadingAO));
     }
 

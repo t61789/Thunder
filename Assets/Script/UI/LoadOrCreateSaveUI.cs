@@ -9,9 +9,9 @@ namespace Assets.Script.UI
     {
         public void StartLoadSave()
         {
-            if (PublicVar.uiManager.IsUIOpened("LoadSaveListPlane"))
+            if (PublicVar.uiManager.IsUiOpened("LoadSaveListPlane"))
             {
-                PublicVar.uiManager.CloseUI("LoadSaveListPlane");
+                PublicVar.uiManager.CloseUi("LoadSaveListPlane");
                 return;
             }
 
@@ -28,7 +28,7 @@ namespace Assets.Script.UI
                 });
             }
 
-            PublicVar.uiManager.OpenUI<ListPlane>("listPlane", this, true, UIInitAction.CenterParent, x =>
+            PublicVar.uiManager.OpenUi<ListPlane>("listPlane", this, true, UIInitAction.CenterParent, x =>
             {
                 x.Init(new ListPlane.Parameters<BaseUI>(1, "normalButton", (500, 150), (50, 50), (0, 0), inits));
             });

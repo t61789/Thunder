@@ -4,27 +4,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 
-public class UIManager : MonoBehaviour,IBaseSystem
+public class UiManager : MonoBehaviour,IBaseSystem
 {
-    private Transform uiContainer;
-    private Transform uiRecycleContainer;
+    private Transform _UiContainer;
+    private Transform _UiRecycleContainer;
 
-    private class UIUnit
+    private class UiUnit
     {
-        public int siblingIndex;
-        public BaseUI uiObj;
+        //public int siblingIndex;
+        public readonly BaseUI UiObj;
 
-        public UIUnit(int siblingIndex, BaseUI uiObj)
+        public UiUnit(int siblingIndex, BaseUI uiObj)
         {
-            this.siblingIndex = siblingIndex;
-            this.uiObj = uiObj;
+            //this.siblingIndex = siblingIndex;
+            this.UiObj = uiObj;
         }
     }
 
-    private readonly List<UIUnit> activeUi = new List<UIUnit>();
-    private readonly List<UIUnit> hideStableUi = new List<UIUnit>();
-    private readonly Stack<UIUnit> closeStack = new Stack<UIUnit>();
+    private readonly List<UiUnit> _ActiveUi = new List<UiUnit>();
+    private readonly List<UiUnit> _HideStableUi = new List<UiUnit>();
+    private readonly Stack<UiUnit> _CloseStack = new Stack<UiUnit>();
 
     public static string DefaultUiBundle = BundleManager.PrefabBundleD+BundleManager.UIBundle;
 
@@ -35,41 +36,41 @@ public class UIManager : MonoBehaviour,IBaseSystem
 
     public void Init()
     {
-        uiContainer = GameObject.Find("Canvas").transform.Find("UI");
+        _UiContainer = GameObject.Find("Canvas").transform.Find("UI");
 
-        uiRecycleContainer = GameObject.Find("Canvas").transform.Find("Recycle");
+        _UiRecycleContainer = GameObject.Find("Canvas").transform.Find("Recycle");
 
         int count = 0;
         List<Transform> move = new List<Transform>();
-        foreach (Transform item in uiContainer.transform)
+        foreach (Transform item in _UiContainer.transform)
         {
-            UIUnit newui = new UIUnit(count, item.GetComponent<BaseUI>());
+            UiUnit newui = new UiUnit(count, item.GetComponent<BaseUI>());
             if (item.gameObject.activeSelf)
-                activeUi.Add(newui);
+                _ActiveUi.Add(newui);
             else
             {
-                hideStableUi.Add(newui);
+                _HideStableUi.Add(newui);
                 move.Add(item);
             }
             count++;
         }
         foreach (var item in move)
-            item.SetParent(uiRecycleContainer);
+            item.SetParent(_UiRecycleContainer);
     }
 
-    public BaseUI OpenUI(string uiName, UIInitAction act = 0, Action<BaseUI> init = null)
+    public BaseUI OpenUi(string uiName, UIInitAction act = 0, Action<BaseUI> init = null)
     {
-        return OpenUI<BaseUI>(uiName, act, init);
+        return OpenUi<BaseUI>(uiName, act, init);
     }
 
-    public T OpenUI<T>(string uiName, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUi<T>(string uiName, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
-        return OpenUI(uiName, true, act, init);
+        return OpenUi(uiName, true, act, init);
     }
 
-    public T OpenUI<T>(string uiName, string after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUi<T>(string uiName, string after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
-        UIUnit find = activeUi.Where(x => x.uiObj.UIName == after).FirstOrDefault();
+        UiUnit find = _ActiveUi.FirstOrDefault(x => x.UiObj.UIName == after);
 
         if (find == null)
         {
@@ -77,51 +78,51 @@ public class UIManager : MonoBehaviour,IBaseSystem
             return null;
         }
 
-        return OpenUI(uiName, activeUi.IndexOf(find) + 1, dialog ? find.uiObj : null, act, init);
+        return OpenUi(uiName, _ActiveUi.IndexOf(find) + 1, dialog ? find.UiObj : null, act, init);
     }
 
-    public T OpenUI<T>(string uiName, BaseUI after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUi<T>(string uiName, BaseUI after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
-        UIUnit find = activeUi.Where(x => x.uiObj == after).FirstOrDefault();
+        UiUnit find = _ActiveUi.FirstOrDefault(x => x.UiObj == after);
         if (find == null)
         {
             Debug.LogError("No such ui named [" + after.UIName + "] which you want to insert [" + uiName + "] after");
             return null;
         }
 
-        return OpenUI(uiName, activeUi.IndexOf(find) + 1, dialog ? after : null, act, init);
+        return OpenUi(uiName, _ActiveUi.IndexOf(find) + 1, dialog ? after : null, act, init);
     }
 
-    public T OpenUI<T>(string uiName, bool last, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUi<T>(string uiName, bool last, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
 
         if (last)
-            return OpenUI(uiName, uiContainer.transform.childCount, null, act, init);
+            return OpenUi(uiName, _UiContainer.transform.childCount, null, act, init);
         else
-            return OpenUI(uiName, 0, null, act, init);
+            return OpenUi(uiName, 0, null, act, init);
     }
 
-    public T OpenUI<T>(string uiName, int siblingIndex, BaseUI dialog = null, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUi<T>(string uiName, int siblingIndex, BaseUI dialog = null, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
     {
-        if (siblingIndex < 0 || siblingIndex > uiContainer.childCount)
+        if (siblingIndex < 0 || siblingIndex > _UiContainer.childCount)
         {
             Debug.LogError("Index out of range");
             return null;
         }
 
-        UIUnit unit = hideStableUi.FirstOrDefault(x => x.uiObj.UIName == uiName);
+        UiUnit unit = _HideStableUi.FirstOrDefault(x => x.UiObj.UIName == uiName);
         if (unit != null)
-            hideStableUi.Remove(unit);
+            _HideStableUi.Remove(unit);
 
-        BaseUI newPlane = unit?.uiObj;
+        BaseUI newPlane = unit?.UiObj;
         if (newPlane == null)
             newPlane = PublicVar.objectPool.Alloc<BaseUI>(null, DefaultUiBundle, uiName);
 
-        newPlane.transform.SetParent(uiContainer);
+        newPlane.transform.SetParent(_UiContainer);
         newPlane.transform.SetSiblingIndex(siblingIndex);
-        if (unit == null) unit = new UIUnit(siblingIndex, newPlane);
+        unit = unit??new UiUnit(siblingIndex, newPlane);
 
-        activeUi.Insert(siblingIndex, unit);
+        _ActiveUi.Insert(siblingIndex, unit);
 
         newPlane.gameObject.SetActive(true);
         if (dialog != null)
@@ -136,55 +137,51 @@ public class UIManager : MonoBehaviour,IBaseSystem
         return result;
     }
 
-    public void CloseUI(string uiName)
+    public void CloseUi(string uiName)
     {
-        CloseUI(activeUi.Where(x => x.uiObj.UIName == uiName).FirstOrDefault());
+        CloseUi(_ActiveUi.FirstOrDefault(x => x.UiObj.UIName == uiName));
     }
 
-    public void CloseUI(BaseUI ui)
+    public void CloseUi(BaseUI ui)
     {
-        CloseUI(activeUi.Where(x => x.uiObj == ui).FirstOrDefault());
+        CloseUi(_ActiveUi.FirstOrDefault(x => x.UiObj == ui));
     }
 
-    private void CloseUI(UIUnit unit)
+    private void CloseUi(UiUnit unit)
     {
-        if (unit == null)
-        {
-            Debug.LogError("No such ui named " + unit.uiObj.UIName);
-            return;
-        }
+        Assert.IsNotNull(unit,$"没有名为 {unit.UiObj.name} 的UI");
 
-        closeStack.Clear();
-        closeStack.Push(unit);
+        _CloseStack.Clear();
+        _CloseStack.Push(unit);
 
         bool back = false;
 
-        while (closeStack.Count != 0)
+        while (_CloseStack.Count != 0)
         {
-            UIUnit curUnit = closeStack.Peek();
+            UiUnit curUnit = _CloseStack.Peek();
 
             if (back)
             {
-                closeStack.Pop();
+                _CloseStack.Pop();
 
-                if (!curUnit.uiObj.BeforeClose()) return;
+                if (!curUnit.UiObj.BeforeClose()) return;
 
-                curUnit.uiObj.transform.SetParent(uiRecycleContainer);
-                activeUi.Remove(curUnit);
-                if (curUnit.uiObj.Stable)
+                curUnit.UiObj.transform.SetParent(_UiRecycleContainer);
+                _ActiveUi.Remove(curUnit);
+                if (curUnit.UiObj.Stable)
                 {
-                    hideStableUi.Add(curUnit);
-                    curUnit.uiObj.gameObject.SetActive(false);
+                    _HideStableUi.Add(curUnit);
+                    curUnit.UiObj.gameObject.SetActive(false);
                 }
                 else
-                    PublicVar.objectPool.Recycle(curUnit.uiObj);
+                    PublicVar.objectPool.Recycle(curUnit.UiObj);
 
                 continue;
             }
 
-            if (DialogOpened(curUnit.uiObj.dialog))
+            if (DialogOpened(curUnit.UiObj.dialog))
             {
-                closeStack.Push(activeUi.Where(x => x.uiObj == curUnit.uiObj.dialog).FirstOrDefault());
+                _CloseStack.Push(_ActiveUi.FirstOrDefault(x => x.UiObj == curUnit.UiObj.dialog));
                 continue;
             }
             else
@@ -192,17 +189,17 @@ public class UIManager : MonoBehaviour,IBaseSystem
         }
     }
 
-    public bool IsUIOpened(string planeName)
+    public bool IsUiOpened(string planeName)
     {
-        return activeUi.Find(x => x.uiObj.UIName == planeName) != null;
+        return _ActiveUi.Find(x => x.UiObj.UIName == planeName) != null;
     }
 
-    public void SwitchUI(string planeName)
+    public void SwitchUi(string planeName)
     {
-        if (IsUIOpened(planeName))
-            CloseUI(planeName);
+        if (IsUiOpened(planeName))
+            CloseUi(planeName);
         else
-            OpenUI<BaseUI>(planeName);
+            OpenUi<BaseUI>(planeName);
     }
 
     public static bool DialogOpened(BaseUI dialog)
