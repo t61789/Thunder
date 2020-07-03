@@ -272,9 +272,28 @@ public class DataBaseManager
         }
     }
 
-    public DataTable this[string table] => GetTable(null, null, table);
+    public DataTable this[string table] => GetTable( table);
     public DataTable this[string bundle, string table] => GetTable(null, bundle, table);
     public DataTable this[string bundleGroup, string bundle, string table] => GetTable(bundleGroup, bundle, table);
+
+    public DataTable GetTable(string tablePath)
+    {
+        var split = tablePath?.Split('!');
+        // ReSharper disable once PossibleNullReferenceException
+        Assert.IsFalse(split == null && split.Length < 1 && split.Length > 3,
+            $"table路径不正确：{tablePath}");
+        switch (split.Length)
+        {
+            case 1:
+                return GetTable(null, null, split[0]);
+            case 2:
+                return GetTable(null, split[0], split[1]);
+            case 3:
+                return GetTable(split[0], split[1], split[2]);
+            default:
+                return default;
+        }
+    }
 
     public DataTable GetTable(string bundleGroup, string bundle, string name)
     {
