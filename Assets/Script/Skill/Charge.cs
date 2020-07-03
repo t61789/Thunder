@@ -1,12 +1,10 @@
 ﻿using System.Collections;
-using Assets.Script.PublicScript;
-using Assets.Script.System;
-using Assets.Script.Tool.BuffData;
-using Assets.Script.Tool.SerializableStruct;
-using Assets.Script.Utility;
+using Thunder.Tool.BuffData;
+using Thunder.Tool.SerializableStruct;
+using Thunder.Utility;
 using UnityEngine;
 
-namespace Assets.Script.Skill
+namespace Thunder.Skill
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]
@@ -40,10 +38,10 @@ namespace Assets.Script.Skill
             //playerController = GetComponent<PlayerController>();
             insideObject = false;
 
-            Values values = System.System.value.GetValue<Values>("skill" + Paths.Div + "charge");
+            Values values = Sys.Stable.value.GetValue<Values>("skill" + Paths.Div + "charge");
 
             damageCoeffient = values.damageCoeffient;
-            protonSword = Instantiate(System.System.bundle.GetAsset<GameObject>(values.protonSwordPrefab));
+            protonSword = Instantiate(Sys.Stable.bundle.GetAsset<GameObject>(values.protonSwordPrefab));
             protonSword.transform.SetParent(transform);
             protonSword.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
             protonSword.transform.localPosition = values.protonSwordPosition;
@@ -56,20 +54,20 @@ namespace Assets.Script.Skill
 
         private void Update()
         {
-            if (System.System.control.RequestUp(KeyCode.Space, "playerControl"))
+            if (Sys.Stable.control.RequestUp(KeyCode.Space, "playerControl"))
             {
                 if (!insideObject)
                     EndSkill();
 
-                System.System.control.Release(KeyCode.Space, "playerControl");
+                Sys.Stable.control.Release(KeyCode.Space, "playerControl");
             }
 
-            if (System.System.control.RequestDown(KeyCode.Space, "playerControl"))
+            if (Sys.Stable.control.RequestDown(KeyCode.Space, "playerControl"))
             {
                 if (!insideObject)
                     StartSkill();
 
-                System.System.control.Release(KeyCode.Space, "playerControl");
+                Sys.Stable.control.Release(KeyCode.Space, "playerControl");
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Script.Turret
+namespace Thunder.Turret
 {
     public class Controller : MonoBehaviour
     {

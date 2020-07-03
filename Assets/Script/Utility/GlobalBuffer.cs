@@ -1,8 +1,8 @@
 ﻿using System;
-using Assets.Script.GameMode;
-using Assets.Script.PublicScript;
+using Thunder.GameMode;
+using Thunder.PublicScript;
 
-namespace Assets.Script.Utility
+namespace Thunder.Utility
 {
     public class GlobalBuffer
     {

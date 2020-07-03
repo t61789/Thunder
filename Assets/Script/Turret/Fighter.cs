@@ -1,9 +1,8 @@
-﻿using Assets.Script.PublicScript;
-using Assets.Script.Tool.BuffData;
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
+using Thunder.Tool.BuffData;
 using UnityEngine;
 
-namespace Assets.Script.Turret
+namespace Thunder.Turret
 {
     public class Fighter : Ship
     {
@@ -217,7 +216,7 @@ namespace Assets.Script.Turret
 
             Aircraft camp = other.GetComponent<Aircraft>();
             if (camp == null) return;
-            if (!System.System.camp.IsHostile(camp, this)) return;
+            if (!Sys.Stable.camp.IsHostile(camp, this)) return;
 
             SetTarget(camp as Aircraft);
         }

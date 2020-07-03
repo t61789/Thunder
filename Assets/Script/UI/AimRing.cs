@@ -1,8 +1,8 @@
-﻿using Assets.Script.Tool;
-using Assets.Script.Turret;
+﻿using Thunder.Tool;
+using Thunder.Turret;
 using UnityEngine;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class AimRing : BaseUi
     {

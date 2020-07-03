@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Script.Skill;
+using Thunder.Skill;
+using Thunder.Utility;
 using UnityEngine;
 
-namespace Assets.Script.PublicScript
+namespace Thunder.PublicScript
 {
+    [DontGenerateWrap]
     public class SkillManager
     {
         private Dictionary<string, Type> skills = new Dictionary<string, Type>();

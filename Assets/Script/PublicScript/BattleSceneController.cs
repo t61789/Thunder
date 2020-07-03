@@ -1,9 +1,9 @@
-﻿using Assets.Script.GameMode;
-using Assets.Script.UI;
-using Assets.Script.Utility;
+﻿using Thunder.GameMode;
+using Thunder.UI;
+using Thunder.Utility;
 using UnityEngine;
 
-namespace Assets.Script.PublicScript
+namespace Thunder.PublicScript
 {
     public class BattleSceneController : MonoBehaviour
     {
@@ -21,7 +21,7 @@ namespace Assets.Script.PublicScript
             var (levelParam, init) = GlobalBuffer.battleSceneParam;
             this.levelParam = levelParam;
 
-            BaseGameMode gameMode = System.System.gameMode.SetupMode(levelParam.modeType, levelParam.arg, init);
+            BaseGameMode gameMode = Sys.Stable.gameMode.SetupMode(levelParam.modeType, levelParam.arg, init);
 
             gameMode.OnModeComplete += GameModeComplete;
         }
@@ -30,20 +30,20 @@ namespace Assets.Script.PublicScript
         {
             ControllerInput.Controlable = false;
             checkoutPanel.Init(completeParam);
-            System.System.UiSys.OpenUi(checkoutPanel.UiName);
-            GlobalBuffer.battleSceneParam = (System.System.level.LevelComplete(levelParam.index), null);
+            Sys.Stable.UiSys.OpenUi(checkoutPanel.UiName);
+            GlobalBuffer.battleSceneParam = (Sys.Stable.level.LevelComplete(levelParam.index), null);
         }
 
         public void NextLevel()
         {
             ControllerInput.Controlable = true;
-            System.System.instance.LoadSceneAsync("BattleScene");
+            Sys.Stable.instance.LoadSceneAsync("BattleScene");
         }
 
         public void GoBack()
         {
             ControllerInput.Controlable = true;
-            System.System.instance.LoadSceneAsync("LevelScene");
+            Sys.Stable.instance.LoadSceneAsync("LevelScene");
         }
     }
 }

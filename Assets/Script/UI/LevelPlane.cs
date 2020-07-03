@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Script.PublicScript;
-using Assets.Script.Utility;
+using Thunder.Utility;
 using UnityEngine.UI;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class LevelPlane : ListPlane
     {
@@ -22,15 +21,15 @@ namespace Assets.Script.UI
         private void Load()
         {
             List<Action<BaseButton>> inits = new List<Action<BaseButton>>();
-            int[] completed = System.System.saveManager.levelComplete.ToArray();
+            int[] completed = Sys.Stable.saveManager.levelComplete.ToArray();
 
             //int count = 0;
             //int index = 0;
 
             int completeCount = 0;
-            for (int i = 0; i < System.System.level.levels.Length; i++)
+            for (int i = 0; i < Sys.Stable.level.levels.Length; i++)
             {
-                var _item = System.System.level.levels[i];
+                var _item = Sys.Stable.level.levels[i];
                 bool flag = _item.index == completed[completeCount];
                 if (flag) completeCount = completeCount + 1 == completed.Length ? completeCount : completeCount + 1;
                 inits.Add(x =>
@@ -81,29 +80,29 @@ namespace Assets.Script.UI
 
         public void StartLevel(BaseButton b)
         {
-            GlobalBuffer.battleSceneParam = (System.System.level.levels[pairs[b]], null);
-            System.System.instance.LoadSceneAsync("BattleScene");
+            GlobalBuffer.battleSceneParam = (Sys.Stable.level.levels[pairs[b]], null);
+            Sys.Stable.instance.LoadSceneAsync("BattleScene");
         }
 
         public void OpenMenu()
         {
-            System.System.UiSys.OpenUi<BaseUi>("MenuPanel", this, true, UiInitAction.CenterParent, null);
+            Sys.Stable.UiSys.OpenUi<BaseUi>("MenuPanel", this, true, UiInitAction.CenterParent, null);
         }
 
         public void Exit(bool force)
         {
             if (!force)
             {
-                unsavedJson = System.System.saveManager.Check();
+                unsavedJson = Sys.Stable.saveManager.Check();
                 if (unsavedJson != null)
                 {
-                    ConfirmDialog confirmDialog = System.System.UiSys.OpenUi<ConfirmDialog>("confirmDialog", menuPanel, true, UiInitAction.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
+                    ConfirmDialog confirmDialog = Sys.Stable.UiSys.OpenUi<ConfirmDialog>("confirmDialog", menuPanel, true, UiInitAction.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
                     confirmDialog.OnBeforeClose += DialogConfirmed;
                     return;
                 }
             }
 
-            System.System.instance.LoadSceneAsync("StartScene");
+            Sys.Stable.instance.LoadSceneAsync("StartScene");
         }
 
         private void DialogConfirmed(BaseUi confirmDialog)
@@ -123,7 +122,7 @@ namespace Assets.Script.UI
 
         public void Save(string json = null)
         {
-            System.System.saveManager.Save(json);
+            Sys.Stable.saveManager.Save(json);
         }
     }
 }

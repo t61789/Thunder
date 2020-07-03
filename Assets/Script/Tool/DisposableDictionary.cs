@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Script.Tool
+namespace Thunder.Tool
 {
     public class DisposableDictionary
     {

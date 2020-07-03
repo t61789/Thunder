@@ -9,7 +9,7 @@ public class ScriptsFromFile : MonoBehaviour
 
     void Start()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
         Application.logMessageReceived += Log;
 #else
         Application.RegisterLogCallback(Log);
@@ -50,7 +50,7 @@ public class ScriptsFromFile : MonoBehaviour
     {
         lua.Dispose();
         lua = null;
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2019	
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020 || UNITY_2019	
         Application.logMessageReceived -= Log;
 #else
         Application.RegisterLogCallback(null);

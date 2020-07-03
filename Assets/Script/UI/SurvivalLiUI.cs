@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class SurvivalLiUI : BaseUi
     {

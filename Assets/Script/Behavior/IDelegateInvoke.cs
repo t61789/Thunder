@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.Script.Behavior
+namespace Thunder.Behavior
 {
     interface IDelegateInvoke
     {

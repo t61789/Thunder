@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Script.Tool
+namespace Thunder.Tool
 {
     public class ConsoleWindow
     {

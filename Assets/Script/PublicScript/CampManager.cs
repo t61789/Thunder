@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Assets.Script.Turret;
+using Thunder.Turret;
 
-namespace Assets.Script.PublicScript
+namespace Thunder.PublicScript
 {
     public class CampManager
     {
@@ -35,23 +35,23 @@ namespace Assets.Script.PublicScript
 
         public CampManager()
         {
-            foreach (var item in System.System.dataBase["camp"].Select(null, null).Rows)
+            foreach (var item in Sys.Stable.dataBase["camp"].Select(null, null).Rows)
                 camps.Add((string)item[0], new CampUnit((string)item[0]));
-            System.System.dataBase.DeleteTable(null,null,"camp");
+            Sys.Stable.dataBase.DeleteTable(null, null, "camp");
 
-            foreach (var item in System.System.dataBase["camp_hostile"].Select(null, null).Rows)
+            foreach (var item in Sys.Stable.dataBase["camp_hostile"].Select(null, null).Rows)
             {
                 camps[(string)item[0]].AddHostile((string)item[1]);
                 camps[(string)item[1]].AddHostile((string)item[0]);
             }
-            System.System.dataBase.DeleteTable(null, null, "camp_hostile");
+            Sys.Stable.dataBase.DeleteTable(null, null, "camp_hostile");
 
-            foreach (var item in System.System.dataBase["camp_ally"].Select(null, null).Rows)
+            foreach (var item in Sys.Stable.dataBase["camp_ally"].Select(null, null).Rows)
             {
                 camps[(string)item[0]].AddAlly((string)item[1]);
                 camps[(string)item[1]].AddAlly((string)item[0]);
             }
-            System.System.dataBase.DeleteTable(null, null, "camp_ally");
+            Sys.Stable.dataBase.DeleteTable(null, null, "camp_ally");
         }
 
         public bool IsHostile(Aircraft aircraft1, Aircraft aircraft2)

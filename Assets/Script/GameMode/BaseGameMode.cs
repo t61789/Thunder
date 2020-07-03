@@ -1,7 +1,7 @@
-﻿using Assets.Script.Turret;
+﻿using Thunder.Turret;
 using UnityEngine;
 
-namespace Assets.Script.GameMode
+namespace Thunder.GameMode
 {
     public abstract class BaseGameMode : MonoBehaviour
     {

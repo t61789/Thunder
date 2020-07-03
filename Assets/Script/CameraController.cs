@@ -1,7 +1,7 @@
-﻿using Assets.Script.Turret;
+﻿using Thunder.Turret;
 using UnityEngine;
 
-namespace Assets.Script
+namespace Thunder
 {
     public class CameraController : MonoBehaviour
     {

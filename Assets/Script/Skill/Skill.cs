@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Assets.Script.Skill
+namespace Thunder.Skill
 {
     public abstract class Skill : MonoBehaviour
     {

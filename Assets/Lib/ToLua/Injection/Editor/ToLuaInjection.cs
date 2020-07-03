@@ -311,13 +311,13 @@ public static class ToLuaInjection
         offset = targetBody.Instructions.IndexOf(startInsertPos);
     }
 
-    #region GenericMethod
+#region GenericMethod
     static void InjectGenericMethod(AssemblyDefinition assembly, MethodDefinition target, int methodIndex)
     {
     }
-    #endregion GenericMethod
+#endregion GenericMethod
 
-    #region Coroutine
+#region Coroutine
     static void InjectCoroutine(AssemblyDefinition assembly, MethodDefinition target, int methodIndex)
     {
         InjectType runtimeInjectType = GetMethodRuntimeInjectType(target);
@@ -463,9 +463,9 @@ public static class ToLuaInjection
         il.InsertBefore(cursor, il.Create(OpCodes.Ldfld, stateField));
     }
 
-    #endregion Coroutine
+#endregion Coroutine
 
-    #region NormalMethod
+#region NormalMethod
     static void InjectMethod(AssemblyDefinition assembly, MethodDefinition target, int methodIndex)
     {
         target.Body.SimplifyMacros();
@@ -679,7 +679,7 @@ public static class ToLuaInjection
             targetBody.Instructions.Remove(cursor.Previous);
         }
     }
-    #endregion NormalMethod
+#endregion NormalMethod
 
     static void FillArgs(MethodDefinition target, Instruction endPoint, Action<MethodDefinition, Instruction, int> parseReferenceProcess)
     {

@@ -1,7 +1,6 @@
-﻿using Assets.Script.PublicScript;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Assets.Script.Turret
+namespace Thunder.Turret
 {
     public class ShootingTurret : Turret
     {
@@ -30,7 +29,7 @@ namespace Assets.Script.Turret
                 if ((Time.time - fireIntervalCount > fireInterval) && ControlKeys.GetBool(FIRE))
                 {
                     fireIntervalCount = Time.time;
-                    System.System.objectPool.Alloc<NormalBullet>(Bullet, x =>
+                    Sys.Stable.objectPool.Alloc<NormalBullet>(Bullet, x =>
                     {
                         x.ObjectPoolInit(shipTrans, trans.position, trans.rotation);
                     });
@@ -55,7 +54,7 @@ namespace Assets.Script.Turret
 
         public void SetBullet(string bullet)
         {
-            fireInterval = System.System.objectPool.GetPrefab(bullet).GetComponent<Bullet>().FireInterval;
+            fireInterval = Sys.Stable.objectPool.GetPrefab(bullet).GetComponent<Bullet>().FireInterval;
             Bullet = bullet;
         }
     }

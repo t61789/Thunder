@@ -1,8 +1,8 @@
-﻿using Assets.Script.GameMode;
-using Assets.Script.PublicScript;
+﻿using Thunder.GameMode;
+using Thunder.PublicScript;
 using UnityEngine;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class CheckoutPanel : BaseUi
     {

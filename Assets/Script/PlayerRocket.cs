@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using Assets.Script.PublicScript;
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Script
+namespace Thunder
 {
     public class PlayerRocket : Bullet
     {
@@ -132,7 +131,7 @@ namespace Assets.Script
 
         protected void Exploded()
         {
-            System.System.objectPool.Recycle(this);
+            Sys.Stable.objectPool.Recycle(this);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)

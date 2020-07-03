@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Script.Character
+namespace Thunder.Character
 {
     public class Controller : MonoBehaviour
     {

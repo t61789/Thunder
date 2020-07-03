@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Assets.Script.Utility
+namespace Thunder.Utility
 {
     public class Paths
     {

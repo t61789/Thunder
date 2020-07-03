@@ -1,6 +1,6 @@
-﻿using Assets.Script.Turret;
+﻿using Thunder.Turret;
 
-namespace Assets.Script.PublicScript
+namespace Thunder.PublicScript
 {
     public class PlayerManager
     {
@@ -13,7 +13,7 @@ namespace Assets.Script.PublicScript
 
             player = Ship.CreateShip(param);
 
-            System.System.mainCamera.FollowTarget = player;
+            Sys.Stable.mainCamera.FollowTarget = player;
 
             return player;
         }

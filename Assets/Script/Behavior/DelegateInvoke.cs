@@ -1,9 +1,9 @@
-﻿using System;
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using System;
 using UnityEngine;
 
-namespace Assets.Script.Behavior
+namespace Thunder.Behavior
 {
     public class DelegateInvoke : BehaviorDesigner.Runtime.Tasks.Action
     {

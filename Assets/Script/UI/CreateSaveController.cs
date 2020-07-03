@@ -1,15 +1,14 @@
-﻿using Assets.Script.PublicScript;
-using Assets.Script.System;
-using Assets.Script.Utility;
+﻿using Thunder.Sys;
+using Thunder.Utility;
 using UnityEngine;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class CreateSaveController : MonoBehaviour
     {
         private void Awake()
         {
-            System.System.UiSys.OpenUi<InputDialog>("inputDialog", UiInitAction.CenterParent, x =>
+            Sys.Stable.UiSys.OpenUi<InputDialog>("inputDialog", UiInitAction.CenterParent, x =>
             {
                 x.Init("");
                 x.OnCloseCheck += (BaseUi baseUi, ref bool result) =>
@@ -21,13 +20,13 @@ namespace Assets.Script.UI
                     {
                         result = SaveSys.CreateSaveDir(id.Text);
                         if (!result)
-                            System.System.UiSys.OpenUi<MessageDialog>("messageDialog", x, true, UiInitAction.CenterParent, message =>
+                            Sys.Stable.UiSys.OpenUi<MessageDialog>("messageDialog", x, true, UiInitAction.CenterParent, message =>
                             {
                                 message.Init("存档已存在");
                             });
                         else
                         {
-                            System.System.saveManager = SaveSys.LoadSave(id.Text);
+                            Sys.Stable.saveManager = SaveSys.LoadSave(id.Text);
                             StartBuildShip();
                         }
                     }
@@ -39,20 +38,20 @@ namespace Assets.Script.UI
 
         private void StartBuildShip()
         {
-            System.System.UiSys.OpenUi<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
+            Sys.Stable.UiSys.OpenUi<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
         }
 
         private void BuildShipClosed(BuildShipPanel b)
         {
-            System.System.saveManager.playerShipParam = b.buildResult;
-            System.System.saveManager.Save();
+            Sys.Stable.saveManager.playerShipParam = b.buildResult;
+            Sys.Stable.saveManager.Save();
 
-            System.System.instance.LoadSceneAsync("LevelScene");
+            Sys.Stable.instance.LoadSceneAsync("LevelScene");
         }
 
         public void GoBack()
         {
-            System.System.instance.LoadSceneAsync("StartScene");
+            Sys.Stable.instance.LoadSceneAsync("StartScene");
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using Assets.Script.PublicScript;
-using Assets.Script.Turret;
-using Assets.Script.Utility;
+using Thunder.Turret;
+using Thunder.Utility;
 
-namespace Assets.Script.GameMode
+namespace Thunder.GameMode
 {
     public abstract class Survival : BaseGameMode
     {
@@ -25,7 +24,7 @@ namespace Assets.Script.GameMode
 
         public override void Init(string arg)
         {
-            player = System.System.player.SetPlayer(System.System.saveManager.playerShipParam);
+            player = Sys.Stable.player.SetPlayer(Sys.Stable.saveManager.playerShipParam);
             player.OnDead += PlayerDead;
             enemys = new List<Aircraft>();
         }
@@ -33,8 +32,8 @@ namespace Assets.Script.GameMode
         protected void PlayerDead(Aircraft player)
         {
             foreach (var item in enemys)
-                System.System.objectPool.Recycle(item);
-            System.System.objectPool.Recycle(player);
+                Sys.Stable.objectPool.Recycle(item);
+            Sys.Stable.objectPool.Recycle(player);
 
             Complete();
         }

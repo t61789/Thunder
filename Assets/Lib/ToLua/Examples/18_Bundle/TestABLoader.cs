@@ -1,5 +1,4 @@
 ﻿using LuaInterface;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -49,7 +48,7 @@ public class TestABLoader : MonoBehaviour
     {
         string streamingPath = Application.streamingAssetsPath.Replace('\\', '/');
 
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
 #if UNITY_ANDROID && !UNITY_EDITOR
         string main = streamingPath + "/" + LuaConst.osDir + "/" + LuaConst.osDir;
 #else
@@ -84,7 +83,7 @@ public class TestABLoader : MonoBehaviour
 
     void Awake()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -113,7 +112,7 @@ public class TestABLoader : MonoBehaviour
 
     void OnApplicationQuit()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);

@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class LogPanel : BaseUi
     {

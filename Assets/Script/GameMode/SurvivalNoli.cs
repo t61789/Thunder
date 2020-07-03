@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
-using Assets.Script.PublicScript;
-using Assets.Script.System;
-using Assets.Script.Turret;
-using Assets.Script.UI;
-using Assets.Script.Utility;
-using Newtonsoft.Json;
+using Thunder.Sys;
+using Thunder.Turret;
+using Thunder.UI;
+using Thunder.Utility;
 using UnityEngine;
 
-namespace Assets.Script.GameMode
+namespace Thunder.GameMode
 {
     public class SurvivalNoli : Survival
     {
@@ -34,7 +33,7 @@ namespace Assets.Script.GameMode
             string diffId = tempArg.diffId;
             generateRange = tempArg.generateRange;
 
-            DataTable.Row row = System.System.dataBase[TABLE_NAME].Select(null, new (string, object)[] { (DIFF_ID, diffId) }).Rows.FirstOrDefault();
+            DataTable.Row row = Sys.Stable.dataBase[TABLE_NAME].Select(null, new (string, object)[] { (DIFF_ID, diffId) }).Rows.FirstOrDefault();
             risingCoefficient = (float)row["rising_coefficient"];
             interval = (float)row["time_interval"];
 
@@ -42,11 +41,11 @@ namespace Assets.Script.GameMode
             _curNodes = (new Vector2(0, temp), new Vector2(interval, temp));
 
             List<AircraftUnit> units = new List<AircraftUnit>();
-            foreach (var item in System.System.dataBase[AIRCRAFT_TABLE_NAME].Select(null, new (string, object)[] { ("diff_id", diffId) }).Rows)
+            foreach (var item in Sys.Stable.dataBase[AIRCRAFT_TABLE_NAME].Select(null, new (string, object)[] { ("diff_id", diffId) }).Rows)
                 units.Add(new AircraftUnit((string)item[AIRCRAFT_ID], (int)item[MAX], (float)item[BASELINE_MIN], (float)item[BASELINE_MAX], (float)item[INTERVAL]));
             _aircraftUnits = units.ToArray();
 
-            ui = System.System.UiSys.OpenUi<SurvivalNoliUI>(UI_NAME, UiInitAction.FillParent);
+            ui = Sys.Stable.UiSys.OpenUi<SurvivalNoliUI>(UI_NAME, UiInitAction.FillParent);
 
             Reset();
 
@@ -96,7 +95,7 @@ namespace Assets.Script.GameMode
                         centerPos = player ? player.trans.position : centerPos;
                         Vector2 temp = Tool.Tools.RandomVectorInCircle(1).normalized * generateRange + centerPos;
 
-                        Aircraft a = System.System.objectPool.Alloc<Aircraft>(aircraftUnits[i].aircraftId, item =>
+                        Aircraft a = Sys.Stable.objectPool.Alloc<Aircraft>(aircraftUnits[i].aircraftId, item =>
                         {
                             item.ObjectPoolInit(temp, Quaternion.identity, null, null, "enemy");
                         });
@@ -137,7 +136,7 @@ namespace Assets.Script.GameMode
 
         public override void BeforeUnInstall()
         {
-            System.System.UiSys.CloseUi(ui);
+            Sys.Stable.UiSys.CloseUi(ui);
             ui = null;
         }
     }

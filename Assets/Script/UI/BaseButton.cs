@@ -2,7 +2,7 @@
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class BaseButton : BaseUi
     {

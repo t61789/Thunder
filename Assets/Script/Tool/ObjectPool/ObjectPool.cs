@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Assets.Script.PublicScript;
-using Assets.Script.System;
+using Thunder.Sys;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace Assets.Script.Tool.ObjectPool
+namespace Thunder.Tool.ObjectPool
 {
     public class ObjectPool : MonoBehaviour
     {
@@ -214,7 +213,7 @@ namespace Assets.Script.Tool.ObjectPool
             public readonly GameObject Prefab;
             public readonly bool Allocable;
 
-            public Pool(GameObject prefab,bool allocable)
+            public Pool(GameObject prefab, bool allocable)
             {
                 _ObjectQueue = new Queue<IObjectPool>();
                 Prefab = prefab;
@@ -251,14 +250,14 @@ namespace Assets.Script.Tool.ObjectPool
 
         private void CreatePools(string bundleGroup, string bundle)
         {
-            AssetId id = new AssetId(bundleGroup, bundle, null,DefaultBundle);
-            foreach (var prefab in System.System.bundle.GetAllAsset<GameObject>(bundleGroup, bundle))
+            AssetId id = new AssetId(bundleGroup, bundle, null, DefaultBundle);
+            foreach (var prefab in Sys.Stable.bundle.GetAllAsset<GameObject>(bundleGroup, bundle))
             {
                 id.Name = prefab.name;
                 if (_Pools.ContainsKey(id)) continue;
                 _Pools.Add(id, new Pool(prefab, prefab.GetComponent<IObjectPool>() != null));
             }
-            System.System.bundle.ReleaseBundle(bundleGroup, bundle);
+            Sys.Stable.bundle.ReleaseBundle(bundleGroup, bundle);
         }
 
         public T Alloc<T>(string prefabPath, Action<T> init = null, Transform container = null) where T : MonoBehaviour
@@ -282,15 +281,15 @@ namespace Assets.Script.Tool.ObjectPool
 
         public T Alloc<T>(string bundleGroup, string bundle, string name, Action<T> init = null, Transform container = null) where T : MonoBehaviour
         {
-            Pool pool = GetPool(bundleGroup, bundle, name,out AssetId assetId);
-            Assert.IsTrue(pool.Allocable,$"{assetId.BundleGroup}!{assetId.Bundle}!{assetId.Name} 没有挂载实现IObjectPool的脚本，不可alloc");
+            Pool pool = GetPool(bundleGroup, bundle, name, out AssetId assetId);
+            Assert.IsTrue(pool.Allocable, $"{assetId.BundleGroup}!{assetId.Bundle}!{assetId.Name} 没有挂载实现IObjectPool的脚本，不可alloc");
 
             IObjectPool aop;
             // ReSharper disable once PossibleNullReferenceException
             if (pool.QueueIsEmpty())
             {
                 GameObject go = Instantiate(pool.Prefab);
-                go.transform.SetParent(container ?? System.System.container);
+                go.transform.SetParent(container ?? Sys.Stable.container);
                 aop = go.GetComponent<IObjectPool>();
                 aop.AssetId = assetId;
             }
@@ -309,7 +308,7 @@ namespace Assets.Script.Tool.ObjectPool
             return result;
         }
 
-        private Pool GetPool(string bundleGroup, string bundle, string name,out AssetId id)
+        private Pool GetPool(string bundleGroup, string bundle, string name, out AssetId id)
         {
             id = CreateId(bundleGroup, bundle, name);
 
@@ -333,7 +332,7 @@ namespace Assets.Script.Tool.ObjectPool
             obj.BeforeOpRecycle();
             GameObject mono = (obj as MonoBehaviour)?.gameObject;
             mono?.SetActive(false);
-            mono?.transform.SetParent(System.System.container);
+            mono?.transform.SetParent(Sys.Stable.container);
             _Pools[obj.AssetId].Enqueue(obj);
         }
 
@@ -357,14 +356,14 @@ namespace Assets.Script.Tool.ObjectPool
         }
         public GameObject GetPrefab(string bundleGroup, string bundle, string name)
         {
-            return GetPool(bundleGroup, bundle, name,out _).Prefab;
+            return GetPool(bundleGroup, bundle, name, out _).Prefab;
         }
 
         private static readonly string DefaultBundle = BundleSys.PrefabBundleD + BundleSys.Normal;
         private static AssetId CreateId(string bundleGroup, string bundle, string name)
         {
             bundle = bundle ?? DefaultBundle;
-            return new AssetId(bundleGroup, bundle, name,DefaultBundle);
+            return new AssetId(bundleGroup, bundle, name, DefaultBundle);
         }
     }
 

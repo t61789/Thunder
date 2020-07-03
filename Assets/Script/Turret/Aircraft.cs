@@ -1,11 +1,11 @@
 ﻿using BehaviorDesigner.Runtime;
 using System.Collections.Generic;
-using Assets.Script.System;
-using Assets.Script.Tool.BuffData;
-using Assets.Script.Tool.ObjectPool;
+using Thunder.Sys;
+using Thunder.Tool.BuffData;
+using Thunder.Tool.ObjectPool;
 using UnityEngine;
 
-namespace Assets.Script.Turret
+namespace Thunder.Turret
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]

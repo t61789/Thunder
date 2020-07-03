@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Script.Tool
+namespace Thunder.Tool
 {
     public class Tools
     {

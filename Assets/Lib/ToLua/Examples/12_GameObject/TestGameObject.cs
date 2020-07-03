@@ -29,7 +29,7 @@ public class TestGameObject : MonoBehaviour
 
     void Start()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -60,7 +60,7 @@ public class TestGameObject : MonoBehaviour
     {
         lua.Dispose();
         lua = null;
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);

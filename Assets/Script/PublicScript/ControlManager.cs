@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Script.PublicScript
+namespace Thunder.PublicScript
 {
     public class ControlManager
     {
@@ -44,7 +44,7 @@ namespace Assets.Script.PublicScript
 
         public ControlManager()
         {
-            var a = System.System.value;
+            var a = Sys.Stable.value;
             Values values = a.GetValue<Values>("input_priority");
 
             string[] temp = values.priority;

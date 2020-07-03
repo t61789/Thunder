@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class Joystick : BaseUi
     {

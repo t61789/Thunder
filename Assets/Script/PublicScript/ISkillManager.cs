@@ -1,4 +1,4 @@
-﻿namespace Assets.Script.PublicScript
+﻿namespace Thunder.PublicScript
 {
     public interface ISkillManager
     {

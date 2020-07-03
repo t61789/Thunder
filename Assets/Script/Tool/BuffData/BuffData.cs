@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Script.Tool.BuffData
+namespace Thunder.Tool.BuffData
 {
     public class BuffData
     {

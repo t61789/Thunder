@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets.Script.Tool
+namespace Thunder.Tool
 {
     public class CompareVec : IComparable
     {

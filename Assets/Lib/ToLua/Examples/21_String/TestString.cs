@@ -28,7 +28,7 @@ public class TestString : LuaClient
 
     protected override void OnLoadFinished()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -53,7 +53,7 @@ public class TestString : LuaClient
     {
         base.OnApplicationQuit();
 
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019	
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020	
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);

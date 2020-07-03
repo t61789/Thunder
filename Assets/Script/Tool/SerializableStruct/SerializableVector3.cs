@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Assets.Script.Tool.SerializableStruct
+namespace Thunder.Tool.SerializableStruct
 {
     [JsonObject]
     public struct SerializableVector3

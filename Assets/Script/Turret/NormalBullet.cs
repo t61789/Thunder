@@ -1,7 +1,6 @@
-﻿using Assets.Script.PublicScript;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Assets.Script.Turret
+namespace Thunder.Turret
 {
     /// <summary>
     /// releaser应有rigidbody2d和继承了aircraft的控制器
@@ -24,7 +23,7 @@ namespace Assets.Script.Turret
         protected void BulletExploded()
         {
             animator.SetBool("contactEnemy", false);
-            System.System.objectPool.Recycle(this);
+            Sys.Stable.objectPool.Recycle(this);
         }
 
         protected void OnTriggerEnter2D(Collider2D other)
@@ -35,7 +34,7 @@ namespace Assets.Script.Turret
             Aircraft camp = other.gameObject.GetComponent<Aircraft>();
             if (camp == null)
                 return;
-            if (!System.System.camp.IsHostile(releaser, camp))
+            if (!Sys.Stable.camp.IsHostile(releaser, camp))
                 return;
 
             camp.GetDamage(Damage);

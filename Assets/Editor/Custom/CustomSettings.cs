@@ -1,8 +1,11 @@
 ﻿using LuaInterface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Thunder.Utility;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 using BindType = ToLuaMenu.BindType;
 #pragma warning disable 618
 public static class CustomSettings
@@ -40,8 +43,33 @@ public static class CustomSettings
         _DT(typeof(System.Func<int, int>)),
     };
 
+    public static BindType[] customTypeList
+    {
+        get
+        {
+            List<BindType> li = new List<BindType>();
+            foreach (var type in typeof(DontGenerateWrapAttribute).Assembly.GetTypes().Where(x =>
+                x.Namespace != null &&
+                x.Namespace.StartsWith("Thunder") &&
+                !x.IsNested &&
+                !x.IsGenericType &&
+                !x.IsInterface &&
+                !x.IsSubclassOf(typeof(Attribute)) &&
+                x.GetCustomAttributes(typeof(
+                DontGenerateWrapAttribute), false).Length < 1))
+            {
+                Debug.Log(type.FullName);
+                li.Add(_GT(type));
+            }
+            BindType[] result = new BindType[_customTypeList.Length + li.Count];
+            Array.Copy(_customTypeList, result, _customTypeList.Length);
+            li.CopyTo(result, _customTypeList.Length);
+            return result;
+        }
+    }
+
     //在这里添加你要导出注册到lua的类型列表
-    public static BindType[] customTypeList =
+    private static BindType[] _customTypeList =
     {                
         //------------------------为例子导出--------------------------------
         //_GT(typeof(TestEventListener)),
@@ -147,7 +175,8 @@ public static class CustomSettings
         _GT(typeof(SkinWeights)),
         _GT(typeof(RenderTexture)),
         _GT(typeof(Resources)),
-        _GT(typeof(LuaProfiler))
+        _GT(typeof(LuaProfiler)),
+        _GT(typeof(Button))
     };
 
     public static List<Type> dynamicList = new List<Type>()
@@ -256,3 +285,4 @@ public static class CustomSettings
         LuaClient.Instance.DetachProfiler();
     }
 }
+

@@ -1,4 +1,4 @@
-﻿namespace Assets.Script.Utility
+﻿namespace Thunder.Utility
 {
     public class GlobalSettings
     {

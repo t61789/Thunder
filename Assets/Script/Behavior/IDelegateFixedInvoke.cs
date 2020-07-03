@@ -1,4 +1,4 @@
-﻿namespace Assets.Script.Behavior
+﻿namespace Thunder.Behavior
 {
     public interface IDelegateFixedInvoke
     {

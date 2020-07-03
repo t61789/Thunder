@@ -1,8 +1,7 @@
-﻿using Assets.Script.PublicScript;
-using Assets.Script.Utility;
+﻿using Thunder.Utility;
 using TMPro;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class ConfirmDialog : BaseUi
     {
@@ -27,13 +26,13 @@ namespace Assets.Script.UI
         public void OK()
         {
             dialogResult = DialogResult.Ok;
-            System.System.UiSys.CloseUi(this);
+            Sys.Stable.UiSys.CloseUi(this);
         }
 
         public void Cancel()
         {
             dialogResult = DialogResult.Cancel;
-            System.System.UiSys.CloseUi(this);
+            Sys.Stable.UiSys.CloseUi(this);
         }
 
         public void Update()

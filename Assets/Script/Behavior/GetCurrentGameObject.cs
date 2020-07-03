@@ -1,7 +1,7 @@
 ﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
-namespace Assets.Script.Behavior
+namespace Thunder.Behavior
 {
     public class GetCurrentGameObject : Action
     {

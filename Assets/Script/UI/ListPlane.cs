@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Script.PublicScript;
-using Assets.Script.System;
+using Thunder.Sys;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class ListPlane : BaseUi
     {
@@ -62,7 +61,7 @@ namespace Assets.Script.UI
             scrollbar.x.value = 0;
 
             foreach (var item in elements)
-                System.System.objectPool.Recycle(item);
+                Sys.Stable.objectPool.Recycle(item);
             elements.Clear();
 
             foreach (RectTransform item in elementsTrans)
@@ -138,7 +137,7 @@ namespace Assets.Script.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                RectTransform rectTransform = System.System.objectPool.Alloc(null,UiSys.DefaultUiBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
+                RectTransform rectTransform = Sys.Stable.objectPool.Alloc(null, UiSys.DefaultUiBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
 
                 elements.Add(rectTransform.GetComponent<BaseUi>());
             }

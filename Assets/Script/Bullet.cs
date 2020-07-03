@@ -1,11 +1,10 @@
-﻿using Assets.Script.PublicScript;
-using Assets.Script.System;
-using Assets.Script.Tool.BuffData;
-using Assets.Script.Tool.ObjectPool;
-using Assets.Script.Turret;
+﻿using Thunder.Sys;
+using Thunder.Tool.BuffData;
+using Thunder.Tool.ObjectPool;
+using Thunder.Turret;
 using UnityEngine;
 
-namespace Assets.Script
+namespace Thunder
 {
     public abstract class Bullet : MonoBehaviour, IObjectPool
     {
@@ -68,7 +67,7 @@ namespace Assets.Script
 
         public virtual void LifeTimeEnd()
         {
-            System.System.objectPool.Recycle(this);
+            Sys.Stable.objectPool.Recycle(this);
         }
 
         public virtual void ObjectPoolInit(Transform releaser, Vector3 pos, Quaternion rotate)

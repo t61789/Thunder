@@ -1,9 +1,8 @@
 ﻿using System.Collections;
-using Assets.Script.PublicScript;
-using Assets.Script.Utility;
+using Thunder.Utility;
 using UnityEngine.UI;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class InputDialog : BaseUi
     {
@@ -31,13 +30,13 @@ namespace Assets.Script.UI
         public void InputEndOK()
         {
             dialogResult = DialogResult.Ok;
-            System.System.UiSys.CloseUi(this);
+            Sys.Stable.UiSys.CloseUi(this);
         }
 
         public void InputEndCancel()
         {
             dialogResult = DialogResult.Cancel;
-            System.System.UiSys.CloseUi(this);
+            Sys.Stable.UiSys.CloseUi(this);
         }
 
         public override void ObjectPoolReset(Hashtable arg)

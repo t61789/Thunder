@@ -1,14 +1,13 @@
-﻿using Assets.Script.Turret;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Assets.Script.PublicScript;
-using Assets.Script.System;
-using Assets.Script.Utility;
+using Thunder.Sys;
+using Thunder.Turret;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class BuildShipPanel : BaseUi
     {
@@ -55,7 +54,7 @@ namespace Assets.Script.UI
             shipId = shipFrameInput.text;
 
             Ship.AttachPoint[] attachPoints = Ship.GetAttachPoints(shipId);
-            Sprite frameSprite = System.System.objectPool.GetPrefab(shipId).GetComponent<SpriteRenderer>().sprite;
+            Sprite frameSprite = Sys.Stable.objectPool.GetPrefab(shipId).GetComponent<SpriteRenderer>().sprite;
 
             Vector2 baseSize = frameSprite.bounds.size;
 
@@ -117,7 +116,7 @@ namespace Assets.Script.UI
         {
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                baseUI.GetComponent<Image>().sprite = System.System.objectPool.GetPrefab(null,BundleSys.UIBundle,"emptyUI").GetComponent<Image>().sprite;
+                baseUI.GetComponent<Image>().sprite = Sys.Stable.objectPool.GetPrefab(null, BundleSys.UIBundle, "emptyUI").GetComponent<Image>().sprite;
 
                 baseUI.RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
                 baseUI.RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
@@ -133,14 +132,14 @@ namespace Assets.Script.UI
 
             selectedAttachPoint = baseUI;
             Ship.AttachPoint info = attachPointInfo[baseUI];
-            DataTable select = System.System.dataBase["turret"].Select(new string[] { "name" }, new (string, object)[] { ("type", info.type) });
+            DataTable select = Sys.Stable.dataBase["turret"].Select(new string[] { "name" }, new (string, object)[] { ("type", info.type) });
             List<Action<BaseUi>> inits = new List<Action<BaseUi>>();
 
             foreach (var item in select.Rows)
             {
                 string turretName = (string)item["name"];
 
-                GameObject prefab = System.System.objectPool.GetPrefab(turretName);
+                GameObject prefab = Sys.Stable.objectPool.GetPrefab(turretName);
                 Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
                 inits.Add(x =>
                 {
@@ -171,7 +170,7 @@ namespace Assets.Script.UI
 
             OnBuildShipComplete?.Invoke(this);
 
-            System.System.UiSys.CloseUi(name);
+            Sys.Stable.UiSys.CloseUi(name);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Assets.Script.Tool.BehaviorTree
+namespace Thunder.Tool.BehaviorTree
 {
     public class Node
     {

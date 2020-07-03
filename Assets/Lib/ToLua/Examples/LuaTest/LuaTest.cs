@@ -1,73 +1,14 @@
-﻿using System;
-using LuaInterface;
+﻿using LuaInterface;
+using System;
 using UnityEngine;
 
 public class LuaTest : MonoBehaviour
 {
-    private Yeah a;
-
-    private void Awake()
-    {
-        a = new Yeah();
-    }
-
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 0, 100, 50), "File1"))
-        {
-            a._Ls.DoFile("File1");
-
-
-            Action fuc = a._Ls.GetFunction("Fuck").ToDelegate<Action>();
-            fuc();
-        }
-
-        if (GUI.Button(new Rect(0, 50, 100, 50), "File2"))
-        {
-            a._Ls.DoFile("File2");
-        }
-
-        if (GUI.Button(new Rect(0, 100, 100, 50), "Loada"))
-        {
-            Debug.Log(a._Ls["a"]);
-        }
-
-        if (GUI.Button(new Rect(0, 150, 100, 50), "SetNull"))
-        {
-            a._Ls["a"] = null;
-        }
-
-        if (GUI.Button(new Rect(0, 200, 100, 50), "Dispose"))
-        {
-            a._Ls.Dispose();
-        }
-
-        if (GUI.Button(new Rect(0, 250, 100, 50), "Start"))
-        {
-            a._Ls.Start();
-        }
-
-        //a._Ls.CheckTop();
-        //a._Ls.Collect();
-    }
-
-    private void OnApplicationQuit()
-    {
-        a._Ls.Dispose();
-        a._Ls = null;
-    }
-}
-
-public class Yeah
-{
     public LuaState _Ls;
 
-    public Yeah()
-    {
-        Awake();
-    }
+    public static LuaTest instance;
 
-    public void Awake()
+    private void Awake()
     {
         _Ls = new LuaState();
         _Ls.Start();
@@ -75,5 +16,28 @@ public class Yeah
 
         LuaBinder.Bind(_Ls);
         DelegateFactory.Init();
+
+        instance = this;
     }
+
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 0, 100, 50), "File1"))
+        {
+            _Ls.DoFile("File1");
+
+            (_Ls["shit"] as Shit).fuck(1);
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        _Ls.Dispose();
+        _Ls = null;
+    }
+}
+
+public class Shit
+{
+    public Func<int, int> fuck;
 }

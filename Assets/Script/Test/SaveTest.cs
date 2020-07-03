@@ -1,8 +1,7 @@
-﻿using Assets.Script.PublicScript;
-using Assets.Script.Utility;
+﻿using Thunder.Utility;
 using UnityEngine;
 
-namespace Assets.Script.Test
+namespace Thunder.Test
 {
     public class SaveTest : MonoBehaviour
     {

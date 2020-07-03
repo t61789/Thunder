@@ -22,7 +22,7 @@ public class AccessingLuaVariables : MonoBehaviour
 
     void Start()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -74,7 +74,7 @@ public class AccessingLuaVariables : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);

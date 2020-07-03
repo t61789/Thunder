@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class DragMoveButton : MonoBehaviour, IBeginDragHandler, IDragHandler
     {

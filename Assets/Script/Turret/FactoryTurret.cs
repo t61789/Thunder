@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Assets.Script.PublicScript;
 using UnityEngine;
 
-namespace Assets.Script.Turret
+namespace Thunder.Turret
 {
     public class FactoryTurret : Turret
     {
@@ -28,7 +27,7 @@ namespace Assets.Script.Turret
 
         public void MakeFighter()
         {
-            Fighter fighter = System.System.objectPool.Alloc<Fighter>(fighterName, x =>
+            Fighter fighter = Sys.Stable.objectPool.Alloc<Fighter>(fighterName, x =>
             {
                 x.ObjectPoolInit(trans.position, trans.rotation, null, ship);
                 x.OnDead += FighterDestroyed;
@@ -39,7 +38,7 @@ namespace Assets.Script.Turret
         public void SetFighter(string fighterName)
         {
             this.fighterName = fighterName;
-            makeInterval = System.System.objectPool.GetPrefab(fighterName).GetComponent<Fighter>().MakeInterval;
+            makeInterval = Sys.Stable.objectPool.GetPrefab(fighterName).GetComponent<Fighter>().MakeInterval;
         }
 
         private void FighterDestroyed(Aircraft aircraft)

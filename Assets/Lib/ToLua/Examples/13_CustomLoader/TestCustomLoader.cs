@@ -26,7 +26,7 @@ public class TestCustomLoader : LuaClient
 
     new void Awake()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
         Application.logMessageReceived += Logger;
 #else
         Application.RegisterLogCallback(Logger);
@@ -38,7 +38,7 @@ public class TestCustomLoader : LuaClient
     {
         base.OnApplicationQuit();
 
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019
+#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
         Application.logMessageReceived -= Logger;
 #else
         Application.RegisterLogCallback(null);

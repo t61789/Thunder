@@ -1,4 +1,4 @@
-﻿namespace Assets.Script.Tool.BehaviorTree
+﻿namespace Thunder.Tool.BehaviorTree
 {
     public class SelectorNode : Node
     {

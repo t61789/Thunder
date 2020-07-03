@@ -1,10 +1,8 @@
 ﻿using System.Collections;
-using Assets.Script.PublicScript;
-using Assets.Script.System;
-using Assets.Script.Utility;
+using Thunder.Utility;
 using UnityEngine;
 
-namespace Assets.Script.Skill
+namespace Thunder.Skill
 {
     public class CircleShoot : Skill
     {
@@ -24,7 +22,7 @@ namespace Assets.Script.Skill
         {
             skillCdCount = 0;
 
-            Values values = System.System.value.GetValue<Values>("skill" + Paths.Div + "circleShoot");
+            Values values = Sys.Stable.value.GetValue<Values>("skill" + Paths.Div + "circleShoot");
 
             SkillCd = values.skillCd;
             BulletNum = values.bulletNum;
@@ -42,7 +40,7 @@ namespace Assets.Script.Skill
 
         protected virtual void Update()
         {
-            if (Time.time - skillCdCount >= SkillCd && System.System.control.RequestDown(KeyCode.Space, "playerControl"))
+            if (Time.time - skillCdCount >= SkillCd && Sys.Stable.control.RequestDown(KeyCode.Space, "playerControl"))
             {
                 StartCoroutine(Shoot());
                 skillCdCount = Time.time;

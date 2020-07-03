@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UI;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     public class MessageDialog : BaseUi
     {

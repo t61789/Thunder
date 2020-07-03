@@ -1,7 +1,7 @@
 ﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
-namespace Assets.Script.Behavior
+namespace Thunder.Behavior
 {
     [TaskCategory("Unity/GameObject")]
     public class IsNotNull : Conditional

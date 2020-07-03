@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using Assets.Script.PublicScript;
-using Assets.Script.Tool;
-using Assets.Script.Utility;
+using Thunder.Tool;
+using Thunder.Utility;
 using UnityEngine;
 
-namespace Assets.Script.Turret
+namespace Thunder.Turret
 {
     public class Ship : Aircraft
     {
@@ -38,7 +37,7 @@ namespace Assets.Script.Turret
         {
             List<AttachPoint> attachPoints = new List<AttachPoint>();
             int index = 0;
-            foreach (var item in System.System.dataBase["ship_attach_points"].Select(null, new (string, object)[] { ("ship_id", shipId) }))
+            foreach (var item in Sys.Stable.dataBase["ship_attach_points"].Select(null, new (string, object)[] { ("ship_id", shipId) }))
             {
                 AttachPoint a = new AttachPoint(
                     index,
@@ -65,7 +64,7 @@ namespace Assets.Script.Turret
             if (attachPoints[pointIndex].turret != null)
                 RemoveTurret(pointIndex);
 
-            GameObject turret = Instantiate(System.System.objectPool.GetPrefab(turretPath));
+            GameObject turret = Instantiate(Sys.Stable.objectPool.GetPrefab(turretPath));
 
             attachPoints[pointIndex].turret = turret.GetComponent<Turret>();
             attachPoints[pointIndex].turret.Install(this, attachPoints[pointIndex].position, attachPoints[pointIndex].rotation);
@@ -97,7 +96,7 @@ namespace Assets.Script.Turret
 
         public static Ship CreateShip(CreateShipParam param)
         {
-            Ship ship = System.System.objectPool.Alloc<Ship>(param.shipId);
+            Ship ship = Sys.Stable.objectPool.Alloc<Ship>(param.shipId);
             ship.Camp = param.camp;
             param.turrets = param.turrets ?? new string[0];
 

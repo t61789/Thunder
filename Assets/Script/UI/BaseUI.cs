@@ -1,12 +1,12 @@
 ﻿using System.Collections;
-using Assets.Script.PublicScript;
-using Assets.Script.System;
-using Assets.Script.Tool.ObjectPool;
-using Assets.Script.Utility;
+using Thunder.Sys;
+using Thunder.Tool.ObjectPool;
+using Thunder.Utility;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 
-namespace Assets.Script.UI
+namespace Thunder.UI
 {
     [RequireComponent(typeof(RectTransform))]
     public class BaseUi : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter, IBeginDragHandler, IEndDragHandler, IDragHandler
@@ -50,12 +50,6 @@ namespace Assets.Script.UI
         {
             UiName = UiName ?? name;
             RectTrans = transform as RectTransform;
-        }
-
-        [ContextMenu("fff")]
-        private void Shit()
-        {
-            Debug.Log(123);
         }
 
         public virtual void AfterOpen()
@@ -166,7 +160,7 @@ namespace Assets.Script.UI
 
         public void Close()
         {
-            System.System.UiSys.CloseUi(this);
+            Sys.Stable.UiSys.CloseUi(this);
         }
 
         public void InitRect(UiInitAction action)
@@ -191,6 +185,22 @@ namespace Assets.Script.UI
             {
                 RectTrans.anchoredPosition = Vector2.zero;
             }
+        }
+
+        // [Assetid]:[FunctionName]
+        public void CallLuaFunction(string func)
+        {
+            Assert.IsFalse(string.IsNullOrEmpty(func), $"命令不正确：{func}");
+            // ReSharper disable once PossibleNullReferenceException
+            var s = func.Split(':');
+            Assert.IsTrue(s.Length == 2, $"命令不正确：{func}");
+            Sys.Stable.lua.ExecuteFile(s[0]);
+            Sys.Stable.lua.LuaState.Call(s[1], true);
+        }
+
+        public void ExecuteLuaCmd(string cmd)
+        {
+            Sys.Stable.lua.ExecuteCommand(cmd);
         }
     }
 }

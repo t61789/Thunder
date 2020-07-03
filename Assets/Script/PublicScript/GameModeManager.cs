@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
-using Assets.Script.GameMode;
+using Thunder.GameMode;
 
-namespace Assets.Script.PublicScript
+namespace Thunder.PublicScript
 {
     public class GameModeManager
     {
@@ -20,7 +20,7 @@ namespace Assets.Script.PublicScript
             if (curGameMode != null)
                 RemoveMode();
 
-            T obj = System.System.publicVar.AddComponent(modeType) as T;
+            T obj = Sys.Stable.publicVar.AddComponent(modeType) as T;
             init?.Invoke(obj);
             (obj as BaseGameMode).Init(arg);
             curGameMode = obj;
@@ -32,7 +32,7 @@ namespace Assets.Script.PublicScript
             if (curGameMode != null)
             {
                 curGameMode.BeforeUnInstall();
-                UnityEngine.Object.Destroy(System.System.publicVar.GetComponent<BaseGameMode>());
+                UnityEngine.Object.Destroy(Sys.Stable.publicVar.GetComponent<BaseGameMode>());
                 curGameMode = null;
             }
         }

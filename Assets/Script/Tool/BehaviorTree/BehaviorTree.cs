@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Script.Tool.BehaviorTree
+namespace Thunder.Tool.BehaviorTree
 {
     public class BehaviorTree : MonoBehaviour
     {
