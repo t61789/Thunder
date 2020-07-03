@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
-    public class Joystick : BaseUI
+    public class Joystick : BaseUi
     {
         public struct Value
         {
@@ -25,8 +25,8 @@ namespace Assets.Script.UI
         public float HideTime = 1f;
         public float StayTime = 0.7f;
 
-        private BaseUI cap;
-        private BaseUI panel;
+        private BaseUi cap;
+        private BaseUi panel;
         private Image panelImage;
         private bool dragging;
         private float curAlpha;
@@ -41,8 +41,8 @@ namespace Assets.Script.UI
                 valueList.Add(new Value());
             values = valueList.ToArray();
 
-            cap = transform.Find("Cap").GetComponent<BaseUI>();
-            panel = transform.Find("Panel").GetComponent<BaseUI>();
+            cap = transform.Find("Cap").GetComponent<BaseUi>();
+            panel = transform.Find("Panel").GetComponent<BaseUi>();
             panelImage = panel.GetComponent<Image>();
 
             cap.DragStart += CapDragStart;
@@ -90,10 +90,10 @@ namespace Assets.Script.UI
             Gizmos.DrawWireSphere(transform.position, Radius);
         }
 
-        private void CapDragStart(BaseUI baseUI, PointerEventData eventData)
+        private void CapDragStart(BaseUi baseUI, PointerEventData eventData)
         {
             Vector2 pos = eventData.position;
-            if ((pos - (Vector2)cap.rectTrans.position).magnitude < CapRadius)
+            if ((pos - (Vector2)cap.RectTrans.position).magnitude < CapRadius)
             {
                 dragging = true;
                 if (!StablePanel)
@@ -102,12 +102,12 @@ namespace Assets.Script.UI
                     alphaCount = curAlpha;
 
                     if (curAlpha <= 0)
-                        panel.rectTrans.position = cap.rectTrans.position;
+                        panel.RectTrans.position = cap.RectTrans.position;
                 }
             }
         }
 
-        private void CapDragEnd(BaseUI baseUI, PointerEventData eventData)
+        private void CapDragEnd(BaseUi baseUI, PointerEventData eventData)
         {
             if (dragging)
             {
@@ -116,7 +116,7 @@ namespace Assets.Script.UI
 
                 if (StablePanel)
                 {
-                    cap.rectTrans.position = panel.rectTrans.position;
+                    cap.RectTrans.position = panel.RectTrans.position;
                 }
                 else
                 {
@@ -126,31 +126,31 @@ namespace Assets.Script.UI
             }
         }
 
-        private void CapDragging(BaseUI baseUI, PointerEventData eventData)
+        private void CapDragging(BaseUi baseUI, PointerEventData eventData)
         {
             if (dragging)
             {
-                Vector3 temp = (Vector3)eventData.position - panel.rectTrans.position;
+                Vector3 temp = (Vector3)eventData.position - panel.RectTrans.position;
                 if (StablePanel)
                 {
                     if (temp.magnitude > Radius)
                         temp = temp.normalized * Radius;
-                    cap.rectTrans.position = panel.rectTrans.position + temp;
+                    cap.RectTrans.position = panel.RectTrans.position + temp;
                 }
                 else
                 {
-                    cap.rectTrans.position = eventData.position;
+                    cap.RectTrans.position = eventData.position;
                     if (temp.magnitude > Radius)
                     {
                         temp = temp.normalized * Radius;
-                        panel.rectTrans.position = -temp.normalized * Radius + cap.rectTrans.position;
+                        panel.RectTrans.position = -temp.normalized * Radius + cap.RectTrans.position;
                     }
                 }
                 values[Index].val = temp.normalized * (temp.magnitude / Radius);
             }
         }
 
-        private void CapClick(BaseUI baseUI, PointerEventData eventData)
+        private void CapClick(BaseUi baseUI, PointerEventData eventData)
         {
             if (dragging) return;
 
@@ -160,12 +160,12 @@ namespace Assets.Script.UI
                 values[Index].doubleClick = true;
         }
 
-        private void CapDown(BaseUI baseUI, PointerEventData eventData)
+        private void CapDown(BaseUi baseUI, PointerEventData eventData)
         {
             values[Index].holding = true;
         }
 
-        private void CapUp(BaseUI baseUI, PointerEventData eventData)
+        private void CapUp(BaseUi baseUI, PointerEventData eventData)
         {
             values[Index].holding = false;
         }

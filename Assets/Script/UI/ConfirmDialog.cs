@@ -2,7 +2,7 @@
 
 namespace Assets.Script.UI
 {
-    public class ConfirmDialog : BaseUI
+    public class ConfirmDialog : BaseUi
     {
         public TextMeshProUGUI textMesh;
 
@@ -39,7 +39,7 @@ namespace Assets.Script.UI
             if (textMesh.text != tempText)
             {
                 tempText = textMesh.text;
-                rectTrans.SetSizeWithCurrentAnchors(UnityEngine.RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width);
+                RectTrans.SetSizeWithCurrentAnchors(UnityEngine.RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width);
             }
         }
     }

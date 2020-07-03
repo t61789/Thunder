@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
-    public class ListPlane : BaseUI
+    public class ListPlane : BaseUi
     {
-        public struct Parameters<T> where T : BaseUI
+        public struct Parameters<T> where T : BaseUi
         {
             public int rowCount;
             public Vector2 elementSize;
@@ -34,19 +34,19 @@ namespace Assets.Script.UI
         protected RectTransform maskTrans;
         protected RectTransform elementsTrans;
 
-        protected List<BaseUI> elements = new List<BaseUI>();
+        protected List<BaseUi> elements = new List<BaseUi>();
         protected Queue<RectTransform> elementContainers = new Queue<RectTransform>();
 
         protected override void Awake()
         {
             base.Awake();
-            scrollbar.y = rectTrans.Find("ScrollbarY").GetComponent<Scrollbar>();
-            scrollbar.x = rectTrans.Find("ScrollbarX").GetComponent<Scrollbar>();
-            maskTrans = rectTrans.Find("Mask").GetComponent<RectTransform>();
+            scrollbar.y = RectTrans.Find("ScrollbarY").GetComponent<Scrollbar>();
+            scrollbar.x = RectTrans.Find("ScrollbarX").GetComponent<Scrollbar>();
+            maskTrans = RectTrans.Find("Mask").GetComponent<RectTransform>();
             elementsTrans = maskTrans.Find("Elements").GetComponent<RectTransform>();
         }
 
-        public T[] Init<T>(Parameters<T> arg) where T : BaseUI
+        public T[] Init<T>(Parameters<T> arg) where T : BaseUi
         {
             Clear();
             return CreateElements(arg);
@@ -70,7 +70,7 @@ namespace Assets.Script.UI
             }
         }
 
-        protected T[] CreateElements<T>(Parameters<T> parameters) where T : BaseUI
+        protected T[] CreateElements<T>(Parameters<T> parameters) where T : BaseUi
         {
             if (parameters.elementSize.x == 0)
             {
@@ -92,25 +92,25 @@ namespace Assets.Script.UI
 
             if (scrollbar.x.gameObject.activeSelf)
             {
-                rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.planeSize.x);
+                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.planeSize.x);
                 scrollRange.x = planeSize.x - maskTrans.rect.width;
                 scrollRange.x = scrollRange.x < 0 ? 0 : scrollRange.x;
                 scrollbar.y.value = 0;
                 scrollbar.y.size = maskTrans.rect.width / planeSize.x;
             }
             else
-                rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, planeSize.x + maskTrans.offsetMin.x - maskTrans.offsetMax.x);
+                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, planeSize.x + maskTrans.offsetMin.x - maskTrans.offsetMax.x);
 
             if (scrollbar.y.gameObject.activeSelf)
             {
-                rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.planeSize.y);
+                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.planeSize.y);
                 scrollRange.y = planeSize.y - maskTrans.rect.height;
                 scrollRange.y = scrollRange.y < 0 ? 0 : scrollRange.y;
                 scrollbar.y.value = 0;
                 scrollbar.y.size = maskTrans.rect.height / planeSize.y;
             }
             else
-                rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, planeSize.y + maskTrans.offsetMin.y - maskTrans.offsetMax.y);
+                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, planeSize.y + maskTrans.offsetMin.y - maskTrans.offsetMax.y);
 
             float tempx = parameters.elementSize.x / 2;
             float tempy = parameters.elementSize.y / 2;
@@ -138,7 +138,7 @@ namespace Assets.Script.UI
 
                 RectTransform rectTransform = PublicVar.objectPool.Alloc(null,UiManager.DefaultUiBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
 
-                elements.Add(rectTransform.GetComponent<BaseUI>());
+                elements.Add(rectTransform.GetComponent<BaseUi>());
             }
 
             return elements.Cast<T>().ToArray();

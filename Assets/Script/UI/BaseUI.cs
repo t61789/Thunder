@@ -6,33 +6,24 @@ using UnityEngine.EventSystems;
 namespace Assets.Script.UI
 {
     [RequireComponent(typeof(RectTransform))]
-    public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public class BaseUi : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter, IBeginDragHandler, IEndDragHandler, IDragHandler
     {
         public bool Stable = false;
 
-        public string UIName
+        public string UiName
         {
-            set
-            {
-                _UIName = value;
-            }
+            set => _UiName = value;
 
-            get
-            {
-                if (_UIName == null || _UIName == "")
-                    return name;
-                else
-                    return _UIName;
-            }
+            get => string.IsNullOrEmpty(_UiName) ? name : _UiName;
         }
 
         [SerializeField]
-        private string _UIName;
+        private string _UiName;
 
         [HideInInspector]
-        public RectTransform rectTrans;
+        public RectTransform RectTrans;
 
-        public delegate void PointerDel(BaseUI baseUI, PointerEventData eventData);
+        public delegate void PointerDel(BaseUi baseUi, PointerEventData eventData);
         public event PointerDel PointerDown;
         public event PointerDel PointerEnter;
         public event PointerDel PointerClick;
@@ -42,21 +33,20 @@ namespace Assets.Script.UI
         public event PointerDel DragEnd;
         public event PointerDel Dragging;
 
-        public delegate void AfterOpenDel(BaseUI baseUI);
+        public delegate void AfterOpenDel(BaseUi baseUi);
         public event AfterOpenDel OnAfterOpen;
-        public delegate void BeforeCloseDel(BaseUI baseUI);
+        public delegate void BeforeCloseDel(BaseUi baseUi);
         public event BeforeCloseDel OnBeforeClose;
-        public delegate void CloseCheck(BaseUI baseUI, ref bool result);
+        public delegate void CloseCheck(BaseUi baseUi, ref bool result);
         public event CloseCheck OnCloseCheck;
 
         [HideInInspector]
-        public BaseUI dialog;
+        public BaseUi Dialog;
 
         protected virtual void Awake()
         {
-            if (UIName == null)
-                UIName = name;
-            rectTrans = transform as RectTransform;
+            UiName = UiName?? name;
+            RectTrans = transform as RectTransform;
         }
 
         public virtual void AfterOpen()
@@ -144,25 +134,25 @@ namespace Assets.Script.UI
 
         public void SetAnchor(Vector2 anchorMax, Vector2 anchorMin)
         {
-            rectTrans.anchorMin = anchorMin;
-            rectTrans.anchorMax = anchorMax;
+            RectTrans.anchorMin = anchorMin;
+            RectTrans.anchorMax = anchorMax;
         }
 
         public void SetOffset(Vector2 offsetMax, Vector2 offsetMin)
         {
-            rectTrans.offsetMax = offsetMax;
-            rectTrans.offsetMin = offsetMin;
+            RectTrans.offsetMax = offsetMax;
+            RectTrans.offsetMin = offsetMin;
         }
 
         public void SetAnchoredPosition(Vector2 pos)
         {
-            rectTrans.position = pos;
+            RectTrans.position = pos;
         }
 
         public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
         {
-            if (dialog == null) return true;
-            return !dialog.gameObject.activeSelf;
+            if (Dialog == null) return true;
+            return !Dialog.gameObject.activeSelf;
         }
 
         public void Close()
@@ -174,23 +164,23 @@ namespace Assets.Script.UI
         {
             if ((action & UIInitAction.MiddleAnchor) != 0)
             {
-                rectTrans.anchorMin = rectTrans.anchorMax = Vector2.one / 2;
+                RectTrans.anchorMin = RectTrans.anchorMax = Vector2.one / 2;
             }
 
             if ((action & UIInitAction.FillAnchor) != 0)
             {
-                rectTrans.anchorMax = Vector2.one;
-                rectTrans.anchorMin = Vector2.zero;
+                RectTrans.anchorMax = Vector2.one;
+                RectTrans.anchorMin = Vector2.zero;
             }
 
             if ((action & UIInitAction.FillSize) != 0)
             {
-                rectTrans.offsetMin = rectTrans.offsetMax = Vector2.zero;
+                RectTrans.offsetMin = RectTrans.offsetMax = Vector2.zero;
             }
 
             if ((action & UIInitAction.PositionMiddleOfAnchor) != 0)
             {
-                rectTrans.anchoredPosition = Vector2.zero;
+                RectTrans.anchoredPosition = Vector2.zero;
             }
         }
 

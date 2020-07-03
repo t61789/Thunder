@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
-    public class SurvivalLiUI : BaseUI
+    public class SurvivalLiUI : BaseUi
     {
         private string surviveTimePreText = "";
         private string scorePreText = "";

@@ -14,9 +14,9 @@ public class UiManager : MonoBehaviour,IBaseSystem
     private class UiUnit
     {
         //public int siblingIndex;
-        public readonly BaseUI UiObj;
+        public readonly BaseUi UiObj;
 
-        public UiUnit(int siblingIndex, BaseUI uiObj)
+        public UiUnit(int siblingIndex, BaseUi uiObj)
         {
             //this.siblingIndex = siblingIndex;
             this.UiObj = uiObj;
@@ -44,7 +44,7 @@ public class UiManager : MonoBehaviour,IBaseSystem
         List<Transform> move = new List<Transform>();
         foreach (Transform item in _UiContainer.transform)
         {
-            UiUnit newui = new UiUnit(count, item.GetComponent<BaseUI>());
+            UiUnit newui = new UiUnit(count, item.GetComponent<BaseUi>());
             if (item.gameObject.activeSelf)
                 _ActiveUi.Add(newui);
             else
@@ -58,19 +58,19 @@ public class UiManager : MonoBehaviour,IBaseSystem
             item.SetParent(_UiRecycleContainer);
     }
 
-    public BaseUI OpenUi(string uiName, UIInitAction act = 0, Action<BaseUI> init = null)
+    public BaseUi OpenUi(string uiName, UIInitAction act = 0, Action<BaseUi> init = null)
     {
-        return OpenUi<BaseUI>(uiName, act, init);
+        return OpenUi<BaseUi>(uiName, act, init);
     }
 
-    public T OpenUi<T>(string uiName, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUi<T>(string uiName, UIInitAction act = 0, Action<T> init = null) where T : BaseUi
     {
         return OpenUi(uiName, true, act, init);
     }
 
-    public T OpenUi<T>(string uiName, string after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUi<T>(string uiName, string after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUi
     {
-        UiUnit find = _ActiveUi.FirstOrDefault(x => x.UiObj.UIName == after);
+        UiUnit find = _ActiveUi.FirstOrDefault(x => x.UiObj.UiName == after);
 
         if (find == null)
         {
@@ -81,19 +81,19 @@ public class UiManager : MonoBehaviour,IBaseSystem
         return OpenUi(uiName, _ActiveUi.IndexOf(find) + 1, dialog ? find.UiObj : null, act, init);
     }
 
-    public T OpenUi<T>(string uiName, BaseUI after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUi<T>(string uiName, BaseUi after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUi
     {
         UiUnit find = _ActiveUi.FirstOrDefault(x => x.UiObj == after);
         if (find == null)
         {
-            Debug.LogError("No such ui named [" + after.UIName + "] which you want to insert [" + uiName + "] after");
+            Debug.LogError("No such ui named [" + after.UiName + "] which you want to insert [" + uiName + "] after");
             return null;
         }
 
         return OpenUi(uiName, _ActiveUi.IndexOf(find) + 1, dialog ? after : null, act, init);
     }
 
-    public T OpenUi<T>(string uiName, bool last, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUi<T>(string uiName, bool last, UIInitAction act = 0, Action<T> init = null) where T : BaseUi
     {
 
         if (last)
@@ -102,7 +102,7 @@ public class UiManager : MonoBehaviour,IBaseSystem
             return OpenUi(uiName, 0, null, act, init);
     }
 
-    public T OpenUi<T>(string uiName, int siblingIndex, BaseUI dialog = null, UIInitAction act = 0, Action<T> init = null) where T : BaseUI
+    public T OpenUi<T>(string uiName, int siblingIndex, BaseUi dialog = null, UIInitAction act = 0, Action<T> init = null) where T : BaseUi
     {
         if (siblingIndex < 0 || siblingIndex > _UiContainer.childCount)
         {
@@ -110,13 +110,13 @@ public class UiManager : MonoBehaviour,IBaseSystem
             return null;
         }
 
-        UiUnit unit = _HideStableUi.FirstOrDefault(x => x.UiObj.UIName == uiName);
+        UiUnit unit = _HideStableUi.FirstOrDefault(x => x.UiObj.UiName == uiName);
         if (unit != null)
             _HideStableUi.Remove(unit);
 
-        BaseUI newPlane = unit?.UiObj;
+        BaseUi newPlane = unit?.UiObj;
         if (newPlane == null)
-            newPlane = PublicVar.objectPool.Alloc<BaseUI>(null, DefaultUiBundle, uiName);
+            newPlane = PublicVar.objectPool.Alloc<BaseUi>(null, DefaultUiBundle, uiName);
 
         newPlane.transform.SetParent(_UiContainer);
         newPlane.transform.SetSiblingIndex(siblingIndex);
@@ -126,7 +126,7 @@ public class UiManager : MonoBehaviour,IBaseSystem
 
         newPlane.gameObject.SetActive(true);
         if (dialog != null)
-            dialog.dialog = newPlane;
+            dialog.Dialog = newPlane;
 
         newPlane.InitRect(act);
 
@@ -139,10 +139,10 @@ public class UiManager : MonoBehaviour,IBaseSystem
 
     public void CloseUi(string uiName)
     {
-        CloseUi(_ActiveUi.FirstOrDefault(x => x.UiObj.UIName == uiName));
+        CloseUi(_ActiveUi.FirstOrDefault(x => x.UiObj.UiName == uiName));
     }
 
-    public void CloseUi(BaseUI ui)
+    public void CloseUi(BaseUi ui)
     {
         CloseUi(_ActiveUi.FirstOrDefault(x => x.UiObj == ui));
     }
@@ -179,9 +179,9 @@ public class UiManager : MonoBehaviour,IBaseSystem
                 continue;
             }
 
-            if (DialogOpened(curUnit.UiObj.dialog))
+            if (DialogOpened(curUnit.UiObj.Dialog))
             {
-                _CloseStack.Push(_ActiveUi.FirstOrDefault(x => x.UiObj == curUnit.UiObj.dialog));
+                _CloseStack.Push(_ActiveUi.FirstOrDefault(x => x.UiObj == curUnit.UiObj.Dialog));
                 continue;
             }
             else
@@ -191,7 +191,7 @@ public class UiManager : MonoBehaviour,IBaseSystem
 
     public bool IsUiOpened(string planeName)
     {
-        return _ActiveUi.Find(x => x.UiObj.UIName == planeName) != null;
+        return _ActiveUi.Find(x => x.UiObj.UiName == planeName) != null;
     }
 
     public void SwitchUi(string planeName)
@@ -199,10 +199,10 @@ public class UiManager : MonoBehaviour,IBaseSystem
         if (IsUiOpened(planeName))
             CloseUi(planeName);
         else
-            OpenUi<BaseUI>(planeName);
+            OpenUi<BaseUi>(planeName);
     }
 
-    public static bool DialogOpened(BaseUI dialog)
+    public static bool DialogOpened(BaseUi dialog)
     {
         if (dialog == null) return false;
         return dialog.gameObject.activeSelf;

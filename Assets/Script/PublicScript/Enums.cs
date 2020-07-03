@@ -1,9 +1,12 @@
-﻿public enum DialogResult
+﻿using System;
+
+public enum DialogResult
 {
     OK,
     Cancel
 }
 
+[Flags]
 public enum UIInitAction
 {
     /// <summary>
@@ -13,15 +16,15 @@ public enum UIInitAction
     /// <summary>
     /// 将锚点设置为0和1
     /// </summary>
-    FillAnchor = 2,
+    FillAnchor = PositionMiddleOfAnchor << 1,
     /// <summary>
     /// 将锚点设置为0.5
     /// </summary>
-    MiddleAnchor = 4,
+    MiddleAnchor = FillAnchor << 1,
     /// <summary>
     /// 将Offset设置为0
     /// </summary>
-    FillSize = 8,
+    FillSize = MiddleAnchor << 1,
     /// <summary>
     /// 充满父容器并居中
     /// </summary>

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Script.UI
 {
-    public class AimRing : BaseUI
+    public class AimRing : BaseUi
     {
         [Range(3, 35)]
         public int Detail = 50;
@@ -23,7 +23,7 @@ namespace Assets.Script.UI
             base.Awake();
             meshFilter = GetComponent<MeshFilter>();
             meshRenderer = GetComponent<MeshRenderer>();
-            aimPoint = rectTrans.Find("aimPoint");
+            aimPoint = RectTrans.Find("aimPoint");
             ringMaterial = meshRenderer.material;
             color = ringMaterial.GetColor("_Color");
 
@@ -38,7 +38,7 @@ namespace Assets.Script.UI
                 return;
             }
 
-            rectTrans.position = aircraft.trans.position;
+            RectTrans.position = aircraft.trans.position;
             if (!aircraft.aimmingPos.Equals(preAimPos))
             {
                 preAimPos = aircraft.aimmingPos;

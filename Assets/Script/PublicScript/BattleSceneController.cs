@@ -28,7 +28,7 @@ namespace Thunder.PublicScript
         {
             ControllerInput.Controlable = false;
             checkoutPanel.Init(completeParam);
-            PublicVar.uiManager.OpenUi(checkoutPanel.UIName);
+            PublicVar.uiManager.OpenUi(checkoutPanel.UiName);
             GlobalBuffer.battleSceneParam = (PublicVar.level.LevelComplete(levelParam.index), null);
         }
 

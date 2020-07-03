@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
-    public class InputDialog : BaseUI
+    public class InputDialog : BaseUi
     {
         public string Text;
         public DialogResult dialogResult;

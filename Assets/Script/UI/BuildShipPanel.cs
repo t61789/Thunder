@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
-    public class BuildShipPanel : BaseUI
+    public class BuildShipPanel : BaseUi
     {
         private InputField shipFrameInput;
         private Transform attachPointsTrans;
@@ -16,8 +16,8 @@ namespace Assets.Script.UI
 
         private ListPlane listPlane;
         private string shipId;
-        private BaseUI selectedAttachPoint;
-        private readonly Dictionary<BaseUI, Ship.AttachPoint> attachPointInfo = new Dictionary<BaseUI, Ship.AttachPoint>();
+        private BaseUi selectedAttachPoint;
+        private readonly Dictionary<BaseUi, Ship.AttachPoint> attachPointInfo = new Dictionary<BaseUi, Ship.AttachPoint>();
 
         private string[] attachResult;
         private Vector2 imageScale;
@@ -74,7 +74,7 @@ namespace Assets.Script.UI
                 naTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
                 naTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
 
-                BaseUI b = newAttachPoint.GetComponent<BaseUI>();
+                BaseUi b = newAttachPoint.GetComponent<BaseUi>();
                 b.PointerClick += AttachPointClick;
                 attachPointInfo.Add(b, item);
             }
@@ -110,14 +110,14 @@ namespace Assets.Script.UI
             frameImage.sprite = null;
         }
 
-        private void AttachPointClick(BaseUI baseUI, PointerEventData eventData)
+        private void AttachPointClick(BaseUi baseUI, PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Right)
             {
                 baseUI.GetComponent<Image>().sprite = PublicVar.objectPool.GetPrefab(null,BundleManager.UIBundle,"emptyUI").GetComponent<Image>().sprite;
 
-                baseUI.rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
-                baseUI.rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
+                baseUI.RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
+                baseUI.RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
 
                 attachResult[attachPointInfo[selectedAttachPoint].index] = null;
 
@@ -131,7 +131,7 @@ namespace Assets.Script.UI
             selectedAttachPoint = baseUI;
             Ship.AttachPoint info = attachPointInfo[baseUI];
             DataTable select = PublicVar.dataBase["turret"].Select(new string[] { "name" }, new (string, object)[] { ("type", info.type) });
-            List<Action<BaseUI>> inits = new List<Action<BaseUI>>();
+            List<Action<BaseUi>> inits = new List<Action<BaseUi>>();
 
             foreach (var item in select.Rows)
             {
@@ -147,7 +147,7 @@ namespace Assets.Script.UI
                 });
             }
 
-            listPlane.Init(new ListPlane.Parameters<BaseUI>(3, "normalButton", (0, 0), (10, 10), (0, rectTrans.rect.height), inits));
+            listPlane.Init(new ListPlane.Parameters<BaseUi>(3, "normalButton", (0, 0), (10, 10), (0, RectTrans.rect.height), inits));
         }
 
         private void ElementClick(string turretName, Sprite sprite)

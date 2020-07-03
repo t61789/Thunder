@@ -2,7 +2,7 @@
 
 namespace Assets.Script.UI
 {
-    public class MessageDialog : BaseUI
+    public class MessageDialog : BaseUi
     {
         private Text text;
 

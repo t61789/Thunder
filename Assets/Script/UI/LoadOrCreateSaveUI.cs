@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
-    public class LoadOrCreateSaveUI : BaseUI
+    public class LoadOrCreateSaveUI : BaseUi
     {
         public void StartLoadSave()
         {
@@ -15,7 +15,7 @@ namespace Assets.Script.UI
                 return;
             }
 
-            List<Action<BaseUI>> inits = new List<Action<BaseUI>>();
+            List<Action<BaseUi>> inits = new List<Action<BaseUi>>();
             foreach (var item in Directory.GetDirectories(Paths.DocumentPath))
             {
                 inits.Add(x =>
@@ -30,7 +30,7 @@ namespace Assets.Script.UI
 
             PublicVar.uiManager.OpenUi<ListPlane>("listPlane", this, true, UIInitAction.CenterParent, x =>
             {
-                x.Init(new ListPlane.Parameters<BaseUI>(1, "normalButton", (500, 150), (50, 50), (0, 0), inits));
+                x.Init(new ListPlane.Parameters<BaseUi>(1, "normalButton", (500, 150), (50, 50), (0, 0), inits));
             });
         }
 

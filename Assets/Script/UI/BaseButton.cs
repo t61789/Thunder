@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 namespace Assets.Script.UI
 {
-    public class BaseButton : BaseUI
+    public class BaseButton : BaseUi
     {
         public void Init(string text, Action onClick = null)
         {
-            rectTrans.Find("Text").GetComponent<Text>().text = text;
+            RectTrans.Find("Text").GetComponent<Text>().text = text;
             if (onClick != null)
                 GetComponent<Button>().onClick.AddListener(new UnityAction(onClick));
         }

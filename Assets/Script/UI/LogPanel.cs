@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Script.UI
 {
-    public class LogPanel : BaseUI
+    public class LogPanel : BaseUi
     {
         [HideInInspector]
         public TextMeshProUGUI textMesh;
@@ -19,8 +19,8 @@ namespace Assets.Script.UI
 
         private void Resize()
         {
-            rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width + Interval.x);
-            rectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, textMesh.rectTransform.rect.height + Interval.y);
+            RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width + Interval.x);
+            RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, textMesh.rectTransform.rect.height + Interval.y);
         }
 
         public string GetText()

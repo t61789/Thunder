@@ -9,7 +9,7 @@ namespace Assets.Script.UI
             PublicVar.uiManager.OpenUi<InputDialog>("inputDialog", UIInitAction.CenterParent, x =>
             {
                 x.Init("");
-                x.OnCloseCheck += (BaseUI baseUi, ref bool result) =>
+                x.OnCloseCheck += (BaseUi baseUi, ref bool result) =>
                 {
                     if (!result) return;
 

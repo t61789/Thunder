@@ -7,7 +7,7 @@ namespace Assets.Script.UI
 {
     public class LevelPlane : ListPlane
     {
-        public BaseUI menuPanel;
+        public BaseUi menuPanel;
         private readonly Dictionary<BaseButton, int> pairs = new Dictionary<BaseButton, int>();
         private string unsavedJson;
 
@@ -85,7 +85,7 @@ namespace Assets.Script.UI
 
         public void OpenMenu()
         {
-            PublicVar.uiManager.OpenUi<BaseUI>("MenuPanel", this, true, UIInitAction.CenterParent, null);
+            PublicVar.uiManager.OpenUi<BaseUi>("MenuPanel", this, true, UIInitAction.CenterParent, null);
         }
 
         public void Exit(bool force)
@@ -104,7 +104,7 @@ namespace Assets.Script.UI
             PublicVar.instance.LoadSceneAsync("StartScene");
         }
 
-        private void DialogConfirmed(BaseUI confirmDialog)
+        private void DialogConfirmed(BaseUi confirmDialog)
         {
             ConfirmDialog confirmDialogg = confirmDialog as ConfirmDialog;
             if (confirmDialogg.dialogResult == DialogResult.OK)
