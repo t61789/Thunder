@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Script.PublicScript;
 using Assets.Script.UI;
+using Assets.Script.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -60,17 +61,17 @@ namespace Assets.Script.System
                 item.SetParent(_UiRecycleContainer);
         }
 
-        public BaseUi OpenUi(string uiName, UIInitAction act = 0, Action<BaseUi> init = null)
+        public BaseUi OpenUi(string uiName, UiInitAction act = 0, Action<BaseUi> init = null)
         {
             return OpenUi<BaseUi>(uiName, act, init);
         }
 
-        public T OpenUi<T>(string uiName, UIInitAction act = 0, Action<T> init = null) where T : BaseUi
+        public T OpenUi<T>(string uiName, UiInitAction act = 0, Action<T> init = null) where T : BaseUi
         {
             return OpenUi(uiName, true, act, init);
         }
 
-        public T OpenUi<T>(string uiName, string after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUi
+        public T OpenUi<T>(string uiName, string after, bool dialog = false, UiInitAction act = 0, Action<T> init = null) where T : BaseUi
         {
             UiUnit find = _ActiveUi.FirstOrDefault(x => x.UiObj.UiName == after);
 
@@ -83,7 +84,7 @@ namespace Assets.Script.System
             return OpenUi(uiName, _ActiveUi.IndexOf(find) + 1, dialog ? find.UiObj : null, act, init);
         }
 
-        public T OpenUi<T>(string uiName, BaseUi after, bool dialog = false, UIInitAction act = 0, Action<T> init = null) where T : BaseUi
+        public T OpenUi<T>(string uiName, BaseUi after, bool dialog = false, UiInitAction act = 0, Action<T> init = null) where T : BaseUi
         {
             UiUnit find = _ActiveUi.FirstOrDefault(x => x.UiObj == after);
             if (find == null)
@@ -95,7 +96,7 @@ namespace Assets.Script.System
             return OpenUi(uiName, _ActiveUi.IndexOf(find) + 1, dialog ? after : null, act, init);
         }
 
-        public T OpenUi<T>(string uiName, bool last, UIInitAction act = 0, Action<T> init = null) where T : BaseUi
+        public T OpenUi<T>(string uiName, bool last, UiInitAction act = 0, Action<T> init = null) where T : BaseUi
         {
 
             if (last)
@@ -104,7 +105,7 @@ namespace Assets.Script.System
                 return OpenUi(uiName, 0, null, act, init);
         }
 
-        public T OpenUi<T>(string uiName, int siblingIndex, BaseUi dialog = null, UIInitAction act = 0, Action<T> init = null) where T : BaseUi
+        public T OpenUi<T>(string uiName, int siblingIndex, BaseUi dialog = null, UiInitAction act = 0, Action<T> init = null) where T : BaseUi
         {
             if (siblingIndex < 0 || siblingIndex > _UiContainer.childCount)
             {
@@ -118,7 +119,7 @@ namespace Assets.Script.System
 
             BaseUi newPlane = unit?.UiObj;
             if (newPlane == null)
-                newPlane = PublicVar.objectPool.Alloc<BaseUi>(null, DefaultUiBundle, uiName);
+                newPlane = System.objectPool.Alloc<BaseUi>(null, DefaultUiBundle, uiName);
 
             newPlane.transform.SetParent(_UiContainer);
             newPlane.transform.SetSiblingIndex(siblingIndex);
@@ -176,7 +177,7 @@ namespace Assets.Script.System
                         curUnit.UiObj.gameObject.SetActive(false);
                     }
                     else
-                        PublicVar.objectPool.Recycle(curUnit.UiObj);
+                        System.objectPool.Recycle(curUnit.UiObj);
 
                     continue;
                 }

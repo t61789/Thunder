@@ -20,7 +20,7 @@ namespace Assets.Script.PublicScript
             if (curGameMode != null)
                 RemoveMode();
 
-            T obj = PublicVar.publicVar.AddComponent(modeType) as T;
+            T obj = System.System.publicVar.AddComponent(modeType) as T;
             init?.Invoke(obj);
             (obj as BaseGameMode).Init(arg);
             curGameMode = obj;
@@ -32,7 +32,7 @@ namespace Assets.Script.PublicScript
             if (curGameMode != null)
             {
                 curGameMode.BeforeUnInstall();
-                UnityEngine.Object.Destroy(PublicVar.publicVar.GetComponent<BaseGameMode>());
+                UnityEngine.Object.Destroy(System.System.publicVar.GetComponent<BaseGameMode>());
                 curGameMode = null;
             }
         }

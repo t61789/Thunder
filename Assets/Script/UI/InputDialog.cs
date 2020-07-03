@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Assets.Script.PublicScript;
+using Assets.Script.Utility;
 using UnityEngine.UI;
 
 namespace Assets.Script.UI
@@ -29,14 +30,14 @@ namespace Assets.Script.UI
 
         public void InputEndOK()
         {
-            dialogResult = DialogResult.OK;
-            PublicVar.UiSys.CloseUi(this);
+            dialogResult = DialogResult.Ok;
+            System.System.UiSys.CloseUi(this);
         }
 
         public void InputEndCancel()
         {
             dialogResult = DialogResult.Cancel;
-            PublicVar.UiSys.CloseUi(this);
+            System.System.UiSys.CloseUi(this);
         }
 
         public override void ObjectPoolReset(Hashtable arg)

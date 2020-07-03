@@ -252,13 +252,13 @@ namespace Assets.Script.Tool.ObjectPool
         private void CreatePools(string bundleGroup, string bundle)
         {
             AssetId id = new AssetId(bundleGroup, bundle, null,DefaultBundle);
-            foreach (var prefab in PublicVar.bundle.GetAllAsset<GameObject>(bundleGroup, bundle))
+            foreach (var prefab in System.System.bundle.GetAllAsset<GameObject>(bundleGroup, bundle))
             {
                 id.Name = prefab.name;
                 if (_Pools.ContainsKey(id)) continue;
                 _Pools.Add(id, new Pool(prefab, prefab.GetComponent<IObjectPool>() != null));
             }
-            PublicVar.bundle.ReleaseBundle(bundleGroup, bundle);
+            System.System.bundle.ReleaseBundle(bundleGroup, bundle);
         }
 
         public T Alloc<T>(string prefabPath, Action<T> init = null, Transform container = null) where T : MonoBehaviour
@@ -290,7 +290,7 @@ namespace Assets.Script.Tool.ObjectPool
             if (pool.QueueIsEmpty())
             {
                 GameObject go = Instantiate(pool.Prefab);
-                go.transform.SetParent(container ?? PublicVar.container);
+                go.transform.SetParent(container ?? System.System.container);
                 aop = go.GetComponent<IObjectPool>();
                 aop.AssetId = assetId;
             }
@@ -333,7 +333,7 @@ namespace Assets.Script.Tool.ObjectPool
             obj.BeforeOpRecycle();
             GameObject mono = (obj as MonoBehaviour)?.gameObject;
             mono?.SetActive(false);
-            mono?.transform.SetParent(PublicVar.container);
+            mono?.transform.SetParent(System.System.container);
             _Pools[obj.AssetId].Enqueue(obj);
         }
 

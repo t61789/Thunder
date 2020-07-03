@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections;
-using Assets.Script.System;
+using Assets.Script.PublicScript;
 using Assets.Script.Tool;
 using Assets.Script.Tool.ObjectPool;
 using Assets.Script.UI;
+using Assets.Script.Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Assets.Script.PublicScript
+namespace Assets.Script.System
 {
-    public class PublicVar : MonoBehaviour
+    public class System : MonoBehaviour
     {
         public bool RedirectLog;
 
-        public static PublicVar instance;
+        public static System instance;
 
         public static GameObject publicVar;
         public static ObjectPool objectPool;
@@ -30,7 +31,7 @@ namespace Assets.Script.PublicScript
         public static DataBaseSys dataBase;
         public static CameraController mainCamera;
         public static GameModeManager gameMode;
-        public static SaveManager saveManager;
+        public static SaveSys saveManager;
         public static PlayerManager player;
         public static LevelManager level;
         public static LuaSys lua;
@@ -116,7 +117,7 @@ namespace Assets.Script.PublicScript
         {
             loading = true;
             loadingAO = SceneManager.LoadSceneAsync(sceneName);
-            loadingLoadPanel = UiSys.OpenUi<LogPanel>("logPanel", UIInitAction.CenterParent);
+            loadingLoadPanel = UiSys.OpenUi<LogPanel>("logPanel", UiInitAction.CenterParent);
             StartCoroutine(LoadScene(loadingAO));
         }
 

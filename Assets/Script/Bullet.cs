@@ -68,7 +68,7 @@ namespace Assets.Script
 
         public virtual void LifeTimeEnd()
         {
-            PublicVar.objectPool.Recycle(this);
+            System.System.objectPool.Recycle(this);
         }
 
         public virtual void ObjectPoolInit(Transform releaser, Vector3 pos, Quaternion rotate)

@@ -30,7 +30,7 @@ namespace Assets.Script.Turret
                 if ((Time.time - fireIntervalCount > fireInterval) && ControlKeys.GetBool(FIRE))
                 {
                     fireIntervalCount = Time.time;
-                    PublicVar.objectPool.Alloc<NormalBullet>(Bullet, x =>
+                    System.System.objectPool.Alloc<NormalBullet>(Bullet, x =>
                     {
                         x.ObjectPoolInit(shipTrans, trans.position, trans.rotation);
                     });
@@ -55,7 +55,7 @@ namespace Assets.Script.Turret
 
         public void SetBullet(string bullet)
         {
-            fireInterval = PublicVar.objectPool.GetPrefab(bullet).GetComponent<Bullet>().FireInterval;
+            fireInterval = System.System.objectPool.GetPrefab(bullet).GetComponent<Bullet>().FireInterval;
             Bullet = bullet;
         }
     }

@@ -1,7 +1,8 @@
 ﻿using System;
 using Assets.Script.GameMode;
+using Assets.Script.PublicScript;
 
-namespace Assets.Script.PublicScript
+namespace Assets.Script.Utility
 {
     public class GlobalBuffer
     {

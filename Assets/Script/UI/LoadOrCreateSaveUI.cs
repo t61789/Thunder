@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Assets.Script.PublicScript;
 using Assets.Script.System;
+using Assets.Script.Utility;
 using UnityEngine.UI;
 
 namespace Assets.Script.UI
@@ -11,9 +12,9 @@ namespace Assets.Script.UI
     {
         public void StartLoadSave()
         {
-            if (PublicVar.UiSys.IsUiOpened("LoadSaveListPlane"))
+            if (System.System.UiSys.IsUiOpened("LoadSaveListPlane"))
             {
-                PublicVar.UiSys.CloseUi("LoadSaveListPlane");
+                System.System.UiSys.CloseUi("LoadSaveListPlane");
                 return;
             }
 
@@ -26,11 +27,11 @@ namespace Assets.Script.UI
                     b.transform.Find("Text").GetComponent<Text>().text = Path.GetFileName(item);
                     b.onClick.AddListener(() => LoadSave(b));
 
-                    x.InitRect(UIInitAction.FillParent);
+                    x.InitRect(UiInitAction.FillParent);
                 });
             }
 
-            PublicVar.UiSys.OpenUi<ListPlane>("listPlane", this, true, UIInitAction.CenterParent, x =>
+            System.System.UiSys.OpenUi<ListPlane>("listPlane", this, true, UiInitAction.CenterParent, x =>
             {
                 x.Init(new ListPlane.Parameters<BaseUi>(1, "normalButton", (500, 150), (50, 50), (0, 0), inits));
             });
@@ -38,13 +39,13 @@ namespace Assets.Script.UI
 
         public void StartCreateSave()
         {
-            PublicVar.instance.LoadSceneAsync("CreateSaveScene");
+            System.System.instance.LoadSceneAsync("CreateSaveScene");
         }
 
         public void LoadSave(Button button)
         {
-            PublicVar.saveManager = SaveManager.LoadSave(button.transform.Find("Text").GetComponent<Text>().text);
-            PublicVar.instance.LoadSceneAsync("LevelScene");
+            System.System.saveManager = SaveSys.LoadSave(button.transform.Find("Text").GetComponent<Text>().text);
+            System.System.instance.LoadSceneAsync("LevelScene");
         }
     }
 }

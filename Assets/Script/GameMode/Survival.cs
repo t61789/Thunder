@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Assets.Script.PublicScript;
 using Assets.Script.Turret;
+using Assets.Script.Utility;
 
 namespace Assets.Script.GameMode
 {
@@ -24,7 +25,7 @@ namespace Assets.Script.GameMode
 
         public override void Init(string arg)
         {
-            player = PublicVar.player.SetPlayer(PublicVar.saveManager.playerShipParam);
+            player = System.System.player.SetPlayer(System.System.saveManager.playerShipParam);
             player.OnDead += PlayerDead;
             enemys = new List<Aircraft>();
         }
@@ -32,8 +33,8 @@ namespace Assets.Script.GameMode
         protected void PlayerDead(Aircraft player)
         {
             foreach (var item in enemys)
-                PublicVar.objectPool.Recycle(item);
-            PublicVar.objectPool.Recycle(player);
+                System.System.objectPool.Recycle(item);
+            System.System.objectPool.Recycle(player);
 
             Complete();
         }

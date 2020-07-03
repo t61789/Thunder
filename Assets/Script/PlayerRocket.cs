@@ -132,7 +132,7 @@ namespace Assets.Script
 
         protected void Exploded()
         {
-            PublicVar.objectPool.Recycle(this);
+            System.System.objectPool.Recycle(this);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)

@@ -28,7 +28,7 @@ namespace Assets.Script.Turret
 
         public void MakeFighter()
         {
-            Fighter fighter = PublicVar.objectPool.Alloc<Fighter>(fighterName, x =>
+            Fighter fighter = System.System.objectPool.Alloc<Fighter>(fighterName, x =>
             {
                 x.ObjectPoolInit(trans.position, trans.rotation, null, ship);
                 x.OnDead += FighterDestroyed;
@@ -39,7 +39,7 @@ namespace Assets.Script.Turret
         public void SetFighter(string fighterName)
         {
             this.fighterName = fighterName;
-            makeInterval = PublicVar.objectPool.GetPrefab(fighterName).GetComponent<Fighter>().MakeInterval;
+            makeInterval = System.System.objectPool.GetPrefab(fighterName).GetComponent<Fighter>().MakeInterval;
         }
 
         private void FighterDestroyed(Aircraft aircraft)

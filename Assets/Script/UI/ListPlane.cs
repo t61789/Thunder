@@ -62,7 +62,7 @@ namespace Assets.Script.UI
             scrollbar.x.value = 0;
 
             foreach (var item in elements)
-                PublicVar.objectPool.Recycle(item);
+                System.System.objectPool.Recycle(item);
             elements.Clear();
 
             foreach (RectTransform item in elementsTrans)
@@ -138,7 +138,7 @@ namespace Assets.Script.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                RectTransform rectTransform = PublicVar.objectPool.Alloc(null,UiSys.DefaultUiBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
+                RectTransform rectTransform = System.System.objectPool.Alloc(null,UiSys.DefaultUiBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
 
                 elements.Add(rectTransform.GetComponent<BaseUi>());
             }

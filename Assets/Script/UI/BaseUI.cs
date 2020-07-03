@@ -2,6 +2,7 @@
 using Assets.Script.PublicScript;
 using Assets.Script.System;
 using Assets.Script.Tool.ObjectPool;
+using Assets.Script.Utility;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -165,28 +166,28 @@ namespace Assets.Script.UI
 
         public void Close()
         {
-            PublicVar.UiSys.CloseUi(this);
+            System.System.UiSys.CloseUi(this);
         }
 
-        public void InitRect(UIInitAction action)
+        public void InitRect(UiInitAction action)
         {
-            if ((action & UIInitAction.MiddleAnchor) != 0)
+            if ((action & UiInitAction.MiddleAnchor) != 0)
             {
                 RectTrans.anchorMin = RectTrans.anchorMax = Vector2.one / 2;
             }
 
-            if ((action & UIInitAction.FillAnchor) != 0)
+            if ((action & UiInitAction.FillAnchor) != 0)
             {
                 RectTrans.anchorMax = Vector2.one;
                 RectTrans.anchorMin = Vector2.zero;
             }
 
-            if ((action & UIInitAction.FillSize) != 0)
+            if ((action & UiInitAction.FillSize) != 0)
             {
                 RectTrans.offsetMin = RectTrans.offsetMax = Vector2.zero;
             }
 
-            if ((action & UIInitAction.PositionMiddleOfAnchor) != 0)
+            if ((action & UiInitAction.PositionMiddleOfAnchor) != 0)
             {
                 RectTrans.anchoredPosition = Vector2.zero;
             }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Assets.Script.System
+namespace Assets.Script.Utility
 {
     public class Paths
     {

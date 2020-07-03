@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Assets.Script.PublicScript;
 using Assets.Script.System;
+using Assets.Script.Utility;
 using UnityEngine;
 
 namespace Assets.Script.Skill
@@ -23,7 +24,7 @@ namespace Assets.Script.Skill
         {
             skillCdCount = 0;
 
-            Values values = PublicVar.value.LoadValue<Values>("skill" + Paths.Div + "circleShoot");
+            Values values = System.System.value.LoadValue<Values>("skill" + Paths.Div + "circleShoot");
 
             SkillCd = values.skillCd;
             BulletNum = values.bulletNum;
@@ -41,7 +42,7 @@ namespace Assets.Script.Skill
 
         protected virtual void Update()
         {
-            if (Time.time - skillCdCount >= SkillCd && PublicVar.control.RequestDown(KeyCode.Space, "playerControl"))
+            if (Time.time - skillCdCount >= SkillCd && System.System.control.RequestDown(KeyCode.Space, "playerControl"))
             {
                 StartCoroutine(Shoot());
                 skillCdCount = Time.time;

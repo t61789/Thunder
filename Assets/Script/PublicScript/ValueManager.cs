@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Assets.Script.System;
+using Assets.Script.Utility;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -157,7 +158,7 @@ namespace Assets.Script.PublicScript
 
             StringBuilder pathBuilder = new StringBuilder();
             string temp = BundleSys.ValuesBundleD + bundlePath;
-            foreach (var item in PublicVar.bundle.GetAllAsset<TextAsset>(temp))
+            foreach (var item in System.System.bundle.GetAllAsset<TextAsset>(temp))
             {
                 pathBuilder.Clear();
                 pathBuilder.Append(bundlePath);
@@ -166,7 +167,7 @@ namespace Assets.Script.PublicScript
                 result.Add((pathBuilder.ToString(), item.text));
             }
 
-            PublicVar.bundle.ReleaseBundle(null,temp);
+            System.System.bundle.ReleaseBundle(null,temp);
 
             return result;
         }

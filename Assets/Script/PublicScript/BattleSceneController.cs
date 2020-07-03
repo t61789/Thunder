@@ -1,5 +1,6 @@
 ﻿using Assets.Script.GameMode;
 using Assets.Script.UI;
+using Assets.Script.Utility;
 using UnityEngine;
 
 namespace Assets.Script.PublicScript
@@ -20,7 +21,7 @@ namespace Assets.Script.PublicScript
             var (levelParam, init) = GlobalBuffer.battleSceneParam;
             this.levelParam = levelParam;
 
-            BaseGameMode gameMode = PublicVar.gameMode.SetupMode(levelParam.modeType, levelParam.arg, init);
+            BaseGameMode gameMode = System.System.gameMode.SetupMode(levelParam.modeType, levelParam.arg, init);
 
             gameMode.OnModeComplete += GameModeComplete;
         }
@@ -29,20 +30,20 @@ namespace Assets.Script.PublicScript
         {
             ControllerInput.Controlable = false;
             checkoutPanel.Init(completeParam);
-            PublicVar.UiSys.OpenUi(checkoutPanel.UiName);
-            GlobalBuffer.battleSceneParam = (PublicVar.level.LevelComplete(levelParam.index), null);
+            System.System.UiSys.OpenUi(checkoutPanel.UiName);
+            GlobalBuffer.battleSceneParam = (System.System.level.LevelComplete(levelParam.index), null);
         }
 
         public void NextLevel()
         {
             ControllerInput.Controlable = true;
-            PublicVar.instance.LoadSceneAsync("BattleScene");
+            System.System.instance.LoadSceneAsync("BattleScene");
         }
 
         public void GoBack()
         {
             ControllerInput.Controlable = true;
-            PublicVar.instance.LoadSceneAsync("LevelScene");
+            System.System.instance.LoadSceneAsync("LevelScene");
         }
     }
 }

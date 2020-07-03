@@ -44,7 +44,7 @@ namespace Assets.Script.PublicScript
 
         public ControlManager()
         {
-            var a = PublicVar.value;
+            var a = System.System.value;
             Values values = a.LoadValue<Values>("input_priority");
 
             string[] temp = values.priority;

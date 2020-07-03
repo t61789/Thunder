@@ -24,7 +24,7 @@ namespace Assets.Script.Turret
         protected void BulletExploded()
         {
             animator.SetBool("contactEnemy", false);
-            PublicVar.objectPool.Recycle(this);
+            System.System.objectPool.Recycle(this);
         }
 
         protected void OnTriggerEnter2D(Collider2D other)
@@ -35,7 +35,7 @@ namespace Assets.Script.Turret
             Aircraft camp = other.gameObject.GetComponent<Aircraft>();
             if (camp == null)
                 return;
-            if (!PublicVar.camp.IsHostile(releaser, camp))
+            if (!System.System.camp.IsHostile(releaser, camp))
                 return;
 
             camp.GetDamage(Damage);

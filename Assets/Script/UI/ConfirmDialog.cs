@@ -1,4 +1,5 @@
 ﻿using Assets.Script.PublicScript;
+using Assets.Script.Utility;
 using TMPro;
 
 namespace Assets.Script.UI
@@ -25,14 +26,14 @@ namespace Assets.Script.UI
 
         public void OK()
         {
-            dialogResult = DialogResult.OK;
-            PublicVar.UiSys.CloseUi(this);
+            dialogResult = DialogResult.Ok;
+            System.System.UiSys.CloseUi(this);
         }
 
         public void Cancel()
         {
             dialogResult = DialogResult.Cancel;
-            PublicVar.UiSys.CloseUi(this);
+            System.System.UiSys.CloseUi(this);
         }
 
         public void Update()

@@ -4,7 +4,7 @@ using Assets.Script.Turret;
 using Assets.Script.UI;
 using UnityEngine;
 
-namespace Assets.Script.PublicScript
+namespace Assets.Script.Utility
 {
     public class ControllerInput : MonoBehaviour
     {
@@ -55,7 +55,7 @@ namespace Assets.Script.PublicScript
         public void Remove()
         {
             if (aimRing != null)
-                PublicVar.UiSys.CloseUi(aimRing);
+                System.System.UiSys.CloseUi(aimRing);
             Destroy(this);
         }
 
@@ -65,7 +65,7 @@ namespace Assets.Script.PublicScript
 
             controller = GetComponent<Controller>();
 
-            var i = PublicVar.dataBase[TABLE_NAME].Select(null, new (string, object)[] { (INPUT_ID, controller.InputId) });
+            var i = System.System.dataBase[TABLE_NAME].Select(null, new (string, object)[] { (INPUT_ID, controller.InputId) });
             if (i.IsEmpty)
                 Debug.LogWarning("No input named " + name + " in database, input will be invalid");
 
@@ -80,7 +80,7 @@ namespace Assets.Script.PublicScript
             }
 
             if (aimRing)
-                this.aimRing = PublicVar.UiSys.OpenUi<AimRing>("aimRing", UIInitAction.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
+                this.aimRing = System.System.UiSys.OpenUi<AimRing>("aimRing", UiInitAction.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
         }
 
         private void Update()
@@ -107,30 +107,30 @@ namespace Assets.Script.PublicScript
         private void KeyStay(ControlStruct c)
         {
             KeyCode k = (KeyCode)c.key;
-            if (PublicVar.control.RequestStay(k, REQUEST_TYPE))
+            if (System.System.control.RequestStay(k, REQUEST_TYPE))
             {
                 controller.ControlKeys.SetBool(c.propName, true);
-                PublicVar.control.Release(k, REQUEST_TYPE);
+                System.System.control.Release(k, REQUEST_TYPE);
             }
         }
 
         private void KeyDown(ControlStruct c)
         {
             KeyCode k = (KeyCode)c.key;
-            if (PublicVar.control.RequestDown(k, REQUEST_TYPE))
+            if (System.System.control.RequestDown(k, REQUEST_TYPE))
             {
                 controller.ControlKeys.SetBool(c.propName, true);
-                PublicVar.control.Release(k, REQUEST_TYPE);
+                System.System.control.Release(k, REQUEST_TYPE);
             }
         }
 
         private void KeyUp(ControlStruct c)
         {
             KeyCode k = (KeyCode)c.key;
-            if (PublicVar.control.RequestUp(k, REQUEST_TYPE))
+            if (System.System.control.RequestUp(k, REQUEST_TYPE))
             {
                 controller.ControlKeys.SetBool(c.propName, true);
-                PublicVar.control.Release(k, REQUEST_TYPE);
+                System.System.control.Release(k, REQUEST_TYPE);
             }
         }
 

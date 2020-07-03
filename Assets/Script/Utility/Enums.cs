@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace Assets.Script.PublicScript
+namespace Assets.Script.Utility
 {
     public enum DialogResult
     {
-        OK,
+        Ok,
         Cancel
     }
 
     [Flags]
-    public enum UIInitAction
+    public enum UiInitAction
     {
         /// <summary>
         /// 将UI相对与锚点的位置设为0

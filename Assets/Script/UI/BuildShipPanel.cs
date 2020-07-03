@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Assets.Script.PublicScript;
 using Assets.Script.System;
+using Assets.Script.Utility;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -54,7 +55,7 @@ namespace Assets.Script.UI
             shipId = shipFrameInput.text;
 
             Ship.AttachPoint[] attachPoints = Ship.GetAttachPoints(shipId);
-            Sprite frameSprite = PublicVar.objectPool.GetPrefab(shipId).GetComponent<SpriteRenderer>().sprite;
+            Sprite frameSprite = System.System.objectPool.GetPrefab(shipId).GetComponent<SpriteRenderer>().sprite;
 
             Vector2 baseSize = frameSprite.bounds.size;
 
@@ -116,7 +117,7 @@ namespace Assets.Script.UI
         {
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                baseUI.GetComponent<Image>().sprite = PublicVar.objectPool.GetPrefab(null,BundleSys.UIBundle,"emptyUI").GetComponent<Image>().sprite;
+                baseUI.GetComponent<Image>().sprite = System.System.objectPool.GetPrefab(null,BundleSys.UIBundle,"emptyUI").GetComponent<Image>().sprite;
 
                 baseUI.RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
                 baseUI.RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
@@ -132,19 +133,19 @@ namespace Assets.Script.UI
 
             selectedAttachPoint = baseUI;
             Ship.AttachPoint info = attachPointInfo[baseUI];
-            DataTable select = PublicVar.dataBase["turret"].Select(new string[] { "name" }, new (string, object)[] { ("type", info.type) });
+            DataTable select = System.System.dataBase["turret"].Select(new string[] { "name" }, new (string, object)[] { ("type", info.type) });
             List<Action<BaseUi>> inits = new List<Action<BaseUi>>();
 
             foreach (var item in select.Rows)
             {
                 string turretName = (string)item["name"];
 
-                GameObject prefab = PublicVar.objectPool.GetPrefab(turretName);
+                GameObject prefab = System.System.objectPool.GetPrefab(turretName);
                 Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
                 inits.Add(x =>
                 {
                     x.GetComponent<Image>().sprite = sprite;
-                    x.InitRect(UIInitAction.FillParent);
+                    x.InitRect(UiInitAction.FillParent);
                     x.GetComponent<Button>().onClick.AddListener(() => ElementClick(turretName, sprite));
                 });
             }
@@ -170,7 +171,7 @@ namespace Assets.Script.UI
 
             OnBuildShipComplete?.Invoke(this);
 
-            PublicVar.UiSys.CloseUi(name);
+            System.System.UiSys.CloseUi(name);
         }
     }
 }

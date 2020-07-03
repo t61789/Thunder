@@ -3,6 +3,7 @@ using Assets.Script.PublicScript;
 using Assets.Script.System;
 using Assets.Script.Tool.BuffData;
 using Assets.Script.Tool.SerializableStruct;
+using Assets.Script.Utility;
 using UnityEngine;
 
 namespace Assets.Script.Skill
@@ -39,10 +40,10 @@ namespace Assets.Script.Skill
             //playerController = GetComponent<PlayerController>();
             insideObject = false;
 
-            Values values = PublicVar.value.LoadValue<Values>("skill" + Paths.Div + "charge");
+            Values values = System.System.value.LoadValue<Values>("skill" + Paths.Div + "charge");
 
             damageCoeffient = values.damageCoeffient;
-            protonSword = Instantiate(PublicVar.bundle.GetAsset<GameObject>(values.protonSwordPrefab));
+            protonSword = Instantiate(System.System.bundle.GetAsset<GameObject>(values.protonSwordPrefab));
             protonSword.transform.SetParent(transform);
             protonSword.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
             protonSword.transform.localPosition = values.protonSwordPosition;
@@ -55,20 +56,20 @@ namespace Assets.Script.Skill
 
         private void Update()
         {
-            if (PublicVar.control.RequestUp(KeyCode.Space, "playerControl"))
+            if (System.System.control.RequestUp(KeyCode.Space, "playerControl"))
             {
                 if (!insideObject)
                     EndSkill();
 
-                PublicVar.control.Release(KeyCode.Space, "playerControl");
+                System.System.control.Release(KeyCode.Space, "playerControl");
             }
 
-            if (PublicVar.control.RequestDown(KeyCode.Space, "playerControl"))
+            if (System.System.control.RequestDown(KeyCode.Space, "playerControl"))
             {
                 if (!insideObject)
                     StartSkill();
 
-                PublicVar.control.Release(KeyCode.Space, "playerControl");
+                System.System.control.Release(KeyCode.Space, "playerControl");
             }
         }
 

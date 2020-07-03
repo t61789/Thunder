@@ -1,4 +1,5 @@
 ﻿using Assets.Script.PublicScript;
+using Assets.Script.Utility;
 using UnityEngine;
 
 namespace Assets.Script.Test

@@ -217,7 +217,7 @@ namespace Assets.Script.Turret
 
             Aircraft camp = other.GetComponent<Aircraft>();
             if (camp == null) return;
-            if (!PublicVar.camp.IsHostile(camp, this)) return;
+            if (!System.System.camp.IsHostile(camp, this)) return;
 
             SetTarget(camp as Aircraft);
         }

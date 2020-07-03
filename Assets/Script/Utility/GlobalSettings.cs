@@ -1,4 +1,4 @@
-﻿namespace Assets.Script.PublicScript
+﻿namespace Assets.Script.Utility
 {
     public class GlobalSettings
     {

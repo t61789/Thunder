@@ -56,9 +56,9 @@ namespace Assets.Script.System
         public void LoadFromBundle(string bundleGroup,string bundle)
         {
             AssetId id = new AssetId(bundleGroup, bundle, null, DefaultBundle);
-            foreach (var textAsset in PublicVar.bundle.GetAllAsset<TextAsset>(id.BundleGroup,id.Bundle))
+            foreach (var textAsset in System.bundle.GetAllAsset<TextAsset>(id.BundleGroup,id.Bundle))
                 _LuaState.DoString(textAsset.text);
-            PublicVar.bundle.ReleaseBundle(id.BundleGroup,id.Bundle);
+            System.bundle.ReleaseBundle(id.BundleGroup,id.Bundle);
         }
 
         public void LoadFromAsset(string path)
@@ -73,7 +73,7 @@ namespace Assets.Script.System
 
         private void LoadFromAsset(AssetId id)
         {
-            _LuaState.DoString(PublicVar.bundle.GetAsset<TextAsset>(id.BundleGroup, id.Bundle, id.Name).text);
+            _LuaState.DoString(System.bundle.GetAsset<TextAsset>(id.BundleGroup, id.Bundle, id.Name).text);
         }
     }
 }

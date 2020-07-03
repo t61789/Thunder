@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Script.PublicScript;
+using Assets.Script.Utility;
 using UnityEngine.UI;
 
 namespace Assets.Script.UI
@@ -21,20 +22,20 @@ namespace Assets.Script.UI
         private void Load()
         {
             List<Action<BaseButton>> inits = new List<Action<BaseButton>>();
-            int[] completed = PublicVar.saveManager.levelComplete.ToArray();
+            int[] completed = System.System.saveManager.levelComplete.ToArray();
 
             //int count = 0;
             //int index = 0;
 
             int completeCount = 0;
-            for (int i = 0; i < PublicVar.level.levels.Length; i++)
+            for (int i = 0; i < System.System.level.levels.Length; i++)
             {
-                var _item = PublicVar.level.levels[i];
+                var _item = System.System.level.levels[i];
                 bool flag = _item.index == completed[completeCount];
                 if (flag) completeCount = completeCount + 1 == completed.Length ? completeCount : completeCount + 1;
                 inits.Add(x =>
                 {
-                    x.InitRect(UIInitAction.FillParent);
+                    x.InitRect(UiInitAction.FillParent);
                     Button but = x.GetComponent<Button>();
                     Action temp = null;
                     if (flag)
@@ -75,40 +76,40 @@ namespace Assets.Script.UI
             for (int i = 0; i < b.Length; i++)
                 pairs.Add(b[i], i);
 
-            InitRect(UIInitAction.CenterParent);
+            InitRect(UiInitAction.CenterParent);
         }
 
         public void StartLevel(BaseButton b)
         {
-            GlobalBuffer.battleSceneParam = (PublicVar.level.levels[pairs[b]], null);
-            PublicVar.instance.LoadSceneAsync("BattleScene");
+            GlobalBuffer.battleSceneParam = (System.System.level.levels[pairs[b]], null);
+            System.System.instance.LoadSceneAsync("BattleScene");
         }
 
         public void OpenMenu()
         {
-            PublicVar.UiSys.OpenUi<BaseUi>("MenuPanel", this, true, UIInitAction.CenterParent, null);
+            System.System.UiSys.OpenUi<BaseUi>("MenuPanel", this, true, UiInitAction.CenterParent, null);
         }
 
         public void Exit(bool force)
         {
             if (!force)
             {
-                unsavedJson = PublicVar.saveManager.Check();
+                unsavedJson = System.System.saveManager.Check();
                 if (unsavedJson != null)
                 {
-                    ConfirmDialog confirmDialog = PublicVar.UiSys.OpenUi<ConfirmDialog>("confirmDialog", menuPanel, true, UIInitAction.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
+                    ConfirmDialog confirmDialog = System.System.UiSys.OpenUi<ConfirmDialog>("confirmDialog", menuPanel, true, UiInitAction.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
                     confirmDialog.OnBeforeClose += DialogConfirmed;
                     return;
                 }
             }
 
-            PublicVar.instance.LoadSceneAsync("StartScene");
+            System.System.instance.LoadSceneAsync("StartScene");
         }
 
         private void DialogConfirmed(BaseUi confirmDialog)
         {
             ConfirmDialog confirmDialogg = confirmDialog as ConfirmDialog;
-            if (confirmDialogg.dialogResult == DialogResult.OK)
+            if (confirmDialogg.dialogResult == DialogResult.Ok)
                 Save(unsavedJson);
 
             Exit(true);
@@ -122,7 +123,7 @@ namespace Assets.Script.UI
 
         public void Save(string json = null)
         {
-            PublicVar.saveManager.Save(json);
+            System.System.saveManager.Save(json);
         }
     }
 }

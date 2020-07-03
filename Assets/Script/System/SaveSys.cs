@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Assets.Script.System;
 using Assets.Script.Turret;
+using Assets.Script.Utility;
 using Newtonsoft.Json;
 
-namespace Assets.Script.PublicScript
+namespace Assets.Script.System
 {
     [JsonObject(MemberSerialization.OptOut)]
-    public class SaveManager
+    public class SaveSys
     {
         [JsonIgnore]
         public string curSaveName;
@@ -25,12 +25,12 @@ namespace Assets.Script.PublicScript
             this.savedJson = savedJson;
         }
 
-        private SaveManager()
+        private SaveSys()
         {
             levelComplete = new SortedSet<int>();
         }
 
-        public static SaveManager LoadSave(string saveName)
+        public static SaveSys LoadSave(string saveName)
         {
             string saveJsonRPath = Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar + "save.json";
 
@@ -38,9 +38,9 @@ namespace Assets.Script.PublicScript
 
             string json = File.ReadAllText(path);
 
-            SaveManager result = JsonConvert.DeserializeObject<SaveManager>(json);
+            SaveSys result = JsonConvert.DeserializeObject<SaveSys>(json);
 
-            if (result == null) result = new SaveManager();
+            if (result == null) result = new SaveSys();
             result.Init(saveName, json);
 
             return result;
@@ -52,7 +52,7 @@ namespace Assets.Script.PublicScript
             if (Directory.Exists(savePath))
                 return false;
 
-            DataTable dirStruct = PublicVar.dataBase["directory_struct"].Select(null, new (string, object)[] { ("id", "save") });
+            DataTable dirStruct = System.dataBase["directory_struct"].Select(null, new (string, object)[] { ("id", "save") });
 
             Stack<string> stack = new Stack<string>();
             stack.Push("");
