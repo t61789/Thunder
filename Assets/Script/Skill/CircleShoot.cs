@@ -24,7 +24,7 @@ namespace Assets.Script.Skill
         {
             skillCdCount = 0;
 
-            Values values = System.System.value.LoadValue<Values>("skill" + Paths.Div + "circleShoot");
+            Values values = System.System.value.GetValue<Values>("skill" + Paths.Div + "circleShoot");
 
             SkillCd = values.skillCd;
             BulletNum = values.bulletNum;

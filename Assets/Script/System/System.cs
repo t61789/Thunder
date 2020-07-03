@@ -22,7 +22,7 @@ namespace Assets.Script.System
         public static Transform container;
 
         public static BundleSys bundle;
-        public static ValueManager value;
+        public static ValueSys value;
         public static ControlManager control;
         public static SkillManager skill;
         public static ConsoleWindow consoleWindow;
@@ -69,7 +69,7 @@ namespace Assets.Script.System
                     publicVar = gameObject;
                     objectPool = GetComponent<ObjectPool>();
                     container = GameObject.Find("Container").transform;
-                    value = new ValueManager();
+                    value = new ValueSys();
                     UiSys = GetComponent<UiSys>();
                     gameMode = new GameModeManager();
                     level = new LevelManager();
@@ -81,7 +81,7 @@ namespace Assets.Script.System
                     container = GameObject.Find("Container").transform;
                     UiSys = GetComponent<UiSys>();
                     dataBase = new DataBaseSys();
-                    value = new ValueManager();
+                    value = new ValueSys();
                     control = new ControlManager();
                     break;
                 case "BattleScene":
@@ -89,7 +89,7 @@ namespace Assets.Script.System
                     objectPool = GetComponent<ObjectPool>();
                     container = GameObject.Find("Container").transform;
                     mainCamera = GameObject.Find("MainCamera").GetComponent<CameraController>();
-                    value = new ValueManager();
+                    value = new ValueSys();
                     player = new PlayerManager();
                     skill = new SkillManager();
                     control = new ControlManager();

@@ -801,7 +801,6 @@
     <Compile Include="Assets\Script\PublicScript\LevelManager.cs" />
     <Compile Include="Assets\Script\PublicScript\PlayerManager.cs" />
     <Compile Include="Assets\Script\PublicScript\SkillManager.cs" />
-    <Compile Include="Assets\Script\PublicScript\ValueManager.cs" />
     <Compile Include="Assets\Script\Skill\Charge.cs" />
     <Compile Include="Assets\Script\Skill\CircleShoot.cs" />
     <Compile Include="Assets\Script\Skill\Skill.cs" />
@@ -812,6 +811,7 @@
     <Compile Include="Assets\Script\System\SaveSys.cs" />
     <Compile Include="Assets\Script\System\System.cs" />
     <Compile Include="Assets\Script\System\UiSys.cs" />
+    <Compile Include="Assets\Script\System\ValueSys.cs" />
     <Compile Include="Assets\Script\Test\SaveTest.cs" />
     <Compile Include="Assets\Script\Tool\BehaviorTree\ActionNode.cs" />
     <Compile Include="Assets\Script\Tool\BehaviorTree\BehaviorTree.cs" />

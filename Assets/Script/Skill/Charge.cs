@@ -40,7 +40,7 @@ namespace Assets.Script.Skill
             //playerController = GetComponent<PlayerController>();
             insideObject = false;
 
-            Values values = System.System.value.LoadValue<Values>("skill" + Paths.Div + "charge");
+            Values values = System.System.value.GetValue<Values>("skill" + Paths.Div + "charge");
 
             damageCoeffient = values.damageCoeffient;
             protonSword = Instantiate(System.System.bundle.GetAsset<GameObject>(values.protonSwordPrefab));

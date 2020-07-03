@@ -289,7 +289,7 @@ namespace Assets.Script.System
             return GetTable(CreateId(bundleGroup,bundle,name));
         }
 
-        public DataTable GetTable(AssetId id)
+        private DataTable GetTable(AssetId id)
         {
             for (int i = 0; i < 2; i++)
             {
@@ -339,7 +339,17 @@ namespace Assets.Script.System
         /// </summary>
         public bool DeleteTable(string bundleGroup, string bundle, string name)
         {
-            return _Tables.Remove(CreateId(bundleGroup, bundle, name));
+            return DeleteTable(new AssetId(bundleGroup,bundle,name,DefaultBundle));
+        }
+
+        public bool DeleteTable(string tablePath)
+        {
+            return DeleteTable(AssetId.CreateAssetId(tablePath, DefaultBundle));
+        }
+
+        private bool DeleteTable(AssetId id)
+        {
+            return _Tables.Remove(id);
         }
 
         /// <summary>
@@ -347,9 +357,13 @@ namespace Assets.Script.System
         /// </summary>
         /// <param name="bundleGroup"></param>
         /// <param name="bundle"></param>
-        public void DeleteTable(string bundleGroup, string bundle)
+        public void DeleteAllTable(string bundleGroup, string bundle)
         {
-            AssetId id = CreateId(bundleGroup, bundle, null);
+            DeleteAllTable(CreateId(bundleGroup, bundle, null));
+        }
+
+        private void DeleteAllTable(AssetId id)
+        {
             var keys = _Tables.Keys.Where(x => x.Bundle == id.Bundle && x.BundleGroup == id.BundleGroup).ToArray();
 
             foreach (var tableId in keys)
