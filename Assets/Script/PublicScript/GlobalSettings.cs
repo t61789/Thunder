@@ -1,4 +1,7 @@
-﻿public class GlobalSettings
+﻿namespace Assets.Script.PublicScript
 {
-    public const float defaultSurvivalGenerateRange = 20;
+    public class GlobalSettings
+    {
+        public const float defaultSurvivalGenerateRange = 20;
+    }
 }

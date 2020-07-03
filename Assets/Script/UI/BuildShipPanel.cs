@@ -1,6 +1,8 @@
 ﻿using Assets.Script.Turret;
 using System;
 using System.Collections.Generic;
+using Assets.Script.PublicScript;
+using Assets.Script.System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -114,7 +116,7 @@ namespace Assets.Script.UI
         {
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                baseUI.GetComponent<Image>().sprite = PublicVar.objectPool.GetPrefab(null,BundleManager.UIBundle,"emptyUI").GetComponent<Image>().sprite;
+                baseUI.GetComponent<Image>().sprite = PublicVar.objectPool.GetPrefab(null,BundleSys.UIBundle,"emptyUI").GetComponent<Image>().sprite;
 
                 baseUI.RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
                 baseUI.RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
@@ -168,7 +170,7 @@ namespace Assets.Script.UI
 
             OnBuildShipComplete?.Invoke(this);
 
-            PublicVar.uiManager.CloseUi(name);
+            PublicVar.UiSys.CloseUi(name);
         }
     }
 }

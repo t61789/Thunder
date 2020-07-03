@@ -1,7 +1,8 @@
 ﻿using BehaviorDesigner.Runtime;
 using System.Collections.Generic;
-using Tool;
-using Tool.ObjectPool;
+using Assets.Script.System;
+using Assets.Script.Tool.BuffData;
+using Assets.Script.Tool.ObjectPool;
 using UnityEngine;
 
 namespace Assets.Script.Turret

@@ -4,7 +4,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace Tool
+namespace Assets.Script.Tool.SerializableStruct
 {
     [XmlRoot("dictionary")]
     public struct SerializableDictionary<K, V> : IXmlSerializable

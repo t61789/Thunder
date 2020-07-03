@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Script.PublicScript;
+using Assets.Script.System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -136,7 +138,7 @@ namespace Assets.Script.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                RectTransform rectTransform = PublicVar.objectPool.Alloc(null,UiManager.DefaultUiBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
+                RectTransform rectTransform = PublicVar.objectPool.Alloc(null,UiSys.DefaultUiBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
 
                 elements.Add(rectTransform.GetComponent<BaseUi>());
             }

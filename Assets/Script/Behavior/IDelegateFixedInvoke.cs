@@ -1,4 +1,7 @@
-﻿public interface IDelegateFixedInvoke
+﻿namespace Assets.Script.Behavior
 {
-    void FixedInvokeMethod(string methodName);
+    public interface IDelegateFixedInvoke
+    {
+        void FixedInvokeMethod(string methodName);
+    }
 }

@@ -1,18 +1,21 @@
 ﻿using Assets.Script.Turret;
 
-public class PlayerManager
+namespace Assets.Script.PublicScript
 {
-    private Ship player;
-
-    public Ship SetPlayer(Ship.CreateShipParam param)
+    public class PlayerManager
     {
-        if (player != null)
-            UnityEngine.Object.Destroy(player.gameObject);
+        private Ship player;
 
-        player = Ship.CreateShip(param);
+        public Ship SetPlayer(Ship.CreateShipParam param)
+        {
+            if (player != null)
+                UnityEngine.Object.Destroy(player.gameObject);
 
-        PublicVar.mainCamera.FollowTarget = player;
+            player = Ship.CreateShip(param);
 
-        return player;
+            PublicVar.mainCamera.FollowTarget = player;
+
+            return player;
+        }
     }
 }

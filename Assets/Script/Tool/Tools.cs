@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tool
+namespace Assets.Script.Tool
 {
     public class Tools
     {
@@ -228,7 +228,7 @@ namespace Tool
         ///</summary>
         public static float GenerateRandom(int max, int min)
         {
-            return new System.Random(Guid.NewGuid().GetHashCode()).Next(min, max + 1);
+            return new global::System.Random(Guid.NewGuid().GetHashCode()).Next(min, max + 1);
         }
 
         ///<summary>
@@ -236,7 +236,7 @@ namespace Tool
         ///</summary>
         public static double GenerateRandomD()
         {
-            return new System.Random(System.Guid.NewGuid().GetHashCode()).NextDouble();
+            return new global::System.Random(global::System.Guid.NewGuid().GetHashCode()).NextDouble();
         }
 
         ///<summary>

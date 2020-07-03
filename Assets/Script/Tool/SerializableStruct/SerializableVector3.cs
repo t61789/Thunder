@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Tool
+namespace Assets.Script.Tool.SerializableStruct
 {
     [JsonObject]
     public struct SerializableVector3

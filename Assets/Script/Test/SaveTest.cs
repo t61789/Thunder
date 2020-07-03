@@ -1,10 +1,13 @@
-﻿using Thunder.PublicScript;
+﻿using Assets.Script.PublicScript;
 using UnityEngine;
 
-public class SaveTest : MonoBehaviour
+namespace Assets.Script.Test
 {
-    private void Awake()
+    public class SaveTest : MonoBehaviour
     {
-        ControllerInput.AttachTo(GameObject.Find("battleShip"), true);
+        private void Awake()
+        {
+            ControllerInput.AttachTo(GameObject.Find("battleShip"), true);
+        }
     }
 }

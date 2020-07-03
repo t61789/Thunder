@@ -1,4 +1,5 @@
-﻿using Thunder.PublicScript;
+﻿using Assets.Script.GameMode;
+using Assets.Script.PublicScript;
 using UnityEngine;
 
 namespace Assets.Script.UI

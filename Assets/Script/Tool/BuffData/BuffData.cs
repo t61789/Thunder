@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace Tool
+namespace Assets.Script.Tool.BuffData
 {
     public class BuffData
     {

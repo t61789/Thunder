@@ -1,5 +1,6 @@
-﻿using BehaviorDesigner.Runtime.Tasks;
-using Tool;
+﻿using Assets.Script.PublicScript;
+using Assets.Script.Tool.BuffData;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
 namespace Assets.Script.Turret

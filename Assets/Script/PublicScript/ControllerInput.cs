@@ -1,10 +1,10 @@
-﻿using Assets.Script.Turret;
-using Assets.Script.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Assets.Script.Turret;
+using Assets.Script.UI;
 using UnityEngine;
 
-namespace Thunder.PublicScript
+namespace Assets.Script.PublicScript
 {
     public class ControllerInput : MonoBehaviour
     {
@@ -55,7 +55,7 @@ namespace Thunder.PublicScript
         public void Remove()
         {
             if (aimRing != null)
-                PublicVar.uiManager.CloseUi(aimRing);
+                PublicVar.UiSys.CloseUi(aimRing);
             Destroy(this);
         }
 
@@ -80,7 +80,7 @@ namespace Thunder.PublicScript
             }
 
             if (aimRing)
-                this.aimRing = PublicVar.uiManager.OpenUi<AimRing>("aimRing", UIInitAction.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
+                this.aimRing = PublicVar.UiSys.OpenUi<AimRing>("aimRing", UIInitAction.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
         }
 
         private void Update()

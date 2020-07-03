@@ -1,7 +1,8 @@
-﻿using Assets.Script.UI;
+﻿using Assets.Script.GameMode;
+using Assets.Script.UI;
 using UnityEngine;
 
-namespace Thunder.PublicScript
+namespace Assets.Script.PublicScript
 {
     public class BattleSceneController : MonoBehaviour
     {
@@ -28,7 +29,7 @@ namespace Thunder.PublicScript
         {
             ControllerInput.Controlable = false;
             checkoutPanel.Init(completeParam);
-            PublicVar.uiManager.OpenUi(checkoutPanel.UiName);
+            PublicVar.UiSys.OpenUi(checkoutPanel.UiName);
             GlobalBuffer.battleSceneParam = (PublicVar.level.LevelComplete(levelParam.index), null);
         }
 

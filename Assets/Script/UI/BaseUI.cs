@@ -1,5 +1,7 @@
 ﻿using System.Collections;
-using Tool.ObjectPool;
+using Assets.Script.PublicScript;
+using Assets.Script.System;
+using Assets.Script.Tool.ObjectPool;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -45,8 +47,14 @@ namespace Assets.Script.UI
 
         protected virtual void Awake()
         {
-            UiName = UiName?? name;
+            UiName = UiName ?? name;
             RectTrans = transform as RectTransform;
+        }
+
+        [ContextMenu("fff")]
+        private void Shit()
+        {
+            Debug.Log(123);
         }
 
         public virtual void AfterOpen()
@@ -157,7 +165,7 @@ namespace Assets.Script.UI
 
         public void Close()
         {
-            PublicVar.uiManager.CloseUi(this);
+            PublicVar.UiSys.CloseUi(this);
         }
 
         public void InitRect(UIInitAction action)
@@ -183,6 +191,5 @@ namespace Assets.Script.UI
                 RectTrans.anchoredPosition = Vector2.zero;
             }
         }
-
     }
 }

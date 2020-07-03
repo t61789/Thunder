@@ -1,16 +1,19 @@
 ﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
-[TaskCategory("Unity/GameObject")]
-public class IsNotNull : Conditional
+namespace Assets.Script.Behavior
 {
-    public SharedGameObject go;
-
-    public override TaskStatus OnUpdate()
+    [TaskCategory("Unity/GameObject")]
+    public class IsNotNull : Conditional
     {
-        if (go.Value == null)
-            return TaskStatus.Failure;
-        else
-            return TaskStatus.Success;
+        public SharedGameObject go;
+
+        public override TaskStatus OnUpdate()
+        {
+            if (go.Value == null)
+                return TaskStatus.Failure;
+            else
+                return TaskStatus.Success;
+        }
     }
 }

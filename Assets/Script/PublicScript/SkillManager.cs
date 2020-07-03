@@ -1,48 +1,52 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Script.Skill;
 using UnityEngine;
 
-public class SkillManager
+namespace Assets.Script.PublicScript
 {
-    private Dictionary<string, Type> skills = new Dictionary<string, Type>();
-
-    private string[] skillBar = new string[5];
-
-    public SkillManager()
+    public class SkillManager
     {
-        skills.Add("charge", typeof(Charge));
-        skills.Add("circleShoot", typeof(CircleShoot));
+        private Dictionary<string, Type> skills = new Dictionary<string, Type>();
 
-        skillBar[0] = "charge";
-        skillBar[1] = "circleShoot";
-    }
+        private string[] skillBar = new string[5];
 
-    public bool UseSkill<T>(T targetScript, KeyCode key, Hashtable arg = null) where T : MonoBehaviour, ISkillManager
-    {
-        int index = (int)key - 49;
-        if (index < 0 || index >= skillBar.Length)
-            return false;
-
-        if (skills.TryGetValue(skillBar[index], out Type type))
+        public SkillManager()
         {
-            ISkillManager interfac = targetScript as ISkillManager;
-            GameObject go = (targetScript as MonoBehaviour).gameObject;
-            Skill curSkill = interfac.GetCurSkill();
-            if (curSkill != null)
-            {
-                if (curSkill.GetType() == type)
-                    return false;
+            skills.Add("charge", typeof(Charge));
+            skills.Add("circleShoot", typeof(CircleShoot));
 
-                curSkill.SkillRemove();
-                UnityEngine.Object.Destroy(go.GetComponent(curSkill.GetType()));
-            }
-
-            Skill skill = go.AddComponent(type) as Skill;
-            skill.SkillInit(arg);
-            interfac.SetSkill(skill);
-            return true;
+            skillBar[0] = "charge";
+            skillBar[1] = "circleShoot";
         }
-        return false;
+
+        public bool UseSkill<T>(T targetScript, KeyCode key, Hashtable arg = null) where T : MonoBehaviour, ISkillManager
+        {
+            int index = (int)key - 49;
+            if (index < 0 || index >= skillBar.Length)
+                return false;
+
+            if (skills.TryGetValue(skillBar[index], out Type type))
+            {
+                ISkillManager interfac = targetScript as ISkillManager;
+                GameObject go = (targetScript as MonoBehaviour).gameObject;
+                Skill.Skill curSkill = interfac.GetCurSkill();
+                if (curSkill != null)
+                {
+                    if (curSkill.GetType() == type)
+                        return false;
+
+                    curSkill.SkillRemove();
+                    UnityEngine.Object.Destroy(go.GetComponent(curSkill.GetType()));
+                }
+
+                Skill.Skill skill = go.AddComponent(type) as Skill.Skill;
+                skill.SkillInit(arg);
+                interfac.SetSkill(skill);
+                return true;
+            }
+            return false;
+        }
     }
 }

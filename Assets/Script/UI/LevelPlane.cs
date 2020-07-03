@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Script.PublicScript;
 using UnityEngine.UI;
 
 namespace Assets.Script.UI
@@ -85,7 +86,7 @@ namespace Assets.Script.UI
 
         public void OpenMenu()
         {
-            PublicVar.uiManager.OpenUi<BaseUi>("MenuPanel", this, true, UIInitAction.CenterParent, null);
+            PublicVar.UiSys.OpenUi<BaseUi>("MenuPanel", this, true, UIInitAction.CenterParent, null);
         }
 
         public void Exit(bool force)
@@ -95,7 +96,7 @@ namespace Assets.Script.UI
                 unsavedJson = PublicVar.saveManager.Check();
                 if (unsavedJson != null)
                 {
-                    ConfirmDialog confirmDialog = PublicVar.uiManager.OpenUi<ConfirmDialog>("confirmDialog", menuPanel, true, UIInitAction.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
+                    ConfirmDialog confirmDialog = PublicVar.UiSys.OpenUi<ConfirmDialog>("confirmDialog", menuPanel, true, UIInitAction.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
                     confirmDialog.OnBeforeClose += DialogConfirmed;
                     return;
                 }

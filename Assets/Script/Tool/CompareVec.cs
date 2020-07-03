@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Tool
+namespace Assets.Script.Tool
 {
     public class CompareVec : IComparable
     {

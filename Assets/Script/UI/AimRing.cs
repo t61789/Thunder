@@ -1,5 +1,5 @@
-﻿using Assets.Script.Turret;
-using Tool;
+﻿using Assets.Script.Tool;
+using Assets.Script.Turret;
 using UnityEngine;
 
 namespace Assets.Script.UI

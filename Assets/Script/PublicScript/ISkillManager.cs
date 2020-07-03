@@ -1,6 +1,9 @@
-﻿public interface ISkillManager
+﻿namespace Assets.Script.PublicScript
 {
-    Skill GetCurSkill();
-    void SetSkill(Skill skill);
+    public interface ISkillManager
+    {
+        Skill.Skill GetCurSkill();
+        void SetSkill(Skill.Skill skill);
+    }
 }
 

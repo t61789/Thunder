@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public abstract class Skill : MonoBehaviour
+namespace Assets.Script.Skill
 {
-    public float SkillCd;
-    public abstract void SkillInit(Hashtable arg);
-    public abstract void SkillRemove();
+    public abstract class Skill : MonoBehaviour
+    {
+        public float SkillCd;
+        public abstract void SkillInit(Hashtable arg);
+        public abstract void SkillRemove();
+    }
 }

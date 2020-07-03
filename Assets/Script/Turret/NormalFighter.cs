@@ -1,4 +1,5 @@
-﻿using BehaviorDesigner.Runtime.Tasks;
+﻿using Assets.Script.PublicScript;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
 namespace Assets.Script.Turret

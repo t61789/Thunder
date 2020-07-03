@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Script.PublicScript;
+using UnityEngine;
 
 namespace Assets.Script.UI
 {
@@ -6,7 +7,7 @@ namespace Assets.Script.UI
     {
         private void Awake()
         {
-            PublicVar.uiManager.OpenUi<InputDialog>("inputDialog", UIInitAction.CenterParent, x =>
+            PublicVar.UiSys.OpenUi<InputDialog>("inputDialog", UIInitAction.CenterParent, x =>
             {
                 x.Init("");
                 x.OnCloseCheck += (BaseUi baseUi, ref bool result) =>
@@ -18,7 +19,7 @@ namespace Assets.Script.UI
                     {
                         result = SaveManager.CreateSaveDir(id.Text);
                         if (!result)
-                            PublicVar.uiManager.OpenUi<MessageDialog>("messageDialog", x, true, UIInitAction.CenterParent, message =>
+                            PublicVar.UiSys.OpenUi<MessageDialog>("messageDialog", x, true, UIInitAction.CenterParent, message =>
                             {
                                 message.Init("存档已存在");
                             });
@@ -36,7 +37,7 @@ namespace Assets.Script.UI
 
         private void StartBuildShip()
         {
-            PublicVar.uiManager.OpenUi<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
+            PublicVar.UiSys.OpenUi<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
         }
 
         private void BuildShipClosed(BuildShipPanel b)

@@ -1,64 +1,67 @@
-﻿using Assets.Script.Turret;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Assets.Script.Turret;
 
-public class CampManager
+namespace Assets.Script.PublicScript
 {
-    public static readonly string PlayerCamp = "player";
-
-    private struct CampUnit
+    public class CampManager
     {
-        public string campName;
-        public HashSet<string> hostile;
-        public HashSet<string> allay;
+        public static readonly string PlayerCamp = "player";
 
-        public CampUnit(string campName)
+        private struct CampUnit
         {
-            this.campName = campName;
-            hostile = new HashSet<string>();
-            allay = new HashSet<string>();
+            public string campName;
+            public HashSet<string> hostile;
+            public HashSet<string> allay;
+
+            public CampUnit(string campName)
+            {
+                this.campName = campName;
+                hostile = new HashSet<string>();
+                allay = new HashSet<string>();
+            }
+
+            public bool AddHostile(string name)
+            {
+                return hostile.Add(name);
+            }
+
+            public bool AddAlly(string name)
+            {
+                return allay.Add(name);
+            }
         }
 
-        public bool AddHostile(string name)
+        private Dictionary<string, CampUnit> camps = new Dictionary<string, CampUnit>();
+
+        public CampManager()
         {
-            return hostile.Add(name);
+            foreach (var item in PublicVar.dataBase["camp"].Select(null, null).Rows)
+                camps.Add((string)item[0], new CampUnit((string)item[0]));
+            PublicVar.dataBase.DeleteTable(null,null,"camp");
+
+            foreach (var item in PublicVar.dataBase["camp_hostile"].Select(null, null).Rows)
+            {
+                camps[(string)item[0]].AddHostile((string)item[1]);
+                camps[(string)item[1]].AddHostile((string)item[0]);
+            }
+            PublicVar.dataBase.DeleteTable(null, null, "camp_hostile");
+
+            foreach (var item in PublicVar.dataBase["camp_ally"].Select(null, null).Rows)
+            {
+                camps[(string)item[0]].AddAlly((string)item[1]);
+                camps[(string)item[1]].AddAlly((string)item[0]);
+            }
+            PublicVar.dataBase.DeleteTable(null, null, "camp_ally");
         }
 
-        public bool AddAlly(string name)
+        public bool IsHostile(Aircraft aircraft1, Aircraft aircraft2)
         {
-            return allay.Add(name);
+            return camps[aircraft1.Camp].hostile.Contains(aircraft2.Camp);
         }
-    }
 
-    private Dictionary<string, CampUnit> camps = new Dictionary<string, CampUnit>();
-
-    public CampManager()
-    {
-        foreach (var item in PublicVar.dataBase["camp"].Select(null, null).Rows)
-            camps.Add((string)item[0], new CampUnit((string)item[0]));
-        PublicVar.dataBase.DeleteTable(null,null,"camp");
-
-        foreach (var item in PublicVar.dataBase["camp_hostile"].Select(null, null).Rows)
+        public bool IsAllay(Aircraft aircraft1, Aircraft aircraft2)
         {
-            camps[(string)item[0]].AddHostile((string)item[1]);
-            camps[(string)item[1]].AddHostile((string)item[0]);
+            return camps[aircraft1.Camp].allay.Contains(aircraft2.Camp);
         }
-        PublicVar.dataBase.DeleteTable(null, null, "camp_hostile");
-
-        foreach (var item in PublicVar.dataBase["camp_ally"].Select(null, null).Rows)
-        {
-            camps[(string)item[0]].AddAlly((string)item[1]);
-            camps[(string)item[1]].AddAlly((string)item[0]);
-        }
-        PublicVar.dataBase.DeleteTable(null, null, "camp_ally");
-    }
-
-    public bool IsHostile(Aircraft aircraft1, Aircraft aircraft2)
-    {
-        return camps[aircraft1.Camp].hostile.Contains(aircraft2.Camp);
-    }
-
-    public bool IsAllay(Aircraft aircraft1, Aircraft aircraft2)
-    {
-        return camps[aircraft1.Camp].allay.Contains(aircraft2.Camp);
     }
 }

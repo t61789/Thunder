@@ -1,43 +1,46 @@
-﻿using BehaviorDesigner.Runtime;
+﻿using System;
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-using System;
 using UnityEngine;
 
-public class DelegateFixedInvoke : BehaviorDesigner.Runtime.Tasks.Action
+namespace Assets.Script.Behavior
 {
-    public SharedObject sharedObject;
-
-    public string methodName;
-
-    private bool fixedUpdating = true;
-
-    private delegate void NoArgMethod();
-    private NoArgMethod method;
-
-    public override TaskStatus OnUpdate()
+    public class DelegateFixedInvoke : BehaviorDesigner.Runtime.Tasks.Action
     {
-        if (!fixedUpdating)
-        {
-            fixedUpdating = true;
-            return TaskStatus.Success;
-        }
-        else
-            return TaskStatus.Running;
-    }
+        public SharedObject sharedObject;
 
-    public override void OnFixedUpdate()
-    {
-        try
-        {
-            if (method == null)
-                method = (NoArgMethod)Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, methodName);
+        public string methodName;
 
-            method();
-        }
-        catch (Exception e)
+        private bool fixedUpdating = true;
+
+        private delegate void NoArgMethod();
+        private NoArgMethod method;
+
+        public override TaskStatus OnUpdate()
         {
-            Debug.Log(e);
+            if (!fixedUpdating)
+            {
+                fixedUpdating = true;
+                return TaskStatus.Success;
+            }
+            else
+                return TaskStatus.Running;
         }
-        fixedUpdating = false;
+
+        public override void OnFixedUpdate()
+        {
+            try
+            {
+                if (method == null)
+                    method = (NoArgMethod)Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, methodName);
+
+                method();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+            fixedUpdating = false;
+        }
     }
 }

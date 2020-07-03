@@ -1,81 +1,86 @@
-﻿using Assets.Script.Turret;
-using Tool;
-using Tool.ObjectPool;
+﻿using Assets.Script.PublicScript;
+using Assets.Script.System;
+using Assets.Script.Tool.BuffData;
+using Assets.Script.Tool.ObjectPool;
+using Assets.Script.Turret;
 using UnityEngine;
 
-public abstract class Bullet : MonoBehaviour, IObjectPool
+namespace Assets.Script
 {
-    public float MaxSpeed;
-    public float LifeTime;
-    public float Damage;
-    public float FireInterval;
-
-    protected Quaternion direction;
-    protected BuffData damage;
-    protected float lifeTimeStart;
-    protected Rigidbody2D rb2d;
-    protected ObjectPool objectPool;
-    protected Animator animator;
-    protected Transform releaserTrans;
-    protected Transform trans;
-    protected Aircraft releaser;
-    public AssetId AssetId { get; set; }
-
-
-    protected void Awake()
+    public abstract class Bullet : MonoBehaviour, IObjectPool
     {
-        rb2d = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        trans = transform;
-        damage = Damage;
-    }
+        public float MaxSpeed;
+        public float LifeTime;
+        public float Damage;
+        public float FireInterval;
 
-    protected void LateUpdate()
-    {
-        if (Time.time - lifeTimeStart >= LifeTime)
-            LifeTimeEnd();
-    }
+        protected Quaternion direction;
+        protected BuffData damage;
+        protected float lifeTimeStart;
+        protected Rigidbody2D rb2d;
+        protected ObjectPool objectPool;
+        protected Animator animator;
+        protected Transform releaserTrans;
+        protected Transform trans;
+        protected Aircraft releaser;
+        public AssetId AssetId { get; set; }
 
-    public virtual void AfterOpDestroy()
-    {
-        Destroy(gameObject);
-    }
+
+        protected void Awake()
+        {
+            rb2d = GetComponent<Rigidbody2D>();
+            animator = GetComponent<Animator>();
+            trans = transform;
+            damage = Damage;
+        }
+
+        protected void LateUpdate()
+        {
+            if (Time.time - lifeTimeStart >= LifeTime)
+                LifeTimeEnd();
+        }
+
+        public virtual void AfterOpDestroy()
+        {
+            Destroy(gameObject);
+        }
 
 
-    public void SetObjectPool(ObjectPool objectPool)
-    {
-        this.objectPool = objectPool;
-    }
+        public void SetObjectPool(ObjectPool objectPool)
+        {
+            this.objectPool = objectPool;
+        }
 
-    public GameObject GetGameObject()
-    {
-        return gameObject;
-    }
+        public GameObject GetGameObject()
+        {
+            return gameObject;
+        }
 
-    public virtual void BeforeOpReset()
-    {
-        lifeTimeStart = Time.time;
-    }
+        public virtual void BeforeOpReset()
+        {
+            lifeTimeStart = Time.time;
+        }
 
-    public virtual void BeforeOpRecycle()
-    {
+        public virtual void BeforeOpRecycle()
+        {
 
-    }
+        }
 
-    public virtual void LifeTimeEnd()
-    {
-        PublicVar.objectPool.Recycle(this);
-    }
+        public virtual void LifeTimeEnd()
+        {
+            PublicVar.objectPool.Recycle(this);
+        }
 
-    public virtual void ObjectPoolInit(Transform releaser, Vector3 pos, Quaternion rotate)
-    {
-        releaserTrans = releaser;
-        this.releaser = releaser.GetComponent<Aircraft>();
+        public virtual void ObjectPoolInit(Transform releaser, Vector3 pos, Quaternion rotate)
+        {
+            releaserTrans = releaser;
+            this.releaser = releaser.GetComponent<Aircraft>();
 
-        trans.rotation = rotate;
-        trans.position = pos;
+            trans.rotation = rotate;
+            trans.position = pos;
 
-        animator.Play("idle");
+            animator.Play("idle");
+        }
     }
 }
 

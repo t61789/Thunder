@@ -1,15 +1,17 @@
-﻿
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
-public class GetCurrentGameObject : Action
+namespace Assets.Script.Behavior
 {
-    public SharedGameObject curGameObject;
-
-    public override TaskStatus OnUpdate()
+    public class GetCurrentGameObject : Action
     {
-        curGameObject.Value = gameObject;
-        return TaskStatus.Success;
+        public SharedGameObject curGameObject;
+
+        public override TaskStatus OnUpdate()
+        {
+            curGameObject.Value = gameObject;
+            return TaskStatus.Success;
+        }
     }
 }
 

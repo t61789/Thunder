@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Assets.Script.PublicScript;
+using Assets.Script.System;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace Tool.ObjectPool
+namespace Assets.Script.Tool.ObjectPool
 {
     public class ObjectPool : MonoBehaviour
     {
@@ -55,7 +56,7 @@ namespace Tool.ObjectPool
 
         //private GameObject GetAsset(string bundlePath, string objName)
         //{
-        //    GameObject go = PublicVar.bundle.GetAsset<GameObject>(BundleManager.PrefabBundleD + bundlePath, objName);
+        //    GameObject go = PublicVar.bundle.GetAsset<GameObject>(BundleSys.PrefabBundleD + bundlePath, objName);
         //    if (go == null)
         //    {
         //        Debug.LogError(objName + " is not in prefabs");
@@ -80,7 +81,7 @@ namespace Tool.ObjectPool
         //    if (index == -1)
         //    {
         //        prefabName = prefabPath;
-        //        bundlePath = BundleManager.Normal;
+        //        bundlePath = BundleSys.Normal;
         //        prefabPath = bundlePath + Paths.Div + prefabPath;
         //    }
         //    else
@@ -176,10 +177,10 @@ namespace Tool.ObjectPool
         //        return go;
 
         //    int index = prefabPath.LastIndexOf(Paths.Div);
-        //    string result = index == -1 ? BundleManager.Normal : prefabPath.Substring(0, index);
+        //    string result = index == -1 ? BundleSys.Normal : prefabPath.Substring(0, index);
         //    string result2 = index == -1 ? prefabPath : prefabPath.Substring(index + 1);
 
-        //    go = PublicVar.bundle.GetAsset<GameObject>(BundleManager.PrefabBundleD + result, result2);
+        //    go = PublicVar.bundle.GetAsset<GameObject>(BundleSys.PrefabBundleD + result, result2);
         //    prefabBuff.Add(prefabPath, go);
 
         //    return go;
@@ -250,7 +251,7 @@ namespace Tool.ObjectPool
 
         private void CreatePools(string bundleGroup, string bundle)
         {
-            AssetId id = new AssetId(bundleGroup, bundle, null);
+            AssetId id = new AssetId(bundleGroup, bundle, null,DefaultBundle);
             foreach (var prefab in PublicVar.bundle.GetAllAsset<GameObject>(bundleGroup, bundle))
             {
                 id.Name = prefab.name;
@@ -359,11 +360,11 @@ namespace Tool.ObjectPool
             return GetPool(bundleGroup, bundle, name,out _).Prefab;
         }
 
-        private static readonly string DefaultBundle = BundleManager.PrefabBundleD + BundleManager.Normal;
+        private static readonly string DefaultBundle = BundleSys.PrefabBundleD + BundleSys.Normal;
         private static AssetId CreateId(string bundleGroup, string bundle, string name)
         {
             bundle = bundle ?? DefaultBundle;
-            return new AssetId(bundleGroup, bundle, name);
+            return new AssetId(bundleGroup, bundle, name,DefaultBundle);
         }
     }
 

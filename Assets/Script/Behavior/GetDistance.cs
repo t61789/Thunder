@@ -1,24 +1,27 @@
 ﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
-public class GetDistance : Action
+namespace Assets.Script.Behavior
 {
-    public SharedGameObject obj1;
-    public SharedGameObject obj2;
-
-    public SharedFloat distance;
-
-    public override TaskStatus OnUpdate()
+    public class GetDistance : Action
     {
-        try
+        public SharedGameObject obj1;
+        public SharedGameObject obj2;
+
+        public SharedFloat distance;
+
+        public override TaskStatus OnUpdate()
         {
-            distance.Value = (obj1.Value.transform.position - obj2.Value.transform.position).magnitude;
-            return TaskStatus.Success;
-        }
-        catch (System.Exception)
-        {
-            return TaskStatus.Failure;
-            throw;
+            try
+            {
+                distance.Value = (obj1.Value.transform.position - obj2.Value.transform.position).magnitude;
+                return TaskStatus.Success;
+            }
+            catch (global::System.Exception)
+            {
+                return TaskStatus.Failure;
+                throw;
+            }
         }
     }
 }

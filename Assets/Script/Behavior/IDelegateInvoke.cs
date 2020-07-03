@@ -1,8 +1,10 @@
 ﻿using System;
 
-
-interface IDelegateInvoke
+namespace Assets.Script.Behavior
 {
-    Type GetCurType();
+    interface IDelegateInvoke
+    {
+        Type GetCurType();
+    }
 }
 

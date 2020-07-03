@@ -1,30 +1,33 @@
-﻿using BehaviorDesigner.Runtime;
+﻿using System;
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-using System;
 using UnityEngine;
 
-public class DelegateInvoke : BehaviorDesigner.Runtime.Tasks.Action
+namespace Assets.Script.Behavior
 {
-    public SharedObject sharedObject;
-
-    public string methodName;
-
-    private delegate TaskStatus NoArgMethod();
-    private NoArgMethod method;
-
-    public override TaskStatus OnUpdate()
+    public class DelegateInvoke : BehaviorDesigner.Runtime.Tasks.Action
     {
-        try
-        {
-            if (method == null)
-                method = (NoArgMethod)Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, methodName);
+        public SharedObject sharedObject;
 
-            return method();
-        }
-        catch (Exception e)
+        public string methodName;
+
+        private delegate TaskStatus NoArgMethod();
+        private NoArgMethod method;
+
+        public override TaskStatus OnUpdate()
         {
-            Debug.LogError(e);
-            return TaskStatus.Failure;
+            try
+            {
+                if (method == null)
+                    method = (NoArgMethod)Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, methodName);
+
+                return method();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                return TaskStatus.Failure;
+            }
         }
     }
 }

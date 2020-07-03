@@ -1,4 +1,4 @@
-﻿namespace Tool.BehaviorTree
+﻿namespace Assets.Script.Tool.BehaviorTree
 {
     public class ActionNode : Node
     {

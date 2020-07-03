@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Assets.Script.PublicScript;
+using Assets.Script.System;
 using UnityEngine.UI;
 
 namespace Assets.Script.UI
@@ -9,9 +11,9 @@ namespace Assets.Script.UI
     {
         public void StartLoadSave()
         {
-            if (PublicVar.uiManager.IsUiOpened("LoadSaveListPlane"))
+            if (PublicVar.UiSys.IsUiOpened("LoadSaveListPlane"))
             {
-                PublicVar.uiManager.CloseUi("LoadSaveListPlane");
+                PublicVar.UiSys.CloseUi("LoadSaveListPlane");
                 return;
             }
 
@@ -28,7 +30,7 @@ namespace Assets.Script.UI
                 });
             }
 
-            PublicVar.uiManager.OpenUi<ListPlane>("listPlane", this, true, UIInitAction.CenterParent, x =>
+            PublicVar.UiSys.OpenUi<ListPlane>("listPlane", this, true, UIInitAction.CenterParent, x =>
             {
                 x.Init(new ListPlane.Parameters<BaseUi>(1, "normalButton", (500, 150), (50, 50), (0, 0), inits));
             });

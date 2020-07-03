@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Script.PublicScript;
 using UnityEngine;
 
 namespace Assets.Script.Turret

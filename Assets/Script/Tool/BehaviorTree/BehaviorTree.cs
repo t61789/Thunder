@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tool.BehaviorTree
+namespace Assets.Script.Tool.BehaviorTree
 {
     public class BehaviorTree : MonoBehaviour
     {
@@ -17,7 +17,7 @@ namespace Tool.BehaviorTree
         {
             firstNode = null;
             nodes.Clear();
-            System.GC.Collect();
+            global::System.GC.Collect();
         }
 
         public void AddNode(Node node, int parentId)

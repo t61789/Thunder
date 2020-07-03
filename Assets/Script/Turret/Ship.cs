@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Thunder.PublicScript;
-using Tool;
+using Assets.Script.PublicScript;
+using Assets.Script.Tool;
 using UnityEngine;
 
 namespace Assets.Script.Turret

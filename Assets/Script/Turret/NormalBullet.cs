@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Script.PublicScript;
+using UnityEngine;
 
 namespace Assets.Script.Turret
 {

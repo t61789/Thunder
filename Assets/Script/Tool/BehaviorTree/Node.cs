@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Tool.BehaviorTree
+namespace Assets.Script.Tool.BehaviorTree
 {
     public class Node
     {
