@@ -67,7 +67,7 @@ namespace Thunder
 
         public virtual void LifeTimeEnd()
         {
-            Sys.Stable.objectPool.Recycle(this);
+            Sys.Stable.ObjectPool.Recycle(this);
         }
 
         public virtual void ObjectPoolInit(Transform releaser, Vector3 pos, Quaternion rotate)

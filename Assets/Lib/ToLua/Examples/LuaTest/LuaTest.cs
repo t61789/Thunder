@@ -24,9 +24,10 @@ public class LuaTest : MonoBehaviour
     {
         if (GUI.Button(new Rect(0, 0, 100, 50), "File1"))
         {
-            _Ls.DoFile("File1");
-
-            (_Ls["shit"] as Shit).fuck(1);
+            _Ls.DoString(
+@"s = Thunder.Test.Shit()
+s.SetNormal(s,'222')
+print(s.normal)");
         }
     }
 
@@ -37,7 +38,3 @@ public class LuaTest : MonoBehaviour
     }
 }
 
-public class Shit
-{
-    public Func<int, int> fuck;
-}

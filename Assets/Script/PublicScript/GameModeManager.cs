@@ -20,7 +20,7 @@ namespace Thunder.PublicScript
             if (curGameMode != null)
                 RemoveMode();
 
-            T obj = Sys.Stable.publicVar.AddComponent(modeType) as T;
+            T obj = Sys.Stable.PublicVar.AddComponent(modeType) as T;
             init?.Invoke(obj);
             (obj as BaseGameMode).Init(arg);
             curGameMode = obj;
@@ -32,7 +32,7 @@ namespace Thunder.PublicScript
             if (curGameMode != null)
             {
                 curGameMode.BeforeUnInstall();
-                UnityEngine.Object.Destroy(Sys.Stable.publicVar.GetComponent<BaseGameMode>());
+                UnityEngine.Object.Destroy(Sys.Stable.PublicVar.GetComponent<BaseGameMode>());
                 curGameMode = null;
             }
         }

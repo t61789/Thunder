@@ -27,7 +27,7 @@ namespace Thunder.Turret
 
         public void MakeFighter()
         {
-            Fighter fighter = Sys.Stable.objectPool.Alloc<Fighter>(fighterName, x =>
+            Fighter fighter = Sys.Stable.ObjectPool.Alloc<Fighter>(fighterName, x =>
             {
                 x.ObjectPoolInit(trans.position, trans.rotation, null, ship);
                 x.OnDead += FighterDestroyed;
@@ -38,7 +38,7 @@ namespace Thunder.Turret
         public void SetFighter(string fighterName)
         {
             this.fighterName = fighterName;
-            makeInterval = Sys.Stable.objectPool.GetPrefab(fighterName).GetComponent<Fighter>().MakeInterval;
+            makeInterval = Sys.Stable.ObjectPool.GetPrefab(fighterName).GetComponent<Fighter>().MakeInterval;
         }
 
         private void FighterDestroyed(Aircraft aircraft)

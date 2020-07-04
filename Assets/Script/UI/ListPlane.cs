@@ -61,7 +61,7 @@ namespace Thunder.UI
             scrollbar.x.value = 0;
 
             foreach (var item in elements)
-                Sys.Stable.objectPool.Recycle(item);
+                Sys.Stable.ObjectPool.Recycle(item);
             elements.Clear();
 
             foreach (RectTransform item in elementsTrans)
@@ -137,7 +137,7 @@ namespace Thunder.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                RectTransform rectTransform = Sys.Stable.objectPool.Alloc(null, UiSys.DefaultUiBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
+                RectTransform rectTransform = Sys.Stable.ObjectPool.Alloc(null, UiSys.DefaultUiBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
 
                 elements.Add(rectTransform.GetComponent<BaseUi>());
             }

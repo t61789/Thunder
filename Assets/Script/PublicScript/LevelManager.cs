@@ -39,7 +39,7 @@ namespace Thunder.PublicScript
         {
             List<LevelParam> levels = new List<LevelParam>();
             int count = 0;
-            foreach (var item in Sys.Stable.dataBase["level"])
+            foreach (var item in Sys.Stable.DataBase["level"])
             {
                 levels.Add(new LevelParam(count, item[NAME] as string, item[ARG] as string, item[MODE_TYPE] as string));
                 count++;
@@ -49,7 +49,7 @@ namespace Thunder.PublicScript
 
         public LevelParam LevelComplete(int index)
         {
-            Sys.Stable.saveManager.levelComplete.Add(index);
+            Sys.Stable.Save.levelComplete.Add(index);
             if (index < levels.Length - 1)
                 return levels[index + 1];
             else

@@ -1,6 +1,6 @@
-﻿using BehaviorDesigner.Runtime;
+﻿using System.Collections.Generic;
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Thunder
@@ -131,7 +131,7 @@ namespace Thunder
 
         protected void Exploded()
         {
-            Sys.Stable.objectPool.Recycle(this);
+            Sys.Stable.ObjectPool.Recycle(this);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Thunder.Tool
 {
-    public class Tools
+    public static class Tools
     {
         public static Text logContainer;
 
@@ -814,6 +815,11 @@ namespace Thunder.Tool
             mesh.triangles = triangles.ToArray();
 
             return mesh;
+        }
+
+        public static bool HaveAttribute<T>(this Type type,bool inherit=false) where T : Attribute
+        {
+            return type.GetCustomAttributes(typeof(T), inherit).Length >0;
         }
     }
 }

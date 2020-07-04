@@ -160,7 +160,7 @@ namespace Thunder.UI
 
         public void Close()
         {
-            Sys.Stable.UiSys.CloseUi(this);
+            Sys.Stable.Ui.CloseUi(this);
         }
 
         public void InitRect(UiInitAction action)
@@ -194,13 +194,13 @@ namespace Thunder.UI
             // ReSharper disable once PossibleNullReferenceException
             var s = func.Split(':');
             Assert.IsTrue(s.Length == 2, $"命令不正确：{func}");
-            Sys.Stable.lua.ExecuteFile(s[0]);
-            Sys.Stable.lua.LuaState.Call(s[1], true);
+            Sys.Stable.Lua.ExecuteFile(s[0]);
+            Sys.Stable.Lua.LuaState.Call(s[1], true);
         }
 
         public void ExecuteLuaCmd(string cmd)
         {
-            Sys.Stable.lua.ExecuteCommand(cmd);
+            Sys.Stable.Lua.ExecuteCommand(cmd);
         }
     }
 }

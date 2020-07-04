@@ -251,13 +251,13 @@ namespace Thunder.Tool.ObjectPool
         private void CreatePools(string bundleGroup, string bundle)
         {
             AssetId id = new AssetId(bundleGroup, bundle, null, DefaultBundle);
-            foreach (var prefab in Sys.Stable.bundle.GetAllAsset<GameObject>(bundleGroup, bundle))
+            foreach (var prefab in Sys.Stable.Bundle.GetAllAsset<GameObject>(bundleGroup, bundle))
             {
                 id.Name = prefab.name;
                 if (_Pools.ContainsKey(id)) continue;
                 _Pools.Add(id, new Pool(prefab, prefab.GetComponent<IObjectPool>() != null));
             }
-            Sys.Stable.bundle.ReleaseBundle(bundleGroup, bundle);
+            Sys.Stable.Bundle.ReleaseBundle(bundleGroup, bundle);
         }
 
         public T Alloc<T>(string prefabPath, Action<T> init = null, Transform container = null) where T : MonoBehaviour
@@ -289,7 +289,7 @@ namespace Thunder.Tool.ObjectPool
             if (pool.QueueIsEmpty())
             {
                 GameObject go = Instantiate(pool.Prefab);
-                go.transform.SetParent(container ?? Sys.Stable.container);
+                go.transform.SetParent(container ?? Sys.Stable.Container);
                 aop = go.GetComponent<IObjectPool>();
                 aop.AssetId = assetId;
             }
@@ -332,7 +332,7 @@ namespace Thunder.Tool.ObjectPool
             obj.BeforeOpRecycle();
             GameObject mono = (obj as MonoBehaviour)?.gameObject;
             mono?.SetActive(false);
-            mono?.transform.SetParent(Sys.Stable.container);
+            mono?.transform.SetParent(Sys.Stable.Container);
             _Pools[obj.AssetId].Enqueue(obj);
         }
 

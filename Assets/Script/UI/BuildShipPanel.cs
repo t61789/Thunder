@@ -54,7 +54,7 @@ namespace Thunder.UI
             shipId = shipFrameInput.text;
 
             Ship.AttachPoint[] attachPoints = Ship.GetAttachPoints(shipId);
-            Sprite frameSprite = Sys.Stable.objectPool.GetPrefab(shipId).GetComponent<SpriteRenderer>().sprite;
+            Sprite frameSprite = Sys.Stable.ObjectPool.GetPrefab(shipId).GetComponent<SpriteRenderer>().sprite;
 
             Vector2 baseSize = frameSprite.bounds.size;
 
@@ -116,7 +116,7 @@ namespace Thunder.UI
         {
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                baseUI.GetComponent<Image>().sprite = Sys.Stable.objectPool.GetPrefab(null, BundleSys.UIBundle, "emptyUI").GetComponent<Image>().sprite;
+                baseUI.GetComponent<Image>().sprite = Sys.Stable.ObjectPool.GetPrefab(null, BundleSys.UIBundle, "emptyUI").GetComponent<Image>().sprite;
 
                 baseUI.RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, imageScale.x);
                 baseUI.RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, imageScale.y);
@@ -132,14 +132,14 @@ namespace Thunder.UI
 
             selectedAttachPoint = baseUI;
             Ship.AttachPoint info = attachPointInfo[baseUI];
-            DataTable select = Sys.Stable.dataBase["turret"].Select(new string[] { "name" }, new (string, object)[] { ("type", info.type) });
+            DataTable select = Sys.Stable.DataBase["turret"].Select(new string[] { "name" }, new (string, object)[] { ("type", info.type) });
             List<Action<BaseUi>> inits = new List<Action<BaseUi>>();
 
             foreach (var item in select.Rows)
             {
                 string turretName = (string)item["name"];
 
-                GameObject prefab = Sys.Stable.objectPool.GetPrefab(turretName);
+                GameObject prefab = Sys.Stable.ObjectPool.GetPrefab(turretName);
                 Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
                 inits.Add(x =>
                 {
@@ -170,7 +170,7 @@ namespace Thunder.UI
 
             OnBuildShipComplete?.Invoke(this);
 
-            Sys.Stable.UiSys.CloseUi(name);
+            Sys.Stable.Ui.CloseUi(name);
         }
     }
 }

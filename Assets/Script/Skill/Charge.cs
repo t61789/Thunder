@@ -38,10 +38,10 @@ namespace Thunder.Skill
             //playerController = GetComponent<PlayerController>();
             insideObject = false;
 
-            Values values = Sys.Stable.value.GetValue<Values>("skill" + Paths.Div + "charge");
+            Values values = Sys.Stable.Value.GetValue<Values>("skill" + Paths.Div + "charge");
 
             damageCoeffient = values.damageCoeffient;
-            protonSword = Instantiate(Sys.Stable.bundle.GetAsset<GameObject>(values.protonSwordPrefab));
+            protonSword = Instantiate(Sys.Stable.Bundle.GetAsset<GameObject>(values.protonSwordPrefab));
             protonSword.transform.SetParent(transform);
             protonSword.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
             protonSword.transform.localPosition = values.protonSwordPosition;
@@ -54,20 +54,20 @@ namespace Thunder.Skill
 
         private void Update()
         {
-            if (Sys.Stable.control.RequestUp(KeyCode.Space, "playerControl"))
+            if (Sys.Stable.Control.RequestUp(KeyCode.Space, "playerControl"))
             {
                 if (!insideObject)
                     EndSkill();
 
-                Sys.Stable.control.Release(KeyCode.Space, "playerControl");
+                Sys.Stable.Control.Release(KeyCode.Space, "playerControl");
             }
 
-            if (Sys.Stable.control.RequestDown(KeyCode.Space, "playerControl"))
+            if (Sys.Stable.Control.RequestDown(KeyCode.Space, "playerControl"))
             {
                 if (!insideObject)
                     StartSkill();
 
-                Sys.Stable.control.Release(KeyCode.Space, "playerControl");
+                Sys.Stable.Control.Release(KeyCode.Space, "playerControl");
             }
         }
 

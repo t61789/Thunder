@@ -1,5 +1,5 @@
-﻿using BehaviorDesigner.Runtime.Tasks;
-using Thunder.Tool.BuffData;
+﻿using Thunder.Tool.BuffData;
+using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
 namespace Thunder.Turret
@@ -216,7 +216,7 @@ namespace Thunder.Turret
 
             Aircraft camp = other.GetComponent<Aircraft>();
             if (camp == null) return;
-            if (!Sys.Stable.camp.IsHostile(camp, this)) return;
+            if (!Sys.Stable.Camp.IsHostile(camp, this)) return;
 
             SetTarget(camp as Aircraft);
         }

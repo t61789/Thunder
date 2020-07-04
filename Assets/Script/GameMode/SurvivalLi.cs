@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Thunder.Turret;
 using Thunder.UI;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Thunder.GameMode
@@ -29,16 +29,16 @@ namespace Thunder.GameMode
             List<Vector2> difficultyList = new List<Vector2>();
             string time = "time";
             string baseline = "baseline";
-            foreach (var item in Sys.Stable.dataBase[TABLE_NAME].Select(null, new (string, object)[] { ("diff_id", diffId) }).Rows)
+            foreach (var item in Sys.Stable.DataBase[TABLE_NAME].Select(null, new (string, object)[] { ("diff_id", diffId) }).Rows)
                 difficultyList.Add(new Vector2((float)item[time], (float)item[baseline]));
             _difficultyList = difficultyList.ToArray();
 
             List<AircraftUnit> units = new List<AircraftUnit>();
-            foreach (var item in Sys.Stable.dataBase[AIRCRAFT_TABLE_NAME].Select(null, new (string, object)[] { ("diff_id", diffId) }).Rows)
+            foreach (var item in Sys.Stable.DataBase[AIRCRAFT_TABLE_NAME].Select(null, new (string, object)[] { ("diff_id", diffId) }).Rows)
                 units.Add(new AircraftUnit((string)item[AIRCRAFT_ID], (int)item[MAX], (float)item[BASELINE_MIN], (float)item[BASELINE_MAX], (float)item[INTERVAL]));
             _aircraftUnits = units.ToArray();
 
-            ui = Sys.Stable.UiSys.OpenUi<SurvivalLiUI>(UI_NAME, 0, x => x.Init(_difficultyList[_difficultyList.Length - 1].x));
+            ui = Sys.Stable.Ui.OpenUi<SurvivalLiUI>(UI_NAME, 0, x => x.Init(_difficultyList[_difficultyList.Length - 1].x));
 
             Reset();
         }
@@ -108,7 +108,7 @@ namespace Thunder.GameMode
                         centerPos = player ? player.trans.position : centerPos;
                         Vector2 temp = Tool.Tools.RandomVectorInCircle(1).normalized * generateRange + centerPos;
 
-                        Aircraft a = Sys.Stable.objectPool.Alloc<Aircraft>(aircraftUnits[i].aircraftId, x =>
+                        Aircraft a = Sys.Stable.ObjectPool.Alloc<Aircraft>(aircraftUnits[i].aircraftId, x =>
                         {
                             x.ObjectPoolInit(temp, Quaternion.identity, null, null, "enemy");
                         });
@@ -132,7 +132,7 @@ namespace Thunder.GameMode
 
         public override void BeforeUnInstall()
         {
-            Sys.Stable.UiSys.CloseUi(ui);
+            Sys.Stable.Ui.CloseUi(ui);
             ui = null;
         }
     }

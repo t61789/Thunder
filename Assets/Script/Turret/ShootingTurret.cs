@@ -29,7 +29,7 @@ namespace Thunder.Turret
                 if ((Time.time - fireIntervalCount > fireInterval) && ControlKeys.GetBool(FIRE))
                 {
                     fireIntervalCount = Time.time;
-                    Sys.Stable.objectPool.Alloc<NormalBullet>(Bullet, x =>
+                    Sys.Stable.ObjectPool.Alloc<NormalBullet>(Bullet, x =>
                     {
                         x.ObjectPoolInit(shipTrans, trans.position, trans.rotation);
                     });
@@ -54,7 +54,7 @@ namespace Thunder.Turret
 
         public void SetBullet(string bullet)
         {
-            fireInterval = Sys.Stable.objectPool.GetPrefab(bullet).GetComponent<Bullet>().FireInterval;
+            fireInterval = Sys.Stable.ObjectPool.GetPrefab(bullet).GetComponent<Bullet>().FireInterval;
             Bullet = bullet;
         }
     }

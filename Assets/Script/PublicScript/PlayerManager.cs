@@ -13,7 +13,7 @@ namespace Thunder.PublicScript
 
             player = Ship.CreateShip(param);
 
-            Sys.Stable.mainCamera.FollowTarget = player;
+            Sys.Stable.MainCamera.FollowTarget = player;
 
             return player;
         }

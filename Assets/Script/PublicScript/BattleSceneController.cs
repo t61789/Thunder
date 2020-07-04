@@ -21,7 +21,7 @@ namespace Thunder.PublicScript
             var (levelParam, init) = GlobalBuffer.battleSceneParam;
             this.levelParam = levelParam;
 
-            BaseGameMode gameMode = Sys.Stable.gameMode.SetupMode(levelParam.modeType, levelParam.arg, init);
+            BaseGameMode gameMode = Sys.Stable.GameMode.SetupMode(levelParam.modeType, levelParam.arg, init);
 
             gameMode.OnModeComplete += GameModeComplete;
         }
@@ -30,20 +30,20 @@ namespace Thunder.PublicScript
         {
             ControllerInput.Controlable = false;
             checkoutPanel.Init(completeParam);
-            Sys.Stable.UiSys.OpenUi(checkoutPanel.UiName);
-            GlobalBuffer.battleSceneParam = (Sys.Stable.level.LevelComplete(levelParam.index), null);
+            Sys.Stable.Ui.OpenUi(checkoutPanel.UiName);
+            GlobalBuffer.battleSceneParam = (Sys.Stable.Level.LevelComplete(levelParam.index), null);
         }
 
         public void NextLevel()
         {
             ControllerInput.Controlable = true;
-            Sys.Stable.instance.LoadSceneAsync("BattleScene");
+            Sys.Stable.Instance.LoadSceneAsync("BattleScene");
         }
 
         public void GoBack()
         {
             ControllerInput.Controlable = true;
-            Sys.Stable.instance.LoadSceneAsync("LevelScene");
+            Sys.Stable.Instance.LoadSceneAsync("LevelScene");
         }
     }
 }

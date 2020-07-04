@@ -24,7 +24,7 @@ namespace Thunder.GameMode
 
         public override void Init(string arg)
         {
-            player = Sys.Stable.player.SetPlayer(Sys.Stable.saveManager.playerShipParam);
+            player = Sys.Stable.Player.SetPlayer(Sys.Stable.Save.playerShipParam);
             player.OnDead += PlayerDead;
             enemys = new List<Aircraft>();
         }
@@ -32,8 +32,8 @@ namespace Thunder.GameMode
         protected void PlayerDead(Aircraft player)
         {
             foreach (var item in enemys)
-                Sys.Stable.objectPool.Recycle(item);
-            Sys.Stable.objectPool.Recycle(player);
+                Sys.Stable.ObjectPool.Recycle(item);
+            Sys.Stable.ObjectPool.Recycle(player);
 
             Complete();
         }

@@ -37,7 +37,7 @@ namespace Thunder.Turret
         {
             List<AttachPoint> attachPoints = new List<AttachPoint>();
             int index = 0;
-            foreach (var item in Sys.Stable.dataBase["ship_attach_points"].Select(null, new (string, object)[] { ("ship_id", shipId) }))
+            foreach (var item in Sys.Stable.DataBase["ship_attach_points"].Select(null, new (string, object)[] { ("ship_id", shipId) }))
             {
                 AttachPoint a = new AttachPoint(
                     index,
@@ -64,7 +64,7 @@ namespace Thunder.Turret
             if (attachPoints[pointIndex].turret != null)
                 RemoveTurret(pointIndex);
 
-            GameObject turret = Instantiate(Sys.Stable.objectPool.GetPrefab(turretPath));
+            GameObject turret = Instantiate(Sys.Stable.ObjectPool.GetPrefab(turretPath));
 
             attachPoints[pointIndex].turret = turret.GetComponent<Turret>();
             attachPoints[pointIndex].turret.Install(this, attachPoints[pointIndex].position, attachPoints[pointIndex].rotation);
@@ -96,7 +96,7 @@ namespace Thunder.Turret
 
         public static Ship CreateShip(CreateShipParam param)
         {
-            Ship ship = Sys.Stable.objectPool.Alloc<Ship>(param.shipId);
+            Ship ship = Sys.Stable.ObjectPool.Alloc<Ship>(param.shipId);
             ship.Camp = param.camp;
             param.turrets = param.turrets ?? new string[0];
 

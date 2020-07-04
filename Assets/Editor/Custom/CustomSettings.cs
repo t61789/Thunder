@@ -1,7 +1,9 @@
 ﻿using LuaInterface;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Thunder.Tool;
 using Thunder.Utility;
 using UnityEditor;
 using UnityEngine;
@@ -48,19 +50,15 @@ public static class CustomSettings
         get
         {
             List<BindType> li = new List<BindType>();
-            foreach (var type in typeof(DontGenerateWrapAttribute).Assembly.GetTypes().Where(x =>
+            foreach (var type in typeof(Thunder.Utility.DontGenerateWrapAttribute).Assembly.GetTypes().Where(x =>
                 x.Namespace != null &&
                 x.Namespace.StartsWith("Thunder") &&
-                !x.IsNested &&
+                (!x.IsNested || x.HaveAttribute<GenerateWrapAttribute>()) &&
                 !x.IsGenericType &&
                 !x.IsInterface &&
                 !x.IsSubclassOf(typeof(Attribute)) &&
-                x.GetCustomAttributes(typeof(
-                DontGenerateWrapAttribute), false).Length < 1))
-            {
-                Debug.Log(type.FullName);
+                x.HaveAttribute<DontGenerateWrapAttribute>()))
                 li.Add(_GT(type));
-            }
             BindType[] result = new BindType[_customTypeList.Length + li.Count];
             Array.Copy(_customTypeList, result, _customTypeList.Length);
             li.CopyTo(result, _customTypeList.Length);
@@ -176,7 +174,9 @@ public static class CustomSettings
         _GT(typeof(RenderTexture)),
         _GT(typeof(Resources)),
         _GT(typeof(LuaProfiler)),
-        _GT(typeof(Button))
+        _GT(typeof(Button)),
+        _GT(typeof(Directory)),
+        _GT(typeof(System.Collections.ArrayList))
     };
 
     public static List<Type> dynamicList = new List<Type>()

@@ -23,7 +23,7 @@ namespace Thunder.Turret
         protected void BulletExploded()
         {
             animator.SetBool("contactEnemy", false);
-            Sys.Stable.objectPool.Recycle(this);
+            Sys.Stable.ObjectPool.Recycle(this);
         }
 
         protected void OnTriggerEnter2D(Collider2D other)
@@ -34,7 +34,7 @@ namespace Thunder.Turret
             Aircraft camp = other.gameObject.GetComponent<Aircraft>();
             if (camp == null)
                 return;
-            if (!Sys.Stable.camp.IsHostile(releaser, camp))
+            if (!Sys.Stable.Camp.IsHostile(releaser, camp))
                 return;
 
             camp.GetDamage(Damage);

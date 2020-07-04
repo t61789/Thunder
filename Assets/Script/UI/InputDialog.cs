@@ -30,13 +30,13 @@ namespace Thunder.UI
         public void InputEndOK()
         {
             dialogResult = DialogResult.Ok;
-            Sys.Stable.UiSys.CloseUi(this);
+            Sys.Stable.Ui.CloseUi(this);
         }
 
         public void InputEndCancel()
         {
             dialogResult = DialogResult.Cancel;
-            Sys.Stable.UiSys.CloseUi(this);
+            Sys.Stable.Ui.CloseUi(this);
         }
 
         public override void ObjectPoolReset(Hashtable arg)

@@ -8,7 +8,7 @@ namespace Thunder.UI
     {
         private void Awake()
         {
-            Sys.Stable.UiSys.OpenUi<InputDialog>("inputDialog", UiInitAction.CenterParent, x =>
+            Sys.Stable.Ui.OpenUi<InputDialog>("inputDialog", UiInitAction.CenterParent, x =>
             {
                 x.Init("");
                 x.OnCloseCheck += (BaseUi baseUi, ref bool result) =>
@@ -20,13 +20,13 @@ namespace Thunder.UI
                     {
                         result = SaveSys.CreateSaveDir(id.Text);
                         if (!result)
-                            Sys.Stable.UiSys.OpenUi<MessageDialog>("messageDialog", x, true, UiInitAction.CenterParent, message =>
+                            Sys.Stable.Ui.OpenUi<MessageDialog>("messageDialog", x, true, UiInitAction.CenterParent, message =>
                             {
                                 message.Init("存档已存在");
                             });
                         else
                         {
-                            Sys.Stable.saveManager = SaveSys.LoadSave(id.Text);
+                            Sys.Stable.Save = SaveSys.LoadSave(id.Text);
                             StartBuildShip();
                         }
                     }
@@ -38,20 +38,20 @@ namespace Thunder.UI
 
         private void StartBuildShip()
         {
-            Sys.Stable.UiSys.OpenUi<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
+            Sys.Stable.Ui.OpenUi<BuildShipPanel>("buildShipPanel").OnBuildShipComplete += BuildShipClosed;
         }
 
         private void BuildShipClosed(BuildShipPanel b)
         {
-            Sys.Stable.saveManager.playerShipParam = b.buildResult;
-            Sys.Stable.saveManager.Save();
+            Sys.Stable.Save.playerShipParam = b.buildResult;
+            Sys.Stable.Save.Save();
 
-            Sys.Stable.instance.LoadSceneAsync("LevelScene");
+            Sys.Stable.Instance.LoadSceneAsync("LevelScene");
         }
 
         public void GoBack()
         {
-            Sys.Stable.instance.LoadSceneAsync("StartScene");
+            Sys.Stable.Instance.LoadSceneAsync("StartScene");
         }
     }
 }

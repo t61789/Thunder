@@ -22,7 +22,7 @@ namespace Thunder.Skill
         {
             skillCdCount = 0;
 
-            Values values = Sys.Stable.value.GetValue<Values>("skill" + Paths.Div + "circleShoot");
+            Values values = Sys.Stable.Value.GetValue<Values>("skill" + Paths.Div + "circleShoot");
 
             SkillCd = values.skillCd;
             BulletNum = values.bulletNum;
@@ -40,7 +40,7 @@ namespace Thunder.Skill
 
         protected virtual void Update()
         {
-            if (Time.time - skillCdCount >= SkillCd && Sys.Stable.control.RequestDown(KeyCode.Space, "playerControl"))
+            if (Time.time - skillCdCount >= SkillCd && Sys.Stable.Control.RequestDown(KeyCode.Space, "playerControl"))
             {
                 StartCoroutine(Shoot());
                 skillCdCount = Time.time;

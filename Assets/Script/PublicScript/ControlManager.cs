@@ -44,7 +44,7 @@ namespace Thunder.PublicScript
 
         public ControlManager()
         {
-            var a = Sys.Stable.value;
+            var a = Sys.Stable.Value;
             Values values = a.GetValue<Values>("input_priority");
 
             string[] temp = values.priority;

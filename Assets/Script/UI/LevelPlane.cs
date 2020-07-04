@@ -21,15 +21,15 @@ namespace Thunder.UI
         private void Load()
         {
             List<Action<BaseButton>> inits = new List<Action<BaseButton>>();
-            int[] completed = Sys.Stable.saveManager.levelComplete.ToArray();
+            int[] completed = Sys.Stable.Save.levelComplete.ToArray();
 
             //int count = 0;
             //int index = 0;
 
             int completeCount = 0;
-            for (int i = 0; i < Sys.Stable.level.levels.Length; i++)
+            for (int i = 0; i < Sys.Stable.Level.levels.Length; i++)
             {
-                var _item = Sys.Stable.level.levels[i];
+                var _item = Sys.Stable.Level.levels[i];
                 bool flag = _item.index == completed[completeCount];
                 if (flag) completeCount = completeCount + 1 == completed.Length ? completeCount : completeCount + 1;
                 inits.Add(x =>
@@ -80,29 +80,29 @@ namespace Thunder.UI
 
         public void StartLevel(BaseButton b)
         {
-            GlobalBuffer.battleSceneParam = (Sys.Stable.level.levels[pairs[b]], null);
-            Sys.Stable.instance.LoadSceneAsync("BattleScene");
+            GlobalBuffer.battleSceneParam = (Sys.Stable.Level.levels[pairs[b]], null);
+            Sys.Stable.Instance.LoadSceneAsync("BattleScene");
         }
 
         public void OpenMenu()
         {
-            Sys.Stable.UiSys.OpenUi<BaseUi>("MenuPanel", this, true, UiInitAction.CenterParent, null);
+            Sys.Stable.Ui.OpenUi<BaseUi>("MenuPanel", this, true, UiInitAction.CenterParent, null);
         }
 
         public void Exit(bool force)
         {
             if (!force)
             {
-                unsavedJson = Sys.Stable.saveManager.Check();
+                unsavedJson = Sys.Stable.Save.Check();
                 if (unsavedJson != null)
                 {
-                    ConfirmDialog confirmDialog = Sys.Stable.UiSys.OpenUi<ConfirmDialog>("confirmDialog", menuPanel, true, UiInitAction.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
+                    ConfirmDialog confirmDialog = Sys.Stable.Ui.OpenUi<ConfirmDialog>("confirmDialog", menuPanel, true, UiInitAction.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
                     confirmDialog.OnBeforeClose += DialogConfirmed;
                     return;
                 }
             }
 
-            Sys.Stable.instance.LoadSceneAsync("StartScene");
+            Sys.Stable.Instance.LoadSceneAsync("StartScene");
         }
 
         private void DialogConfirmed(BaseUi confirmDialog)
@@ -122,7 +122,7 @@ namespace Thunder.UI
 
         public void Save(string json = null)
         {
-            Sys.Stable.saveManager.Save(json);
+            Sys.Stable.Save.Save(json);
         }
     }
 }

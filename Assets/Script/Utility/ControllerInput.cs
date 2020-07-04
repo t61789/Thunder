@@ -55,7 +55,7 @@ namespace Thunder.Utility
         public void Remove()
         {
             if (aimRing != null)
-                Sys.Stable.UiSys.CloseUi(aimRing);
+                Sys.Stable.Ui.CloseUi(aimRing);
             Destroy(this);
         }
 
@@ -65,7 +65,7 @@ namespace Thunder.Utility
 
             controller = GetComponent<Controller>();
 
-            var i = Sys.Stable.dataBase[TABLE_NAME].Select(null, new (string, object)[] { (INPUT_ID, controller.InputId) });
+            var i = Sys.Stable.DataBase[TABLE_NAME].Select(null, new (string, object)[] { (INPUT_ID, controller.InputId) });
             if (i.IsEmpty)
                 Debug.LogWarning("No input named " + name + " in database, input will be invalid");
 
@@ -80,7 +80,7 @@ namespace Thunder.Utility
             }
 
             if (aimRing)
-                this.aimRing = Sys.Stable.UiSys.OpenUi<AimRing>("aimRing", UiInitAction.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
+                this.aimRing = Sys.Stable.Ui.OpenUi<AimRing>("aimRing", UiInitAction.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
         }
 
         private void Update()
@@ -107,30 +107,30 @@ namespace Thunder.Utility
         private void KeyStay(ControlStruct c)
         {
             KeyCode k = (KeyCode)c.key;
-            if (Sys.Stable.control.RequestStay(k, REQUEST_TYPE))
+            if (Sys.Stable.Control.RequestStay(k, REQUEST_TYPE))
             {
                 controller.ControlKeys.SetBool(c.propName, true);
-                Sys.Stable.control.Release(k, REQUEST_TYPE);
+                Sys.Stable.Control.Release(k, REQUEST_TYPE);
             }
         }
 
         private void KeyDown(ControlStruct c)
         {
             KeyCode k = (KeyCode)c.key;
-            if (Sys.Stable.control.RequestDown(k, REQUEST_TYPE))
+            if (Sys.Stable.Control.RequestDown(k, REQUEST_TYPE))
             {
                 controller.ControlKeys.SetBool(c.propName, true);
-                Sys.Stable.control.Release(k, REQUEST_TYPE);
+                Sys.Stable.Control.Release(k, REQUEST_TYPE);
             }
         }
 
         private void KeyUp(ControlStruct c)
         {
             KeyCode k = (KeyCode)c.key;
-            if (Sys.Stable.control.RequestUp(k, REQUEST_TYPE))
+            if (Sys.Stable.Control.RequestUp(k, REQUEST_TYPE))
             {
                 controller.ControlKeys.SetBool(c.propName, true);
-                Sys.Stable.control.Release(k, REQUEST_TYPE);
+                Sys.Stable.Control.Release(k, REQUEST_TYPE);
             }
         }
 
