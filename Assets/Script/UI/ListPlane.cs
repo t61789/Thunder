@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Thunder.Sys;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,23 +10,31 @@ namespace Thunder.UI
 {
     public class ListPlane : BaseUi
     {
-        public struct Parameters<T> where T : BaseUi
+        [GenerateWrap]
+        public struct Parameters
         {
             public int rowCount;
             public Vector2 elementSize;
             public Vector2 elementInterval;
             public string elementName;
             public Vector2 planeSize;
-            public List<Action<T>> inits;
 
-            public Parameters(int rowCount, string elementName, (float x, float y) elementSize, (float x, float y) elementInterval, (float x, float y) planeSize, List<Action<T>> inits)
+            public Parameters(int rowCount, string elementName, Vector2 elementSize, Vector2 elementInterval, Vector2 planeSize)
+            {
+                this.rowCount = rowCount;
+                this.elementSize = elementSize;
+                this.elementInterval = elementInterval;
+                this.elementName = elementName;
+                this.planeSize = planeSize;
+            }
+
+            public Parameters(int rowCount, string elementName, (float x, float y) elementSize, (float x, float y) elementInterval, (float x, float y) planeSize)
             {
                 this.rowCount = rowCount;
                 this.elementSize = new Vector2(elementSize.x, elementSize.y);
                 this.elementInterval = new Vector2(elementInterval.x, elementInterval.y);
                 this.elementName = elementName;
                 this.planeSize = new Vector2(planeSize.x, planeSize.y);
-                this.inits = inits;
             }
         }
 
@@ -47,10 +56,15 @@ namespace Thunder.UI
             elementsTrans = maskTrans.Find("Elements").GetComponent<RectTransform>();
         }
 
-        public T[] Init<T>(Parameters<T> arg) where T : BaseUi
+        public BaseUi[] Init(Parameters arg,List<Action<BaseUi>> inits)
+        {
+            return Init<BaseUi>(arg, inits);
+        }
+
+        public T[] Init<T>(Parameters arg, List<Action<T>> inits) where T : BaseUi
         {
             Clear();
-            return CreateElements(arg);
+            return CreateElements(arg,inits);
         }
 
         public void Clear()
@@ -71,7 +85,7 @@ namespace Thunder.UI
             }
         }
 
-        protected T[] CreateElements<T>(Parameters<T> parameters) where T : BaseUi
+        protected T[] CreateElements<T>(Parameters parameters, List<Action<T>> inits) where T : BaseUi
         {
             if (parameters.elementSize.x == 0)
             {
@@ -87,7 +101,7 @@ namespace Thunder.UI
             elementsTrans.anchoredPosition = Vector3.zero;
 
             Vector2 interval = new Vector2(parameters.elementInterval.x + parameters.elementSize.x, parameters.elementInterval.y + parameters.elementSize.y);
-            int temp = (parameters.inits.Count - 1) / parameters.rowCount + 1;
+            int temp = (inits.Count - 1) / parameters.rowCount + 1;
             Vector2 planeSize = new Vector2(parameters.rowCount * parameters.elementSize.x + parameters.elementInterval.x * (parameters.rowCount - 1),
                 temp * parameters.elementSize.y + parameters.elementInterval.y * (temp - 1));
 
@@ -115,7 +129,7 @@ namespace Thunder.UI
 
             float tempx = parameters.elementSize.x / 2;
             float tempy = parameters.elementSize.y / 2;
-            for (int i = 0; i < parameters.inits.Count; i++)
+            for (int i = 0; i < inits.Count; i++)
             {
                 int x = i % parameters.rowCount;
                 int y = i / parameters.rowCount;
@@ -137,7 +151,7 @@ namespace Thunder.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                RectTransform rectTransform = Sys.Stable.ObjectPool.Alloc(null, UiSys.DefaultUiBundle, parameters.elementName, parameters.inits[i], elementContainer).GetComponent<RectTransform>();
+                RectTransform rectTransform = Sys.Stable.ObjectPool.Alloc(null, UiSys.DefaultUiBundle, parameters.elementName, inits[i], elementContainer).GetComponent<RectTransform>();
 
                 elements.Add(rectTransform.GetComponent<BaseUi>());
             }

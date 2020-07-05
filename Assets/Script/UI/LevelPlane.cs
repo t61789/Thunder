@@ -34,7 +34,7 @@ namespace Thunder.UI
                 if (flag) completeCount = completeCount + 1 == completed.Length ? completeCount : completeCount + 1;
                 inits.Add(x =>
                 {
-                    x.InitRect(UiInitAction.FillParent);
+                    x.InitRect(UiInitType.FillParent);
                     Button but = x.GetComponent<Button>();
                     Action temp = null;
                     if (flag)
@@ -71,11 +71,11 @@ namespace Thunder.UI
             //    });
             //    count++;
             //}
-            BaseButton[] b = Init(new Parameters<BaseButton>(10, "normalButton", (0, 0), (5, 5), (0, 200), inits));
+            BaseButton[] b = Init(new Parameters(10, "normalButton", (0, 0), (5, 5), (0, 200)), inits);
             for (int i = 0; i < b.Length; i++)
                 pairs.Add(b[i], i);
 
-            InitRect(UiInitAction.CenterParent);
+            InitRect(UiInitType.CenterParent);
         }
 
         public void StartLevel(BaseButton b)
@@ -86,7 +86,7 @@ namespace Thunder.UI
 
         public void OpenMenu()
         {
-            Sys.Stable.Ui.OpenUi<BaseUi>("MenuPanel", this, true, UiInitAction.CenterParent, null);
+            Sys.Stable.Ui.OpenUi<BaseUi>("MenuPanel", UiName, true, UiInitType.CenterParent, null);
         }
 
         public void Exit(bool force)
@@ -96,7 +96,7 @@ namespace Thunder.UI
                 unsavedJson = Sys.Stable.Save.Check();
                 if (unsavedJson != null)
                 {
-                    ConfirmDialog confirmDialog = Sys.Stable.Ui.OpenUi<ConfirmDialog>("confirmDialog", menuPanel, true, UiInitAction.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
+                    ConfirmDialog confirmDialog = Sys.Stable.Ui.OpenUi<ConfirmDialog>("confirmDialog", menuPanel.UiName, true, UiInitType.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
                     confirmDialog.OnBeforeClose += DialogConfirmed;
                     return;
                 }

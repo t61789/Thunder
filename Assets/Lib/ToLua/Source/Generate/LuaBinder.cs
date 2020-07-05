@@ -57,12 +57,20 @@ public static class LuaBinder
 		UnityEngine_AudioBehaviourWrap.Register(L);
 		L.BeginModule("UI");
 		UnityEngine_UI_ButtonWrap.Register(L);
+		UnityEngine_UI_TextWrap.Register(L);
 		UnityEngine_UI_SelectableWrap.Register(L);
+		UnityEngine_UI_MaskableGraphicWrap.Register(L);
+		UnityEngine_UI_GraphicWrap.Register(L);
+		L.BeginModule("Button");
+		UnityEngine_UI_Button_ButtonClickedEventWrap.Register(L);
+		L.EndModule();
 		L.EndModule();
 		L.BeginModule("EventSystems");
 		UnityEngine_EventSystems_UIBehaviourWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Events");
+		UnityEngine_Events_UnityEventWrap.Register(L);
+		UnityEngine_Events_UnityEventBaseWrap.Register(L);
 		L.RegFunction("UnityAction", UnityEngine_Events_UnityAction);
 		L.EndModule();
 		L.BeginModule("Camera");
@@ -89,9 +97,18 @@ public static class LuaBinder
 		L.RegFunction("Func_bool", System_Func_bool);
 		L.RegFunction("Action_UnityEngine_AsyncOperation", System_Action_UnityEngine_AsyncOperation);
 		L.RegFunction("Action_Thunder_UI_BaseUi", System_Action_Thunder_UI_BaseUi);
+		L.RegFunction("Predicate_System_Action_Thunder_UI_BaseUi", System_Predicate_System_Action_Thunder_UI_BaseUi);
+		L.RegFunction("Action_System_Action_Thunder_UI_BaseUi", System_Action_System_Action_Thunder_UI_BaseUi);
+		L.RegFunction("Comparison_System_Action_Thunder_UI_BaseUi", System_Comparison_System_Action_Thunder_UI_BaseUi);
 		L.RegFunction("Action_Thunder_GameMode_BaseGameMode", System_Action_Thunder_GameMode_BaseGameMode);
 		L.BeginModule("IO");
 		System_IO_DirectoryWrap.Register(L);
+		System_IO_PathWrap.Register(L);
+		L.EndModule();
+		L.BeginModule("Collections");
+		L.BeginModule("Generic");
+		System_Collections_Generic_List_System_Action_Thunder_UI_BaseUiWrap.Register(L);
+		L.EndModule();
 		L.EndModule();
 		L.EndModule();
 		L.BeginModule("Thunder");
@@ -102,7 +119,7 @@ public static class LuaBinder
 		Thunder_Utility_CheckWrap.Register(L);
 		Thunder_Utility_ControllerInputWrap.Register(L);
 		Thunder_Utility_DialogResultWrap.Register(L);
-		Thunder_Utility_UiInitActionWrap.Register(L);
+		Thunder_Utility_UiInitTypeWrap.Register(L);
 		Thunder_Utility_GlobalBufferWrap.Register(L);
 		Thunder_Utility_GlobalSettingsWrap.Register(L);
 		Thunder_Utility_PathsWrap.Register(L);
@@ -126,6 +143,9 @@ public static class LuaBinder
 		Thunder_UI_ScaleDragButtonWrap.Register(L);
 		Thunder_UI_SurvivalLiUIWrap.Register(L);
 		Thunder_UI_SurvivalNoliUIWrap.Register(L);
+		L.BeginModule("ListPlane");
+		Thunder_UI_ListPlane_ParametersWrap.Register(L);
+		L.EndModule();
 		L.BeginModule("BaseUi");
 		L.RegFunction("PointerDel", Thunder_UI_BaseUi_PointerDel);
 		L.RegFunction("AfterOpenDel", Thunder_UI_BaseUi_AfterOpenDel);
@@ -704,6 +724,87 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<System.Action<Thunder.UI.BaseUi>>.Create(func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int System_Predicate_System_Action_Thunder_UI_BaseUi(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateTraits<System.Predicate<System.Action<Thunder.UI.BaseUi>>>.Create(func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateTraits<System.Predicate<System.Action<Thunder.UI.BaseUi>>>.Create(func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int System_Action_System_Action_Thunder_UI_BaseUi(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateTraits<System.Action<System.Action<Thunder.UI.BaseUi>>>.Create(func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateTraits<System.Action<System.Action<Thunder.UI.BaseUi>>>.Create(func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int System_Comparison_System_Action_Thunder_UI_BaseUi(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Thunder.UI.BaseUi>>>.Create(func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Thunder.UI.BaseUi>>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

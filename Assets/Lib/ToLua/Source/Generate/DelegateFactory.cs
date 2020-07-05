@@ -33,6 +33,10 @@ public class DelegateFactory
 		dict.Add(typeof(UnityEngine.AudioClip.PCMReaderCallback), factory.UnityEngine_AudioClip_PCMReaderCallback);
 		dict.Add(typeof(UnityEngine.AudioClip.PCMSetPositionCallback), factory.UnityEngine_AudioClip_PCMSetPositionCallback);
 		dict.Add(typeof(System.Action<UnityEngine.AsyncOperation>), factory.System_Action_UnityEngine_AsyncOperation);
+		dict.Add(typeof(System.Action<Thunder.UI.BaseUi>), factory.System_Action_Thunder_UI_BaseUi);
+		dict.Add(typeof(System.Predicate<System.Action<Thunder.UI.BaseUi>>), factory.System_Predicate_System_Action_Thunder_UI_BaseUi);
+		dict.Add(typeof(System.Action<System.Action<Thunder.UI.BaseUi>>), factory.System_Action_System_Action_Thunder_UI_BaseUi);
+		dict.Add(typeof(System.Comparison<System.Action<Thunder.UI.BaseUi>>), factory.System_Comparison_System_Action_Thunder_UI_BaseUi);
 		dict.Add(typeof(Thunder.UI.BaseUi.PointerDel), factory.Thunder_UI_BaseUi_PointerDel);
 		dict.Add(typeof(Thunder.UI.BaseUi.AfterOpenDel), factory.Thunder_UI_BaseUi_AfterOpenDel);
 		dict.Add(typeof(Thunder.UI.BaseUi.BeforeCloseDel), factory.Thunder_UI_BaseUi_BeforeCloseDel);
@@ -41,7 +45,6 @@ public class DelegateFactory
 		dict.Add(typeof(Thunder.Turret.Aircraft.DeadDel), factory.Thunder_Turret_Aircraft_DeadDel);
 		dict.Add(typeof(Thunder.Tool.BehaviorTree.ActionNode.DelAction), factory.Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		dict.Add(typeof(Thunder.Tool.BehaviorTree.ConditionNode.DelCondition), factory.Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
-		dict.Add(typeof(System.Action<Thunder.UI.BaseUi>), factory.System_Action_Thunder_UI_BaseUi);
 		dict.Add(typeof(System.Action<Thunder.GameMode.BaseGameMode>), factory.System_Action_Thunder_GameMode_BaseGameMode);
 		dict.Add(typeof(Thunder.GameMode.BaseGameMode.ModeComplete), factory.Thunder_GameMode_BaseGameMode_ModeComplete);
 
@@ -61,6 +64,10 @@ public class DelegateFactory
 		DelegateTraits<UnityEngine.AudioClip.PCMReaderCallback>.Init(factory.UnityEngine_AudioClip_PCMReaderCallback);
 		DelegateTraits<UnityEngine.AudioClip.PCMSetPositionCallback>.Init(factory.UnityEngine_AudioClip_PCMSetPositionCallback);
 		DelegateTraits<System.Action<UnityEngine.AsyncOperation>>.Init(factory.System_Action_UnityEngine_AsyncOperation);
+		DelegateTraits<System.Action<Thunder.UI.BaseUi>>.Init(factory.System_Action_Thunder_UI_BaseUi);
+		DelegateTraits<System.Predicate<System.Action<Thunder.UI.BaseUi>>>.Init(factory.System_Predicate_System_Action_Thunder_UI_BaseUi);
+		DelegateTraits<System.Action<System.Action<Thunder.UI.BaseUi>>>.Init(factory.System_Action_System_Action_Thunder_UI_BaseUi);
+		DelegateTraits<System.Comparison<System.Action<Thunder.UI.BaseUi>>>.Init(factory.System_Comparison_System_Action_Thunder_UI_BaseUi);
 		DelegateTraits<Thunder.UI.BaseUi.PointerDel>.Init(factory.Thunder_UI_BaseUi_PointerDel);
 		DelegateTraits<Thunder.UI.BaseUi.AfterOpenDel>.Init(factory.Thunder_UI_BaseUi_AfterOpenDel);
 		DelegateTraits<Thunder.UI.BaseUi.BeforeCloseDel>.Init(factory.Thunder_UI_BaseUi_BeforeCloseDel);
@@ -69,7 +76,6 @@ public class DelegateFactory
 		DelegateTraits<Thunder.Turret.Aircraft.DeadDel>.Init(factory.Thunder_Turret_Aircraft_DeadDel);
 		DelegateTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Init(factory.Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		DelegateTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Init(factory.Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
-		DelegateTraits<System.Action<Thunder.UI.BaseUi>>.Init(factory.System_Action_Thunder_UI_BaseUi);
 		DelegateTraits<System.Action<Thunder.GameMode.BaseGameMode>>.Init(factory.System_Action_Thunder_GameMode_BaseGameMode);
 		DelegateTraits<Thunder.GameMode.BaseGameMode.ModeComplete>.Init(factory.Thunder_GameMode_BaseGameMode_ModeComplete);
 
@@ -89,6 +95,10 @@ public class DelegateFactory
 		TypeTraits<UnityEngine.AudioClip.PCMReaderCallback>.Init(factory.Check_UnityEngine_AudioClip_PCMReaderCallback);
 		TypeTraits<UnityEngine.AudioClip.PCMSetPositionCallback>.Init(factory.Check_UnityEngine_AudioClip_PCMSetPositionCallback);
 		TypeTraits<System.Action<UnityEngine.AsyncOperation>>.Init(factory.Check_System_Action_UnityEngine_AsyncOperation);
+		TypeTraits<System.Action<Thunder.UI.BaseUi>>.Init(factory.Check_System_Action_Thunder_UI_BaseUi);
+		TypeTraits<System.Predicate<System.Action<Thunder.UI.BaseUi>>>.Init(factory.Check_System_Predicate_System_Action_Thunder_UI_BaseUi);
+		TypeTraits<System.Action<System.Action<Thunder.UI.BaseUi>>>.Init(factory.Check_System_Action_System_Action_Thunder_UI_BaseUi);
+		TypeTraits<System.Comparison<System.Action<Thunder.UI.BaseUi>>>.Init(factory.Check_System_Comparison_System_Action_Thunder_UI_BaseUi);
 		TypeTraits<Thunder.UI.BaseUi.PointerDel>.Init(factory.Check_Thunder_UI_BaseUi_PointerDel);
 		TypeTraits<Thunder.UI.BaseUi.AfterOpenDel>.Init(factory.Check_Thunder_UI_BaseUi_AfterOpenDel);
 		TypeTraits<Thunder.UI.BaseUi.BeforeCloseDel>.Init(factory.Check_Thunder_UI_BaseUi_BeforeCloseDel);
@@ -97,7 +107,6 @@ public class DelegateFactory
 		TypeTraits<Thunder.Turret.Aircraft.DeadDel>.Init(factory.Check_Thunder_Turret_Aircraft_DeadDel);
 		TypeTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Init(factory.Check_Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		TypeTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Init(factory.Check_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
-		TypeTraits<System.Action<Thunder.UI.BaseUi>>.Init(factory.Check_System_Action_Thunder_UI_BaseUi);
 		TypeTraits<System.Action<Thunder.GameMode.BaseGameMode>>.Init(factory.Check_System_Action_Thunder_GameMode_BaseGameMode);
 		TypeTraits<Thunder.GameMode.BaseGameMode.ModeComplete>.Init(factory.Check_Thunder_GameMode_BaseGameMode_ModeComplete);
 
@@ -117,6 +126,10 @@ public class DelegateFactory
 		StackTraits<UnityEngine.AudioClip.PCMReaderCallback>.Push = factory.Push_UnityEngine_AudioClip_PCMReaderCallback;
 		StackTraits<UnityEngine.AudioClip.PCMSetPositionCallback>.Push = factory.Push_UnityEngine_AudioClip_PCMSetPositionCallback;
 		StackTraits<System.Action<UnityEngine.AsyncOperation>>.Push = factory.Push_System_Action_UnityEngine_AsyncOperation;
+		StackTraits<System.Action<Thunder.UI.BaseUi>>.Push = factory.Push_System_Action_Thunder_UI_BaseUi;
+		StackTraits<System.Predicate<System.Action<Thunder.UI.BaseUi>>>.Push = factory.Push_System_Predicate_System_Action_Thunder_UI_BaseUi;
+		StackTraits<System.Action<System.Action<Thunder.UI.BaseUi>>>.Push = factory.Push_System_Action_System_Action_Thunder_UI_BaseUi;
+		StackTraits<System.Comparison<System.Action<Thunder.UI.BaseUi>>>.Push = factory.Push_System_Comparison_System_Action_Thunder_UI_BaseUi;
 		StackTraits<Thunder.UI.BaseUi.PointerDel>.Push = factory.Push_Thunder_UI_BaseUi_PointerDel;
 		StackTraits<Thunder.UI.BaseUi.AfterOpenDel>.Push = factory.Push_Thunder_UI_BaseUi_AfterOpenDel;
 		StackTraits<Thunder.UI.BaseUi.BeforeCloseDel>.Push = factory.Push_Thunder_UI_BaseUi_BeforeCloseDel;
@@ -125,7 +138,6 @@ public class DelegateFactory
 		StackTraits<Thunder.Turret.Aircraft.DeadDel>.Push = factory.Push_Thunder_Turret_Aircraft_DeadDel;
 		StackTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Push = factory.Push_Thunder_Tool_BehaviorTree_ActionNode_DelAction;
 		StackTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Push = factory.Push_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition;
-		StackTraits<System.Action<Thunder.UI.BaseUi>>.Push = factory.Push_System_Action_Thunder_UI_BaseUi;
 		StackTraits<System.Action<Thunder.GameMode.BaseGameMode>>.Push = factory.Push_System_Action_Thunder_GameMode_BaseGameMode;
 		StackTraits<Thunder.GameMode.BaseGameMode.ModeComplete>.Push = factory.Push_Thunder_GameMode_BaseGameMode_ModeComplete;
 	}
@@ -1163,6 +1175,244 @@ public class DelegateFactory
 		ToLua.Push(L, o);
 	}
 
+	class System_Action_Thunder_UI_BaseUi_Event : LuaDelegate
+	{
+		public System_Action_Thunder_UI_BaseUi_Event(LuaFunction func) : base(func) { }
+		public System_Action_Thunder_UI_BaseUi_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(Thunder.UI.BaseUi param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(Thunder.UI.BaseUi param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<Thunder.UI.BaseUi> System_Action_Thunder_UI_BaseUi(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<Thunder.UI.BaseUi> fn = delegate(Thunder.UI.BaseUi param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_Thunder_UI_BaseUi_Event target = new System_Action_Thunder_UI_BaseUi_Event(func);
+			System.Action<Thunder.UI.BaseUi> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_Thunder_UI_BaseUi_Event target = new System_Action_Thunder_UI_BaseUi_Event(func, self);
+			System.Action<Thunder.UI.BaseUi> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_Thunder_UI_BaseUi(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<Thunder.UI.BaseUi>), L, pos);
+	}
+
+	void Push_System_Action_Thunder_UI_BaseUi(IntPtr L, System.Action<Thunder.UI.BaseUi> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Predicate_System_Action_Thunder_UI_BaseUi_Event : LuaDelegate
+	{
+		public System_Predicate_System_Action_Thunder_UI_BaseUi_Event(LuaFunction func) : base(func) { }
+		public System_Predicate_System_Action_Thunder_UI_BaseUi_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public bool Call(System.Action<Thunder.UI.BaseUi> param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			bool ret = func.CheckBoolean();
+			func.EndPCall();
+			return ret;
+		}
+
+		public bool CallWithSelf(System.Action<Thunder.UI.BaseUi> param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			bool ret = func.CheckBoolean();
+			func.EndPCall();
+			return ret;
+		}
+	}
+
+	public System.Predicate<System.Action<Thunder.UI.BaseUi>> System_Predicate_System_Action_Thunder_UI_BaseUi(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Predicate<System.Action<Thunder.UI.BaseUi>> fn = delegate(System.Action<Thunder.UI.BaseUi> param0) { return false; };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Predicate_System_Action_Thunder_UI_BaseUi_Event target = new System_Predicate_System_Action_Thunder_UI_BaseUi_Event(func);
+			System.Predicate<System.Action<Thunder.UI.BaseUi>> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Predicate_System_Action_Thunder_UI_BaseUi_Event target = new System_Predicate_System_Action_Thunder_UI_BaseUi_Event(func, self);
+			System.Predicate<System.Action<Thunder.UI.BaseUi>> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Predicate_System_Action_Thunder_UI_BaseUi(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Predicate<System.Action<Thunder.UI.BaseUi>>), L, pos);
+	}
+
+	void Push_System_Predicate_System_Action_Thunder_UI_BaseUi(IntPtr L, System.Predicate<System.Action<Thunder.UI.BaseUi>> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_System_Action_Thunder_UI_BaseUi_Event : LuaDelegate
+	{
+		public System_Action_System_Action_Thunder_UI_BaseUi_Event(LuaFunction func) : base(func) { }
+		public System_Action_System_Action_Thunder_UI_BaseUi_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(System.Action<Thunder.UI.BaseUi> param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(System.Action<Thunder.UI.BaseUi> param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<System.Action<Thunder.UI.BaseUi>> System_Action_System_Action_Thunder_UI_BaseUi(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<System.Action<Thunder.UI.BaseUi>> fn = delegate(System.Action<Thunder.UI.BaseUi> param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_System_Action_Thunder_UI_BaseUi_Event target = new System_Action_System_Action_Thunder_UI_BaseUi_Event(func);
+			System.Action<System.Action<Thunder.UI.BaseUi>> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_System_Action_Thunder_UI_BaseUi_Event target = new System_Action_System_Action_Thunder_UI_BaseUi_Event(func, self);
+			System.Action<System.Action<Thunder.UI.BaseUi>> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_System_Action_Thunder_UI_BaseUi(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<System.Action<Thunder.UI.BaseUi>>), L, pos);
+	}
+
+	void Push_System_Action_System_Action_Thunder_UI_BaseUi(IntPtr L, System.Action<System.Action<Thunder.UI.BaseUi>> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Comparison_System_Action_Thunder_UI_BaseUi_Event : LuaDelegate
+	{
+		public System_Comparison_System_Action_Thunder_UI_BaseUi_Event(LuaFunction func) : base(func) { }
+		public System_Comparison_System_Action_Thunder_UI_BaseUi_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public int Call(System.Action<Thunder.UI.BaseUi> param0, System.Action<Thunder.UI.BaseUi> param1)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			int ret = (int)func.CheckNumber();
+			func.EndPCall();
+			return ret;
+		}
+
+		public int CallWithSelf(System.Action<Thunder.UI.BaseUi> param0, System.Action<Thunder.UI.BaseUi> param1)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.PCall();
+			int ret = (int)func.CheckNumber();
+			func.EndPCall();
+			return ret;
+		}
+	}
+
+	public System.Comparison<System.Action<Thunder.UI.BaseUi>> System_Comparison_System_Action_Thunder_UI_BaseUi(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Comparison<System.Action<Thunder.UI.BaseUi>> fn = delegate(System.Action<Thunder.UI.BaseUi> param0, System.Action<Thunder.UI.BaseUi> param1) { return 0; };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Comparison_System_Action_Thunder_UI_BaseUi_Event target = new System_Comparison_System_Action_Thunder_UI_BaseUi_Event(func);
+			System.Comparison<System.Action<Thunder.UI.BaseUi>> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Comparison_System_Action_Thunder_UI_BaseUi_Event target = new System_Comparison_System_Action_Thunder_UI_BaseUi_Event(func, self);
+			System.Comparison<System.Action<Thunder.UI.BaseUi>> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Comparison_System_Action_Thunder_UI_BaseUi(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Comparison<System.Action<Thunder.UI.BaseUi>>), L, pos);
+	}
+
+	void Push_System_Comparison_System_Action_Thunder_UI_BaseUi(IntPtr L, System.Comparison<System.Action<Thunder.UI.BaseUi>> o)
+	{
+		ToLua.Push(L, o);
+	}
+
 	class Thunder_UI_BaseUi_PointerDel_Event : LuaDelegate
 	{
 		public Thunder_UI_BaseUi_PointerDel_Event(LuaFunction func) : base(func) { }
@@ -1617,63 +1867,6 @@ public class DelegateFactory
 	}
 
 	void Push_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition(IntPtr L, Thunder.Tool.BehaviorTree.ConditionNode.DelCondition o)
-	{
-		ToLua.Push(L, o);
-	}
-
-	class System_Action_Thunder_UI_BaseUi_Event : LuaDelegate
-	{
-		public System_Action_Thunder_UI_BaseUi_Event(LuaFunction func) : base(func) { }
-		public System_Action_Thunder_UI_BaseUi_Event(LuaFunction func, LuaTable self) : base(func, self) { }
-
-		public void Call(Thunder.UI.BaseUi param0)
-		{
-			func.BeginPCall();
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-
-		public void CallWithSelf(Thunder.UI.BaseUi param0)
-		{
-			func.BeginPCall();
-			func.Push(self);
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-	}
-
-	public System.Action<Thunder.UI.BaseUi> System_Action_Thunder_UI_BaseUi(LuaFunction func, LuaTable self, bool flag)
-	{
-		if (func == null)
-		{
-			System.Action<Thunder.UI.BaseUi> fn = delegate(Thunder.UI.BaseUi param0) { };
-			return fn;
-		}
-
-		if(!flag)
-		{
-			System_Action_Thunder_UI_BaseUi_Event target = new System_Action_Thunder_UI_BaseUi_Event(func);
-			System.Action<Thunder.UI.BaseUi> d = target.Call;
-			target.method = d.Method;
-			return d;
-		}
-		else
-		{
-			System_Action_Thunder_UI_BaseUi_Event target = new System_Action_Thunder_UI_BaseUi_Event(func, self);
-			System.Action<Thunder.UI.BaseUi> d = target.CallWithSelf;
-			target.method = d.Method;
-			return d;
-		}
-	}
-
-	bool Check_System_Action_Thunder_UI_BaseUi(IntPtr L, int pos)
-	{
-		return TypeChecker.CheckDelegateType(typeof(System.Action<Thunder.UI.BaseUi>), L, pos);
-	}
-
-	void Push_System_Action_Thunder_UI_BaseUi(IntPtr L, System.Action<Thunder.UI.BaseUi> o)
 	{
 		ToLua.Push(L, o);
 	}

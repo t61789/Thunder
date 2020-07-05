@@ -9,7 +9,7 @@ namespace Thunder.Utility
     }
 
     [Flags]
-    public enum UiInitAction
+    public enum UiInitType
     {
         /// <summary>
         /// 将UI相对与锚点的位置设为0

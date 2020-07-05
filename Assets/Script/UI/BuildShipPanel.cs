@@ -144,12 +144,12 @@ namespace Thunder.UI
                 inits.Add(x =>
                 {
                     x.GetComponent<Image>().sprite = sprite;
-                    x.InitRect(UiInitAction.FillParent);
+                    x.InitRect(UiInitType.FillParent);
                     x.GetComponent<Button>().onClick.AddListener(() => ElementClick(turretName, sprite));
                 });
             }
 
-            listPlane.Init(new ListPlane.Parameters<BaseUi>(3, "normalButton", (0, 0), (10, 10), (0, RectTrans.rect.height), inits));
+            listPlane.Init(new ListPlane.Parameters(3, "normalButton", (0, 0), (10, 10), (0, RectTrans.rect.height)),inits);
         }
 
         private void ElementClick(string turretName, Sprite sprite)

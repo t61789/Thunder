@@ -55,7 +55,7 @@ namespace Thunder.Utility
         public void Remove()
         {
             if (aimRing != null)
-                Sys.Stable.Ui.CloseUi(aimRing);
+                Sys.Stable.Ui.CloseUi(aimRing.UiName);
             Destroy(this);
         }
 
@@ -80,7 +80,7 @@ namespace Thunder.Utility
             }
 
             if (aimRing)
-                this.aimRing = Sys.Stable.Ui.OpenUi<AimRing>("aimRing", UiInitAction.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
+                this.aimRing = Sys.Stable.Ui.OpenUi<AimRing>("aimRing", UiInitType.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
         }
 
         private void Update()

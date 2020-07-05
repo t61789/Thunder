@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Thunder.Sys;
 using Thunder.Utility;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Thunder.UI
@@ -26,12 +28,12 @@ namespace Thunder.UI
                     b.transform.Find("Text").GetComponent<Text>().text = Path.GetFileName(item);
                     b.onClick.AddListener(() => LoadSave(b));
 
-                    x.InitRect(UiInitAction.FillParent);
+                    x.InitRect(UiInitType.FillParent);
                 });
             }
 
-            Sys.Stable.Ui.OpenUi<ListPlane>("listPlane", this, true, UiInitAction.CenterParent, x =>
-                x.Init(new ListPlane.Parameters<BaseUi>(1, "normalButton", (500, 150), (50, 50), (0, 0), inits)));
+            Sys.Stable.Ui.OpenUi<ListPlane>("listPlane", UiName, true, UiInitType.CenterParent, x =>
+                x.Init(new ListPlane.Parameters(1, "normalButton", (500, 150), (50, 50), (0, 0)), inits));
         }
 
         public void StartCreateSave()
@@ -45,4 +47,6 @@ namespace Thunder.UI
             Sys.Stable.Instance.LoadSceneAsync("LevelScene");
         }
     }
+
+    
 }

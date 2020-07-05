@@ -38,7 +38,7 @@ namespace Thunder.GameMode
                 units.Add(new AircraftUnit((string)item[AIRCRAFT_ID], (int)item[MAX], (float)item[BASELINE_MIN], (float)item[BASELINE_MAX], (float)item[INTERVAL]));
             _aircraftUnits = units.ToArray();
 
-            ui = Sys.Stable.Ui.OpenUi<SurvivalLiUI>(UI_NAME, 0, x => x.Init(_difficultyList[_difficultyList.Length - 1].x));
+            ui = Sys.Stable.Ui.OpenUi(UI_NAME, 0, x => (x as SurvivalLiUI).Init(_difficultyList[_difficultyList.Length - 1].x)) as SurvivalLiUI;
 
             Reset();
         }
@@ -132,7 +132,7 @@ namespace Thunder.GameMode
 
         public override void BeforeUnInstall()
         {
-            Sys.Stable.Ui.CloseUi(ui);
+            Sys.Stable.Ui.CloseUi(ui.UiName);
             ui = null;
         }
     }

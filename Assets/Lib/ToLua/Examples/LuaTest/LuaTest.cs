@@ -1,40 +1,43 @@
 ﻿using LuaInterface;
 using System;
+using Thunder.Sys;
+using Thunder.Utility;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class LuaTest : MonoBehaviour
 {
-    public LuaState _Ls;
-
-    public static LuaTest instance;
-
     private void Awake()
-    {
-        _Ls = new LuaState();
-        _Ls.Start();
-        _Ls.AddSearchPath(Application.dataPath + "/Test/Lua");
-
-        LuaBinder.Bind(_Ls);
-        DelegateFactory.Init();
-
-        instance = this;
+    { 
+        //bs.luaState = Stable.Lua.LuaState;
     }
 
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(0, 0, 100, 50), "File1"))
-        {
-            _Ls.DoString(
-@"s = Thunder.Test.Shit()
-s.SetNormal(s,'222')
-print(s.normal)");
-        }
+//        if (GUI.Button(new Rect(0, 0, 100, 50), "Load"))
+//        {
+//            string str =
+//@"function ReceiveSoldiers()
+//    soldiers = System.Collections.Generic.List_Thunder_Entity_Person()
+//    for id=0,300,1 do
+//        soldiers:Add(Thunder.Entity.Person(id))
+//    end
+//    return soldiers
+//end";
+
+//            Stable.Lua.ExecuteCommand(str);
+//        }
+
+//        if (GUI.Button(new Rect(0, 50, 100, 50), "Rec"))
+//        {
+//            bs.ReceiveSoldiers();
+//        }
     }
 
-    private void OnApplicationQuit()
+    public void Exec(string cmd)
     {
-        _Ls.Dispose();
-        _Ls = null;
+        
+        //Thunder.Sys.Stable.Lua.ExecuteCommand(cmd);
     }
 }
 

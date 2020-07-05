@@ -160,28 +160,28 @@ namespace Thunder.UI
 
         public void Close()
         {
-            Sys.Stable.Ui.CloseUi(this);
+            Sys.Stable.Ui.CloseUi(UiName);
         }
 
-        public void InitRect(UiInitAction action)
+        public void InitRect(UiInitType action)
         {
-            if ((action & UiInitAction.MiddleAnchor) != 0)
+            if ((action & UiInitType.MiddleAnchor) != 0)
             {
                 RectTrans.anchorMin = RectTrans.anchorMax = Vector2.one / 2;
             }
 
-            if ((action & UiInitAction.FillAnchor) != 0)
+            if ((action & UiInitType.FillAnchor) != 0)
             {
                 RectTrans.anchorMax = Vector2.one;
                 RectTrans.anchorMin = Vector2.zero;
             }
 
-            if ((action & UiInitAction.FillSize) != 0)
+            if ((action & UiInitType.FillSize) != 0)
             {
                 RectTrans.offsetMin = RectTrans.offsetMax = Vector2.zero;
             }
 
-            if ((action & UiInitAction.PositionMiddleOfAnchor) != 0)
+            if ((action & UiInitType.PositionMiddleOfAnchor) != 0)
             {
                 RectTrans.anchoredPosition = Vector2.zero;
             }
@@ -195,12 +195,17 @@ namespace Thunder.UI
             var s = func.Split(':');
             Assert.IsTrue(s.Length == 2, $"命令不正确：{func}");
             Sys.Stable.Lua.ExecuteFile(s[0]);
-            Sys.Stable.Lua.LuaState.Call(s[1], true);
+            Sys.Stable.Lua.ExecuteCommand(s[1]);
         }
 
         public void ExecuteLuaCmd(string cmd)
         {
-            Sys.Stable.Lua.ExecuteCommand(cmd);
+            Assert.IsFalse(string.IsNullOrEmpty(cmd), $"命令不正确：{cmd}");
+            // ReSharper disable once PossibleNullReferenceException
+            var s = cmd.Split(':');
+            Assert.IsTrue(s.Length == 2, $"命令不正确：{cmd}");
+            Sys.Stable.Lua.ExecuteFile(s[0]);
+            Sys.Stable.Lua.ExecuteCommand(s[1]);
         }
     }
 }
