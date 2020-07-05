@@ -123,6 +123,7 @@ public static class LuaBinder
 		Thunder_Utility_GlobalBufferWrap.Register(L);
 		Thunder_Utility_GlobalSettingsWrap.Register(L);
 		Thunder_Utility_PathsWrap.Register(L);
+		Thunder_Utility_FuckWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("UI");
 		Thunder_UI_AimRingWrap.Register(L);
@@ -235,8 +236,9 @@ public static class LuaBinder
 		L.RegFunction("ModeComplete", Thunder_GameMode_BaseGameMode_ModeComplete);
 		L.EndModule();
 		L.EndModule();
-		L.BeginModule("Character");
-		Thunder_Character_ControllerWrap.Register(L);
+		L.BeginModule("Entity");
+		Thunder_Entity_ControllerWrap.Register(L);
+		Thunder_Entity_PeopleWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Behavior");
 		Thunder_Behavior_DelegateFixedInvokeWrap.Register(L);

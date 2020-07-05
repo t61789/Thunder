@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using LuaInterface;
-using Thunder.UI;
-using UnityEngine;
 
 namespace Thunder.Utility
 {
@@ -38,5 +34,10 @@ namespace Thunder.Utility
             if (!Directory.Exists(BundleBasePath))
                 Directory.CreateDirectory(BundleBasePath);
         }
+    }
+
+    public class Fuck
+    {
+        private int a;
     }
 }

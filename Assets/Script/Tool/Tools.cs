@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -820,6 +820,16 @@ namespace Thunder.Tool
         public static bool HaveAttribute<T>(this Type type,bool inherit=false) where T : Attribute
         {
             return type.GetCustomAttributes(typeof(T), inherit).Length >0;
+        }
+
+        public static bool HaveAttribute<T>(this PropertyInfo type, bool inherit = false) where T : Attribute
+        {
+            return type.GetCustomAttributes(typeof(T), inherit).Length > 0;
+        }
+
+        public static bool HaveAttribute<T>(this FieldInfo type, bool inherit = false) where T : Attribute
+        {
+            return type.GetCustomAttributes(typeof(T), inherit).Length > 0;
         }
     }
 }

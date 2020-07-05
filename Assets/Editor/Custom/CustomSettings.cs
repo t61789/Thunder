@@ -51,7 +51,7 @@ public static class CustomSettings
         get
         {
             List<BindType> li = new List<BindType>();
-            foreach (var type in typeof(Thunder.Utility.DontGenerateWrapAttribute).Assembly.GetTypes().Where(x =>
+            foreach (var type in typeof(DontGenerateWrapAttribute).Assembly.GetTypes().Where(x =>
                 x.Namespace != null &&
                 x.Namespace.StartsWith("Thunder") &&
                 (!x.IsNested || x.HaveAttribute<GenerateWrapAttribute>()) &&

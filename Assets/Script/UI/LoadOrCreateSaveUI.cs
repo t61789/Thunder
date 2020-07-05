@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Thunder.Sys;
 using Thunder.Utility;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace Thunder.UI
