@@ -54,6 +54,7 @@ public static class LuaBinder
 		UnityEngine_QualitySettingsWrap.Register(L);
 		UnityEngine_RenderSettingsWrap.Register(L);
 		UnityEngine_ResourcesWrap.Register(L);
+		UnityEngine_Matrix4x4Wrap.Register(L);
 		UnityEngine_AudioBehaviourWrap.Register(L);
 		L.BeginModule("UI");
 		UnityEngine_UI_ButtonWrap.Register(L);
@@ -114,10 +115,12 @@ public static class LuaBinder
 		L.BeginModule("Thunder");
 		Thunder_BulletWrap.Register(L);
 		Thunder_CameraControllerWrap.Register(L);
+		Thunder_BaseCameraWrap.Register(L);
+		Thunder_FreeLookCameraWrap.Register(L);
+		Thunder_CameraModeWrap.Register(L);
 		Thunder_PlayerRocketWrap.Register(L);
 		L.BeginModule("Utility");
 		Thunder_Utility_CheckWrap.Register(L);
-		Thunder_Utility_ControllerInputWrap.Register(L);
 		Thunder_Utility_DialogResultWrap.Register(L);
 		Thunder_Utility_UiInitTypeWrap.Register(L);
 		Thunder_Utility_GlobalBufferWrap.Register(L);
@@ -206,6 +209,8 @@ public static class LuaBinder
 		L.BeginModule("Sys");
 		Thunder_Sys_BundleSysWrap.Register(L);
 		Thunder_Sys_AssetIdWrap.Register(L);
+		Thunder_Sys_ControlSysWrap.Register(L);
+		Thunder_Sys_ControlInfoWrap.Register(L);
 		Thunder_Sys_DataBaseSysWrap.Register(L);
 		Thunder_Sys_DataTableWrap.Register(L);
 		Thunder_Sys_LuaSysWrap.Register(L);
@@ -215,14 +220,11 @@ public static class LuaBinder
 		Thunder_Sys_ValueSysWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Skill");
-		Thunder_Skill_ChargeWrap.Register(L);
-		Thunder_Skill_CircleShootWrap.Register(L);
 		Thunder_Skill_SkillWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("PublicScript");
 		Thunder_PublicScript_BattleSceneControllerWrap.Register(L);
 		Thunder_PublicScript_CampManagerWrap.Register(L);
-		Thunder_PublicScript_ControlManagerWrap.Register(L);
 		Thunder_PublicScript_GameModeManagerWrap.Register(L);
 		Thunder_PublicScript_LevelManagerWrap.Register(L);
 		Thunder_PublicScript_PlayerManagerWrap.Register(L);

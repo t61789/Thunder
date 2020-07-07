@@ -54,8 +54,8 @@ namespace Thunder.Turret
         public GameObject AttachTurret(string turretPath, int pointIndex, bool controlable)
         {
             GameObject turret = AttachTurret(turretPath, pointIndex);
-            if (controlable)
-                ControllerInput.AttachTo(turret);
+            //if (controlable)
+            //    ControllerInput.AttachTo(turret);
             return turret;
         }
 
@@ -106,8 +106,8 @@ namespace Thunder.Turret
                 ship.AttachTurret(param.turrets[i], i, param.controlable);
             }
 
-            if (param.controlable)
-                ControllerInput.AttachTo(ship.gameObject, true);
+            //if (param.controlable)
+                //ControllerInput.AttachTo(ship.gameObject, true);
 
             return ship;
         }

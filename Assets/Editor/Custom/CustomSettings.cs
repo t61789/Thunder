@@ -181,6 +181,9 @@ public static class CustomSettings
         _GT(typeof(Text)),
         _GT(typeof(Path)),
         _GT(typeof(Button.ButtonClickedEvent)),
+        _GT(typeof(Vector2)),
+        _GT(typeof(Vector3)),
+        _GT(typeof(Matrix4x4)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

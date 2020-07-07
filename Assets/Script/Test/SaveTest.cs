@@ -7,7 +7,7 @@ namespace Thunder.Test
     {
         private void Awake()
         {
-            ControllerInput.AttachTo(GameObject.Find("battleShip"), true);
+            //ControllerInput.AttachTo(GameObject.Find("battleShip"), true);
         }
     }
 }

@@ -16,8 +16,8 @@ namespace Thunder.PublicScript
 
         public SkillManager()
         {
-            skills.Add("charge", typeof(Charge));
-            skills.Add("circleShoot", typeof(CircleShoot));
+            //skills.Add("charge", typeof(Charge));
+            //skills.Add("circleShoot", typeof(CircleShoot));
 
             skillBar[0] = "charge";
             skillBar[1] = "circleShoot";

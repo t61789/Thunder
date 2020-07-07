@@ -831,5 +831,31 @@ namespace Thunder.Tool
         {
             return type.GetCustomAttributes(typeof(T), inherit).Length > 0;
         }
+
+        public static void AddOrModify<K, V>(this Dictionary<K, V> dic, K key, V value,bool forceAdd=false)
+        {
+            if (dic.TryGetValue(key, out _))
+            {
+                if (forceAdd) return;
+                dic[key] = value;
+                return;
+            }
+            dic.Add(key,value);
+        }
+
+        public static V GetOrCreate<K, V>(this Dictionary<K, V> dic, K key,bool forceGet=false)
+        {
+            if (dic.TryGetValue(key, out var result))
+                return result;
+            result = default;
+            if (forceGet) return result;
+            dic.Add(key, result);
+            return result;
+        }
+
+        public static void DrawLine(Vector3 start,Vector3 end)
+        {
+            Debug.DrawLine(start,end, Color.yellow);
+        }
     }
 }

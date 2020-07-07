@@ -6,157 +6,157 @@ using UnityEngine;
 
 namespace Thunder.Utility
 {
-    public class ControllerInput : MonoBehaviour
-    {
-        private const string TABLE_NAME = "input";
-        private const string INPUT_ID = "input_id";
-        private const string PROPERTY_FIELD = "property_name";
-        private const string CONTROL_TYPE_FIELD = "control_type";
-        private const string KEY_FIELD = "key";
-        private const string REQUEST_TYPE = "playerControl";
+    //public class ControllerInput : MonoBehaviour
+    //{
+    //    private const string TABLE_NAME = "input";
+    //    private const string INPUT_ID = "input_id";
+    //    private const string PROPERTY_FIELD = "property_name";
+    //    private const string CONTROL_TYPE_FIELD = "control_type";
+    //    private const string KEY_FIELD = "key";
+    //    private const string REQUEST_TYPE = "playerControl";
 
-        public static bool Controlable = true;
+    //    public static bool Controlable = true;
 
-        [Serializable]
-        public struct ControlStruct
-        {
-            public int key;
-            public string propName;
-            public Act act;
-        }
+    //    [Serializable]
+    //    public struct ControlStruct
+    //    {
+    //        public int key;
+    //        public string propName;
+    //        public Act act;
+    //    }
 
-        public bool InstallWhenStart = false;
+    //    public bool InstallWhenStart = false;
 
-        [SerializeField]
-        private List<ControlStruct> controlStructs = new List<ControlStruct>();
+    //    [SerializeField]
+    //    private List<ControlStruct> controlStructs = new List<ControlStruct>();
 
-        private Controller controller;
+    //    private Controller controller;
 
-        public delegate void Act(ControlStruct c);
+    //    public delegate void Act(ControlStruct c);
 
-        private AimRing aimRing;
+    //    private AimRing aimRing;
 
-        private void Start()
-        {
-            if (InstallWhenStart)
-                Install(false);
-        }
+    //    private void Start()
+    //    {
+    //        if (InstallWhenStart)
+    //            Install(false);
+    //    }
 
-        public static void AttachTo(GameObject gameObject, bool aimRing = false)
-        {
-            gameObject.AddComponent<ControllerInput>().Install(aimRing);
-        }
+    //    public static void AttachTo(GameObject gameObject, bool aimRing = false)
+    //    {
+    //        gameObject.AddComponent<ControllerInput>().Install(aimRing);
+    //    }
 
-        public static void RemoveFrom(GameObject gameObject)
-        {
-            gameObject.GetComponent<ControllerInput>().Remove();
-        }
+    //    public static void RemoveFrom(GameObject gameObject)
+    //    {
+    //        gameObject.GetComponent<ControllerInput>().Remove();
+    //    }
 
-        public void Remove()
-        {
-            if (aimRing != null)
-                Sys.Stable.Ui.CloseUi(aimRing.UiName);
-            Destroy(this);
-        }
+    //    public void Remove()
+    //    {
+    //        if (aimRing != null)
+    //            Sys.Stable.Ui.CloseUi(aimRing.UiName);
+    //        Destroy(this);
+    //    }
 
-        private void Install(bool aimRing)
-        {
-            controlStructs.Clear();
+    //    private void Install(bool aimRing)
+    //    {
+    //        controlStructs.Clear();
 
-            controller = GetComponent<Controller>();
+    //        controller = GetComponent<Controller>();
 
-            var i = Sys.Stable.DataBase[TABLE_NAME].Select(null, new (string, object)[] { (INPUT_ID, controller.InputId) });
-            if (i.IsEmpty)
-                Debug.LogWarning("No input named " + name + " in database, input will be invalid");
+    //        var i = Sys.Stable.DataBase[TABLE_NAME].Select(null, new (string, object)[] { (INPUT_ID, controller.InputId) });
+    //        if (i.IsEmpty)
+    //            Debug.LogWarning("No input named " + name + " in database, input will be invalid");
 
-            foreach (var item in i)
-            {
-                controlStructs.Add(new ControlStruct()
-                {
-                    key = (int)item[KEY_FIELD],
-                    propName = (string)item[PROPERTY_FIELD],
-                    act = (Act)Delegate.CreateDelegate(typeof(Act), this, (string)item[CONTROL_TYPE_FIELD])
-                });
-            }
+    //        foreach (var item in i)
+    //        {
+    //            controlStructs.Add(new ControlStruct()
+    //            {
+    //                key = (int)item[KEY_FIELD],
+    //                propName = (string)item[PROPERTY_FIELD],
+    //                act = (Act)Delegate.CreateDelegate(typeof(Act), this, (string)item[CONTROL_TYPE_FIELD])
+    //            });
+    //        }
 
-            if (aimRing)
-                this.aimRing = Sys.Stable.Ui.OpenUi<AimRing>("aimRing", UiInitType.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
-        }
+    //        if (aimRing)
+    //            this.aimRing = Sys.Stable.Ui.OpenUi<AimRing>("aimRing", UiInitType.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
+    //    }
 
-        private void Update()
-        {
-            if (!Controlable) return;
+    //    private void Update()
+    //    {
+    //        if (!Controlable) return;
 
-            if (controller == null)
-            {
-                Remove();
-                return;
-            }
+    //        if (controller == null)
+    //        {
+    //            Remove();
+    //            return;
+    //        }
 
-            foreach (var item in controlStructs)
-                item.act(item);
-        }
+    //        foreach (var item in controlStructs)
+    //            item.act(item);
+    //    }
 
-        private void FixedUpdate()
-        {
-            if (!Controlable) return;
+    //    private void FixedUpdate()
+    //    {
+    //        if (!Controlable) return;
 
-            Update();
-        }
+    //        Update();
+    //    }
 
-        private void KeyStay(ControlStruct c)
-        {
-            KeyCode k = (KeyCode)c.key;
-            if (Sys.Stable.Control.RequestStay(k, REQUEST_TYPE))
-            {
-                controller.ControlKeys.SetBool(c.propName, true);
-                Sys.Stable.Control.Release(k, REQUEST_TYPE);
-            }
-        }
+    //    private void KeyStay(ControlStruct c)
+    //    {
+    //        KeyCode k = (KeyCode)c.key;
+    //        if (Sys.Stable.Control.RequestStay(k, REQUEST_TYPE))
+    //        {
+    //            controller.ControlKeys.SetBool(c.propName, true);
+    //            Sys.Stable.Control.Release(k, REQUEST_TYPE);
+    //        }
+    //    }
 
-        private void KeyDown(ControlStruct c)
-        {
-            KeyCode k = (KeyCode)c.key;
-            if (Sys.Stable.Control.RequestDown(k, REQUEST_TYPE))
-            {
-                controller.ControlKeys.SetBool(c.propName, true);
-                Sys.Stable.Control.Release(k, REQUEST_TYPE);
-            }
-        }
+    //    private void KeyDown(ControlStruct c)
+    //    {
+    //        KeyCode k = (KeyCode)c.key;
+    //        if (Sys.Stable.Control.RequestDown(k, REQUEST_TYPE))
+    //        {
+    //            controller.ControlKeys.SetBool(c.propName, true);
+    //            Sys.Stable.Control.Release(k, REQUEST_TYPE);
+    //        }
+    //    }
 
-        private void KeyUp(ControlStruct c)
-        {
-            KeyCode k = (KeyCode)c.key;
-            if (Sys.Stable.Control.RequestUp(k, REQUEST_TYPE))
-            {
-                controller.ControlKeys.SetBool(c.propName, true);
-                Sys.Stable.Control.Release(k, REQUEST_TYPE);
-            }
-        }
+    //    private void KeyUp(ControlStruct c)
+    //    {
+    //        KeyCode k = (KeyCode)c.key;
+    //        if (Sys.Stable.Control.RequestUp(k, REQUEST_TYPE))
+    //        {
+    //            controller.ControlKeys.SetBool(c.propName, true);
+    //            Sys.Stable.Control.Release(k, REQUEST_TYPE);
+    //        }
+    //    }
 
-        private void MousePosition(ControlStruct c)
-        {
-            controller.ControlKeys.SetVector(c.propName, Tool.Tools.GetMousePosition());
-        }
+    //    private void MousePosition(ControlStruct c)
+    //    {
+    //        controller.ControlKeys.SetVector(c.propName, Tool.Tools.GetMousePosition());
+    //    }
 
-        private void VJoystick(ControlStruct c)
-        {
-            controller.ControlKeys.SetVector(c.propName, Joystick.GetValue(c.key).val);
-        }
+    //    private void VJoystick(ControlStruct c)
+    //    {
+    //        controller.ControlKeys.SetVector(c.propName, Joystick.GetValue(c.key).val);
+    //    }
 
-        private void VJoystickClick(ControlStruct c)
-        {
-            controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).click);
-        }
+    //    private void VJoystickClick(ControlStruct c)
+    //    {
+    //        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).click);
+    //    }
 
-        private void VJoystickDoubleClick(ControlStruct c, bool clear)
-        {
-            controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).doubleClick);
-        }
+    //    private void VJoystickDoubleClick(ControlStruct c, bool clear)
+    //    {
+    //        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).doubleClick);
+    //    }
 
-        private void VJoystickHolding(ControlStruct c, bool clear)
-        {
-            controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).holding);
-        }
-    }
+    //    private void VJoystickHolding(ControlStruct c, bool clear)
+    //    {
+    //        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).holding);
+    //    }
+    //}
 }

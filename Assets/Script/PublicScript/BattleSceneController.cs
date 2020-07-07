@@ -28,7 +28,7 @@ namespace Thunder.PublicScript
 
         private void GameModeComplete(BaseGameMode gameMode, BaseGameMode.CompleteParam completeParam)
         {
-            ControllerInput.Controlable = false;
+            //ControllerInput.Controlable = false;
             checkoutPanel.Init(completeParam);
             Sys.Stable.Ui.OpenUi(checkoutPanel.UiName);
             GlobalBuffer.battleSceneParam = (Sys.Stable.Level.LevelComplete(levelParam.index), null);
@@ -36,13 +36,13 @@ namespace Thunder.PublicScript
 
         public void NextLevel()
         {
-            ControllerInput.Controlable = true;
+            //ControllerInput.Controlable = true;
             Sys.Stable.Instance.LoadSceneAsync("BattleScene");
         }
 
         public void GoBack()
         {
-            ControllerInput.Controlable = true;
+            //ControllerInput.Controlable = true;
             Sys.Stable.Instance.LoadSceneAsync("LevelScene");
         }
     }
