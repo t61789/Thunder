@@ -184,6 +184,7 @@ public static class CustomSettings
         _GT(typeof(Vector2)),
         _GT(typeof(Vector3)),
         _GT(typeof(Matrix4x4)),
+        _GT(typeof(Quaternion)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

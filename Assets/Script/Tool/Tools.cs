@@ -855,7 +855,23 @@ namespace Thunder.Tool
 
         public static void DrawLine(Vector3 start,Vector3 end)
         {
-            Debug.DrawLine(start,end, Color.yellow);
+            Debug.DrawLine(start,end, Color.red);
+        }
+
+        public static Vector4 ToV4Pos(this Vector3 pos)
+        {
+            return new Vector4(pos.x,pos.y,pos.z,1);
+        }
+
+        public static Vector4 ToV4Dir(this Vector3 dir)
+        {
+            return new Vector4(dir.x, dir.y, dir.z, 0);
+        }
+
+        public static Vector3 ToV3Pos(this Vector4 pos)
+        {
+            if (pos.w == 0) return default;
+            return pos/pos.w;
         }
     }
 }

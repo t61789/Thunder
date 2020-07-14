@@ -115,9 +115,10 @@ public static class LuaBinder
 		L.BeginModule("Thunder");
 		Thunder_BulletWrap.Register(L);
 		Thunder_CameraControllerWrap.Register(L);
+		Thunder_CameraModeWrap.Register(L);
 		Thunder_BaseCameraWrap.Register(L);
 		Thunder_FreeLookCameraWrap.Register(L);
-		Thunder_CameraModeWrap.Register(L);
+		Thunder_PlayerLockCameraWrap.Register(L);
 		Thunder_PlayerRocketWrap.Register(L);
 		L.BeginModule("Utility");
 		Thunder_Utility_CheckWrap.Register(L);
