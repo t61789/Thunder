@@ -718,7 +718,7 @@ MonoBehaviour:
   UserControl: 0
   _InputId: 
   _ControllerName: 
-  _LuaScriptScopePath: Controller:Controller
+  _LuaScriptScopePath: PlayerController:PlayerController
   RotateFactor: 5
   MoveDamp: 0.05
 --- !u!54 &1430796180
