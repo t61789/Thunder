@@ -30,7 +30,8 @@ namespace Thunder.Sys
 
         public void RemoveCamp(string campName)
         {
-            Assert.IsTrue(_KeyMap.TryGetValue(campName,out int index),$"不存在名为 {campName} 的阵营");
+            int index=0;
+            Assert.IsTrue(_KeyMap.TryGetValue(campName,out index),$"不存在名为 {campName} 的阵营");
 
             for (int i = 0; i < GlobalSettings.CampMapSize; i++)
             {
@@ -63,8 +64,10 @@ namespace Thunder.Sys
 
         public float GetFriendliness(string c1,string c2)
         {
-            Assert.IsTrue(_KeyMap.TryGetValue(c1, out int i1), $"未找到名为 {c1} 的Camp");
-            Assert.IsTrue(_KeyMap.TryGetValue(c2, out int i2), $"未找到名为 {c2} 的Camp");
+            int i1, i2;
+            Assert.IsTrue(_KeyMap.TryGetValue(c1, out i1), $"未找到名为 {c1} 的Camp");
+            Assert.IsTrue(_KeyMap.TryGetValue(c2, out i2), $"未找到名为 {c2} 的Camp");
+            i1=i2 = 0;
             return _FriendlinessMap[i1, i2];
         }
 
@@ -75,8 +78,10 @@ namespace Thunder.Sys
 
         public void SetFriendliness(string c1, string c2,float friendliness)
         {
-            Assert.IsTrue(_KeyMap.TryGetValue(c1, out int i1), $"未找到名为 {c1} 的Camp");
-            Assert.IsTrue(_KeyMap.TryGetValue(c2, out int i2), $"未找到名为 {c2} 的Camp");
+            int i1, i2;
+            Assert.IsTrue(_KeyMap.TryGetValue(c1, out i1), $"未找到名为 {c1} 的Camp");
+            Assert.IsTrue(_KeyMap.TryGetValue(c2, out i2), $"未找到名为 {c2} 的Camp");
+            i1 = i2 = 0;
             _FriendlinessMap[i1, i2] = friendliness;
         }
 
