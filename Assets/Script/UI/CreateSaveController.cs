@@ -26,7 +26,7 @@ namespace Thunder.UI
                         else
                         {
                             Sys.Stable.Save = SaveSys.LoadSave(id.Text);
-                            StartBuildShip();
+                            //StartBuildShip();
                         }
                     }
                     else
@@ -35,18 +35,18 @@ namespace Thunder.UI
             });
         }
 
-        private void StartBuildShip()
-        {
-            (Sys.Stable.Ui.OpenUi("buildShipPanel") as BuildShipPanel).OnBuildShipComplete += BuildShipClosed;
-        }
+        //private void StartBuildShip()
+        //{
+        //    (Sys.Stable.Ui.OpenUi("buildShipPanel") as BuildShipPanel).OnBuildShipComplete += BuildShipClosed;
+        //}
 
-        private void BuildShipClosed(BuildShipPanel b)
-        {
-            Sys.Stable.Save.playerShipParam = b.buildResult;
-            Sys.Stable.Save.Save();
+        //private void BuildShipClosed(BuildShipPanel b)
+        //{
+        //    Sys.Stable.Save.playerShipParam = b.buildResult;
+        //    Sys.Stable.Save.Save();
 
-            Sys.Stable.Instance.LoadSceneAsync("LevelScene");
-        }
+        //    Sys.Stable.Instance.LoadSceneAsync("LevelScene");
+        //}
 
         public void GoBack()
         {

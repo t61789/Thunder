@@ -27,26 +27,26 @@ namespace Thunder.UI
             //int index = 0;
 
             int completeCount = 0;
-            for (int i = 0; i < Sys.Stable.Level.levels.Length; i++)
-            {
-                var _item = Sys.Stable.Level.levels[i];
-                bool flag = _item.index == completed[completeCount];
-                if (flag) completeCount = completeCount + 1 == completed.Length ? completeCount : completeCount + 1;
-                inits.Add(x =>
-                {
-                    x.InitRect(UiInitType.FillParent);
-                    Button but = x.GetComponent<Button>();
-                    Action temp = null;
-                    if (flag)
-                    {
-                        temp = () => StartLevel(x);
-                        but.interactable = true;
-                    }
-                    else
-                        but.interactable = false;
-                    x.Init(_item.name, temp);
-                });
-            }
+            //for (int i = 0; i < Sys.Stable.Level.levels.Length; i++)
+            //{
+            //    var _item = Sys.Stable.Level.levels[i];
+            //    bool flag = _item.index == completed[completeCount];
+            //    if (flag) completeCount = completeCount + 1 == completed.Length ? completeCount : completeCount + 1;
+            //    inits.Add(x =>
+            //    {
+            //        x.InitRect(UiInitType.FillParent);
+            //        Button but = x.GetComponent<Button>();
+            //        Action temp = null;
+            //        if (flag)
+            //        {
+            //            temp = () => StartLevel(x);
+            //            but.interactable = true;
+            //        }
+            //        else
+            //            but.interactable = false;
+            //        x.Init(_item.name, temp);
+            //    });
+            //}
 
             //foreach (var item in PublicVar.level.levels)
             //{
@@ -80,8 +80,8 @@ namespace Thunder.UI
 
         public void StartLevel(BaseButton b)
         {
-            GlobalBuffer.battleSceneParam = (Sys.Stable.Level.levels[pairs[b]], null);
-            Sys.Stable.Instance.LoadSceneAsync("BattleScene");
+            //GlobalBuffer.battleSceneParam = (Sys.Stable.Level.levels[pairs[b]], null);
+            //Sys.Stable.Instance.LoadSceneAsync("BattleScene");
         }
 
         public void OpenMenu()

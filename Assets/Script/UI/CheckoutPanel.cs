@@ -1,17 +1,17 @@
-﻿using Thunder.GameMode;
-using Thunder.PublicScript;
+﻿
+
 using UnityEngine;
 
 namespace Thunder.UI
 {
     public class CheckoutPanel : BaseUi
     {
-        [SerializeField]
-        private BattleSceneController battleSceneController;
+        //[SerializeField]
+        //private BattleSceneController battleSceneController;
 
-        public void Init(BaseGameMode.CompleteParam completeParam)
-        {
+        //public void Init(BaseGameMode.CompleteParam completeParam)
+        //{
 
-        }
+        //}
     }
 }

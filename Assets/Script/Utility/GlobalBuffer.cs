@@ -1,6 +1,4 @@
 ﻿using System;
-using Thunder.GameMode;
-using Thunder.PublicScript;
 
 namespace Thunder.Utility
 {
@@ -69,7 +67,5 @@ namespace Thunder.Utility
         //    return sb.ToString();
         //}
         #endregion
-
-        public static (LevelManager.LevelParam levelParam, Action<BaseGameMode> init) battleSceneParam;
     }
 }

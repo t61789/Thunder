@@ -101,7 +101,6 @@ public static class LuaBinder
 		L.RegFunction("Predicate_System_Action_Thunder_UI_BaseUi", System_Predicate_System_Action_Thunder_UI_BaseUi);
 		L.RegFunction("Action_System_Action_Thunder_UI_BaseUi", System_Action_System_Action_Thunder_UI_BaseUi);
 		L.RegFunction("Comparison_System_Action_Thunder_UI_BaseUi", System_Comparison_System_Action_Thunder_UI_BaseUi);
-		L.RegFunction("Action_Thunder_GameMode_BaseGameMode", System_Action_Thunder_GameMode_BaseGameMode);
 		L.BeginModule("IO");
 		System_IO_DirectoryWrap.Register(L);
 		System_IO_PathWrap.Register(L);
@@ -113,13 +112,11 @@ public static class LuaBinder
 		L.EndModule();
 		L.EndModule();
 		L.BeginModule("Thunder");
-		Thunder_BulletWrap.Register(L);
 		Thunder_CameraControllerWrap.Register(L);
 		Thunder_CameraModeWrap.Register(L);
 		Thunder_BaseCameraWrap.Register(L);
 		Thunder_FreeLookCameraWrap.Register(L);
 		Thunder_PlayerLockCameraWrap.Register(L);
-		Thunder_PlayerRocketWrap.Register(L);
 		L.BeginModule("Utility");
 		Thunder_Utility_CheckWrap.Register(L);
 		Thunder_Utility_DialogResultWrap.Register(L);
@@ -130,10 +127,8 @@ public static class LuaBinder
 		Thunder_Utility_FuckWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("UI");
-		Thunder_UI_AimRingWrap.Register(L);
 		Thunder_UI_BaseButtonWrap.Register(L);
 		Thunder_UI_BaseUiWrap.Register(L);
-		Thunder_UI_BuildShipPanelWrap.Register(L);
 		Thunder_UI_CheckoutPanelWrap.Register(L);
 		Thunder_UI_ConfirmDialogWrap.Register(L);
 		Thunder_UI_CreateSaveControllerWrap.Register(L);
@@ -156,24 +151,6 @@ public static class LuaBinder
 		L.RegFunction("AfterOpenDel", Thunder_UI_BaseUi_AfterOpenDel);
 		L.RegFunction("BeforeCloseDel", Thunder_UI_BaseUi_BeforeCloseDel);
 		L.RegFunction("CloseCheck", Thunder_UI_BaseUi_CloseCheck);
-		L.EndModule();
-		L.BeginModule("BuildShipPanel");
-		L.RegFunction("BuildShipCompleteDel", Thunder_UI_BuildShipPanel_BuildShipCompleteDel);
-		L.EndModule();
-		L.EndModule();
-		L.BeginModule("Turret");
-		Thunder_Turret_AircraftWrap.Register(L);
-		Thunder_Turret_ControllerWrap.Register(L);
-		Thunder_Turret_FactoryTurretWrap.Register(L);
-		Thunder_Turret_FighterWrap.Register(L);
-		Thunder_Turret_MachineGunFighterWrap.Register(L);
-		Thunder_Turret_NormalBulletWrap.Register(L);
-		Thunder_Turret_NormalFighterWrap.Register(L);
-		Thunder_Turret_ShipWrap.Register(L);
-		Thunder_Turret_ShootingTurretWrap.Register(L);
-		Thunder_Turret_TurretWrap.Register(L);
-		L.BeginModule("Aircraft");
-		L.RegFunction("DeadDel", Thunder_Turret_Aircraft_DeadDel);
 		L.EndModule();
 		L.EndModule();
 		L.BeginModule("Tool");
@@ -210,6 +187,7 @@ public static class LuaBinder
 		L.BeginModule("Sys");
 		Thunder_Sys_BundleSysWrap.Register(L);
 		Thunder_Sys_AssetIdWrap.Register(L);
+		Thunder_Sys_CampSysWrap.Register(L);
 		Thunder_Sys_ControlSysWrap.Register(L);
 		Thunder_Sys_ControlInfoWrap.Register(L);
 		Thunder_Sys_DataBaseSysWrap.Register(L);
@@ -222,22 +200,6 @@ public static class LuaBinder
 		L.EndModule();
 		L.BeginModule("Skill");
 		Thunder_Skill_SkillWrap.Register(L);
-		L.EndModule();
-		L.BeginModule("PublicScript");
-		Thunder_PublicScript_BattleSceneControllerWrap.Register(L);
-		Thunder_PublicScript_CampManagerWrap.Register(L);
-		Thunder_PublicScript_GameModeManagerWrap.Register(L);
-		Thunder_PublicScript_LevelManagerWrap.Register(L);
-		Thunder_PublicScript_PlayerManagerWrap.Register(L);
-		L.EndModule();
-		L.BeginModule("GameMode");
-		Thunder_GameMode_BaseGameModeWrap.Register(L);
-		Thunder_GameMode_SurvivalWrap.Register(L);
-		Thunder_GameMode_SurvivalLiWrap.Register(L);
-		Thunder_GameMode_SurvivalNoliWrap.Register(L);
-		L.BeginModule("BaseGameMode");
-		L.RegFunction("ModeComplete", Thunder_GameMode_BaseGameMode_ModeComplete);
-		L.EndModule();
 		L.EndModule();
 		L.BeginModule("Entity");
 		Thunder_Entity_ControllerWrap.Register(L);
@@ -822,33 +784,6 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int System_Action_Thunder_GameMode_BaseGameMode(IntPtr L)
-	{
-		try
-		{
-			int count = LuaDLL.lua_gettop(L);
-			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
-
-			if (count == 1)
-			{
-				Delegate arg1 = DelegateTraits<System.Action<Thunder.GameMode.BaseGameMode>>.Create(func);
-				ToLua.Push(L, arg1);
-			}
-			else
-			{
-				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<System.Action<Thunder.GameMode.BaseGameMode>>.Create(func, self);
-				ToLua.Push(L, arg1);
-			}
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int Thunder_UI_BaseUi_PointerDel(IntPtr L)
 	{
 		try
@@ -957,60 +892,6 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Thunder_UI_BuildShipPanel_BuildShipCompleteDel(IntPtr L)
-	{
-		try
-		{
-			int count = LuaDLL.lua_gettop(L);
-			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
-
-			if (count == 1)
-			{
-				Delegate arg1 = DelegateTraits<Thunder.UI.BuildShipPanel.BuildShipCompleteDel>.Create(func);
-				ToLua.Push(L, arg1);
-			}
-			else
-			{
-				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<Thunder.UI.BuildShipPanel.BuildShipCompleteDel>.Create(func, self);
-				ToLua.Push(L, arg1);
-			}
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Thunder_Turret_Aircraft_DeadDel(IntPtr L)
-	{
-		try
-		{
-			int count = LuaDLL.lua_gettop(L);
-			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
-
-			if (count == 1)
-			{
-				Delegate arg1 = DelegateTraits<Thunder.Turret.Aircraft.DeadDel>.Create(func);
-				ToLua.Push(L, arg1);
-			}
-			else
-			{
-				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<Thunder.Turret.Aircraft.DeadDel>.Create(func, self);
-				ToLua.Push(L, arg1);
-			}
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int Thunder_Tool_BehaviorTree_ActionNode_DelAction(IntPtr L)
 	{
 		try
@@ -1054,33 +935,6 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Create(func, self);
-				ToLua.Push(L, arg1);
-			}
-			return 1;
-		}
-		catch(Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Thunder_GameMode_BaseGameMode_ModeComplete(IntPtr L)
-	{
-		try
-		{
-			int count = LuaDLL.lua_gettop(L);
-			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
-
-			if (count == 1)
-			{
-				Delegate arg1 = DelegateTraits<Thunder.GameMode.BaseGameMode.ModeComplete>.Create(func);
-				ToLua.Push(L, arg1);
-			}
-			else
-			{
-				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<Thunder.GameMode.BaseGameMode.ModeComplete>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

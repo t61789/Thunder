@@ -41,12 +41,8 @@ public class DelegateFactory
 		dict.Add(typeof(Thunder.UI.BaseUi.AfterOpenDel), factory.Thunder_UI_BaseUi_AfterOpenDel);
 		dict.Add(typeof(Thunder.UI.BaseUi.BeforeCloseDel), factory.Thunder_UI_BaseUi_BeforeCloseDel);
 		dict.Add(typeof(Thunder.UI.BaseUi.CloseCheck), factory.Thunder_UI_BaseUi_CloseCheck);
-		dict.Add(typeof(Thunder.UI.BuildShipPanel.BuildShipCompleteDel), factory.Thunder_UI_BuildShipPanel_BuildShipCompleteDel);
-		dict.Add(typeof(Thunder.Turret.Aircraft.DeadDel), factory.Thunder_Turret_Aircraft_DeadDel);
 		dict.Add(typeof(Thunder.Tool.BehaviorTree.ActionNode.DelAction), factory.Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		dict.Add(typeof(Thunder.Tool.BehaviorTree.ConditionNode.DelCondition), factory.Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
-		dict.Add(typeof(System.Action<Thunder.GameMode.BaseGameMode>), factory.System_Action_Thunder_GameMode_BaseGameMode);
-		dict.Add(typeof(Thunder.GameMode.BaseGameMode.ModeComplete), factory.Thunder_GameMode_BaseGameMode_ModeComplete);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -72,12 +68,8 @@ public class DelegateFactory
 		DelegateTraits<Thunder.UI.BaseUi.AfterOpenDel>.Init(factory.Thunder_UI_BaseUi_AfterOpenDel);
 		DelegateTraits<Thunder.UI.BaseUi.BeforeCloseDel>.Init(factory.Thunder_UI_BaseUi_BeforeCloseDel);
 		DelegateTraits<Thunder.UI.BaseUi.CloseCheck>.Init(factory.Thunder_UI_BaseUi_CloseCheck);
-		DelegateTraits<Thunder.UI.BuildShipPanel.BuildShipCompleteDel>.Init(factory.Thunder_UI_BuildShipPanel_BuildShipCompleteDel);
-		DelegateTraits<Thunder.Turret.Aircraft.DeadDel>.Init(factory.Thunder_Turret_Aircraft_DeadDel);
 		DelegateTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Init(factory.Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		DelegateTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Init(factory.Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
-		DelegateTraits<System.Action<Thunder.GameMode.BaseGameMode>>.Init(factory.System_Action_Thunder_GameMode_BaseGameMode);
-		DelegateTraits<Thunder.GameMode.BaseGameMode.ModeComplete>.Init(factory.Thunder_GameMode_BaseGameMode_ModeComplete);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -103,12 +95,8 @@ public class DelegateFactory
 		TypeTraits<Thunder.UI.BaseUi.AfterOpenDel>.Init(factory.Check_Thunder_UI_BaseUi_AfterOpenDel);
 		TypeTraits<Thunder.UI.BaseUi.BeforeCloseDel>.Init(factory.Check_Thunder_UI_BaseUi_BeforeCloseDel);
 		TypeTraits<Thunder.UI.BaseUi.CloseCheck>.Init(factory.Check_Thunder_UI_BaseUi_CloseCheck);
-		TypeTraits<Thunder.UI.BuildShipPanel.BuildShipCompleteDel>.Init(factory.Check_Thunder_UI_BuildShipPanel_BuildShipCompleteDel);
-		TypeTraits<Thunder.Turret.Aircraft.DeadDel>.Init(factory.Check_Thunder_Turret_Aircraft_DeadDel);
 		TypeTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Init(factory.Check_Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		TypeTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Init(factory.Check_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
-		TypeTraits<System.Action<Thunder.GameMode.BaseGameMode>>.Init(factory.Check_System_Action_Thunder_GameMode_BaseGameMode);
-		TypeTraits<Thunder.GameMode.BaseGameMode.ModeComplete>.Init(factory.Check_Thunder_GameMode_BaseGameMode_ModeComplete);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -134,12 +122,8 @@ public class DelegateFactory
 		StackTraits<Thunder.UI.BaseUi.AfterOpenDel>.Push = factory.Push_Thunder_UI_BaseUi_AfterOpenDel;
 		StackTraits<Thunder.UI.BaseUi.BeforeCloseDel>.Push = factory.Push_Thunder_UI_BaseUi_BeforeCloseDel;
 		StackTraits<Thunder.UI.BaseUi.CloseCheck>.Push = factory.Push_Thunder_UI_BaseUi_CloseCheck;
-		StackTraits<Thunder.UI.BuildShipPanel.BuildShipCompleteDel>.Push = factory.Push_Thunder_UI_BuildShipPanel_BuildShipCompleteDel;
-		StackTraits<Thunder.Turret.Aircraft.DeadDel>.Push = factory.Push_Thunder_Turret_Aircraft_DeadDel;
 		StackTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Push = factory.Push_Thunder_Tool_BehaviorTree_ActionNode_DelAction;
 		StackTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Push = factory.Push_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition;
-		StackTraits<System.Action<Thunder.GameMode.BaseGameMode>>.Push = factory.Push_System_Action_Thunder_GameMode_BaseGameMode;
-		StackTraits<Thunder.GameMode.BaseGameMode.ModeComplete>.Push = factory.Push_Thunder_GameMode_BaseGameMode_ModeComplete;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -1645,120 +1629,6 @@ public class DelegateFactory
 		ToLua.Push(L, o);
 	}
 
-	class Thunder_UI_BuildShipPanel_BuildShipCompleteDel_Event : LuaDelegate
-	{
-		public Thunder_UI_BuildShipPanel_BuildShipCompleteDel_Event(LuaFunction func) : base(func) { }
-		public Thunder_UI_BuildShipPanel_BuildShipCompleteDel_Event(LuaFunction func, LuaTable self) : base(func, self) { }
-
-		public void Call(Thunder.UI.BuildShipPanel param0)
-		{
-			func.BeginPCall();
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-
-		public void CallWithSelf(Thunder.UI.BuildShipPanel param0)
-		{
-			func.BeginPCall();
-			func.Push(self);
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-	}
-
-	public Thunder.UI.BuildShipPanel.BuildShipCompleteDel Thunder_UI_BuildShipPanel_BuildShipCompleteDel(LuaFunction func, LuaTable self, bool flag)
-	{
-		if (func == null)
-		{
-			Thunder.UI.BuildShipPanel.BuildShipCompleteDel fn = delegate(Thunder.UI.BuildShipPanel param0) { };
-			return fn;
-		}
-
-		if(!flag)
-		{
-			Thunder_UI_BuildShipPanel_BuildShipCompleteDel_Event target = new Thunder_UI_BuildShipPanel_BuildShipCompleteDel_Event(func);
-			Thunder.UI.BuildShipPanel.BuildShipCompleteDel d = target.Call;
-			target.method = d.Method;
-			return d;
-		}
-		else
-		{
-			Thunder_UI_BuildShipPanel_BuildShipCompleteDel_Event target = new Thunder_UI_BuildShipPanel_BuildShipCompleteDel_Event(func, self);
-			Thunder.UI.BuildShipPanel.BuildShipCompleteDel d = target.CallWithSelf;
-			target.method = d.Method;
-			return d;
-		}
-	}
-
-	bool Check_Thunder_UI_BuildShipPanel_BuildShipCompleteDel(IntPtr L, int pos)
-	{
-		return TypeChecker.CheckDelegateType(typeof(Thunder.UI.BuildShipPanel.BuildShipCompleteDel), L, pos);
-	}
-
-	void Push_Thunder_UI_BuildShipPanel_BuildShipCompleteDel(IntPtr L, Thunder.UI.BuildShipPanel.BuildShipCompleteDel o)
-	{
-		ToLua.Push(L, o);
-	}
-
-	class Thunder_Turret_Aircraft_DeadDel_Event : LuaDelegate
-	{
-		public Thunder_Turret_Aircraft_DeadDel_Event(LuaFunction func) : base(func) { }
-		public Thunder_Turret_Aircraft_DeadDel_Event(LuaFunction func, LuaTable self) : base(func, self) { }
-
-		public void Call(Thunder.Turret.Aircraft param0)
-		{
-			func.BeginPCall();
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-
-		public void CallWithSelf(Thunder.Turret.Aircraft param0)
-		{
-			func.BeginPCall();
-			func.Push(self);
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-	}
-
-	public Thunder.Turret.Aircraft.DeadDel Thunder_Turret_Aircraft_DeadDel(LuaFunction func, LuaTable self, bool flag)
-	{
-		if (func == null)
-		{
-			Thunder.Turret.Aircraft.DeadDel fn = delegate(Thunder.Turret.Aircraft param0) { };
-			return fn;
-		}
-
-		if(!flag)
-		{
-			Thunder_Turret_Aircraft_DeadDel_Event target = new Thunder_Turret_Aircraft_DeadDel_Event(func);
-			Thunder.Turret.Aircraft.DeadDel d = target.Call;
-			target.method = d.Method;
-			return d;
-		}
-		else
-		{
-			Thunder_Turret_Aircraft_DeadDel_Event target = new Thunder_Turret_Aircraft_DeadDel_Event(func, self);
-			Thunder.Turret.Aircraft.DeadDel d = target.CallWithSelf;
-			target.method = d.Method;
-			return d;
-		}
-	}
-
-	bool Check_Thunder_Turret_Aircraft_DeadDel(IntPtr L, int pos)
-	{
-		return TypeChecker.CheckDelegateType(typeof(Thunder.Turret.Aircraft.DeadDel), L, pos);
-	}
-
-	void Push_Thunder_Turret_Aircraft_DeadDel(IntPtr L, Thunder.Turret.Aircraft.DeadDel o)
-	{
-		ToLua.Push(L, o);
-	}
-
 	class Thunder_Tool_BehaviorTree_ActionNode_DelAction_Event : LuaDelegate
 	{
 		public Thunder_Tool_BehaviorTree_ActionNode_DelAction_Event(LuaFunction func) : base(func) { }
@@ -1867,122 +1737,6 @@ public class DelegateFactory
 	}
 
 	void Push_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition(IntPtr L, Thunder.Tool.BehaviorTree.ConditionNode.DelCondition o)
-	{
-		ToLua.Push(L, o);
-	}
-
-	class System_Action_Thunder_GameMode_BaseGameMode_Event : LuaDelegate
-	{
-		public System_Action_Thunder_GameMode_BaseGameMode_Event(LuaFunction func) : base(func) { }
-		public System_Action_Thunder_GameMode_BaseGameMode_Event(LuaFunction func, LuaTable self) : base(func, self) { }
-
-		public void Call(Thunder.GameMode.BaseGameMode param0)
-		{
-			func.BeginPCall();
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-
-		public void CallWithSelf(Thunder.GameMode.BaseGameMode param0)
-		{
-			func.BeginPCall();
-			func.Push(self);
-			func.Push(param0);
-			func.PCall();
-			func.EndPCall();
-		}
-	}
-
-	public System.Action<Thunder.GameMode.BaseGameMode> System_Action_Thunder_GameMode_BaseGameMode(LuaFunction func, LuaTable self, bool flag)
-	{
-		if (func == null)
-		{
-			System.Action<Thunder.GameMode.BaseGameMode> fn = delegate(Thunder.GameMode.BaseGameMode param0) { };
-			return fn;
-		}
-
-		if(!flag)
-		{
-			System_Action_Thunder_GameMode_BaseGameMode_Event target = new System_Action_Thunder_GameMode_BaseGameMode_Event(func);
-			System.Action<Thunder.GameMode.BaseGameMode> d = target.Call;
-			target.method = d.Method;
-			return d;
-		}
-		else
-		{
-			System_Action_Thunder_GameMode_BaseGameMode_Event target = new System_Action_Thunder_GameMode_BaseGameMode_Event(func, self);
-			System.Action<Thunder.GameMode.BaseGameMode> d = target.CallWithSelf;
-			target.method = d.Method;
-			return d;
-		}
-	}
-
-	bool Check_System_Action_Thunder_GameMode_BaseGameMode(IntPtr L, int pos)
-	{
-		return TypeChecker.CheckDelegateType(typeof(System.Action<Thunder.GameMode.BaseGameMode>), L, pos);
-	}
-
-	void Push_System_Action_Thunder_GameMode_BaseGameMode(IntPtr L, System.Action<Thunder.GameMode.BaseGameMode> o)
-	{
-		ToLua.Push(L, o);
-	}
-
-	class Thunder_GameMode_BaseGameMode_ModeComplete_Event : LuaDelegate
-	{
-		public Thunder_GameMode_BaseGameMode_ModeComplete_Event(LuaFunction func) : base(func) { }
-		public Thunder_GameMode_BaseGameMode_ModeComplete_Event(LuaFunction func, LuaTable self) : base(func, self) { }
-
-		public void Call(Thunder.GameMode.BaseGameMode param0, Thunder.GameMode.BaseGameMode.CompleteParam param1)
-		{
-			func.BeginPCall();
-			func.Push(param0);
-			func.PushValue(param1);
-			func.PCall();
-			func.EndPCall();
-		}
-
-		public void CallWithSelf(Thunder.GameMode.BaseGameMode param0, Thunder.GameMode.BaseGameMode.CompleteParam param1)
-		{
-			func.BeginPCall();
-			func.Push(self);
-			func.Push(param0);
-			func.PushValue(param1);
-			func.PCall();
-			func.EndPCall();
-		}
-	}
-
-	public Thunder.GameMode.BaseGameMode.ModeComplete Thunder_GameMode_BaseGameMode_ModeComplete(LuaFunction func, LuaTable self, bool flag)
-	{
-		if (func == null)
-		{
-			Thunder.GameMode.BaseGameMode.ModeComplete fn = delegate(Thunder.GameMode.BaseGameMode param0, Thunder.GameMode.BaseGameMode.CompleteParam param1) { };
-			return fn;
-		}
-
-		if(!flag)
-		{
-			Thunder_GameMode_BaseGameMode_ModeComplete_Event target = new Thunder_GameMode_BaseGameMode_ModeComplete_Event(func);
-			Thunder.GameMode.BaseGameMode.ModeComplete d = target.Call;
-			target.method = d.Method;
-			return d;
-		}
-		else
-		{
-			Thunder_GameMode_BaseGameMode_ModeComplete_Event target = new Thunder_GameMode_BaseGameMode_ModeComplete_Event(func, self);
-			Thunder.GameMode.BaseGameMode.ModeComplete d = target.CallWithSelf;
-			target.method = d.Method;
-			return d;
-		}
-	}
-
-	bool Check_Thunder_GameMode_BaseGameMode_ModeComplete(IntPtr L, int pos)
-	{
-		return TypeChecker.CheckDelegateType(typeof(Thunder.GameMode.BaseGameMode.ModeComplete), L, pos);
-	}
-
-	void Push_Thunder_GameMode_BaseGameMode_ModeComplete(IntPtr L, Thunder.GameMode.BaseGameMode.ModeComplete o)
 	{
 		ToLua.Push(L, o);
 	}
