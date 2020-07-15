@@ -241,6 +241,7 @@ public static class LuaBinder
 		L.EndModule();
 		L.BeginModule("Entity");
 		Thunder_Entity_ControllerWrap.Register(L);
+		Thunder_Entity_LuaScriptInterfaceWrap.Register(L);
 		Thunder_Entity_PeopleWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Behavior");
