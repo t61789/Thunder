@@ -7,6 +7,7 @@ using Thunder.Tool;
 using Thunder.UI;
 using Thunder.Utility;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 using BindType = ToLuaMenu.BindType;
@@ -183,8 +184,11 @@ public static class CustomSettings
         _GT(typeof(Button.ButtonClickedEvent)),
         _GT(typeof(Vector2)),
         _GT(typeof(Vector3)),
+        _GT(typeof(Vector4)),
         _GT(typeof(Matrix4x4)),
         _GT(typeof(Quaternion)),
+        _GT(typeof(AnimatorStateInfo)),
+        _GT(typeof(TrailRenderer)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

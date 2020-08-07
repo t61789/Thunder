@@ -378,17 +378,17 @@ namespace Thunder.Sys
         public static DataTable LoadFromJsonReciever(JsonReciever jsonReciever)
         {
             int rank1 = jsonReciever.Rows.GetLength(0);
-            int rank2 = jsonReciever.Rows.GetLength(1);
+            int rank2 = jsonReciever.Fields.Length;
             for (int i = 0; i < rank1; i++)
                 for (int j = 0; j < rank2; j++)
                 {
-                    switch (jsonReciever.Rows[rank1][rank2])
+                    switch (jsonReciever.Rows[i][j])
                     {
                         case long _:
-                            jsonReciever.Rows[rank1][rank2] = (int) (long) jsonReciever.Rows[rank1][rank2];
+                            jsonReciever.Rows[i][j] = (int) (long) jsonReciever.Rows[i][j];
                             break;
                         case double _:
-                            jsonReciever.Rows[rank1][rank2] = (float)(double)jsonReciever.Rows[rank1][rank2];
+                            jsonReciever.Rows[i][j] = (float)(double)jsonReciever.Rows[i][j];
                             break;
                     }
                 }

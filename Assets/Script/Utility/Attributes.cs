@@ -12,4 +12,9 @@ namespace Thunder.Utility
     {
 
     }
+
+    public class DontInjectAttribute : Attribute
+    {
+
+    }
 }

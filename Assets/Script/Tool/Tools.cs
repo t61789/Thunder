@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using LuaInterface;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,7 @@ namespace Thunder.Tool
 
         public const long bigNumber = 9223372036854775;
 
-        public static Vector3 screenMiddle = new Vector3(Screen.width / 2, Screen.height / 2);
+        public static Vector3 screenMiddle = new Vector3(Screen.width / 2f, Screen.height / 2f);
 
         public static Vector2 farPosition = new Vector2(bigNumber, bigNumber);
 
@@ -590,15 +591,6 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// Log向量
-        /// </summary>
-        /// <param name="vec"></param>
-        public static void LogVector(Vector3 vec)
-        {
-            Debug.Log("(" + vec.x + "," + vec.y + "," + vec.z + ")");
-        }
-
-        /// <summary>
         /// 范围内随机的大量点
         /// </summary>
         /// <param name="center"></param>
@@ -872,6 +864,87 @@ namespace Thunder.Tool
         {
             if (pos.w == 0) return default;
             return pos/pos.w;
+        }
+
+        public static bool InCameraView(Vector3 pos, Camera camera = null)
+        {
+            camera = camera ?? Camera.main;
+            Vector4 result = camera.projectionMatrix * camera.worldToCameraMatrix * pos.ToV4Pos();
+            bool x = result.x <= result.w && result.x >= -result.w;
+            bool y = result.y <= result.w && result.y >= -result.w;
+            return x && y;
+        }
+
+        public static void LogVector(Vector3 v)
+        {
+            Debug.Log($"({v.x},{v.y},{v.z})");
+        }
+
+        public static float TurnToVectorXz(float preLocalEulerAngleY,Vector3 target,float deltaAngle)
+        {
+            float targetAngle =
+                Mathf.Sign(Vector3.Cross(Vector3.forward, target).y) *
+                Vector3.Angle(target, Vector3.forward);
+            return Mathf.MoveTowardsAngle(preLocalEulerAngleY, targetAngle, deltaAngle);
+        }
+
+        public static Transform RecursiveFind(Transform root,string name)
+        {
+            if (root == null) return null;
+            var findTrans = new Stack<Transform>();
+            findTrans.Push(root);
+            while (findTrans.Count != 0)
+            {
+                Transform curTrans = findTrans.Pop();
+                if (curTrans.name == name) return curTrans;
+                for (int i = 0; i < curTrans.childCount; i++)
+                    findTrans.Push(curTrans.GetChild(i));
+            }
+
+            return null;
+        }
+
+        public static Vector3 ProjectToxz(this Vector3 source)
+        {
+            source.y = 0;
+            return source;
+        }
+
+        public static Vector3 ProjectToxy(this Vector3 source)
+        {
+            source.z = 0;
+            return source;
+        }
+
+        public static Vector3 ProjectToyz(this Vector3 source)
+        {
+            source.x = 0;
+            return source;
+        }
+
+        public static bool InRange(this Array arr,int index)
+        {
+            return index >= 0 && index < arr.Length;
+        }
+
+        public static Vector3 VecMul(this Vector3 v1, Vector3 v2)
+        {
+            return new Vector3(v1.x * v2.x,v1.y* v2.y,v1.z*v2.z);
+        }
+
+        public static string GetStr(this Vector2 v)
+        {
+            return $"({v.x},{v.y})";
+        }
+
+        public static string GetStr(this Vector3 v)
+        {
+            return $"({v.x},{v.y},{v.z})";
+        }
+
+        public static string GetStr(this Vector4 v)
+        {
+            return $"({v.x},{v.y},{v.z},{v.w})";
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using LuaInterface;
 using Thunder.Sys;
 using Thunder.Tool;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -14,52 +16,68 @@ using UnityEngine.Assertions;
 
 namespace Thunder.Entity
 {
+    [Serializable]
     public class LuaScriptInterface:MonoBehaviour
     {
-        [DontInject]
-        [SerializeField]
-        private string _LuaScriptScopePath;
+        public string LuaScriptScopePath;
 
-        [DontInject]
+        public string DebugScopePath;
+
+        public bool UseDebugScopePath;
+
+        public bool InitAtStart;
+
+        public object InjectSource;
+
         protected LuaTable LuaScope;
 
-        [DontInject]
-        public LuaTable Data;
+        public LuaTable Data { private set; get; }
 
-        [DontInject]
         private static readonly Dictionary<Type, (PropertyInfo[], FieldInfo[])> InjectInfoBuffer =
             new Dictionary<Type, (PropertyInfo[], FieldInfo[])>();
 
-        [DontInject]
         private static readonly Dictionary<string, LuaTable> LuaScopeBuffer =
             new Dictionary<string, LuaTable>();
 
-        [DontInject]
         private static readonly Dictionary<(LuaTable, string), LuaFunction> LuaFuncBuffer =
             new Dictionary<(LuaTable, string), LuaFunction>();
 
-        [DontInject]
         private static bool _ClearBufferRegistered;
 
         protected virtual void Awake()
         {
-            InitData(_LuaScriptScopePath);
+            if(InitAtStart)
+                InitLuaData(LuaScriptScopePath,DebugScopePath);
         }
 
-        private void InitData(string scriptScope)
+        public void InitLuaData(string scriptScope,string debugScriptScope)
         {
-            if (string.IsNullOrEmpty(scriptScope))
+            if (string.IsNullOrEmpty(UseDebugScopePath? debugScriptScope : scriptScope))
             {
                 Debug.LogWarning($"{name} 的Lua接口未指定脚本");
                 return;
             }
 
-            var command = scriptScope.Split(':');
-            Assert.IsTrue(command.Length == 2 &&
-                          !string.IsNullOrEmpty(command[0]) &&
-                          !string.IsNullOrEmpty(command[1]), $"{name} 的Lua脚本格式有误：{scriptScope}");
+            string[] command;
+            if (!UseDebugScopePath)
+            {
+                command = scriptScope.Split(':');
+                Assert.IsTrue(command.Length == 2 &&
+                              !string.IsNullOrEmpty(command[0]) &&
+                              !string.IsNullOrEmpty(command[1]), $"{name} 的Lua脚本格式有误：{scriptScope}");
 
-            Stable.Lua.ExecuteFile(command[0]);
+                Stable.Lua.ExecuteFile(command[0]);
+            }
+            else
+            {
+                using (FileStream fs = File.OpenRead(debugScriptScope))
+                {
+                    Stable.Lua.ExecuteCommand(new StreamReader(fs).ReadToEnd());
+                }
+                command = new string[2];
+                command[1] = Path.GetFileNameWithoutExtension(debugScriptScope);
+            }
+
             if (!LuaScopeBuffer.TryGetValue(command[1], out LuaScope))
             {
                 LuaScope = Stable.Lua.LuaState[command[1]] as LuaTable;
@@ -67,9 +85,8 @@ namespace Thunder.Entity
             }
 
             Data = Stable.Lua.GetEmptyTable();
-            Data["CSharp"] = this;
             Inject(Data);
-            GetLuaFunc("Init")?.Call(Data, this);
+            GetLuaFunc("Init",true)?.Call(Data, this);
 
             if (_ClearBufferRegistered) return;
             Stable.Lua.StateDisposedEvent.AddListener(ClearBuffer);
@@ -78,7 +95,9 @@ namespace Thunder.Entity
 
         private void Inject(LuaTable data)
         {
-            Type curType = GetType();
+            InjectSource = InjectSource ?? GetComponent<BaseEntity>();
+            Assert.IsNotNull(InjectSource,$"对象 {name} 的Lua接口未找到注入源");
+            Type curType = InjectSource.GetType();
 
             if (!InjectInfoBuffer.TryGetValue(curType, out var injectInfo))
             {
@@ -159,9 +178,9 @@ namespace Thunder.Entity
             return result;
         }
 
-        protected class DontInjectAttribute : Attribute
+        public void CallLuaMethod(string methodName)
         {
-
+            GetLuaFunc(methodName,true)?.Call(Data);
         }
     }
 }

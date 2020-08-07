@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Thunder.Tool;
@@ -21,26 +22,40 @@ namespace Thunder.Sys
         private readonly Dictionary<string, ControlInfo> _BufferKey =
             new Dictionary<string, ControlInfo>();
 
+        private readonly HashSet<string> _InvalidInputManagerKey =
+            new HashSet<string>();
+
         public float ShieldValue = -1;
 
-        public ControlInfo RequireKey(string key,float shieldValue)
+        public ControlInfo RequireKey(string key, float shieldValue)
         {
             if (shieldValue < ShieldValue) return ControlInfo.Default;
-            ControlInfo fromInputManager = new ControlInfo(new Vector3(Input.GetAxis(key), 0),
-                Input.GetButton(key),
-                Input.GetButtonDown(key),
-                Input.GetButtonUp(key));
-            return _CusKey.TryGetValue(key, out var value) ? KeyConflict(fromInputManager,value) : fromInputManager;
-        }
-        public void InjectValue(string key,ControlInfo info)
-        {
-            if (_BufferKey.TryGetValue(key, out var value))
-                _BufferKey[key] = KeyConflict(value,info);
-            else
-                _BufferKey.Add(key,info);
+
+            ControlInfo fromInputManager = ControlInfo.Default;
+            if (!_InvalidInputManagerKey.Contains(key))
+                try
+                {
+                    fromInputManager = new ControlInfo(new Vector3(Input.GetAxis(key), 0),
+                        Input.GetButton(key),
+                        Input.GetButtonDown(key),
+                        Input.GetButtonUp(key));
+                }
+                catch (ArgumentException)
+                {
+                    _InvalidInputManagerKey.Add(key);
+                }
+            return _CusKey.TryGetValue(key, out var value) ? KeyConflict(fromInputManager, value) : fromInputManager;
         }
 
-        private static ControlInfo KeyConflict(ControlInfo ctr1,ControlInfo ctr2)   // ctr1优先
+        public void InjectValue(string key, ControlInfo info)
+        {
+            if (_BufferKey.TryGetValue(key, out var value))
+                _BufferKey[key] = KeyConflict(value, info);
+            else
+                _BufferKey.Add(key, info);
+        }
+
+        private static ControlInfo KeyConflict(ControlInfo ctr1, ControlInfo ctr2)   // ctr1优先
         {
             if (ctr1.Equals(ControlInfo.Default) && !ctr2.Equals(ControlInfo.Default)) return ctr2;
             return ctr1;
@@ -49,7 +64,6 @@ namespace Thunder.Sys
         private void Awake()
         {
 #if UNITY_STANDALONE || UNITY_EDITOR
-            _PreCursorPos = Tools.GetMousePosition();
             if (_LockCursor) _LockCursor = false;
 #endif
         }
@@ -80,8 +94,6 @@ namespace Thunder.Sys
         private readonly KeyCode[] _CodesArr = { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D };
         private readonly Vector2[] _DirsArr = { Vector2.up, Vector2.left, Vector2.down, Vector2.right };
 
-        private Vector3 _PreCursorPos;
-
         public bool LockCursor
         {
             get => _LockCursor;
@@ -104,7 +116,7 @@ namespace Thunder.Sys
             for (int i = 0; i < _CodesArr.Length; i++)
             {
                 if (!Input.GetKey(_CodesArr[i])) continue;
-                stay ++;
+                stay++;
                 dir += _DirsArr[i];
             }
             dir = dir.normalized;
@@ -112,22 +124,14 @@ namespace Thunder.Sys
             bool up = _CodesArr.Any(Input.GetKeyUp) && stay == 1;
             bool down = _CodesArr.Any(Input.GetKeyDown) && stay == 1;
 
-            InjectValue( "Axis1",new ControlInfo(dir,stay>0,down,up));
+            InjectValue("Axis1", new ControlInfo(dir, stay > 0, down, up));
 
             // 鼠标 Axis2
-            Vector3 curCursorPos = Input.mousePosition;
-            if(curCursorPos== _PreCursorPos)
-                InjectValue("Axis2", new ControlInfo(default, false, false, false));
-            else
-            {
-                InjectValue("Axis2", new ControlInfo(curCursorPos - _PreCursorPos, true, false, false));
-                _PreCursorPos = curCursorPos;
-            }
-
-            if (_LockCursor) _PreCursorPos = Tools.screenMiddle;
+            Vector2 cursorAxis = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            InjectValue("Axis2", new ControlInfo(cursorAxis, true, false, false));
 
             // 滚轮 Axis3
-            InjectValue("Axis3", new ControlInfo(Input.mouseScrollDelta.y*Vector3.right, true, false, false));
+            InjectValue("Axis3", new ControlInfo(Input.mouseScrollDelta.y * Vector3.right, true, false, false));
 #endif
         }
     }

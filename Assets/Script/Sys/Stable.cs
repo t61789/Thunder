@@ -72,10 +72,12 @@ namespace Thunder.Sys
                     PublicVar = gameObject;
                     Bundle = new BundleSys();
                     Lua = new LuaSys();
+                    DataBase = new DataBaseSys();
                     ObjectPool = gameObject.AddComponent<ObjectPool>();
                     Container = GameObject.Find("Container").transform;
-                    //Ui = new UiSys();
-                    DataBase = new DataBaseSys();
+                    Ui = new UiSys();
+                    Camp = new CampSys();
+                    MainCamera = Camera.main.transform.GetComponent<CameraController>();
                     Value = new ValueSys();
                     Control = gameObject.AddComponent<ControlSys>();
                     break;
