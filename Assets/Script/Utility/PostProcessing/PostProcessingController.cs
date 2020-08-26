@@ -9,6 +9,7 @@ namespace Thunder.Utility
     [RequireComponent(typeof(Camera))]
     public class PostProcessingController:MonoBehaviour
     {
+        public static PostProcessingController Instance;
         public Bsc Bsc;
         public EdgeDetect EdgeDetect;
         public GaussBlur GaussBlur;
@@ -16,6 +17,10 @@ namespace Thunder.Utility
         public MotionBlur MotionBlur;
         public SMotionBlur SMotionBlur;
         public DepthTexture DepthTexture;
+        public DepthOfField DepthOfField;
+        public LDepthOfField LDepthOfField;
+        public Ssao Ssao;
+        public AimScope AimScope;
 
         private RenderTexture _Souce;
         private Camera _Camera;
@@ -23,8 +28,10 @@ namespace Thunder.Utility
 
         private void Start()
         {
+            Instance = this;
             _Camera = GetComponent<Camera>();
-            _Camera.depthTextureMode = DepthTextureMode.Depth;
+            _Camera.depthTextureMode = DepthTextureMode.Depth |
+                                        DepthTextureMode.DepthNormals;
 
             foreach (var processing in GetType().
                 GetFields(BindingFlags.Public | BindingFlags.Instance).

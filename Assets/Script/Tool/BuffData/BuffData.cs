@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Thunder.Tool.BuffData
 {
+    [Serializable]
     public class BuffData
     {
         // 用于实现Buff机制的类，采用树状结构储存
@@ -36,31 +38,43 @@ namespace Thunder.Tool.BuffData
 
         public float BaseData
         {
-            get => _baseData;
+            get => _BaseData;
             set
             {
-                if (_baseData == value) return;
-                _baseData = value;
+                if (_BaseData == value) return;
+                _BaseData = value;
                 ReCalculateData();
             }
         }
-        private float _baseData;
+        [SerializeField]
+        private float _BaseData;
 
         public float CurData
         {
-            get => _curData;
+            get
+            {
+                if (_CurDataChanged) return _CurData;
+                CurData = BaseData;
+                _CurDataChanged = true;
+                return _CurData;
+            }
             set
             {
-                if (_curData == value) return;
-                _curData = value;
+                if (_CurData == value) return;
+                _CurData = value;
                 Parent?.ReCalculateData();
             }
         }
-        private float _curData;
+        private float _CurData;
+        private bool _CurDataChanged;
 
+        [HideInInspector]
         public BuffData Parent { get; set; }
 
-        private readonly List<Unit> _child = new List<Unit>();
+        [HideInInspector]
+        public UnityEvent DataChanged;
+
+        private readonly List<Unit> _Child = new List<Unit>();
 
         public BuffData(float baseData)
         {
@@ -71,7 +85,7 @@ namespace Thunder.Tool.BuffData
         {
             // 递归修改所有父节点的当前值
             float newData = BaseData;
-            foreach (var t in _child)
+            foreach (var t in _Child)
             {
                 switch (t.Op)
                 {
@@ -98,49 +112,55 @@ namespace Thunder.Tool.BuffData
         public void AddBuff(BuffData newBuff, string name, Operator op, float priority)
         {
             newBuff.Parent = this;
-            _child.Add(new Unit(name, op, priority, newBuff));
-            for (int i = _child.Count - 1; i > 0; i--)
+            _Child.Add(new Unit(name, op, priority, newBuff));
+            for (int i = _Child.Count - 1; i > 0; i--)
             {
-                if (_child[i - 1].Priority > _child[i].Priority)
+                if (_Child[i - 1].Priority > _Child[i].Priority)
                 {
-                    Unit temp = _child[i - 1];
-                    _child[i - 1] = _child[i];
-                    _child[i] = temp;
+                    Unit temp = _Child[i - 1];
+                    _Child[i - 1] = _Child[i];
+                    _Child[i] = temp;
                 }
                 else break;
             }
 
             ReCalculateData();
+
+            DataChanged?.Invoke();
         }
 
         public void RemoveBuff(BuffData buf)
         {
-            for (int i = 0; i < _child.Count; i++)
+            for (int i = 0; i < _Child.Count; i++)
             {
-                if (_child[i].BuffData != buf) continue;
-                _child[i].BuffData.Parent = null;
-                _child.RemoveAt(i);
+                if (_Child[i].BuffData != buf) continue;
+                _Child[i].BuffData.Parent = null;
+                _Child.RemoveAt(i);
                 return;
             }
             ReCalculateData();
+
+            DataChanged?.Invoke();
         }
 
         public void RemoveBuff(string name)
         {
-            for (int i = 0; i < _child.Count; i++)
+            for (int i = 0; i < _Child.Count; i++)
             {
-                if (_child[i].Name != name) continue;
-                _child[i].BuffData.Parent = null;
-                _child.RemoveAt(i);
-                return;
+                if (_Child[i].Name != name) continue;
+                _Child[i].BuffData.Parent = null;
+                _Child.RemoveAt(i);
+                break;
             }
             ReCalculateData();
+
+            DataChanged?.Invoke();
         }
 
         public void Destroy()
         {
             Parent?.RemoveBuff(this);
-            foreach (var nBuffData in _child)
+            foreach (var nBuffData in _Child)
                 nBuffData.BuffData.Parent = null;
         }
 
@@ -236,7 +256,7 @@ namespace Thunder.Tool.BuffData
             const char l = '(';
             const char r = ')';
             _Sb.Clear();
-            foreach (var unit in _child)
+            foreach (var unit in _Child)
             {
                 _Sb.Append(l);
                 _Sb.Append(unit.Name);

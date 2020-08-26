@@ -1,6 +1,7 @@
 ﻿/.vs/Thunder
 
 /Assets/Bundle
+!/Assets/Bundle/Shader
 /Build
 /Library
 /Logs

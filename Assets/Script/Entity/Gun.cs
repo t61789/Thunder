@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Thunder.Sys;
 using Thunder.Tool;
+using Thunder.Tool.BuffData;
+using Thunder.UI;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -14,8 +16,9 @@ namespace Thunder.Entity
     public class Gun:BaseEntity
     {
         public float FireInterval = 0.2f;
-        public BulletSpread _BulletSpread;
         public float CameraRecoliDampTime = 0.1f;
+        public Vector3 OverHeatFactor => _BulletSpread.OverHeatFactor;
+        public float AimScopeFov = 20;
 
         private Animator _Animator;
         private float _FireIntervalCount;
@@ -24,6 +27,14 @@ namespace Thunder.Entity
         private float _CameraRecoliDampTimeCount;
         private Vector2 _CameraStart;
         private Vector2 _CameraEnd;
+        [SerializeField]
+        private BulletSpread _BulletSpread;
+        private bool _AimScopeEnable;
+        private float _BaseAimScopeFov;
+        private Camera _GunCamera;
+
+        private const string Squat = "squat";
+        private const string Hang = "hang";
 
         protected override void Awake()
         {
@@ -33,6 +44,10 @@ namespace Thunder.Entity
             _Trans = transform;
             Assert.IsNotNull(_Player = _Trans.parent.parent.parent.GetComponent<Player>(),
                 $"枪械 {name} 安装位置不正确");
+            _Player.OnSquat.AddListener(PlayerSquat);
+            _Player.OnHanging.AddListener(PlayerHanging);
+            _GunCamera = Camera.main;
+            _BaseAimScopeFov = _GunCamera.fieldOfView;
         }
 
         private void Update()
@@ -54,7 +69,7 @@ namespace Thunder.Entity
         private void Fire()
         {
             Vector3 dir = _BulletSpread.GetNextBulletDir(FireInterval);
-            dir = _Trans.localToWorldMatrix * dir;
+            dir = Camera.main.transform.localToWorldMatrix * dir;
             Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + dir, Color.red);
 
             RaycastHit[] hits = Physics.RaycastAll(_Trans.position, dir);
@@ -89,6 +104,54 @@ namespace Thunder.Entity
 
                 _Player.ViewRotAddition(_CurCameraRecoilAddition);
             }
+
+            AimPoint.Instance.SetAimValue(OverHeatFactor.Average());
+        }
+
+        private void PlayerSquat(bool squating,bool hanging)
+        {
+            if (squating)
+            {
+                AimPoint.Instance.AimSizeScale.AddBuff(_BulletSpread.SquatSpreadScale, Squat, BuffData.Operator.Mul, 0);
+                _BulletSpread.SpreadScale.AddBuff(_BulletSpread.SquatSpreadScale, Squat, BuffData.Operator.Mul, 0);
+                _BulletSpread.SetSpreadScale();
+            }
+            else
+            {
+                AimPoint.Instance.AimSizeScale.RemoveBuff(Squat);
+                _BulletSpread.SpreadScale.RemoveBuff(Squat);
+                _BulletSpread.SetSpreadScale();
+            }
+        }
+
+        private void PlayerHanging(bool squating, bool hanging)
+        {
+            if (hanging)
+            {
+                AimPoint.Instance.AimSizeScale.AddBuff(_BulletSpread.HangingSpreadScale, Hang, BuffData.Operator.Mul, 0);
+                _BulletSpread.SpreadScale.AddBuff(_BulletSpread.HangingSpreadScale, Hang, BuffData.Operator.Mul, 0);
+                _BulletSpread.SetSpreadScale();
+            }
+            else
+            {
+                AimPoint.Instance.AimSizeScale.RemoveBuff(Hang);
+                _BulletSpread.SpreadScale.RemoveBuff(Hang);
+                _BulletSpread.SetSpreadScale();
+            }
+        }
+
+        private void SwitchAimScope()
+        {
+            if (!_AimScopeEnable)
+            {
+                _GunCamera.fieldOfView = AimScopeFov;
+            }
+            else
+            {
+                _GunCamera.fieldOfView = _BaseAimScopeFov;
+            }
+
+            _AimScopeEnable = !_AimScopeEnable;
         }
 
         private void OnDrawGizmos()
@@ -100,5 +163,4 @@ namespace Thunder.Entity
             }
         }
     }
-
 }

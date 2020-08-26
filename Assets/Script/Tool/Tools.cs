@@ -946,5 +946,50 @@ namespace Thunder.Tool
         {
             return $"({v.x},{v.y},{v.z},{v.w})";
         }
+
+        public static Vector3 Xyz(this Vector4 v)
+        {
+            return new Vector3(v.x,v.y,v.z);
+        }
+
+        public static Vector2 Xy(this Vector4 v)
+        {
+            return new Vector2(v.x, v.y);
+        }
+
+        public static Vector2 Zw(this Vector4 v)
+        {
+            return new Vector2(v.z, v.w);
+        }
+
+        public static Vector2 Xy(this Vector3 v)
+        {
+            return new Vector2(v.x, v.y);
+        }
+
+        public static float Average(this Vector2 v)
+        {
+            return (v.x + v.y) / 2;
+        }
+
+        public static float Average(this Vector3 v)
+        {
+            return (v.x + v.y + v.z) / 2;
+        }
+
+        public static float Average(this Vector4 v)
+        {
+            return (v.x + v.y + v.z + v.w) / 2;
+        }
+
+        public static float Interpolation(float min,float max,float t)
+        {
+            return Mathf.Clamp01((t - min) / (max - min));
+        }
+
+        public static float InterpolationUnclamped(float min, float max, float t)
+        {
+            return (t - min) / (max - min);
+        }
     }
 }
