@@ -6,13 +6,13 @@ namespace Thunder.Utility
     {
         public static void IsNull(object arg, string message = null)
         {
-            if(arg!=null)
+            if (arg != null)
                 throw new Exception(message);
         }
 
         public static void IsNotNull(object arg, string message = null)
         {
-            if (arg==null)
+            if (arg == null)
                 throw new Exception(message);
         }
 

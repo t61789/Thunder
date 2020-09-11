@@ -355,7 +355,7 @@ namespace Thunder.Sys
             var split = assetPath?.Split('!');
             split = split ?? new string[1];
             // ReSharper disable once PossibleNullReferenceException
-            Assert.IsTrue(split.Length <= 3,$"路径不正确：{assetPath}");
+            Assert.IsTrue(split.Length <= 3, $"路径不正确：{assetPath}");
             return CreateAssetId(split, defaultBundle);
         }
     }

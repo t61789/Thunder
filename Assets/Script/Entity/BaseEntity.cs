@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thunder.Utility;
+﻿using Thunder.Utility;
 using UnityEngine;
 
 namespace Thunder.Entity
 {
-    public class BaseEntity:MonoBehaviour
+    public class BaseEntity : MonoBehaviour
     {
         public string EntityName
         {

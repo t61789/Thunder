@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Thunder.UI;
-using UnityEngine;
-
-namespace Thunder.Utility
+﻿namespace Thunder.Utility
 {
     //public class ControllerInput : MonoBehaviour
     //{

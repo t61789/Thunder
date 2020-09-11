@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Thunder.Sys;
-using LuaInterface;
-using Thunder.Tool;
-using Thunder.Utility;
+﻿using Thunder.Utility;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 
 namespace Thunder.Entity

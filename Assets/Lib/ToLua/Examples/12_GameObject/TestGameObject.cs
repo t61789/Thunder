@@ -1,6 +1,5 @@
 ﻿using LuaInterface;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TestGameObject : MonoBehaviour
 {

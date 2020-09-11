@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Thunder.Utility.PostProcessing
 {
     [Serializable]
-    public class DepthTexture:BasePostProcessing
+    public class DepthTexture : BasePostProcessing
     {
         public override void Process(RenderTexture source, RenderTexture dest)
         {

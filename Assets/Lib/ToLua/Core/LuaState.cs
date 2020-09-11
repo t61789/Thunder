@@ -29,7 +29,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace LuaInterface
 {

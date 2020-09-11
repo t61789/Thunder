@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Thunder.Utility.PostProcessing
 {
     [Serializable]
-    public class MotionBlur:BasePostProcessing
+    public class MotionBlur : BasePostProcessing
     {
         [Range(0, 1f)]
         public float BlurAmount = 0.5f;

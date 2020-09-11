@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Thunder.Utility
 {
     [RequireComponent(typeof(Camera))]
-    public class PostProcessingController:MonoBehaviour
+    public class PostProcessingController : MonoBehaviour
     {
         public static PostProcessingController Instance;
         public Bsc Bsc;

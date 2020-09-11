@@ -1,12 +1,14 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using LuaInterface;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
+using Random = System.Random;
 
 namespace Thunder.Tool
 {
@@ -19,6 +21,13 @@ namespace Thunder.Tool
         public static Vector3 screenMiddle = new Vector3(Screen.width / 2f, Screen.height / 2f);
 
         public static Vector2 farPosition = new Vector2(bigNumber, bigNumber);
+
+        private static Random _Random;
+
+        static Tools()
+        {
+            _Random = new Random(System.Guid.NewGuid().GetHashCode());
+        }
 
         public static void Log(string message)
         {
@@ -809,9 +818,9 @@ namespace Thunder.Tool
             return mesh;
         }
 
-        public static bool HaveAttribute<T>(this Type type,bool inherit=false) where T : Attribute
+        public static bool HaveAttribute<T>(this Type type, bool inherit = false) where T : Attribute
         {
-            return type.GetCustomAttributes(typeof(T), inherit).Length >0;
+            return type.GetCustomAttributes(typeof(T), inherit).Length > 0;
         }
 
         public static bool HaveAttribute<T>(this PropertyInfo type, bool inherit = false) where T : Attribute
@@ -824,7 +833,7 @@ namespace Thunder.Tool
             return type.GetCustomAttributes(typeof(T), inherit).Length > 0;
         }
 
-        public static void AddOrModify<K, V>(this Dictionary<K, V> dic, K key, V value,bool forceAdd=false)
+        public static void AddOrModify<K, V>(this Dictionary<K, V> dic, K key, V value, bool forceAdd = false)
         {
             if (dic.TryGetValue(key, out _))
             {
@@ -832,10 +841,10 @@ namespace Thunder.Tool
                 dic[key] = value;
                 return;
             }
-            dic.Add(key,value);
+            dic.Add(key, value);
         }
 
-        public static V GetOrCreate<K, V>(this Dictionary<K, V> dic, K key,bool forceGet=false)
+        public static V GetOrCreate<K, V>(this Dictionary<K, V> dic, K key, bool forceGet = false)
         {
             if (dic.TryGetValue(key, out var result))
                 return result;
@@ -845,14 +854,14 @@ namespace Thunder.Tool
             return result;
         }
 
-        public static void DrawLine(Vector3 start,Vector3 end)
+        public static void DrawLine(Vector3 start, Vector3 end)
         {
-            Debug.DrawLine(start,end, Color.red);
+            Debug.DrawLine(start, end, Color.red);
         }
 
         public static Vector4 ToV4Pos(this Vector3 pos)
         {
-            return new Vector4(pos.x,pos.y,pos.z,1);
+            return new Vector4(pos.x, pos.y, pos.z, 1);
         }
 
         public static Vector4 ToV4Dir(this Vector3 dir)
@@ -863,7 +872,7 @@ namespace Thunder.Tool
         public static Vector3 ToV3Pos(this Vector4 pos)
         {
             if (pos.w == 0) return default;
-            return pos/pos.w;
+            return pos / pos.w;
         }
 
         public static bool InCameraView(Vector3 pos, Camera camera = null)
@@ -880,7 +889,7 @@ namespace Thunder.Tool
             Debug.Log($"({v.x},{v.y},{v.z})");
         }
 
-        public static float TurnToVectorXz(float preLocalEulerAngleY,Vector3 target,float deltaAngle)
+        public static float TurnToVectorXz(float preLocalEulerAngleY, Vector3 target, float deltaAngle)
         {
             float targetAngle =
                 Mathf.Sign(Vector3.Cross(Vector3.forward, target).y) *
@@ -888,7 +897,7 @@ namespace Thunder.Tool
             return Mathf.MoveTowardsAngle(preLocalEulerAngleY, targetAngle, deltaAngle);
         }
 
-        public static Transform RecursiveFind(Transform root,string name)
+        public static Transform RecursiveFind(Transform root, string name)
         {
             if (root == null) return null;
             var findTrans = new Stack<Transform>();
@@ -922,14 +931,14 @@ namespace Thunder.Tool
             return source;
         }
 
-        public static bool InRange(this Array arr,int index)
+        public static bool InRange(this Array arr, int index)
         {
             return index >= 0 && index < arr.Length;
         }
 
         public static Vector3 VecMul(this Vector3 v1, Vector3 v2)
         {
-            return new Vector3(v1.x * v2.x,v1.y* v2.y,v1.z*v2.z);
+            return new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
         }
 
         public static string GetStr(this Vector2 v)
@@ -949,7 +958,7 @@ namespace Thunder.Tool
 
         public static Vector3 Xyz(this Vector4 v)
         {
-            return new Vector3(v.x,v.y,v.z);
+            return new Vector3(v.x, v.y, v.z);
         }
 
         public static Vector2 Xy(this Vector4 v)
@@ -982,7 +991,7 @@ namespace Thunder.Tool
             return (v.x + v.y + v.z + v.w) / 2;
         }
 
-        public static float Interpolation(float min,float max,float t)
+        public static float Interpolation(float min, float max, float t)
         {
             return Mathf.Clamp01((t - min) / (max - min));
         }
@@ -990,6 +999,282 @@ namespace Thunder.Tool
         public static float InterpolationUnclamped(float min, float max, float t)
         {
             return (t - min) / (max - min);
+        }
+
+        /// <summary>
+        /// 限定于360内
+        /// </summary>
+        public static float LerpAngle(float a, float b, float t)
+        {
+            float result = Mathf.LerpAngle(a, b, t);
+            return result + (result < 0 ? 360 : 0);
+        }
+
+        /// <summary>
+        /// 返回给定范围内的随机float值
+        /// </summary>
+        public static float RandomFloat(float min, float max)
+        {
+            float temp = (max - min) * RandomNormal();
+            return min + temp;
+        }
+
+        /// <summary>
+        /// 返回给定范围内的随机int值，闭区间
+        /// </summary>
+        public static int RandomInt(int min, int max)
+        {
+            return _Random.Next(min, max + 1);
+        }
+
+        /// <summary>
+        /// 返回0，1之间的float值
+        /// </summary>
+        public static float RandomNormal()
+        {
+            return (float)_Random.NextDouble();
+        }
+
+        /// <summary>
+        /// 判断下标是否超出数组的范围
+        /// </summary>
+        public static bool OutOfRange(this Array arr, int index)
+        {
+            return index < arr.Length && index > 0;
+        }
+
+        /// <summary>
+        /// 施密特正交化，获取新左手坐标系的三个轴
+        /// </summary>
+        /// <param name="z"></param>
+        /// <param name="auxiliary">辅助向量，用于构造坐标系</param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public static void GramSchimidt(Vector3 z, Vector3 auxiliary, out Vector3 x, out Vector3 y)
+        {
+            z = z.normalized;
+            x = (auxiliary - Vector3.Dot(z, auxiliary) * z).normalized;
+            y = Vector3.Cross(z, x);
+        }
+
+        /// <summary>
+        /// 施密特正交化，获取新左手坐标系的变换矩阵
+        /// </summary>
+        /// <param name="z"></param>
+        /// <param name="auxiliary">辅助向量，用于构造坐标系</param>
+        /// <param name="o"></param>
+        /// <returns>新左手坐标系的变换矩阵</returns>
+        public static Matrix4x4 GramSchimidt(Vector3 z, Vector3 auxiliary, Vector3 o = default)
+        {
+            Vector3 x;
+            Vector3 y;
+            GramSchimidt(z, auxiliary, out x, out y);
+            return BuildTransferMatrix(x, y, z, o);
+        }
+
+        /// <summary>
+        /// 根据三个坐标轴以及坐标原点构造变换矩阵
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static Matrix4x4 BuildTransferMatrix(Vector3 x, Vector3 y, Vector3 z, Vector3 o = default)
+        {
+            return new Matrix4x4(new Vector4(x.x, x.y, x.z, 0),
+                new Vector4(y.x, y.y, y.z, 0),
+                new Vector4(z.x, z.y, z.z, 0),
+                new Vector4(o.x, o.y, o.z, 1));
+        }
+
+        /// <summary>
+        /// 构造简单坐标变换矩阵，坐标系的y轴与世界坐标系平行
+        /// </summary>
+        /// <param name="z"></param>
+        /// <returns></returns>
+        public static Matrix4x4 BuildTransferMatrix(Vector3 z, Vector3 o = default)
+        {
+            Vector3 y = Vector3.up;
+            z = z.normalized;
+            Vector3 x = Vector3.Cross(y, z);
+            return BuildTransferMatrix(x, y, z, o);
+        }
+
+        /// <summary>
+        /// 插值，经过clamp处理
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static float Lerp(float a, float b, float value)
+        {
+            return Mathf.Lerp(a, b, value);
+        }
+
+        /// <summary>
+        /// 插值，未经clamp处理
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static float LerpUc(float a, float b, float value)
+        {
+            return Mathf.LerpUnclamped(a, b, value);
+        }
+
+        /// <summary>
+        /// 插值，经过clamp处理
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Vector3 Lerp(Vector3 a, Vector3 b, float value)
+        {
+            return new Vector3(Lerp(a.x, b.y, value),
+                Lerp(a.y, b.y, value),
+                Lerp(a.z, b.z, value));
+        }
+
+        /// <summary>
+        /// 插值，未经clamp处理
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Vector3 LerpUc(Vector3 a, Vector3 b, float value)
+        {
+            return new Vector3(LerpUc(a.x, b.y, value),
+                LerpUc(a.y, b.y, value),
+                LerpUc(a.z, b.z, value));
+        }
+
+        /// <summary>
+        /// 插值，经过clamp处理
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Color Lerp(Color a, Color b, float value)
+        {
+            return new Color(Lerp(a.r, b.r, value),
+                Lerp(a.g, b.g, value),
+                Lerp(a.b, b.b, value),
+                Lerp(a.a, b.a, value));
+        }
+
+        /// <summary>
+        /// 插值，未经clamp处理
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Color LerpUc(Color a, Color b, float value)
+        {
+            return new Color(LerpUc(a.r, b.r, value),
+                LerpUc(a.g, b.g, value),
+                LerpUc(a.b, b.b, value),
+                LerpUc(a.a, b.a, value));
+        }
+
+        /// <summary>
+        /// 反插值，经过clamp处理。ab不可相等
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static float InLerp(float a, float b, float value)
+        {
+            Assert.IsFalse(a == b, $"a:{a} 与 b:{b} 不可相等");
+            return Mathf.InverseLerp(a, b, value);
+        }
+
+        /// <summary>
+        /// 反插值，未经clamp处理。ab不可相等
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static float InLerpUc(float a, float b, float value)
+        {
+            Assert.IsFalse(a == b, $"a:{a} 与 b:{b} 不可相等");
+            return (value - a) / (b - a);
+        }
+
+        /// <summary>
+        /// 获取rect的尺寸
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        public static Vector2 Size(this Rect rect)
+        {
+            return new Vector2(rect.width, rect.height);
+        }
+
+        /// <summary>
+        /// 获取rect的坐标
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        public static Vector2 Pos(this Rect rect)
+        {
+            return new Vector2(rect.x, rect.y);
+        }
+
+        /// <summary>
+        /// 设置rectTransform的长宽
+        /// </summary>
+        /// <param name="rt"></param>
+        /// <param name="size"></param>
+        public static void SetSize(this RectTransform rt, Vector3 size)
+        {
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+        }
+
+        /// <summary>
+        /// 生成改变固定尺寸的tween
+        /// </summary>
+        /// <param name="rt"></param>
+        /// <param name="endValue"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
+        public static Tweener DOFixedSize(this RectTransform rt, Vector2 endValue, float duration)
+        {
+            return DOTween.To(() => rt.rect.Size(),
+                x => rt.SetSize(x),
+                endValue,
+                duration);
+        }
+
+        /// <summary>
+        /// clamp函数的扩展方法形式
+        /// </summary>
+        /// <param name="f"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static float Clamp(this float f, float a, float b)
+        {
+            return Mathf.Clamp(f, a, b);
+        }
+
+        /// <summary>
+        /// clamp01函数的扩展方法形式
+        /// </summary>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public static float Clamp01(this float f)
+        {
+            return Mathf.Clamp01(f);
         }
     }
 }

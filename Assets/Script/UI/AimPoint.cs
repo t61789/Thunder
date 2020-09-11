@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BehaviorDesigner.Runtime.Tasks;
-using UnityEngine;
-using UnityEngine.UI;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Thunder.Tool;
 using Thunder.Tool.BuffData;
-using Thunder.Utility;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Thunder.UI
 {
@@ -27,7 +19,7 @@ namespace Thunder.UI
         public RectTransform HitTrans;
         public float AimValue
         {
-            get=>_AimValue;
+            get => _AimValue;
             set => SetAimValue(value);
         }
         private float _AimValue;
@@ -84,8 +76,8 @@ namespace Thunder.UI
         public void SetAimValue(float value)
         {
             _AimValue = value;
-            float size = Mathf.Lerp(AimSize.x,AimSize.y,value);
-            AimTrans.sizeDelta = new Vector2(size,size);
+            float size = Mathf.Lerp(AimSize.x, AimSize.y, value);
+            AimTrans.sizeDelta = new Vector2(size, size);
         }
 
         private void FixedUpdate()

@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -126,7 +124,7 @@ namespace Thunder.Sys
             {
                 AssetId id = CreateId(bundleGroup, bundle, item.name);
                 if (_Tables.ContainsKey(id)) continue;
-                _Tables.Add(id, new TableUnit(default,item.text));
+                _Tables.Add(id, new TableUnit(default, item.text));
             }
 
             Stable.Bundle.ReleaseBundle(bundleGroup, bundle);
@@ -385,14 +383,14 @@ namespace Thunder.Sys
                     switch (jsonReciever.Rows[i][j])
                     {
                         case long _:
-                            jsonReciever.Rows[i][j] = (int) (long) jsonReciever.Rows[i][j];
+                            jsonReciever.Rows[i][j] = (int)(long)jsonReciever.Rows[i][j];
                             break;
                         case double _:
                             jsonReciever.Rows[i][j] = (float)(double)jsonReciever.Rows[i][j];
                             break;
                     }
                 }
-            return new DataTable(jsonReciever.Fields,(from row in jsonReciever.Rows select row).ToList());
+            return new DataTable(jsonReciever.Fields, (from row in jsonReciever.Rows select row).ToList());
         }
 
         public IEnumerable<string> Fields => _Fields.Keys;

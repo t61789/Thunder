@@ -369,9 +369,9 @@ namespace Thunder.Tool.ObjectPool
 
     public interface IObjectPool
     {
+        AssetId AssetId { get; set; }
         void BeforeOpReset();
         void BeforeOpRecycle();
         void AfterOpDestroy();
-        AssetId AssetId { get; set; }
     }
 }

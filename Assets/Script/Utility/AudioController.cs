@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thunder.Tool;
+﻿using Thunder.Tool;
 using UnityEngine;
 
 namespace Thunder.Utility
 {
-    public class AudioController:MonoBehaviour
+    public class AudioController : MonoBehaviour
     {
         public AudioClip[] AudioClips;
 

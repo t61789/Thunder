@@ -1,8 +1,4 @@
-﻿
-
-using UnityEngine;
-
-namespace Thunder.UI
+﻿namespace Thunder.UI
 {
     public class CheckoutPanel : BaseUi
     {

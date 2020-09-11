@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thunder.Sys;
+﻿using Thunder.Sys;
 using Thunder.Tool;
 using UnityEngine;
 
 namespace Thunder.Utility
 {
-    public class AimingCamera:BaseCamera
+    public class AimingCamera : BaseCamera
     {
         public Transform Target;
         public float OffsetAngle;
@@ -17,7 +12,7 @@ namespace Thunder.Utility
         public float Sensitive;
         public float UpAngleLimit;
         public Vector3 TargetOffset;
-        [Range(0,1)]
+        [Range(0, 1)]
         public float SmoothFactor;
 
         public bool RealTimeUpdate;
@@ -130,8 +125,8 @@ namespace Thunder.Utility
         private void LateUpdate()
         {
             //if (Target == null) return;
-            
-            Trans.position = Vector3.Lerp(Trans.position,_TargetDir*Radius + Target.position + TargetOffset,SmoothFactor);
+
+            Trans.position = Vector3.Lerp(Trans.position, _TargetDir * Radius + Target.position + TargetOffset, SmoothFactor);
             //Trans.position = _TargetDir * Radius + Target.position + TargetOffset;
             //Trans.rotation = Quaternion.Lerp(Trans.rotation,Quaternion.Euler(_TargetRot),SmoothFactor);
             Trans.rotation = Quaternion.Euler(_TargetRot);

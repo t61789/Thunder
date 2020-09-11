@@ -1,5 +1,4 @@
-﻿using Thunder.Utility;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Thunder.Test
 {

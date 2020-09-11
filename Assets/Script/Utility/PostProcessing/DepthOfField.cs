@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Assertions;
-using UnityEngine.Experimental.Rendering;
 
 namespace Thunder.Utility.PostProcessing
 {
     [Serializable]
-    public class DepthOfField:BasePostProcessing
+    public class DepthOfField : BasePostProcessing
     {
-        [Range(1,10)]
+        [Range(1, 10)]
         public int Iterations = 1;
         public float MaxBlurSize = 0.5f;
         [Range(0, 1)]

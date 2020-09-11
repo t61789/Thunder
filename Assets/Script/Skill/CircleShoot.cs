@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using Thunder.Utility;
-using UnityEngine;
-
-namespace Thunder.Skill
+﻿namespace Thunder.Skill
 {
     //public class CircleShoot : Skill
     //{

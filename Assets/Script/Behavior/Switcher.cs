@@ -1,6 +1,6 @@
-﻿using System;
-using BehaviorDesigner.Runtime;
+﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using System;
 using UnityEngine;
 
 namespace Thunder.Behavior

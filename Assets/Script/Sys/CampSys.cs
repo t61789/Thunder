@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Thunder.Entity;
-using Thunder.Sys;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -11,7 +10,7 @@ namespace Thunder.Sys
     {
         private readonly float[,] _FriendlinessMap = new float[GlobalSettings.CampMapSize, GlobalSettings.CampMapSize];
 
-        private readonly Dictionary<string,int> _KeyMap = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> _KeyMap = new Dictionary<string, int>();
 
         private int _InsertIndex;
 
@@ -21,7 +20,7 @@ namespace Thunder.Sys
             while (_FriendlinessMap[_InsertIndex, _InsertIndex] == GlobalSettings.CampMaxFriendliness)
             {
                 _InsertIndex = (_InsertIndex + 1) % GlobalSettings.CampMapSize;
-                Assert.IsTrue(++finding <= GlobalSettings.CampMapSize,"阵营表已满，不可添加阵营");
+                Assert.IsTrue(++finding <= GlobalSettings.CampMapSize, "阵营表已满，不可添加阵营");
             }
             _KeyMap.Add(campName, _InsertIndex);
 
@@ -30,8 +29,8 @@ namespace Thunder.Sys
 
         public void RemoveCamp(string campName)
         {
-            int index=0;
-            Assert.IsTrue(_KeyMap.TryGetValue(campName,out index),$"不存在名为 {campName} 的阵营");
+            int index = 0;
+            Assert.IsTrue(_KeyMap.TryGetValue(campName, out index), $"不存在名为 {campName} 的阵营");
 
             for (int i = 0; i < GlobalSettings.CampMapSize; i++)
             {
@@ -62,9 +61,9 @@ namespace Thunder.Sys
             return GetFriendliness(c1.Camp, c2.Camp);
         }
 
-        public float GetFriendliness(string c1,string c2)
+        public float GetFriendliness(string c1, string c2)
         {
-            int i1=0, i2=0;
+            int i1 = 0, i2 = 0;
             Assert.IsTrue(_KeyMap.TryGetValue(c1, out i1), $"未找到名为 {c1} 的Camp");
             Assert.IsTrue(_KeyMap.TryGetValue(c2, out i2), $"未找到名为 {c2} 的Camp");
             return _FriendlinessMap[i1, i2];
@@ -72,10 +71,10 @@ namespace Thunder.Sys
 
         public void SetFriendliness(Controller c1, Controller c2, float friendliness)
         {
-            SetFriendliness(c1.Camp,c2.Camp, friendliness);
+            SetFriendliness(c1.Camp, c2.Camp, friendliness);
         }
 
-        public void SetFriendliness(string c1, string c2,float friendliness)
+        public void SetFriendliness(string c1, string c2, float friendliness)
         {
             int i1 = 0, i2 = 0;
             Assert.IsTrue(_KeyMap.TryGetValue(c1, out i1), $"未找到名为 {c1} 的Camp");
@@ -87,14 +86,14 @@ namespace Thunder.Sys
         {
             foreach (var row in Stable.DataBase["camp"])
             {
-                var campName = (string) row["camp_name"];
+                var campName = (string)row["camp_name"];
                 if (!_KeyMap.ContainsKey(campName))
                     AddCamp(campName);
-                var targetName = (string) row["camp_target"];
-                if(string.IsNullOrEmpty(targetName))continue;
+                var targetName = (string)row["camp_target"];
+                if (string.IsNullOrEmpty(targetName)) continue;
                 if (!_KeyMap.ContainsKey(targetName))
                     AddCamp(targetName);
-                SetFriendliness(campName,targetName,(float)row["friendliness"]);
+                SetFriendliness(campName, targetName, (float)row["friendliness"]);
             }
 
             Stable.DataBase.DeleteTable("camp");

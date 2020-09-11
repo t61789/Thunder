@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Thunder.Utility.PostProcessing
 {
     [Serializable]
-    public class Bloom:GaussBlur
+    public class Bloom : GaussBlur
     {
         [Range(0, 4)]
         public float LuminanceThreshold = 0.6f;

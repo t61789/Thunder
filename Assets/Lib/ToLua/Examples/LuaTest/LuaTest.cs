@@ -2,12 +2,11 @@
 using System;
 using Thunder.Sys;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 public class LuaTest : MonoBehaviour
 {
     private void Awake()
-    { 
+    {
         //bs.luaState = Stable.Lua.LuaState;
     }
 
@@ -31,7 +30,7 @@ end";
                 float time = Time.realtimeSinceStartup;
                 for (int i = 0; i < loop; i++)
                 {
-                    Stable.Lua.LuaState.Call("TestScope.Read",1,true);
+                    Stable.Lua.LuaState.Call("TestScope.Read", 1, true);
                 }
                 Debug.Log($"From state:{Time.realtimeSinceStartup - time}");
                 time = Time.realtimeSinceStartup;
@@ -47,7 +46,7 @@ end";
                 {
                     func.Call(1);
                 }
-                Debug.Log($"From luafunction:{Time.realtimeSinceStartup-time}");
+                Debug.Log($"From luafunction:{Time.realtimeSinceStartup - time}");
                 time = Time.realtimeSinceStartup;
 
                 Action<int> act = func.ToDelegate<Action<int>>();

@@ -135,7 +135,7 @@ namespace Thunder.Sys
 
         public void OnApplicationQuit()
         {
-            if(LuaSys.Started)
+            if (LuaSys.Started)
                 Lua.Dispose();
         }
 

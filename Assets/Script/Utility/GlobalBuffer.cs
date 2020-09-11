@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Thunder.Utility
+﻿namespace Thunder.Utility
 {
     public class GlobalBuffer
     {

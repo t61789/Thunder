@@ -10,7 +10,7 @@ namespace Thunder.Sys
 {
     public class UiSys
     {
-        private readonly struct OpenParam<T> where T:BaseUi
+        private readonly struct OpenParam<T> where T : BaseUi
         {
             public readonly string UiName;
             public readonly BaseUi Dialog;
@@ -18,9 +18,9 @@ namespace Thunder.Sys
             public readonly Action<T> InitAction;
             public readonly int SiblingIndex;
 
-            public OpenParam(string uiName,int siblingIndex, BaseUi dialog, UiInitType initType, Action<T> initAction)
+            public OpenParam(string uiName, int siblingIndex, BaseUi dialog, UiInitType initType, Action<T> initAction)
             {
-                Assert.IsNotNull(uiName,"UI名不能为null");
+                Assert.IsNotNull(uiName, "UI名不能为null");
                 UiName = uiName;
                 Dialog = dialog;
                 InitType = initType;
@@ -102,7 +102,7 @@ namespace Thunder.Sys
         //    return OpenUi(uiName, after.UiName, dialog, act, init);
         //}
 
-        private T OpenUi<T>(OpenParam<T> param) where T:BaseUi
+        private T OpenUi<T>(OpenParam<T> param) where T : BaseUi
         {
             BaseUi plane = _HideStableUi.FirstOrDefault(x => x.UiName == param.UiName);
             if (plane != null)
@@ -127,7 +127,7 @@ namespace Thunder.Sys
             return plane as T;
         }
 
-        public void CloseUi(string uiName,bool force=false)
+        public void CloseUi(string uiName, bool force = false)
         {
             BaseUi baseUi = _ActiveUi.FirstOrDefault(x => x.UiName == uiName);
             Assert.IsNotNull(baseUi, $"没有名为 {uiName} 的UI");
@@ -198,7 +198,7 @@ namespace Thunder.Sys
 
         private BaseUi GetUi(string uiName)
         {
-            return _ActiveUi.FirstOrDefault(x=>x.UiName==uiName);
+            return _ActiveUi.FirstOrDefault(x => x.UiName == uiName);
         }
     }
 }

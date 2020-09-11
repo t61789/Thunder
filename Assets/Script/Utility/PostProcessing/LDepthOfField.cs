@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Thunder.Utility.PostProcessing
 {
     [Serializable]
-    public class LDepthOfField:GaussBlur
+    public class LDepthOfField : GaussBlur
     {
-        [Range(0,1)]
+        [Range(0, 1)]
         public float MiddleDepth = 0.5f;
         public Shader GaussBlurShader;
 
@@ -25,11 +21,11 @@ namespace Thunder.Utility.PostProcessing
 
         public override void Process(RenderTexture source, RenderTexture dest)
         {
-            RenderTexture gauss = RenderTexture.GetTemporary(source.width,source.height,0);
-            Blur(Iterations,BlurSpread,DownSample,source,gauss,_GaussBlurMat);
-            _Mat.SetTexture("_Gauss",gauss);
-            _Mat.SetFloat("_MiddleDepth",MiddleDepth);
-            Graphics.Blit(source,dest,_Mat);
+            RenderTexture gauss = RenderTexture.GetTemporary(source.width, source.height, 0);
+            Blur(Iterations, BlurSpread, DownSample, source, gauss, _GaussBlurMat);
+            _Mat.SetTexture("_Gauss", gauss);
+            _Mat.SetFloat("_MiddleDepth", MiddleDepth);
+            Graphics.Blit(source, dest, _Mat);
             RenderTexture.ReleaseTemporary(gauss);
         }
     }

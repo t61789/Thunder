@@ -13,6 +13,6 @@ namespace Thunder.Utility.PostProcessing
             _Mat = new Material(Shader);
         }
 
-        public abstract void Process(RenderTexture source,RenderTexture dest);
+        public abstract void Process(RenderTexture source, RenderTexture dest);
     }
 }

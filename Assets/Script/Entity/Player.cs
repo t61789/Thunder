@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thunder.Sys;
+﻿using Thunder.Sys;
 using Thunder.Tool;
+using Thunder.Tool.BuffData;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,10 +8,18 @@ namespace Thunder.Entity
 {
     public class Player : BaseEntity
     {
+        public Vector2 Sensitive
+        {
+            get => _Sensitive * SensitiveScale.CurData;
+            set => _Sensitive = value;
+        }
+        [SerializeField]
+        private Vector2 _Sensitive;
+        [HideInInspector]
+        public BuffData SensitiveScale = 1;
+
         [Range(0, 1)]
-        public float SensitiveTotal = 0.5f;
-        public float SensitiveX = 1;
-        public float SensitiveY = 1;
+        public float ViewDampFactor = 0.7f;
         [Range(0, 1)]
         public float SmoothFactor = 0.2f;
         public float GroundRayStartOffset = 0.05f;
@@ -28,8 +32,6 @@ namespace Thunder.Entity
         [Range(0, 1)]
         public float WalkShakeDampFactor = 0.5f;
         public Vector2 WeaponWalkShakeRange;
-        [Range(0, 1)]
-        public float WeaponWalkShakeDampFactor = 0.5f;
         [HideInInspector]
         public Vector3 WalkShakeOffset;
         /// <summary>
@@ -58,22 +60,22 @@ namespace Thunder.Entity
         private Vector3 _Velocity;
         private Vector2 _TargetRot;
         private float _WalkShakeDir = 1;
-        private Vector3 _WeaponAttachPointOffset;
         private float _WalkShakeOffsetT;
-        private Vector2 _AdditionRot;
         private Vector2 _AdditionTargetRot;
         private bool _Squating;
         private bool _Hanging;
         private float _WalkSpeedFactor = 1;
-        private Vector3 _TargetMoveDir;
+        private Vector2 _CtrlDir;
+        private bool _FixedReaded;
+        private Vector3 _PivotOffset;
 
         protected override void Awake()
         {
             base.Awake();
 
             _PivotTrans = _Trans.Find("Pivot");
+            _PivotOffset = _PivotTrans.localPosition;
             _WeaponAttachPoint = _PivotTrans.Find("Weapon");
-            _WeaponAttachPointOffset = _WeaponAttachPoint.localPosition;
             _Rb = GetComponent<Rigidbody>();
             _CapsuleCol = GetComponent<CapsuleCollider>();
 
@@ -84,25 +86,74 @@ namespace Thunder.Entity
         private void Update()
         {
             // 视角
-            Vector2 ctrlDir = Stable.Control.RequireKey("Axis2", 0).Axis;
-            ctrlDir += _AdditionTargetRot;
-            _AdditionTargetRot = Vector2.zero;
-
-            if (ctrlDir != Vector2.zero)
-            {
-                _TargetRot.y += ctrlDir.x * SensitiveTotal * 2 * SensitiveX;
-                _TargetRot.x = Mathf.Clamp(_TargetRot.x - ctrlDir.y * SensitiveTotal * 2 * SensitiveY, -90, 90);
-            }
-
-            float tempX = _TargetRot.x + _AdditionRot.x;
-            tempX = tempX < 0 ? tempX + 360 : tempX;
-
-            _Trans.localEulerAngles = new Vector3(0, Mathf.LerpAngle(_Trans.localEulerAngles.y, _TargetRot.y + _AdditionRot.y, SmoothFactor), 0);
-            _PivotTrans.localEulerAngles = new Vector3(Mathf.LerpAngle(_PivotTrans.localEulerAngles.x, tempX, SmoothFactor), 0, 0);
+            _Trans.localEulerAngles = new Vector3(0, Tools.LerpAngle(_Trans.localEulerAngles.y, _TargetRot.y + _AdditionTargetRot.y, SmoothFactor), 0);
+            _PivotTrans.localEulerAngles = new Vector3(Tools.LerpAngle(_PivotTrans.localEulerAngles.x, _TargetRot.x + _AdditionTargetRot.x, SmoothFactor), 0, 0);
 
             // 移动
-            ctrlDir = Stable.Control.RequireKey("Axis1", 0).Axis;
-            _Velocity = Vector3.Lerp(_Velocity, ctrlDir, MoveDampFactor);
+            Vector2 ctrlDir = Stable.Control.RequireKey("Axis1", 0).Axis;
+            if (_FixedReaded || ctrlDir != Vector2.zero)
+            {
+                _CtrlDir = ctrlDir;
+                _FixedReaded = false;
+            }
+
+            // 视角晃动
+            Vector3 shakeTarget = Vector3.down * (_Squating ? SquatOffset : 0) + WalkShakeOffset.VecMul(WalkShakeRange) + _PivotOffset;
+            _PivotTrans.localPosition = Vector3.Lerp(_PivotTrans.localPosition, shakeTarget, WalkShakeDampFactor);
+            _WeaponAttachPoint.localPosition = Vector3.Lerp(_WeaponAttachPoint.localPosition, WalkShakeOffset.VecMul(WeaponWalkShakeRange), WalkShakeDampFactor);
+
+            // 根据垂直速度上下摆动
+            float tempX = 1 - 1 / (Mathf.Abs(_Rb.velocity.y) + 1);
+            tempX *= _Rb.velocity.y < 0 ? -1 : 1;
+            tempX *= JumpWeaponOffsetAngle;
+            _WeaponAttachPoint.localEulerAngles = new Vector3(Mathf.LerpAngle(_WeaponAttachPoint.localEulerAngles.x, tempX, WalkShakeDampFactor), 0);
+
+            if (Stable.Control.RequireKey("LockCursor", 0).Down)
+                SwitchLockCursor();
+            ControlInfo c = Stable.Control.RequireKey("Squat", 0);
+            if (c.Down)
+                Squat(true);
+            else if (c.Up)
+                Squat(false);
+            if (Stable.Control.RequireKey("Jump", 0).Down)
+                Jump();
+        }
+
+        private static Vector2 EulerAdd(Vector2 e1, Vector2 e2)
+        {
+            e1.y += e2.y;
+            e1.x = Mathf.Clamp(e1.x + e2.x, -90, 90);
+
+            return e1;
+        }
+
+        private Vector2 MoveToEuler(Vector2 move)
+        {
+            return new Vector2(-move.y, move.x) * Sensitive;
+        }
+
+        public void ViewRotAddition(Vector2 rot)
+        {
+            _AdditionTargetRot = MoveToEuler(rot);
+        }
+
+        public void ViewRotTargetAddition(Vector2 rot)
+        {
+            _TargetRot = EulerAdd(_TargetRot, MoveToEuler(rot));
+        }
+
+        private void FixedUpdate()
+        {
+            // 视角
+            Vector2 ctrlDir = Stable.Control.RequireKey("Axis2", 0).Axis;
+
+            Vector2 ctrlEuler = MoveToEuler(ctrlDir);
+            if (ctrlDir != Vector2.zero)
+                _TargetRot = EulerAdd(_TargetRot, ctrlEuler);
+
+
+            // 移动
+            _Velocity = Vector3.Lerp(_Velocity, _CtrlDir, MoveDampFactor);
 
             Vector3 tempVelocity = _Velocity;
             tempVelocity.z = tempVelocity.y;
@@ -112,10 +163,10 @@ namespace Thunder.Entity
             Vector3 planeNormal = _GroundHit.normal == Vector3.zero ? Vector3.up : _GroundHit.normal;
             moveDir = Vector3.ProjectOnPlane(moveDir, planeNormal).normalized;
 
-            _TargetMoveDir = moveDir;
+            _Rb.MovePosition(_Trans.position + moveDir * WalkSpeed);
 
             // 视角晃动
-            if (ctrlDir == Vector2.zero || _GroundHit.transform == null)
+            if (_CtrlDir == Vector2.zero || _GroundHit.transform == null)
             {
                 _WalkShakeDir = -1;
                 _WalkShakeOffsetT = Mathf.PI / 2;
@@ -130,40 +181,10 @@ namespace Thunder.Entity
             // lemniscate of Gerono
             WalkShakeOffset.x = Mathf.Cos(_WalkShakeOffsetT);
             WalkShakeOffset.y = Mathf.Sin(_WalkShakeOffsetT * 2) / 2;
-            _PivotTrans.localPosition = Vector3.Lerp(_PivotTrans.localPosition, WalkShakeOffset.VecMul(WalkShakeRange) + Vector3.down * (_Squating ? SquatOffset : 0), WalkShakeDampFactor);
-            _WeaponAttachPoint.localPosition = _WeaponAttachPointOffset + Vector3.Lerp(_WeaponAttachPoint.localPosition - _WeaponAttachPointOffset, WalkShakeOffset.VecMul(WeaponWalkShakeRange), WeaponWalkShakeDampFactor);
 
-            tempX = 1 - 1 / (Mathf.Abs(_Rb.velocity.y) + 1);
-            tempX *= _Rb.velocity.y < 0 ? -1 : 1;
-            tempX *= JumpWeaponOffsetAngle;
+            _FixedReaded = true;
 
-            _WeaponAttachPoint.localEulerAngles = new Vector3(Mathf.LerpAngle(_WeaponAttachPoint.localEulerAngles.x,tempX, WalkShakeDampFactor),0);
-
-
-            if (Stable.Control.RequireKey("LockCursor", 0).Down)
-                SwitchLockCursor();
-            ControlInfo c = Stable.Control.RequireKey("Squat", 0);
-            if (c.Down)
-                Squat(true);
-            else if (c.Up)
-                Squat(false);
-            if (Stable.Control.RequireKey("Jump", 0).Down)
-                Jump();
-        }
-
-        public void ViewRotAddition(Vector2 rot)
-        {
-            _AdditionRot = rot;
-        }
-
-        public void ViewRotTargetAddition(Vector2 rot)
-        {
-            _AdditionTargetRot.x = rot.y;
-            _AdditionTargetRot.y = -rot.x;
-        }
-
-        private void FixedUpdate()
-        {
+            // 地面检测
             _GroundRayStartOffset = _CapsuleCol.center + Vector3.down * GetCapusleHeight(_CapsuleCol.height) / 2 +
                                     Vector3.up * GroundRayStartOffset;
 
@@ -179,8 +200,6 @@ namespace Thunder.Entity
                 _Hanging = false;
                 OnHanging?.Invoke(_Squating, false);
             }
-
-            _Rb.MovePosition(_Trans.position + _TargetMoveDir * WalkSpeed);
         }
 
         private static void SwitchLockCursor()

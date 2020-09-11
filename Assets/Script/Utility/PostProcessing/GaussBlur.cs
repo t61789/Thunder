@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Thunder.Utility.PostProcessing
 {
     [Serializable]
-    public class GaussBlur:BasePostProcessing
+    public class GaussBlur : BasePostProcessing
     {
         [Range(0, 4)]
         public int Iterations = 3;
@@ -19,10 +15,10 @@ namespace Thunder.Utility.PostProcessing
 
         public override void Process(RenderTexture source, RenderTexture dest)
         {
-            Blur(Iterations, BlurSpread, DownSample, source, dest,_Mat);
+            Blur(Iterations, BlurSpread, DownSample, source, dest, _Mat);
         }
 
-        public static void Blur(int iterations, float blurSpread, int downSample, RenderTexture source,RenderTexture dest,Material gaussMaterial)
+        public static void Blur(int iterations, float blurSpread, int downSample, RenderTexture source, RenderTexture dest, Material gaussMaterial)
         {
             RenderTexture gaussTemp0 = RenderTexture.GetTemporary(source.width / downSample, source.height / downSample, 0);
             gaussTemp0.filterMode = FilterMode.Bilinear;

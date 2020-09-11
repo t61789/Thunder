@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
-
 using Thunder.Utility;
-using Newtonsoft.Json;
 
 namespace Thunder.Sys
 {

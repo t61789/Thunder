@@ -1,10 +1,4 @@
-﻿using System.Collections;
-using Thunder.Tool.BuffData;
-using Thunder.Tool.SerializableStruct;
-using Thunder.Utility;
-using UnityEngine;
-
-namespace Thunder.Skill
+﻿namespace Thunder.Skill
 {
     //[RequireComponent(typeof(Rigidbody2D))]
     //[RequireComponent(typeof(Collider2D))]

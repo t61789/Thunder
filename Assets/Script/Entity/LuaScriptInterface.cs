@@ -1,11 +1,9 @@
-﻿using System;
+﻿using LuaInterface;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using LuaInterface;
 using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.Utility;
@@ -17,7 +15,7 @@ using UnityEngine.Assertions;
 namespace Thunder.Entity
 {
     [Serializable]
-    public class LuaScriptInterface:MonoBehaviour
+    public class LuaScriptInterface : MonoBehaviour
     {
         public string LuaScriptScopePath;
 
@@ -46,13 +44,13 @@ namespace Thunder.Entity
 
         protected virtual void Awake()
         {
-            if(InitAtStart)
-                InitLuaData(LuaScriptScopePath,DebugScopePath);
+            if (InitAtStart)
+                InitLuaData(LuaScriptScopePath, DebugScopePath);
         }
 
-        public void InitLuaData(string scriptScope,string debugScriptScope)
+        public void InitLuaData(string scriptScope, string debugScriptScope)
         {
-            if (string.IsNullOrEmpty(UseDebugScopePath? debugScriptScope : scriptScope))
+            if (string.IsNullOrEmpty(UseDebugScopePath ? debugScriptScope : scriptScope))
             {
                 Debug.LogWarning($"{name} 的Lua接口未指定脚本");
                 return;
@@ -86,7 +84,7 @@ namespace Thunder.Entity
 
             Data = Stable.Lua.GetEmptyTable();
             Inject(Data);
-            GetLuaFunc("Init",true)?.Call(Data, this);
+            GetLuaFunc("Init", true)?.Call(Data, this);
 
             if (_ClearBufferRegistered) return;
             Stable.Lua.StateDisposedEvent.AddListener(ClearBuffer);
@@ -96,7 +94,7 @@ namespace Thunder.Entity
         private void Inject(LuaTable data)
         {
             InjectSource = InjectSource ?? GetComponent<BaseEntity>();
-            Assert.IsNotNull(InjectSource,$"对象 {name} 的Lua接口未找到注入源");
+            Assert.IsNotNull(InjectSource, $"对象 {name} 的Lua接口未找到注入源");
             Type curType = InjectSource.GetType();
 
             if (!InjectInfoBuffer.TryGetValue(curType, out var injectInfo))
@@ -180,7 +178,7 @@ namespace Thunder.Entity
 
         public void CallLuaMethod(string methodName)
         {
-            GetLuaFunc(methodName,true)?.Call(Data);
+            GetLuaFunc(methodName, true)?.Call(Data);
         }
     }
 }

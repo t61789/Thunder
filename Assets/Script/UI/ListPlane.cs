@@ -56,7 +56,7 @@ namespace Thunder.UI
             elementsTrans = maskTrans.Find("Elements").GetComponent<RectTransform>();
         }
 
-        public BaseUi[] Init(Parameters arg,List<Action<BaseUi>> inits)
+        public BaseUi[] Init(Parameters arg, List<Action<BaseUi>> inits)
         {
             return Init<BaseUi>(arg, inits);
         }
@@ -64,7 +64,7 @@ namespace Thunder.UI
         public T[] Init<T>(Parameters arg, List<Action<T>> inits) where T : BaseUi
         {
             Clear();
-            return CreateElements(arg,inits);
+            return CreateElements(arg, inits);
         }
 
         public void Clear()

@@ -7,7 +7,6 @@ using Thunder.Tool;
 using Thunder.UI;
 using Thunder.Utility;
 using UnityEditor;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 using BindType = ToLuaMenu.BindType;

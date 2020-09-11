@@ -1,8 +1,6 @@
-﻿using UnityEngine;
-
-namespace Thunder.Entity
+﻿namespace Thunder.Entity
 {
-    public class People:Controller
+    public class People : Controller
     {
         public float RotateFactor;
 
