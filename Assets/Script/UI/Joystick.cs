@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class Joystick : BaseUi
+    public class Joystick : BaseUI
     {
         public struct Value
         {
@@ -25,8 +25,8 @@ namespace Thunder.UI
         public float HideTime = 1f;
         public float StayTime = 0.7f;
 
-        private BaseUi cap;
-        private BaseUi panel;
+        private BaseUI cap;
+        private BaseUI panel;
         private Image panelImage;
         private bool dragging;
         private float curAlpha;
@@ -41,8 +41,8 @@ namespace Thunder.UI
                 valueList.Add(new Value());
             values = valueList.ToArray();
 
-            cap = transform.Find("Cap").GetComponent<BaseUi>();
-            panel = transform.Find("Panel").GetComponent<BaseUi>();
+            cap = transform.Find("Cap").GetComponent<BaseUI>();
+            panel = transform.Find("Panel").GetComponent<BaseUI>();
             panelImage = panel.GetComponent<Image>();
 
             cap.DragStart += CapDragStart;
@@ -90,7 +90,7 @@ namespace Thunder.UI
             Gizmos.DrawWireSphere(transform.position, Radius);
         }
 
-        private void CapDragStart(BaseUi baseUI, PointerEventData eventData)
+        private void CapDragStart(BaseUI baseUI, PointerEventData eventData)
         {
             Vector2 pos = eventData.position;
             if ((pos - (Vector2)cap.RectTrans.position).magnitude < CapRadius)
@@ -107,7 +107,7 @@ namespace Thunder.UI
             }
         }
 
-        private void CapDragEnd(BaseUi baseUI, PointerEventData eventData)
+        private void CapDragEnd(BaseUI baseUI, PointerEventData eventData)
         {
             if (dragging)
             {
@@ -126,7 +126,7 @@ namespace Thunder.UI
             }
         }
 
-        private void CapDragging(BaseUi baseUI, PointerEventData eventData)
+        private void CapDragging(BaseUI baseUI, PointerEventData eventData)
         {
             if (dragging)
             {
@@ -150,7 +150,7 @@ namespace Thunder.UI
             }
         }
 
-        private void CapClick(BaseUi baseUI, PointerEventData eventData)
+        private void CapClick(BaseUI baseUI, PointerEventData eventData)
         {
             if (dragging) return;
 
@@ -160,12 +160,12 @@ namespace Thunder.UI
                 values[Index].doubleClick = true;
         }
 
-        private void CapDown(BaseUi baseUI, PointerEventData eventData)
+        private void CapDown(BaseUI baseUI, PointerEventData eventData)
         {
             values[Index].holding = true;
         }
 
-        private void CapUp(BaseUi baseUI, PointerEventData eventData)
+        private void CapUp(BaseUI baseUI, PointerEventData eventData)
         {
             values[Index].holding = false;
         }

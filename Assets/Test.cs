@@ -3,7 +3,7 @@ using Thunder.Tool;
 using Thunder.UI;
 using UnityEngine;
 
-public class Test : BaseUi
+public class Test : BaseUI
 {
     private bool _Set;
 

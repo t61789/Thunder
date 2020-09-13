@@ -1276,5 +1276,37 @@ namespace Thunder.Tool
         {
             return Mathf.Clamp01(f);
         }
+
+        /// <summary>
+        /// clamp函数的扩展方法形式
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static int Clamp(this int i, int a, int b)
+        {
+            return Mathf.Clamp(i, a, b);
+        }
+
+        /// <summary>
+        /// 创建一个src尺寸/downSample大小的renderTexture
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="downSample"></param>
+        /// <returns></returns>
+        public static RenderTexture GetTemporary(this RenderTexture src,int downSample=1)
+        {
+            return RenderTexture.GetTemporary(src.width/downSample,src.height/downSample,0);
+        }
+
+        /// <summary>
+        /// RenderTexture.ReleaseTemporary的扩展方法形式
+        /// </summary>
+        /// <param name="src"></param>
+        public static void ReleaseTemporary(this RenderTexture src)
+        {
+            RenderTexture.ReleaseTemporary(src);
+        }
     }
 }

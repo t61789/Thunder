@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class BaseButton : BaseUi
+    public class BaseButton : BaseUI
     {
         public void Init(string text, Action onClick = null)
         {

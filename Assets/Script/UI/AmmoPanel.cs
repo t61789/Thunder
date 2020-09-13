@@ -3,7 +3,7 @@ using TMPro;
 
 namespace Thunder.UI
 {
-    public class AmmoPanel : BaseUi
+    public class AmmoPanel : BaseUI
     {
         private TextMeshProUGUI _Text;
 

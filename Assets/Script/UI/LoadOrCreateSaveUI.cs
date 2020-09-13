@@ -7,17 +7,17 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class LoadOrCreateSaveUi : BaseUi
+    public class LoadOrCreateSaveUi : BaseUI
     {
         public void StartLoadSave()
         {
-            if (Sys.Stable.Ui.IsUiOpened("LoadSaveListPlane"))
+            if (Sys.Stable.UI.IsUIOpened("LoadSaveListPlane"))
             {
-                Sys.Stable.Ui.CloseUi("LoadSaveListPlane");
+                Sys.Stable.UI.CloseUI("LoadSaveListPlane");
                 return;
             }
 
-            List<Action<BaseUi>> inits = new List<Action<BaseUi>>();
+            List<Action<BaseUI>> inits = new List<Action<BaseUI>>();
             foreach (var item in Directory.GetDirectories(Paths.DocumentPath))
             {
                 inits.Add(x =>
@@ -30,7 +30,7 @@ namespace Thunder.UI
                 });
             }
 
-            Sys.Stable.Ui.OpenUi<ListPlane>("listPlane", UiName, true, UiInitType.CenterParent, x =>
+            Sys.Stable.UI.OpenUI<ListPlane>("listPlane", UIName, true, UiInitType.CenterParent, x =>
                 x.Init(new ListPlane.Parameters(1, "normalButton", (500, 150), (50, 50), (0, 0)), inits));
         }
 

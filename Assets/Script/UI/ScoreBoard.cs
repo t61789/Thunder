@@ -2,12 +2,14 @@
 using System.Linq;
 using Thunder.Tool;
 using Thunder.Utility;
+using Thunder.Utility.Events;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class ScoreBoard : BaseUi
+    public class ScoreBoard : BaseUI
     {
         public float ScorePerHit;
         public float BatterFadeTime;

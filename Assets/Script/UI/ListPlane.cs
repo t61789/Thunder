@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class ListPlane : BaseUi
+    public class ListPlane : BaseUI
     {
         [GenerateWrap]
         public struct Parameters
@@ -44,7 +44,7 @@ namespace Thunder.UI
         protected RectTransform maskTrans;
         protected RectTransform elementsTrans;
 
-        protected List<BaseUi> elements = new List<BaseUi>();
+        protected List<BaseUI> elements = new List<BaseUI>();
         protected Queue<RectTransform> elementContainers = new Queue<RectTransform>();
 
         protected override void Awake()
@@ -56,12 +56,12 @@ namespace Thunder.UI
             elementsTrans = maskTrans.Find("Elements").GetComponent<RectTransform>();
         }
 
-        public BaseUi[] Init(Parameters arg, List<Action<BaseUi>> inits)
+        public BaseUI[] Init(Parameters arg, List<Action<BaseUI>> inits)
         {
-            return Init<BaseUi>(arg, inits);
+            return Init<BaseUI>(arg, inits);
         }
 
-        public T[] Init<T>(Parameters arg, List<Action<T>> inits) where T : BaseUi
+        public T[] Init<T>(Parameters arg, List<Action<T>> inits) where T : BaseUI
         {
             Clear();
             return CreateElements(arg, inits);
@@ -85,7 +85,7 @@ namespace Thunder.UI
             }
         }
 
-        protected T[] CreateElements<T>(Parameters parameters, List<Action<T>> inits) where T : BaseUi
+        protected T[] CreateElements<T>(Parameters parameters, List<Action<T>> inits) where T : BaseUI
         {
             if (parameters.elementSize.x == 0)
             {
@@ -151,9 +151,9 @@ namespace Thunder.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                RectTransform rectTransform = Sys.Stable.ObjectPool.Alloc(null, UiSys.DefaultUiBundle, parameters.elementName, inits[i], elementContainer).GetComponent<RectTransform>();
+                RectTransform rectTransform = Sys.Stable.ObjectPool.Alloc(null, UISys.DefaultUiBundle, parameters.elementName, inits[i], elementContainer).GetComponent<RectTransform>();
 
-                elements.Add(rectTransform.GetComponent<BaseUi>());
+                elements.Add(rectTransform.GetComponent<BaseUI>());
             }
 
             return elements.Cast<T>().ToArray();

@@ -2,7 +2,7 @@
 
 namespace Thunder.UI
 {
-    public class MessageDialog : BaseUi
+    public class MessageDialog : BaseUI
     {
         private Text text;
 

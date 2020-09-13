@@ -1,6 +1,6 @@
 ﻿using UnityEngine.Events;
 
-namespace Thunder.Utility
+namespace Thunder.Utility.Events
 {
     public class FlyingSaucerHit
     {

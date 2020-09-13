@@ -49,7 +49,7 @@
     //    public void Remove()
     //    {
     //        if (aimRing != null)
-    //            Sys.Stable.Ui.CloseUi(aimRing.UiName);
+    //            Sys.Stable.UI.CloseUI(aimRing.UIName);
     //        Destroy(this);
     //    }
 
@@ -74,7 +74,7 @@
     //        }
 
     //        if (aimRing)
-    //            this.aimRing = Sys.Stable.Ui.OpenUi<AimRing>("aimRing", UiInitType.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
+    //            this.aimRing = Sys.Stable.UI.OpenUI<AimRing>("aimRing", UiInitType.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
     //    }
 
     //    private void Update()

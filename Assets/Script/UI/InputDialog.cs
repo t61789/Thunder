@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class InputDialog : BaseUi
+    public class InputDialog : BaseUI
     {
         public string Text;
         public DialogResult dialogResult;
@@ -30,13 +30,13 @@ namespace Thunder.UI
         public void InputEndOK()
         {
             dialogResult = DialogResult.Ok;
-            Sys.Stable.Ui.CloseUi(UiName);
+            Sys.Stable.UI.CloseUI(UIName);
         }
 
         public void InputEndCancel()
         {
             dialogResult = DialogResult.Cancel;
-            Sys.Stable.Ui.CloseUi(UiName);
+            Sys.Stable.UI.CloseUI(UIName);
         }
 
         public override void ObjectPoolReset(Hashtable arg)

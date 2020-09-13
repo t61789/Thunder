@@ -9,24 +9,24 @@ using UnityEngine.EventSystems;
 namespace Thunder.UI
 {
     [RequireComponent(typeof(RectTransform))]
-    public class BaseUi : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter, IBeginDragHandler, IEndDragHandler, IDragHandler
     {
         public bool Stable = false;
 
-        public string UiName
+        public string UIName
         {
-            set => _UiName = value;
+            set => _UIName = value;
 
-            get => string.IsNullOrEmpty(_UiName) ? name : _UiName;
+            get => string.IsNullOrEmpty(_UIName) ? name : _UIName;
         }
 
         [SerializeField]
-        private string _UiName;
+        private string _UIName;
 
         [HideInInspector]
         public RectTransform RectTrans;
 
-        public delegate void PointerDel(BaseUi baseUi, PointerEventData eventData);
+        public delegate void PointerDel(BaseUI baseUi, PointerEventData eventData);
         public event PointerDel PointerDown;
         public event PointerDel PointerEnter;
         public event PointerDel PointerClick;
@@ -36,19 +36,19 @@ namespace Thunder.UI
         public event PointerDel DragEnd;
         public event PointerDel Dragging;
 
-        public delegate void AfterOpenDel(BaseUi baseUi);
+        public delegate void AfterOpenDel(BaseUI baseUi);
         public event AfterOpenDel OnAfterOpen;
-        public delegate void BeforeCloseDel(BaseUi baseUi);
+        public delegate void BeforeCloseDel(BaseUI baseUi);
         public event BeforeCloseDel OnBeforeClose;
-        public delegate void CloseCheck(BaseUi baseUi, ref bool result);
+        public delegate void CloseCheck(BaseUI baseUi, ref bool result);
         public event CloseCheck OnCloseCheck;
 
         [HideInInspector]
-        public BaseUi Dialog;
+        public BaseUI Dialog;
 
         protected virtual void Awake()
         {
-            UiName = UiName ?? name;
+            UIName = UIName ?? name;
             RectTrans = transform as RectTransform;
         }
 
@@ -160,7 +160,7 @@ namespace Thunder.UI
 
         public void Close()
         {
-            Sys.Stable.Ui.CloseUi(UiName);
+            Sys.Stable.UI.CloseUI(UIName);
         }
 
         public void InitRect(UiInitType action)

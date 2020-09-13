@@ -177,7 +177,7 @@ public static class CustomSettings
         _GT(typeof(LuaProfiler)),
         _GT(typeof(Button)),
         _GT(typeof(Directory)),
-        _GT(typeof(System.Collections.Generic.List<Action<BaseUi>>)),
+        _GT(typeof(System.Collections.Generic.List<Action<BaseUI>>)),
         _GT(typeof(Text)),
         _GT(typeof(Path)),
         _GT(typeof(Button.ButtonClickedEvent)),

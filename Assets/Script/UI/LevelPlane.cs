@@ -7,7 +7,7 @@ namespace Thunder.UI
 {
     public class LevelPlane : ListPlane
     {
-        public BaseUi menuPanel;
+        public BaseUI menuPanel;
         private readonly Dictionary<BaseButton, int> pairs = new Dictionary<BaseButton, int>();
         private string unsavedJson;
 
@@ -85,7 +85,7 @@ namespace Thunder.UI
 
         public void OpenMenu()
         {
-            Sys.Stable.Ui.OpenUi<BaseUi>("MenuPanel", UiName, true, UiInitType.CenterParent, null);
+            Sys.Stable.UI.OpenUI<BaseUI>("MenuPanel", UIName, true, UiInitType.CenterParent, null);
         }
 
         public void Exit(bool force)
@@ -95,7 +95,7 @@ namespace Thunder.UI
                 unsavedJson = Sys.Stable.Save.Check();
                 if (unsavedJson != null)
                 {
-                    ConfirmDialog confirmDialog = Sys.Stable.Ui.OpenUi<ConfirmDialog>("confirmDialog", menuPanel.UiName, true, UiInitType.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
+                    ConfirmDialog confirmDialog = Sys.Stable.UI.OpenUI<ConfirmDialog>("confirmDialog", menuPanel.UIName, true, UiInitType.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
                     confirmDialog.OnBeforeClose += DialogConfirmed;
                     return;
                 }
@@ -104,7 +104,7 @@ namespace Thunder.UI
             Sys.Stable.Instance.LoadSceneAsync("StartScene");
         }
 
-        private void DialogConfirmed(BaseUi confirmDialog)
+        private void DialogConfirmed(BaseUI confirmDialog)
         {
             ConfirmDialog confirmDialogg = confirmDialog as ConfirmDialog;
             if (confirmDialogg.dialogResult == DialogResult.Ok)

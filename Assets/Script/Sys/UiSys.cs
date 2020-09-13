@@ -8,17 +8,17 @@ using UnityEngine.Assertions;
 
 namespace Thunder.Sys
 {
-    public class UiSys
+    public class UISys
     {
-        private readonly struct OpenParam<T> where T : BaseUi
+        private readonly struct OpenParam<T> where T : BaseUI
         {
             public readonly string UiName;
-            public readonly BaseUi Dialog;
+            public readonly BaseUI Dialog;
             public readonly UiInitType InitType;
             public readonly Action<T> InitAction;
             public readonly int SiblingIndex;
 
-            public OpenParam(string uiName, int siblingIndex, BaseUi dialog, UiInitType initType, Action<T> initAction)
+            public OpenParam(string uiName, int siblingIndex, BaseUI dialog, UiInitType initType, Action<T> initAction)
             {
                 Assert.IsNotNull(uiName, "UI名不能为null");
                 UiName = uiName;
@@ -32,13 +32,13 @@ namespace Thunder.Sys
         private Transform _UiContainer;
         private Transform _UiRecycleContainer;
 
-        private readonly List<BaseUi> _ActiveUi = new List<BaseUi>();
-        private readonly List<BaseUi> _HideStableUi = new List<BaseUi>();
-        private readonly Stack<BaseUi> _CloseStack = new Stack<BaseUi>();
+        private readonly List<BaseUI> _ActiveUi = new List<BaseUI>();
+        private readonly List<BaseUI> _HideStableUi = new List<BaseUI>();
+        private readonly Stack<BaseUI> _CloseStack = new Stack<BaseUI>();
 
         public static string DefaultUiBundle = BundleSys.PrefabBundleD + BundleSys.UIBundle;
 
-        public UiSys()
+        public UISys()
         {
             Init();
         }
@@ -52,7 +52,7 @@ namespace Thunder.Sys
             var move = new List<Transform>();
             foreach (Transform item in _UiContainer.transform)
             {
-                var newui = item.GetComponent<BaseUi>();
+                var newui = item.GetComponent<BaseUI>();
                 if (item.gameObject.activeSelf)
                     _ActiveUi.Add(newui);
                 else
@@ -65,50 +65,50 @@ namespace Thunder.Sys
                 item.SetParent(_UiRecycleContainer);
         }
 
-        public BaseUi OpenUi(string uiName, UiInitType act = 0, Action<BaseUi> init = null)
+        public BaseUI OpenUI(string uiName, UiInitType act = 0, Action<BaseUI> init = null)
         {
-            return OpenUi<BaseUi>(uiName, act, init);
+            return OpenUI<BaseUI>(uiName, act, init);
         }
 
-        public BaseUi OpenUi(string uiName, string after, bool dialog = true, UiInitType act = 0, Action<BaseUi> init = null)
+        public BaseUI OpenUI(string uiName, string after, bool dialog = true, UiInitType act = 0, Action<BaseUI> init = null)
         {
-            return OpenUi<BaseUi>(uiName, after, dialog, act, init);
+            return OpenUI<BaseUI>(uiName, after, dialog, act, init);
         }
 
-        //public BaseUi OpenUi(string uiName, BaseUi after, bool dialog = true, UiInitType act = 0, Action<BaseUi> init = null)
+        //public BaseUI OpenUI(string uiName, BaseUI after, bool dialog = true, UiInitType act = 0, Action<BaseUI> init = null)
         //{
-        //    return OpenUi<BaseUi>(uiName,after,dialog, act, init);
+        //    return OpenUI<BaseUI>(uiName,after,dialog, act, init);
         //}
 
-        public T OpenUi<T>(string uiName, UiInitType act = 0, Action<T> init = null) where T : BaseUi
+        public T OpenUI<T>(string uiName, UiInitType act = 0, Action<T> init = null) where T : BaseUI
         {
-            return OpenUi(new OpenParam<T>(uiName, _UiContainer.childCount, null, act, init));
+            return OpenUI(new OpenParam<T>(uiName, _UiContainer.childCount, null, act, init));
         }
 
-        public T OpenUi<T>(string uiName, string after, bool dialog = true, UiInitType act = 0, Action<T> init = null) where T : BaseUi
+        public T OpenUI<T>(string uiName, string after, bool dialog = true, UiInitType act = 0, Action<T> init = null) where T : BaseUI
         {
             int i = 0;
             for (; i < _ActiveUi.Count; i++)
-                if (_ActiveUi[i].UiName == after)
+                if (_ActiveUi[i].UIName == after)
                     break;
 
-            if (i != _ActiveUi.Count) return OpenUi(new OpenParam<T>(uiName, i + 1, dialog ? _ActiveUi[i] : null, act, init));
+            if (i != _ActiveUi.Count) return OpenUI(new OpenParam<T>(uiName, i + 1, dialog ? _ActiveUi[i] : null, act, init));
             Debug.LogWarning($"未找到after名为 {after} 的UI");
             return null;
         }
 
-        //public T OpenUi<T>(string uiName, BaseUi after, bool dialog = true, UiInitType act = 0, Action<T> init = null) where T : BaseUi
+        //public T OpenUI<T>(string uiName, BaseUI after, bool dialog = true, UiInitType act = 0, Action<T> init = null) where T : BaseUI
         //{
-        //    return OpenUi(uiName, after.UiName, dialog, act, init);
+        //    return OpenUI(uiName, after.UIName, dialog, act, init);
         //}
 
-        private T OpenUi<T>(OpenParam<T> param) where T : BaseUi
+        private T OpenUI<T>(OpenParam<T> param) where T : BaseUI
         {
-            BaseUi plane = _HideStableUi.FirstOrDefault(x => x.UiName == param.UiName);
+            BaseUI plane = _HideStableUi.FirstOrDefault(x => x.UIName == param.UiName);
             if (plane != null)
                 _HideStableUi.Remove(plane);
 
-            plane = plane ?? Stable.ObjectPool.Alloc<BaseUi>(null, DefaultUiBundle, param.UiName);
+            plane = plane ?? Stable.ObjectPool.Alloc<BaseUI>(null, DefaultUiBundle, param.UiName);
 
             plane.transform.SetParent(_UiContainer);
             plane.transform.SetSiblingIndex(param.SiblingIndex);
@@ -127,14 +127,14 @@ namespace Thunder.Sys
             return plane as T;
         }
 
-        public void CloseUi(string uiName, bool force = false)
+        public void CloseUI(string uiName, bool force = false)
         {
-            BaseUi baseUi = _ActiveUi.FirstOrDefault(x => x.UiName == uiName);
+            BaseUI baseUi = _ActiveUi.FirstOrDefault(x => x.UIName == uiName);
             Assert.IsNotNull(baseUi, $"没有名为 {uiName} 的UI");
-            CloseUi(baseUi, force);
+            CloseUI(baseUi, force);
         }
 
-        private void CloseUi(BaseUi baseUi, bool force = false)
+        private void CloseUI(BaseUI baseUi, bool force = false)
         {
             if (!force && baseUi.Dialog != null) return;
 
@@ -145,7 +145,7 @@ namespace Thunder.Sys
 
             while (_CloseStack.Count != 0)
             {
-                BaseUi curUi = _CloseStack.Peek();
+                BaseUI curUi = _CloseStack.Peek();
 
                 if (back)
                 {
@@ -173,32 +173,32 @@ namespace Thunder.Sys
             }
         }
 
-        public bool IsUiOpened(BaseUi baseUi)
+        public bool IsUIOpened(BaseUI baseUi)
         {
-            return GetUi(baseUi.UiName) != null;
+            return GetUI(baseUi.UIName) != null;
         }
 
-        public bool IsUiOpened(string uiName)
+        public bool IsUIOpened(string uiName)
         {
-            return GetUi(uiName) != null;
+            return GetUI(uiName) != null;
         }
 
-        public void SwitchUi(string planeName)
+        public void SwitchUI(string planeName)
         {
-            if (IsUiOpened(planeName))
-                CloseUi(planeName);
+            if (IsUIOpened(planeName))
+                CloseUI(planeName);
             else
-                OpenUi(planeName);
+                OpenUI(planeName);
         }
 
-        public static bool DialogOpened(BaseUi dialog)
+        public static bool DialogOpened(BaseUI dialog)
         {
             return dialog != null && dialog.gameObject.activeSelf;
         }
 
-        private BaseUi GetUi(string uiName)
+        private BaseUI GetUI(string uiName)
         {
-            return _ActiveUi.FirstOrDefault(x => x.UiName == uiName);
+            return _ActiveUi.FirstOrDefault(x => x.UIName == uiName);
         }
     }
 }

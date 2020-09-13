@@ -3,7 +3,7 @@ using TMPro;
 
 namespace Thunder.UI
 {
-    public class ConfirmDialog : BaseUi
+    public class ConfirmDialog : BaseUI
     {
         public TextMeshProUGUI textMesh;
 
@@ -26,13 +26,13 @@ namespace Thunder.UI
         public void OK()
         {
             dialogResult = DialogResult.Ok;
-            Sys.Stable.Ui.CloseUi(UiName);
+            Sys.Stable.UI.CloseUI(UIName);
         }
 
         public void Cancel()
         {
             dialogResult = DialogResult.Cancel;
-            Sys.Stable.Ui.CloseUi(UiName);
+            Sys.Stable.UI.CloseUI(UIName);
         }
 
         public void Update()

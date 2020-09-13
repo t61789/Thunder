@@ -8,11 +8,11 @@ namespace Thunder.UI
     {
         private void Awake()
         {
-            Sys.Stable.Ui.OpenUi("inputDialog", UiInitType.CenterParent, y =>
+            Sys.Stable.UI.OpenUI("inputDialog", UiInitType.CenterParent, y =>
             {
                 InputDialog x = y as InputDialog;
                 x.Init("");
-                x.OnCloseCheck += (BaseUi baseUi, ref bool result) =>
+                x.OnCloseCheck += (BaseUI baseUi, ref bool result) =>
                 {
                     if (!result) return;
 
@@ -21,7 +21,7 @@ namespace Thunder.UI
                     {
                         result = SaveSys.CreateSaveDir(id.Text);
                         if (!result)
-                            Sys.Stable.Ui.OpenUi("messageDialog", x.UiName, true, UiInitType.CenterParent, message =>
+                            Sys.Stable.UI.OpenUI("messageDialog", x.UIName, true, UiInitType.CenterParent, message =>
                            (message as MessageDialog).Init("存档已存在"));
                         else
                         {
@@ -37,7 +37,7 @@ namespace Thunder.UI
 
         //private void StartBuildShip()
         //{
-        //    (Sys.Stable.Ui.OpenUi("buildShipPanel") as BuildShipPanel).OnBuildShipComplete += BuildShipClosed;
+        //    (Sys.Stable.UI.OpenUI("buildShipPanel") as BuildShipPanel).OnBuildShipComplete += BuildShipClosed;
         //}
 
         //private void BuildShipClosed(BuildShipPanel b)

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class SurvivalLiUI : BaseUi
+    public class SurvivalLiUI : BaseUI
     {
         private string surviveTimePreText = "";
         private string scorePreText = "";

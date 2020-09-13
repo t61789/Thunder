@@ -26,7 +26,7 @@ namespace Thunder.Sys
         public static ControlSys Control;
         public static ConsoleWindow ConsoleWindow;
         public static CampSys Camp;
-        public static UiSys Ui;
+        public static UISys UI;
         public static DataBaseSys DataBase;
         public static CameraController MainCamera;
         public static SaveSys Save;
@@ -51,14 +51,14 @@ namespace Thunder.Sys
                     ObjectPool = gameObject.AddComponent<ObjectPool>();
                     Container = GameObject.Find("Container").transform;
                     Lua = new LuaSys();
-                    Ui = new UiSys();
+                    UI = new UISys();
                     DataBase = new DataBaseSys();
                     break;
 
                 case "CreateSaveScene":
                     ObjectPool = gameObject.AddComponent<ObjectPool>();
                     Container = GameObject.Find("Container").transform;
-                    Ui = GetComponent<UiSys>();
+                    UI = GetComponent<UISys>();
                     break;
 
                 case "LevelScene":
@@ -66,7 +66,7 @@ namespace Thunder.Sys
                     ObjectPool = gameObject.AddComponent<ObjectPool>();
                     Container = GameObject.Find("Container").transform;
                     Value = new ValueSys();
-                    Ui = GetComponent<UiSys>();
+                    UI = GetComponent<UISys>();
                     break;
                 case "TestScene":
                     PublicVar = gameObject;
@@ -75,7 +75,7 @@ namespace Thunder.Sys
                     DataBase = new DataBaseSys();
                     ObjectPool = gameObject.AddComponent<ObjectPool>();
                     Container = GameObject.Find("Container").transform;
-                    Ui = new UiSys();
+                    UI = new UISys();
                     Camp = new CampSys();
                     MainCamera = Camera.main.transform.GetComponent<CameraController>();
                     Value = new ValueSys();
@@ -89,7 +89,7 @@ namespace Thunder.Sys
                     Value = new ValueSys();
                     Control = gameObject.AddComponent<ControlSys>();
                     Camp = new CampSys();
-                    Ui = new UiSys();
+                    UI = new UISys();
                     break;
                 case "LuaTestScene":
                     Bundle = new BundleSys();
@@ -105,7 +105,7 @@ namespace Thunder.Sys
         {
             if (_Loading)
             {
-                _LoadingLoadPanel.SetText("loading: " + _LoadingAo.progress);
+                //_LoadingLoadPanel.SetText("loading: " + _LoadingAo.progress);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Thunder.Sys
         {
             _Loading = true;
             _LoadingAo = SceneManager.LoadSceneAsync(sceneName);
-            _LoadingLoadPanel = Ui.OpenUi("logPanel", UiInitType.CenterParent) as LogPanel;
+            _LoadingLoadPanel = UI.OpenUI("logPanel", UiInitType.CenterParent) as LogPanel;
             StartCoroutine(LoadScene(_LoadingAo));
         }
 
@@ -141,7 +141,7 @@ namespace Thunder.Sys
 
         public void Test(string cmd)
         {
-            Stable.Lua.ExecuteFile("BaseUi");
+            Stable.Lua.ExecuteFile("BaseUI");
             Stable.Lua.ExecuteCommand(cmd);
         }
     }

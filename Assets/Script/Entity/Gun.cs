@@ -239,14 +239,14 @@ namespace Thunder.Entity
             {
                 _GunCamera.fieldOfView = AimScopeFov;
                 PostProcessingController.Instance.AimScope.Enable = true;
-                Stable.Ui.CloseUi("AimPoint");
+                Stable.UI.CloseUI("AimPoint");
                 _Player.SensitiveScale.AddBuff(_AimScopeSensitiveScale, "AimScope", BuffData.Operator.Mul, 0);
             }
             else
             {
                 _GunCamera.fieldOfView = _BaseAimScopeFov;
                 PostProcessingController.Instance.AimScope.Enable = false;
-                Stable.Ui.OpenUi("AimPoint");
+                Stable.UI.OpenUI("AimPoint");
                 _Player.SensitiveScale.RemoveBuff("AimScope");
             }
 
