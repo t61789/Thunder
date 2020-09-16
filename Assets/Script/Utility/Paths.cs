@@ -8,12 +8,17 @@ namespace Thunder.Utility
         public static string DocumentPath;
         public static string DocumentPathD;
         public static char Div = '/';
-        public static string LogPath = @"E:\ThunderLog.txt";
+        
 
-#if UNITY_STANDALONE || UNITY_EDITOR
+#if UNITY_EDITOR
         public static string BundleBasePath = @"E:\AssetBundles" + Div + "StandaloneWindows";
+        public static string LogPath = @"E:\ThunderLog.txt";
+#elif UNITY_STANDALONE
+        public static string BundleBasePath = @"."+Div+"StandaloneWindows";
+        public static string LogPath = @"."+Div+"ThunderLog.txt";
 #elif UNITY_ANDROID && !UNITY_EDITOR
-    public static string BundleBasePath = Application.persistentDataPath+@"Bundles";
+        public static string BundleBasePath = Application.persistentDataPath+@"Bundles";
+        public static string LogPath = Application.persistentDataPath+"ThunderLog.txt";
 #endif
         public static string BundleBasePathD = BundleBasePath + Div;
 
