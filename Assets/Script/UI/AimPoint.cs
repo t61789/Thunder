@@ -129,11 +129,11 @@ namespace Thunder.UI
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(Tools.screenMiddle, new Vector3(AimSize.x, AimSize.x, 0));
-            Gizmos.DrawWireCube(Tools.screenMiddle, new Vector3(AimSize.y, AimSize.y, 0));
+            Gizmos.DrawWireCube(Tools.ScreenMiddle, new Vector3(AimSize.x, AimSize.x, 0));
+            Gizmos.DrawWireCube(Tools.ScreenMiddle, new Vector3(AimSize.y, AimSize.y, 0));
             Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(Tools.screenMiddle, new Vector3(HitSize.x, HitSize.x, 0));
-            Gizmos.DrawWireCube(Tools.screenMiddle, new Vector3(HitSize.y, HitSize.y, 0));
+            Gizmos.DrawWireCube(Tools.ScreenMiddle, new Vector3(HitSize.x, HitSize.x, 0));
+            Gizmos.DrawWireCube(Tools.ScreenMiddle, new Vector3(HitSize.y, HitSize.y, 0));
         }
     }
 }

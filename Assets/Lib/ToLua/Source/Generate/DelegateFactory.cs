@@ -43,6 +43,7 @@ public class DelegateFactory
 		dict.Add(typeof(Thunder.UI.BaseUI.CloseCheck), factory.Thunder_UI_BaseUI_CloseCheck);
 		dict.Add(typeof(Thunder.Tool.BehaviorTree.ActionNode.DelAction), factory.Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		dict.Add(typeof(Thunder.Tool.BehaviorTree.ConditionNode.DelCondition), factory.Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
+		dict.Add(typeof(Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged), factory.Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -70,6 +71,7 @@ public class DelegateFactory
 		DelegateTraits<Thunder.UI.BaseUI.CloseCheck>.Init(factory.Thunder_UI_BaseUI_CloseCheck);
 		DelegateTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Init(factory.Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		DelegateTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Init(factory.Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
+		DelegateTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Init(factory.Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -97,6 +99,7 @@ public class DelegateFactory
 		TypeTraits<Thunder.UI.BaseUI.CloseCheck>.Init(factory.Check_Thunder_UI_BaseUI_CloseCheck);
 		TypeTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Init(factory.Check_Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		TypeTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Init(factory.Check_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
+		TypeTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Init(factory.Check_Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -124,6 +127,7 @@ public class DelegateFactory
 		StackTraits<Thunder.UI.BaseUI.CloseCheck>.Push = factory.Push_Thunder_UI_BaseUI_CloseCheck;
 		StackTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Push = factory.Push_Thunder_Tool_BehaviorTree_ActionNode_DelAction;
 		StackTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Push = factory.Push_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition;
+		StackTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Push = factory.Push_Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -1737,6 +1741,67 @@ public class DelegateFactory
 	}
 
 	void Push_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition(IntPtr L, Thunder.Tool.BehaviorTree.ConditionNode.DelCondition o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged_Event : LuaDelegate
+	{
+		public Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged_Event(LuaFunction func) : base(func) { }
+		public Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(float param0, int param1, int param2)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(float param0, int param1, int param2)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.Push(param1);
+			func.Push(param2);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged fn = delegate(float param0, int param1, int param2) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged_Event target = new Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged_Event(func);
+			Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged_Event target = new Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged_Event(func, self);
+			Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged), L, pos);
+	}
+
+	void Push_Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged(IntPtr L, Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged o)
 	{
 		ToLua.Push(L, o);
 	}

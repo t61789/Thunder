@@ -38,8 +38,9 @@ namespace Thunder.UI
         //    textMesh.SetText(text);
         //    Resize();
         //}
-
         #endregion
+
+        public static LogPanel Instance;
 
         public int MaxBufferSize;
 
@@ -50,6 +51,7 @@ namespace Thunder.UI
         protected override void Awake()
         {
             base.Awake();
+            Instance = this;
             _LogBuffer = new CircleBuffer<string>(MaxBufferSize);
             var l =
                 (from Transform rectTran in RectTrans select rectTran.GetComponent<TextMeshProUGUI>()).ToList();
@@ -102,30 +104,36 @@ namespace Thunder.UI
             }
         }
 
+        public void LogSystem(string msg)
+        {
+            msg = "<color=red>[system]</color>" + msg;
+            Log(msg);
+        }
+
         #region guiTest
-        private void OnGUI()
-        {
-            if (GUI.Button(new Rect(0, 0, 700, 300), "up"))
-            {
-                MoveView(true);
-            }
+        //private void OnGUI()
+        //{
+        //    if (GUI.Button(new Rect(0, 0, 700, 300), "up"))
+        //    {
+        //        MoveView(true);
+        //    }
 
-            if (GUI.Button(new Rect(0, 300, 700, 300), "down"))
-            {
-                MoveView(false);
-            }
+        //    if (GUI.Button(new Rect(0, 300, 700, 300), "down"))
+        //    {
+        //        MoveView(false);
+        //    }
 
-            if (GUI.Button(new Rect(0, 600, 700, 300), "log"))
-            {
-                Log();
-            }
-        }
+        //    if (GUI.Button(new Rect(0, 600, 700, 300), "log"))
+        //    {
+        //        Log();
+        //    }
+        //}
 
-        private int count;
-        private void Log()
-        {
-            Log((count++).ToString());
-        }
+        //private int count;
+        //private void Log()
+        //{
+        //    Log((count++).ToString());
+        //}
         #endregion
     }
 }

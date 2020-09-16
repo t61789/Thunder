@@ -8,6 +8,7 @@ namespace Thunder.Utility
         public static string DocumentPath;
         public static string DocumentPathD;
         public static char Div = '/';
+        public static string LogPath = @"E:\ThunderLog.txt";
 
 #if UNITY_STANDALONE || UNITY_EDITOR
         public static string BundleBasePath = @"E:\AssetBundles" + Div + "StandaloneWindows";

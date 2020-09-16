@@ -313,7 +313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Stable: 1
-  _UiName: 
+  _UIName: 
   RectTrans: {fileID: 0}
   Dialog: {fileID: 0}
 --- !u!224 &7360271441479853923
@@ -353,7 +353,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &7360271441570900711
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -799,7 +799,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Stable: 1
-  _UiName: 
+  _UIName: 
   RectTrans: {fileID: 0}
   Dialog: {fileID: 0}
 --- !u!222 &7360271441951069213
@@ -909,7 +909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Stable: 0
-  _UiName: 
+  _UIName: 
   RectTrans: {fileID: 0}
   Dialog: {fileID: 0}
 --- !u!222 &7360271441958205204
@@ -1122,7 +1122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Stable: 0
-  _UiName: 
+  _UIName: 
   RectTrans: {fileID: 0}
   Dialog: {fileID: 0}
 --- !u!222 &7360271442486312084
@@ -1373,7 +1373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Stable: 1
-  _UiName: 
+  _UIName: 
   RectTrans: {fileID: 0}
   Dialog: {fileID: 0}
 --- !u!222 &7360271442659772037

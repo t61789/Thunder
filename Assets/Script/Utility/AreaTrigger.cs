@@ -10,23 +10,41 @@ namespace Thunder.Utility
 {
     public class AreaTrigger:MonoBehaviour
     {
-        public UnityEvent<Collider> Enter;
-        public UnityEvent<Collider> Stay;
-        public UnityEvent<Collider> Exit;
+        public UnityEvent<Collider> OnEnter;
+        public UnityEvent<Collider> OnStay;
+        public UnityEvent<Collider> OnExit;
 
-        private void OnTriggerEnter(Collider collider)
+        protected virtual void OnTriggerEnter(Collider collider)
         {
-            Enter?.Invoke(collider);
+            Enter(collider);
+            OnEnter?.Invoke(collider);
         }
 
-        private void OnTriggerStay(Collider collider)
+        protected virtual void OnTriggerStay(Collider collider)
         {
-            Stay?.Invoke(collider);
+            Stay(collider);
+            OnStay?.Invoke(collider);
         }
 
-        private void OnTriggerExit(Collider collider)
+        protected virtual void OnTriggerExit(Collider collider)
         {
-            Exit?.Invoke(collider);
+            Exit(collider);
+            OnExit?.Invoke(collider);
+        }
+
+        protected virtual void Enter(Collider collider)
+        {
+
+        }
+
+        protected virtual void Stay(Collider collider)
+        {
+            
+        }
+
+        protected virtual void Exit(Collider collider)
+        {
+
         }
     }
 }

@@ -201,11 +201,7 @@ namespace Thunder.UI
         public void ExecuteLuaCmd(string cmd)
         {
             Assert.IsFalse(string.IsNullOrEmpty(cmd), $"命令不正确：{cmd}");
-            // ReSharper disable once PossibleNullReferenceException
-            var s = cmd.Split(':');
-            Assert.IsTrue(s.Length == 2, $"命令不正确：{cmd}");
-            Sys.Stable.Lua.ExecuteFile(s[0]);
-            Sys.Stable.Lua.ExecuteCommand(s[1]);
+            Sys.Stable.Lua.ExecuteCommand(cmd);
         }
     }
 }

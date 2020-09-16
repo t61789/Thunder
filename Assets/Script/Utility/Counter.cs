@@ -1,96 +1,58 @@
 ﻿using System;
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Thunder.Tool;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Thunder.Utility
 {
     [Serializable]
     public class Counter
     {
-        private struct AvaliableData
-        {
-            public float Float;
-            public Vector3 Vector;
-            public Color Color;
-        }
-
         /// <summary>
-        /// 当前时间计数与目标时间的插值，未经clamp处理
+        /// 当前计时与目标时间的插值，未经clamp处理
         /// </summary>
         public float Interpolant =>
             Tools.InLerpUc(_TimeCount, _TimeCount + TimeLimit, Time.time);
 
         /// <summary>
-        /// 当前已经距离上次重新计数过去了多少秒
+        /// 当前已经距离上次重新计时过去了多少秒
         /// </summary>
         public float TimeCount =>
             Time.time - _TimeCount;
 
-        public float LerpFloat =>
-            Tools.Lerp(_LValue.Float, _RValue.Float, Interpolant);
-
-        public float LerpFloatUc => 
-            Tools.LerpUc(_LValue.Float,_RValue.Float,Interpolant);
-
-        public Vector3 LerpVector =>
-            Tools.Lerp(_LValue.Vector, _RValue.Vector, Interpolant);
-
-        public Vector3 LerpVectorUc =>
-            Tools.LerpUc(_LValue.Vector, _RValue.Vector, Interpolant);
-
-        public Color LerpColor =>
-            Tools.Lerp(_LValue.Color, _RValue.Color, Interpolant);
-
-        public Color LerpColorUc =>
-            Tools.LerpUc(_LValue.Color, _RValue.Color, Interpolant);
-
-        public float FloatL
-        {
-            get => _LValue.Float;
-            set => _LValue.Float = value;
-        }
+        /// <summary>
+        /// 指示是否已经完成计时
+        /// </summary>
+        public bool Completed => Time.time >= _TimeCount + TimeLimit;
         
-        public float FloatR
-        {
-            get => _RValue.Float;
-            set => _RValue.Float = value;
-        }
+        /// <summary>
+        /// 计时时限
+        /// </summary>
+        public float TimeLimit;
 
-        public Vector3 VectorL
-        {
-            get => _LValue.Vector;
-            set => _LValue.Vector = value;
-        }
+        /// <summary>
+        /// 指示是否在自动计时
+        /// </summary>
+        public bool AutoCount { get; private set; }
 
-        public Vector3 VectorR
-        {
-            get => _RValue.Vector;
-            set => _RValue.Vector = value;
-        }
-
-        public Color ColorL
-        {
-            get => _LValue.Color;
-            set => _LValue.Color = value;
-        }
-
-        public Color ColorR
-        {
-            get => _RValue.Color;
-            set => _RValue.Color = value;
-        }
+        /// <summary>
+        /// 指示计时器是否是自动计时器
+        /// </summary>
+        public bool IsAutoCounter => _Coroutine != null;
 
         private float _TimeCount;
-        
-        public float TimeLimit;
         private Action _OnCompleteCallBack;
         private bool _Completed;
         private Coroutine _Coroutine;
+        private float _CountPauseSave;
 
-        private AvaliableData _LValue;
-        private AvaliableData _RValue;
-
+        /// <summary>
+        /// 创建一个计时器，初始为被动计时器
+        /// </summary>
+        /// <param name="timeLimit">计时时限</param>
+        /// <param name="countAtStart">是否在创建完成后立即开始计时</param>
         public Counter(float timeLimit,bool countAtStart=true)
         {
             TimeLimit = timeLimit;
@@ -100,44 +62,115 @@ namespace Thunder.Utility
             _TimeCount -= TimeLimit;
         }
 
-        public void Recount()
+        /// <summary>
+        /// 重新计时
+        /// </summary>
+        /// <param name="timeLimit">新的计时时限，为-1则不做改变</param>
+        /// <returns></returns>
+        public Counter Recount(float timeLimit = -1)
         {
+            TimeLimit = timeLimit == -1 ? TimeLimit : timeLimit;
             _TimeCount = Time.time;
             _Completed = false;
+            return this;
         }
 
+        /// <summary>
+        /// 启用自动计时后调用该回调函数
+        /// </summary>
+        /// <param name="callBack">回调函数</param>
+        /// <returns></returns>
         public Counter OnComplete(Action callBack)
         {
             _OnCompleteCallBack = callBack;
             return this;
         }
 
-        public IEnumerator Count()
+        /// <summary>
+        /// 立即完成计时
+        /// </summary>
+        /// <param name="callback">是否调用完成回调函数</param>
+        /// <returns></returns>
+        public Counter Complete(bool callback=false)
+        {
+            _TimeCount = Time.time - TimeLimit;
+            if(callback)
+                _OnCompleteCallBack?.Invoke();
+            _Completed = true;
+            return this;
+        }
+
+        /// <summary>
+        /// 将被动计时器转化为自动计时器
+        /// </summary>
+        /// <param name="parent">依附对象</param>
+        /// <param name="start"></param>
+        /// <returns></returns>
+        public Counter ToAutoCounter(MonoBehaviour parent,bool start=true)
+        {
+            Assert.IsFalse(IsAutoCounter,"当前已经是自动计时器");
+            _Coroutine = parent.StartCoroutine(Count());
+            AutoCount = start;
+            _TimeCount = Time.time;
+            return this;
+        }
+
+        /// <summary>
+        /// 将自动计时器转化为被动计时器
+        /// </summary>
+        /// <param name="parent">依附对象</param>
+        /// <returns></returns>
+        public Counter ToNegetiveCounter(MonoBehaviour parent)
+        {
+            Assert.IsTrue(IsAutoCounter, "当前已经是被动计时器");
+            _CountPauseSave = 0;
+            _TimeCount = Time.time;
+            parent.StopCoroutine(_Coroutine);
+            _Coroutine = null;
+            AutoCount = false;
+            return this;
+        }
+
+        /// <summary>
+        /// 恢复自动计时，如果当前正在自动计时，则重置计数
+        /// </summary>
+        /// <param name="recount">是否重新计时，即清除上一次暂停之前所记录的时间。反之则继续上一次的计时</param>
+        /// <returns></returns>
+        public Counter ResumeAutoCount(bool recount=false)
+        {
+            if (AutoCount || recount)
+            {
+                _CountPauseSave = 0;
+                _Completed = false;
+            }
+            AutoCount = true;
+            _TimeCount = Time.time - _CountPauseSave;
+            return this;
+        }
+
+        /// <summary>
+        /// 暂停自动计时
+        /// </summary>
+        /// <returns></returns>
+        public Counter PauseAutoCount()
+        {
+            Assert.IsTrue(AutoCount, "自动计时未开启，请先启动");
+            AutoCount = false;
+            _CountPauseSave = Time.time - _TimeCount;
+            return this;
+        }
+
+        private IEnumerator Count()
         {
             while (true)
             {
-                if (!_Completed && Time.time >= _TimeCount + TimeLimit)
+                if (!_Completed && AutoCount && Time.time >= _TimeCount + TimeLimit)
                 {
                     _Completed = true;
                     _OnCompleteCallBack?.Invoke();
                 }
                 yield return null;
             }
-        }
-
-        public Counter StartCount(MonoBehaviour parent)
-        {
-            if (_Coroutine != null) return this;
-            _Coroutine = parent.StartCoroutine(Count());
-            return this;
-        }
-
-        public Counter StopCount(MonoBehaviour parent)
-        {
-            if (_Coroutine == null) return this;
-            parent.StopCoroutine(_Coroutine);
-            _Coroutine = null;
-            return this;
         }
     }
 }

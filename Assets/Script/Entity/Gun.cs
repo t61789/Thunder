@@ -15,6 +15,7 @@ namespace Thunder.Entity
     {
         public static Gun Instance;
 
+        public bool Safety = false;
         public float FireInterval = 0.2f;
         public float CameraRecoliDampTime = 0.1f;
         public Vector3 OverHeatFactor => _BulletSpread.OverHeatFactor;
@@ -22,16 +23,20 @@ namespace Thunder.Entity
         /// <summary>
         /// 0为无限连发模式，其余正整数为连射次数
         /// </summary>
-        public float BurstMode = 0;
+        public int BurstMode = 0;
         public bool ScopeAllowed = false;
         public float Damage = 20;
         public float MagazineMaxAmmo = 30;
         public float MagazineAmmo = 30;
+        public float BackupMaxAmmo = 90;
         public float BackupAmmo = 90;
         /// <summary>
         /// MagazineMaxAmmo MagazineAmmo BackupAmmo
         /// </summary>
+        [HideInInspector]
         public UnityEvent<float, float, float> OnAmmoChange;
+        public Vector3 MuzzleFirePos;
+        public Sprite[] MuzzleFireSprites;
 
         private Animator _Animator;
         private float _FireIntervalCount;
@@ -51,6 +56,7 @@ namespace Thunder.Entity
         private readonly StickyInputDic _StickyInputDic = new StickyInputDic();
         private bool _AimScopeBeforeReload;
         private bool _Reloading;
+        private readonly int[] _FireModeLoop = {0, 1,3};
 
         private const string SQUAT = "squat";
         private const string HANG = "hang";
@@ -62,14 +68,15 @@ namespace Thunder.Entity
 
             _Animator = GetComponent<Animator>();
             _Trans = transform;
-            Assert.IsNotNull(_Player = _Trans.parent.parent.parent.GetComponent<Player>(),
+            _Player = _Trans.parent.parent.parent.GetComponent<Player>();
+            Assert.IsNotNull(_Player,
                 $"枪械 {name} 安装位置不正确");
             _Player.OnSquat.AddListener(PlayerSquat);
+
             _Player.OnHanging.AddListener(PlayerHanging);
             _GunCamera = Camera.main;
             _BaseAimScopeFov = _GunCamera.fieldOfView;
             _AimScopeSensitiveScale = AimScopeFov / _BaseAimScopeFov;
-
             _StickyInputDic.AddBool(RELOAD, 0.7f);
 
             Instance = this;
@@ -77,6 +84,7 @@ namespace Thunder.Entity
 
         private void Update()
         {
+            if (!Safety) return;
             ControlInfo fire = Stable.Control.RequireKey("Fire1", 0);
             bool param = Time.time - _FireIntervalCount >= FireInterval;
 
@@ -127,9 +135,12 @@ namespace Thunder.Entity
 
             if (Stable.Control.RequireKey("AimScope", 0).Down)
                 SwitchAimScope();
+            if (Stable.Control.RequireKey("SwitchFireMode", 0).Down)
+                LoopFireMode();
         }
 
         private readonly List<Vector3> _Spreads = new List<Vector3>();
+
         public void Reload()
         {
             float ammoDiff = MagazineMaxAmmo - MagazineAmmo;
@@ -152,9 +163,30 @@ namespace Thunder.Entity
             OnAmmoChange?.Invoke(MagazineMaxAmmo, MagazineAmmo, BackupAmmo);
         }
 
+        public void SetSafety(int value)
+        {
+            Safety = value != 0;
+        }
+
+        public void FillAmmo()
+        {
+            BackupAmmo = BackupMaxAmmo;
+            MagazineAmmo = MagazineMaxAmmo;
+            OnAmmoChange?.Invoke(MagazineMaxAmmo,MagazineAmmo,BackupAmmo);
+        }
+
+        private int LoopFireMode()
+        {
+            int index = _FireModeLoop.FindIndex(x => BurstMode == x);
+            index++;
+            index %= _FireModeLoop.Length;
+            BurstMode = _FireModeLoop[index];
+            PublicEvents.GunFireModeChange?.Invoke(BurstMode);
+            return BurstMode;
+        }
+
         private void Fire()
         {
-
             Vector3 dir = _BulletSpread.GetNextBulletDir(FireInterval);
             dir = Camera.main.transform.localToWorldMatrix * dir;
 
@@ -164,6 +196,7 @@ namespace Thunder.Entity
                 _Spreads.Add(hit.point);
                 if (_Spreads.Count > 50)
                     _Spreads.RemoveAt(0);
+                BulletHoleManager.Create(hit.point,hit.normal);
                 hit.transform.GetComponent<IShootable>()?.GetShoot(hit.point, dir, Damage);
             }
 
@@ -175,6 +208,9 @@ namespace Thunder.Entity
 
             MagazineAmmo--;
             OnAmmoChange?.Invoke(MagazineMaxAmmo, MagazineAmmo, BackupAmmo);
+
+            
+            PublicEvents.GunFire?.Invoke();
         }
 
         private void FixedUpdate()
@@ -239,15 +275,17 @@ namespace Thunder.Entity
             {
                 _GunCamera.fieldOfView = AimScopeFov;
                 PostProcessingController.Instance.AimScope.Enable = true;
-                Stable.UI.CloseUI("AimPoint");
+                Stable.UI.CloseUI("aimPoint");
                 _Player.SensitiveScale.AddBuff(_AimScopeSensitiveScale, "AimScope", BuffData.Operator.Mul, 0);
+                PostProcessingController.Instance.DepthOfField.Enable = true;
             }
             else
             {
                 _GunCamera.fieldOfView = _BaseAimScopeFov;
                 PostProcessingController.Instance.AimScope.Enable = false;
-                Stable.UI.OpenUI("AimPoint");
+                Stable.UI.OpenUI("aimPoint");
                 _Player.SensitiveScale.RemoveBuff("AimScope");
+                PostProcessingController.Instance.DepthOfField.Enable = false;
             }
 
             _AimScopeEnable = !_AimScopeEnable;

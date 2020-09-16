@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using BehaviorDesigner.Runtime.Tasks;
-using UnityEditor.Experimental.TerrainAPI;
 using UnityEngine.Assertions;
 
 namespace Thunder.Utility
@@ -102,35 +101,45 @@ namespace Thunder.Utility
         /// <param name="value"></param>
         /// <param name="end">为true则在队尾添加元素，否则在队首添加</param>
         /// <param name="cautious">指示当缓冲区满后是否自动覆盖 队首/队尾 的元素</param>
-        /// <returns>仅当cautious=true且缓冲区已满时返回false</returns>
-        public bool Insert(T value,bool end=true,bool cautious=false)
+        /// <returns>当缓冲区已满时返回被覆盖的元素</returns>
+        public T Insert(T value,bool end=true,bool cautious=false)
         {
             if (ElementSize == 0)
             {
                 _Buffer[_BufferPointer.start] = value;
                 ElementSize++;
                 _Version++;
-                return true;
+                return default;
             }
 
+            T result;
             if (end)
             {
                 int endLimit = LimitPointer(_BufferPointer.end + 1);
                 if (cautious && endLimit == _BufferPointer.start)
-                    return false;
+                    return default;
+                result = default;
+                if (endLimit == _BufferPointer.start)
+                    result = _Buffer[endLimit];
                 _BufferPointer.end = endLimit;
                 _Buffer[_BufferPointer.end] = value;
+
                 if (_BufferPointer.end == _BufferPointer.start)
+                {
                     _BufferPointer.start = LimitPointer(_BufferPointer.start + 1);
+                }
                 else
                     ElementSize++;
                 _Version++;
-                return true;
+                return result;
             }
 
             int startLimit = LimitPointer(_BufferPointer.start - 1);
             if (cautious && startLimit == _BufferPointer.end)
-                return false;
+                return default;
+            result = default;
+            if (startLimit == _BufferPointer.end)
+                result = _Buffer[startLimit];
             _BufferPointer.start = startLimit;
             _Buffer[_BufferPointer.start] = value;
             if (_BufferPointer.end == _BufferPointer.start)
@@ -138,39 +147,42 @@ namespace Thunder.Utility
             else
                 ElementSize++;
             _Version++;
-            return true;
+            return result;
         }
 
         /// <summary>
         /// 移除队首/队尾的元素
         /// </summary>
-        /// <param name="end">为true则在队尾添加移除，否则在队首移除</param>
+        /// <param name="start">为true则在队首移除，否则在队尾移除</param>
         /// <param name="clear">是否清除单元格内的元素</param>
-        /// <returns>指示是否清除成功（缓冲区为空时失败）</returns>
-        public bool Remove(bool end = true, bool clear = true)
+        /// <returns>被移除的元素</returns>
+        public T Remove(bool start = true, bool clear = true)
         {
             switch (ElementSize)
             {
                 case 0:
-                    return false;
+                    return default;
                 case 1:
                 {
                     if (clear)
                         _Buffer[_BufferPointer.end] = default;
                     ElementSize--;
                     _Version++;
-                    return true;
+                    return default;
                 }
             }
 
-            if (end)
+            T result;
+            if (!start)
             {
+                result = _Buffer[_BufferPointer.end];
                 if (clear)
                     _Buffer[_BufferPointer.end] = default;
                 _BufferPointer.end = LimitPointer(_BufferPointer.end - 1);
             }
             else
             {
+                result = _Buffer[_BufferPointer.start];
                 if (clear)
                     _Buffer[_BufferPointer.start] = default;
                 _BufferPointer.start = LimitPointer(_BufferPointer.start + 1);
@@ -178,7 +190,7 @@ namespace Thunder.Utility
 
             ElementSize--;
             _Version++;
-            return true;
+            return result;
         }
 
         /// <summary>

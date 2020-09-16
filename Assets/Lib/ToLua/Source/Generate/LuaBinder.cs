@@ -124,6 +124,7 @@ public static class LuaBinder
 		Thunder_Utility_CounterWrap.Register(L);
 		Thunder_Utility_DialogResultWrap.Register(L);
 		Thunder_Utility_UiInitTypeWrap.Register(L);
+		Thunder_Utility_PublicEventsWrap.Register(L);
 		Thunder_Utility_FreeLookCameraWrap.Register(L);
 		Thunder_Utility_GlobalBufferWrap.Register(L);
 		Thunder_Utility_GlobalSettingsWrap.Register(L);
@@ -148,9 +149,6 @@ public static class LuaBinder
 		Thunder_Utility_PostProcessing_SMotionBlurWrap.Register(L);
 		Thunder_Utility_PostProcessing_SsaoWrap.Register(L);
 		L.EndModule();
-		L.BeginModule("Events");
-		Thunder_Utility_Events_FlyingSaucerHitWrap.Register(L);
-		L.EndModule();
 		L.EndModule();
 		L.BeginModule("UI");
 		Thunder_UI_AimPointWrap.Register(L);
@@ -161,6 +159,7 @@ public static class LuaBinder
 		Thunder_UI_ConfirmDialogWrap.Register(L);
 		Thunder_UI_CreateSaveControllerWrap.Register(L);
 		Thunder_UI_DragMoveButtonWrap.Register(L);
+		Thunder_UI_FlyingSaucerScoreBoardWrap.Register(L);
 		Thunder_UI_InputDialogWrap.Register(L);
 		Thunder_UI_JoystickWrap.Register(L);
 		Thunder_UI_LevelPlaneWrap.Register(L);
@@ -169,7 +168,6 @@ public static class LuaBinder
 		Thunder_UI_LogPanelWrap.Register(L);
 		Thunder_UI_MessageDialogWrap.Register(L);
 		Thunder_UI_ScaleDragButtonWrap.Register(L);
-		Thunder_UI_ScoreBoardWrap.Register(L);
 		Thunder_UI_SurvivalLiUIWrap.Register(L);
 		Thunder_UI_SurvivalNoliUIWrap.Register(L);
 		L.BeginModule("ListPlane");
@@ -213,6 +211,7 @@ public static class LuaBinder
 		L.EndModule();
 		L.BeginModule("Test");
 		Thunder_Test_SaveTestWrap.Register(L);
+		Thunder_Test_GenerateAlphaWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Sys");
 		Thunder_Sys_BundleSysWrap.Register(L);
@@ -234,15 +233,26 @@ public static class LuaBinder
 		Thunder_Skill_SkillWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Game");
-		Thunder_Game_FlyingSaucerWrap.Register(L);
+		L.BeginModule("FlyingSaucer");
+		Thunder_Game_FlyingSaucer_FlyingSaucerWrap.Register(L);
+		Thunder_Game_FlyingSaucer_FlyingSaucerGameWrap.Register(L);
+		Thunder_Game_FlyingSaucer_FlyingSaucerLauncherWrap.Register(L);
+		Thunder_Game_FlyingSaucer_FlyingSaucerShootPointWrap.Register(L);
+		Thunder_Game_FlyingSaucer_FlyingSaucerSwitcherWrap.Register(L);
+		L.BeginModule("FlyingSaucerGame");
+		L.RegFunction("DelDataChanged", Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
+		L.EndModule();
+		L.EndModule();
 		L.EndModule();
 		L.BeginModule("Entity");
+		Thunder_Entity_AmmoCaseWrap.Register(L);
 		Thunder_Entity_BaseEntityWrap.Register(L);
+		Thunder_Entity_BulletHoleWrap.Register(L);
+		Thunder_Entity_BulletHoleManagerWrap.Register(L);
 		Thunder_Entity_ControllerWrap.Register(L);
-		Thunder_Entity_FlyingSaucerWrap.Register(L);
-		Thunder_Entity_FlyingSaucerLauncherWrap.Register(L);
 		Thunder_Entity_GunWrap.Register(L);
 		Thunder_Entity_LuaScriptInterfaceWrap.Register(L);
+		Thunder_Entity_MuzzleFireWrap.Register(L);
 		Thunder_Entity_PeopleWrap.Register(L);
 		Thunder_Entity_PlayerWrap.Register(L);
 		L.EndModule();
@@ -975,6 +985,33 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Create(func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Create(func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

@@ -56,7 +56,7 @@ namespace Thunder.Utility.PostProcessing
             Graphics.Blit(source, gaussTemp0);
 
             _MiddleQualityMat.SetFloat("_MaxBlurSize", MaxBlurSize);
-            _MiddleQualityMat.SetFloat("_MiddleDepth", FocalDepth);
+            _MiddleQualityMat.SetVector("_FocalDepthPos", new Vector4(0.5f,0.5f,0,0));
             _MiddleQualityMat.SetFloat("_DistanceThreshold", DistanceThreshold);
 
             for (int i = 0; i < Iterations; i++)

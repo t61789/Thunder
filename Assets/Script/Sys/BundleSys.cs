@@ -10,8 +10,6 @@ namespace Thunder.Sys
 {
     public class BundleSys : ISys
     {
-        // todo 数据相关测试
-
         public static readonly string DllBundle = @"dll";
         public static readonly string DllBundleD = @"dll" + Paths.Div;
         public static readonly string PrefabBundle = @"prefabs";

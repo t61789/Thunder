@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-
+using System.IO;
 using Thunder.Tool;
 using Thunder.Tool.ObjectPool;
 using Thunder.UI;
@@ -13,7 +13,14 @@ namespace Thunder.Sys
 {
     public class Stable : MonoBehaviour
     {
-        public bool RedirectLog;
+        public static bool SaveLog =
+#if UNITY_EDITOR
+            false;
+#elif UNITY_STANDALONE_WIN
+            true;
+#else
+            false;
+#endif
 
         public static Stable Instance;
 
@@ -40,38 +47,28 @@ namespace Thunder.Sys
 
         private void Awake()
         {
-            Instance = this;
+            if (SaveLog)
+            {
+                if (SaveLog)
+                    Application.logMessageReceived += (condition, stackTrace, logType) =>
+                    {
+                        File.AppendAllText(Paths.LogPath, $"[condition]\n{condition}\n[stackTrace]\n{stackTrace}\n");
+                    };
+                SaveLog = false;
+            }
 
+            Instance = this;
             switch (SceneManager.GetActiveScene().name)
             {
-                case "StartScene":
+                case "MainMenuScene":
                     PublicVar = gameObject;
                     Bundle?.ReleaseAllBundleGroup();
                     Bundle = new BundleSys();
-                    ObjectPool = gameObject.AddComponent<ObjectPool>();
-                    Container = GameObject.Find("Container").transform;
                     Lua = new LuaSys();
                     UI = new UISys();
-                    DataBase = new DataBaseSys();
                     break;
-
-                case "CreateSaveScene":
-                    ObjectPool = gameObject.AddComponent<ObjectPool>();
-                    Container = GameObject.Find("Container").transform;
-                    UI = GetComponent<UISys>();
-                    break;
-
-                case "LevelScene":
+                case "GameScene":
                     PublicVar = gameObject;
-                    ObjectPool = gameObject.AddComponent<ObjectPool>();
-                    Container = GameObject.Find("Container").transform;
-                    Value = new ValueSys();
-                    UI = GetComponent<UISys>();
-                    break;
-                case "TestScene":
-                    PublicVar = gameObject;
-                    Bundle = new BundleSys();
-                    Lua = new LuaSys();
                     DataBase = new DataBaseSys();
                     ObjectPool = gameObject.AddComponent<ObjectPool>();
                     Container = GameObject.Find("Container").transform;
@@ -81,21 +78,61 @@ namespace Thunder.Sys
                     Value = new ValueSys();
                     Control = gameObject.AddComponent<ControlSys>();
                     break;
-                case "BattleScene":
+                case "TestScene":
                     PublicVar = gameObject;
-                    ObjectPool = GetComponent<ObjectPool>();
+                    Bundle = new BundleSys();
+                    Lua = new LuaSys();
+                    DataBase = new DataBaseSys();
+                    ObjectPool = gameObject.AddComponent<ObjectPool>();
                     Container = GameObject.Find("Container").transform;
-                    MainCamera = GameObject.Find("MainCamera").GetComponent<CameraController>();
                     Value = new ValueSys();
                     Control = gameObject.AddComponent<ControlSys>();
                     Camp = new CampSys();
                     UI = new UISys();
                     break;
-                case "LuaTestScene":
-                    Bundle = new BundleSys();
-                    Lua = new LuaSys();
-                    Control = gameObject.AddComponent<ControlSys>();
-                    break;
+
+                    #region  old code
+                    //case "StartScene":
+                    //    PublicVar = gameObject;
+                    //    Bundle?.ReleaseAllBundleGroup();
+                    //    Bundle = new BundleSys();
+                    //    ObjectPool = gameObject.AddComponent<ObjectPool>();
+                    //    Container = GameObject.Find("Container").transform;
+                    //    Lua = new LuaSys();
+                    //    UI = new UISys();
+                    //    DataBase = new DataBaseSys();
+                    //    break;
+
+                    //case "CreateSaveScene":
+                    //    ObjectPool = gameObject.AddComponent<ObjectPool>();
+                    //    Container = GameObject.Find("Container").transform;
+                    //    UI = GetComponent<UISys>();
+                    //    break;
+
+                    //case "LevelScene":
+                    //    PublicVar = gameObject;
+                    //    ObjectPool = gameObject.AddComponent<ObjectPool>();
+                    //    Container = GameObject.Find("Container").transform;
+                    //    Value = new ValueSys();
+                    //    UI = GetComponent<UISys>();
+                    //    break;
+
+                    //case "BattleScene":
+                    //    PublicVar = gameObject;
+                    //    ObjectPool = GetComponent<ObjectPool>();
+                    //    Container = GameObject.Find("Container").transform;
+                    //    MainCamera = GameObject.Find("MainCamera").GetComponent<CameraController>();
+                    //    Value = new ValueSys();
+                    //    Control = gameObject.AddComponent<ControlSys>();
+                    //    Camp = new CampSys();
+                    //    UI = new UISys();
+                    //    break;
+                    //case "LuaTestScene":
+                    //    Bundle = new BundleSys();
+                    //    Lua = new LuaSys();
+                    //    Control = gameObject.AddComponent<ControlSys>();
+                    //    break;
+                    #endregion
             }
 
             GC.Collect();
@@ -111,9 +148,12 @@ namespace Thunder.Sys
 
         public void LoadSceneAsync(string sceneName)
         {
+            SceneManager.LoadScene(sceneName);
+            return;
+
             _Loading = true;
             _LoadingAo = SceneManager.LoadSceneAsync(sceneName);
-            _LoadingLoadPanel = UI.OpenUI("logPanel", UiInitType.CenterParent) as LogPanel;
+            //_LoadingLoadPanel = UI.OpenUI("logPanel", UiInitType.CenterParent) as LogPanel;
             StartCoroutine(LoadScene(_LoadingAo));
         }
 
