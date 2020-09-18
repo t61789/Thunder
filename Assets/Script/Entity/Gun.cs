@@ -85,7 +85,7 @@ namespace Thunder.Entity
         private void Update()
         {
             if (!Safety) return;
-            ControlInfo fire = Stable.Control.RequireKey("Fire1", 0);
+            ControlInfo fire = ControlSys.Ins.RequireKey("Fire1", 0);
             bool param = Time.time - _FireIntervalCount >= FireInterval;
 
             if (param)
@@ -118,7 +118,7 @@ namespace Thunder.Entity
             }
             _Animator.SetBool("Fire", param);
 
-            param = (Stable.Control.RequireKey(RELOAD, 0).Down && MagazineAmmo != MagazineMaxAmmo ||
+            param = (ControlSys.Ins.RequireKey(RELOAD, 0).Down && MagazineAmmo != MagazineMaxAmmo ||
                     _AutoReload) &&
                     BackupAmmo != 0 &&
                     !_Reloading;
@@ -133,9 +133,9 @@ namespace Thunder.Entity
             }
             _Animator.SetBool(RELOAD, _StickyInputDic.GetBool(RELOAD));
 
-            if (Stable.Control.RequireKey("AimScope", 0).Down)
+            if (ControlSys.Ins.RequireKey("AimScope", 0).Down)
                 SwitchAimScope();
-            if (Stable.Control.RequireKey("SwitchFireMode", 0).Down)
+            if (ControlSys.Ins.RequireKey("SwitchFireMode", 0).Down)
                 LoopFireMode();
         }
 
@@ -275,7 +275,7 @@ namespace Thunder.Entity
             {
                 _GunCamera.fieldOfView = AimScopeFov;
                 PostProcessingController.Instance.AimScope.Enable = true;
-                Stable.UI.CloseUI("aimPoint");
+                UISys.Ins.CloseUI("aimPoint");
                 _Player.SensitiveScale.AddBuff(_AimScopeSensitiveScale, "AimScope", BuffData.Operator.Mul, 0);
                 PostProcessingController.Instance.DepthOfField.Enable = true;
             }
@@ -283,7 +283,7 @@ namespace Thunder.Entity
             {
                 _GunCamera.fieldOfView = _BaseAimScopeFov;
                 PostProcessingController.Instance.AimScope.Enable = false;
-                Stable.UI.OpenUI("aimPoint");
+                UISys.Ins.OpenUI("aimPoint");
                 _Player.SensitiveScale.RemoveBuff("AimScope");
                 PostProcessingController.Instance.DepthOfField.Enable = false;
             }

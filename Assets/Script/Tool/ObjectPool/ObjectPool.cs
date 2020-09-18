@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Thunder.Sys;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 namespace Thunder.Tool.ObjectPool
 {
-    public class ObjectPool : MonoBehaviour
+    public class ObjectPool : MonoBehaviour,IBaseSys
     {
         #region OldCode
 
@@ -55,7 +57,7 @@ namespace Thunder.Tool.ObjectPool
 
         //private GameObject GetAsset(string bundlePath, string objName)
         //{
-        //    GameObject go = PublicVar.bundle.GetAsset<GameObject>(BundleSys.PrefabBundleD + bundlePath, objName);
+        //    GameObject go = PublicVar.bundle.GetAsset<GameObject>(Paths.PrefabBundleD + bundlePath, objName);
         //    if (go == null)
         //    {
         //        Debug.LogError(objName + " is not in prefabs");
@@ -80,7 +82,7 @@ namespace Thunder.Tool.ObjectPool
         //    if (index == -1)
         //    {
         //        prefabName = prefabPath;
-        //        bundlePath = BundleSys.Normal;
+        //        bundlePath = Paths.Normal;
         //        prefabPath = bundlePath + Paths.Div + prefabPath;
         //    }
         //    else
@@ -176,10 +178,10 @@ namespace Thunder.Tool.ObjectPool
         //        return go;
 
         //    int index = prefabPath.LastIndexOf(Paths.Div);
-        //    string result = index == -1 ? BundleSys.Normal : prefabPath.Substring(0, index);
+        //    string result = index == -1 ? Paths.Normal : prefabPath.Substring(0, index);
         //    string result2 = index == -1 ? prefabPath : prefabPath.Substring(index + 1);
 
-        //    go = PublicVar.bundle.GetAsset<GameObject>(BundleSys.PrefabBundleD + result, result2);
+        //    go = PublicVar.bundle.GetAsset<GameObject>(Paths.PrefabBundleD + result, result2);
         //    prefabBuff.Add(prefabPath, go);
 
         //    return go;
@@ -243,6 +245,8 @@ namespace Thunder.Tool.ObjectPool
             }
         }
 
+        public static ObjectPool Ins { get; private set; }
+
         public float ClearTime = 5;
         private float _ClearTimeStart;
 
@@ -251,13 +255,13 @@ namespace Thunder.Tool.ObjectPool
         private void CreatePools(string bundleGroup, string bundle)
         {
             AssetId id = new AssetId(bundleGroup, bundle, null, DefaultBundle);
-            foreach (var prefab in Sys.Stable.Bundle.GetAllAsset<GameObject>(bundleGroup, bundle))
+            foreach (var prefab in Sys.BundleSys.Ins.GetAllAsset<GameObject>(bundleGroup, bundle))
             {
                 id.Name = prefab.name;
                 if (_Pools.ContainsKey(id)) continue;
                 _Pools.Add(id, new Pool(prefab, prefab.GetComponent<IObjectPool>() != null));
             }
-            Sys.Stable.Bundle.ReleaseBundle(bundleGroup, bundle);
+            Sys.BundleSys.Ins.ReleaseBundle(bundleGroup, bundle);
         }
 
         public T Alloc<T>(string prefabPath, Action<T> init = null, Transform container = null) where T : MonoBehaviour
@@ -319,6 +323,12 @@ namespace Thunder.Tool.ObjectPool
             return pool;
         }
 
+        private void Awake()
+        {
+            Ins = this;
+            SceneManager.sceneUnloaded += x => _Pools.Clear();
+        }
+
         protected void Update()
         {
             if (!(Time.time - _ClearTimeStart >= ClearTime)) return;
@@ -359,11 +369,25 @@ namespace Thunder.Tool.ObjectPool
             return GetPool(bundleGroup, bundle, name, out _).Prefab;
         }
 
-        private static readonly string DefaultBundle = BundleSys.PrefabBundleD + BundleSys.Normal;
+        private static readonly string DefaultBundle = Paths.PrefabBundleD + Paths.Normal;
         private static AssetId CreateId(string bundleGroup, string bundle, string name)
         {
             bundle = bundle ?? DefaultBundle;
             return new AssetId(bundleGroup, bundle, name, DefaultBundle);
+        }
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+            
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+            
+        }
+
+        public void OnApplicationExit()
+        {
         }
     }
 

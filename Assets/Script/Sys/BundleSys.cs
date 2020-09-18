@@ -8,23 +8,8 @@ using Object = UnityEngine.Object;
 
 namespace Thunder.Sys
 {
-    public class BundleSys : ISys
+    public class BundleSys : IBaseSys
     {
-        public static readonly string DllBundle = @"dll";
-        public static readonly string DllBundleD = @"dll" + Paths.Div;
-        public static readonly string PrefabBundle = @"prefabs";
-        public static readonly string PrefabBundleD = @"prefabs" + Paths.Div;
-        public static readonly string UIBundle = @"ui";
-        public static readonly string UIBundleD = @"ui" + Paths.Div;
-        public static readonly string ValuesBundle = @"values";
-        public static readonly string ValuesBundleD = @"values" + Paths.Div;
-        public static readonly string DatabaseBundle = @"database";
-        public static readonly string DatabaseBundleD = @"database" + Paths.Div;
-        public static readonly string LuaBundle = @"lua";
-        public static readonly string LuaBundleD = @"lua" + Paths.Div;
-
-        public static readonly string Normal = @"normal";
-        public static readonly string NormalD = @"normal" + Paths.Div;
 
         #region oldCode
         //private readonly Dictionary<string, Bundle> bundles = new Dictionary<string, Bundle>();
@@ -140,6 +125,9 @@ namespace Thunder.Sys
         //    bundles.Clear();
         //}
         #endregion
+
+        public static BundleSys Ins { get; private set; }
+        
         private class BundleUnit
         {
             public readonly AssetBundle Bundle;
@@ -185,6 +173,7 @@ namespace Thunder.Sys
 
         public BundleSys()
         {
+            Ins = this;
             LoadBundleGroup(Paths.BundleBasePath);
         }
 
@@ -318,6 +307,21 @@ namespace Thunder.Sys
         public void Reset()
         {
             ReleaseAllBundleGroup();
+        }
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+
+        }
+
+        public void OnApplicationExit()
+        {
+            
         }
     }
     public struct AssetId

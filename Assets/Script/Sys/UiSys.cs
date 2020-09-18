@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Thunder.Tool.ObjectPool;
 using Thunder.UI;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 namespace Thunder.Sys
 {
-    public class UISys
+    public class UISys:IBaseSys
     {
+        public static UISys Ins { get; private set; }
+
         private readonly struct OpenParam<T> where T : BaseUI
         {
             public readonly string UiName;
@@ -36,18 +40,23 @@ namespace Thunder.Sys
         private readonly List<BaseUI> _HideStableUi = new List<BaseUI>();
         private readonly Stack<BaseUI> _CloseStack = new Stack<BaseUI>();
 
-        public static string DefaultUiBundle = BundleSys.PrefabBundleD + BundleSys.UIBundle;
+        public static string DefaultUiBundle = Paths.PrefabBundleD + Paths.UIBundle;
 
         public UISys()
         {
-            Init();
+            Ins = this;
+            SceneManager.sceneLoaded += (x,y) => Init();
         }
 
-        public void Init()
+        public UISys Init()
         {
             _UiContainer = GameObject.Find("Canvas").transform.Find("UI");
 
             _UiRecycleContainer = GameObject.Find("Canvas").transform.Find("Recycle");
+
+            _ActiveUi.Clear();
+            _HideStableUi.Clear();
+            _CloseStack.Clear();
 
             var move = new List<Transform>();
             foreach (Transform item in _UiContainer.transform)
@@ -63,6 +72,7 @@ namespace Thunder.Sys
             }
             foreach (var item in move)
                 item.SetParent(_UiRecycleContainer);
+            return this;
         }
 
         public BaseUI OpenUI(string uiName, UiInitType act = 0, Action<BaseUI> init = null)
@@ -108,7 +118,7 @@ namespace Thunder.Sys
             if (plane != null)
                 _HideStableUi.Remove(plane);
 
-            plane = plane ?? Stable.ObjectPool.Alloc<BaseUI>(null, DefaultUiBundle, param.UiName);
+            plane = plane ?? ObjectPool.Ins.Alloc<BaseUI>(null, DefaultUiBundle, param.UiName);
 
             plane.transform.SetParent(_UiContainer);
             plane.transform.SetSiblingIndex(param.SiblingIndex);
@@ -161,7 +171,7 @@ namespace Thunder.Sys
                         curUi.gameObject.SetActive(false);
                     }
                     else
-                        Stable.ObjectPool.Recycle(curUi);
+                        ObjectPool.Ins.Recycle(curUi);
 
                     continue;
                 }
@@ -199,6 +209,19 @@ namespace Thunder.Sys
         private BaseUI GetUI(string uiName)
         {
             return _ActiveUi.FirstOrDefault(x => x.UIName == uiName);
+        }
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+            Init();
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+        }
+
+        public void OnApplicationExit()
+        {
         }
     }
 }

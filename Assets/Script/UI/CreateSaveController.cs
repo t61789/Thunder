@@ -8,7 +8,7 @@ namespace Thunder.UI
     {
         private void Awake()
         {
-            Sys.Stable.UI.OpenUI("inputDialog", UiInitType.CenterParent, y =>
+            Sys.UISys.Ins.OpenUI("inputDialog", UiInitType.CenterParent, y =>
             {
                 InputDialog x = y as InputDialog;
                 x.Init("");
@@ -21,11 +21,13 @@ namespace Thunder.UI
                     {
                         result = SaveSys.CreateSaveDir(id.Text);
                         if (!result)
-                            Sys.Stable.UI.OpenUI("messageDialog", x.UIName, true, UiInitType.CenterParent, message =>
+                            Sys.UISys.Ins.OpenUI("messageDialog", x.UIName, true, UiInitType.CenterParent, message =>
                            (message as MessageDialog).Init("存档已存在"));
                         else
                         {
-                            Sys.Stable.Save = SaveSys.LoadSave(id.Text);
+                            //存档创建
+
+                            //Sys.Stable.Save = SaveSys.LoadSave(id.Text);
                             //StartBuildShip();
                         }
                     }
@@ -37,7 +39,7 @@ namespace Thunder.UI
 
         //private void StartBuildShip()
         //{
-        //    (Sys.Stable.UI.OpenUI("buildShipPanel") as BuildShipPanel).OnBuildShipComplete += BuildShipClosed;
+        //    (Sys.UISys.Ins.OpenUI("buildShipPanel") as BuildShipPanel).OnBuildShipComplete += BuildShipClosed;
         //}
 
         //private void BuildShipClosed(BuildShipPanel b)
@@ -45,12 +47,12 @@ namespace Thunder.UI
         //    Sys.Stable.Save.playerShipParam = b.buildResult;
         //    Sys.Stable.Save.Save();
 
-        //    Sys.Stable.Instance.LoadSceneAsync("LevelScene");
+        //    Sys.Stable.Ins.LoadSceneAsync("LevelScene");
         //}
 
         public void GoBack()
         {
-            Sys.Stable.Instance.LoadSceneAsync("StartScene");
+            Sys.Stable.Ins.LoadSceneAsync("StartScene");
         }
     }
 }

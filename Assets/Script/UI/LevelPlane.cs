@@ -20,7 +20,7 @@ namespace Thunder.UI
         private void Load()
         {
             List<Action<BaseButton>> inits = new List<Action<BaseButton>>();
-            int[] completed = Sys.Stable.Save.levelComplete.ToArray();
+            int[] completed = null; //Sys.Stable.Save.levelComplete.ToArray();
 
             //int count = 0;
             //int index = 0;
@@ -80,28 +80,28 @@ namespace Thunder.UI
         public void StartLevel(BaseButton b)
         {
             //GlobalBuffer.battleSceneParam = (Sys.Stable.Level.levels[pairs[b]], null);
-            //Sys.Stable.Instance.LoadSceneAsync("BattleScene");
+            //Sys.Stable.Ins.LoadSceneAsync("BattleScene");
         }
 
         public void OpenMenu()
         {
-            Sys.Stable.UI.OpenUI<BaseUI>("MenuPanel", UIName, true, UiInitType.CenterParent, null);
+            Sys.UISys.Ins.OpenUI<BaseUI>("MenuPanel", UIName, true, UiInitType.CenterParent, null);
         }
 
         public void Exit(bool force)
         {
             if (!force)
             {
-                unsavedJson = Sys.Stable.Save.Check();
+                //unsavedJson = Sys.Stable.Save.Check();
                 if (unsavedJson != null)
                 {
-                    ConfirmDialog confirmDialog = Sys.Stable.UI.OpenUI<ConfirmDialog>("confirmDialog", menuPanel.UIName, true, UiInitType.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
+                    ConfirmDialog confirmDialog = Sys.UISys.Ins.OpenUI<ConfirmDialog>("confirmDialog", menuPanel.UIName, true, UiInitType.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
                     confirmDialog.OnBeforeClose += DialogConfirmed;
                     return;
                 }
             }
 
-            Sys.Stable.Instance.LoadSceneAsync("StartScene");
+            Sys.Stable.Ins.LoadSceneAsync("StartScene");
         }
 
         private void DialogConfirmed(BaseUI confirmDialog)
@@ -121,7 +121,7 @@ namespace Thunder.UI
 
         public void Save(string json = null)
         {
-            Sys.Stable.Save.Save(json);
+            //Sys.Stable.Save.Save(json);
         }
     }
 }

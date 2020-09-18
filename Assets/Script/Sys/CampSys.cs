@@ -6,13 +6,34 @@ using UnityEngine.Assertions;
 
 namespace Thunder.Sys
 {
-    public class CampSys
+    public class CampSys : IBaseSys
     {
+        public static CampSys Ins { get; private set; }
+
         private readonly float[,] _FriendlinessMap = new float[GlobalSettings.CampMapSize, GlobalSettings.CampMapSize];
 
         private readonly Dictionary<string, int> _KeyMap = new Dictionary<string, int>();
 
         private int _InsertIndex;
+
+        public CampSys()
+        {
+            Ins = this;
+
+            foreach (var row in DataBaseSys.Ins["camp"])
+            {
+                var campName = (string)row["camp_name"];
+                if (!_KeyMap.ContainsKey(campName))
+                    AddCamp(campName);
+                var targetName = (string)row["camp_target"];
+                if (string.IsNullOrEmpty(targetName)) continue;
+                if (!_KeyMap.ContainsKey(targetName))
+                    AddCamp(targetName);
+                SetFriendliness(campName, targetName, (float)row["friendliness"]);
+            }
+
+            DataBaseSys.Ins.DeleteTable("camp");
+        }
 
         public void AddCamp(string campName)
         {
@@ -81,22 +102,14 @@ namespace Thunder.Sys
             Assert.IsTrue(_KeyMap.TryGetValue(c2, out i2), $"未找到名为 {c2} 的Camp");
             _FriendlinessMap[i1, i2] = friendliness;
         }
+        
+        public void OnSceneEnter(string preScene, string curScene){}
 
-        public CampSys()
+        public void OnSceneExit(string curScene){}
+        
+        public void OnApplicationExit()
         {
-            foreach (var row in Stable.DataBase["camp"])
-            {
-                var campName = (string)row["camp_name"];
-                if (!_KeyMap.ContainsKey(campName))
-                    AddCamp(campName);
-                var targetName = (string)row["camp_target"];
-                if (string.IsNullOrEmpty(targetName)) continue;
-                if (!_KeyMap.ContainsKey(targetName))
-                    AddCamp(targetName);
-                SetFriendliness(campName, targetName, (float)row["friendliness"]);
-            }
-
-            Stable.DataBase.DeleteTable("camp");
+            
         }
     }
 }

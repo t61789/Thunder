@@ -10,7 +10,7 @@ namespace Thunder.Utility.PostProcessing
 
         public virtual void Init()
         {
-            _Mat = new Material(Shader);
+            _Mat = Shader==null?null:new Material(Shader);
         }
 
         public abstract void Process(RenderTexture source, RenderTexture dest);

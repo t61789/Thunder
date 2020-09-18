@@ -1470,5 +1470,17 @@ namespace Thunder.Tool
 
             return -1;
         }
+
+        /// <summary>
+        /// 遍历目标迭代器，对于每个元素执行foreachAction
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr"></param>
+        /// <param name="foreachAction"></param>
+        public static void Foreach<T>(this IEnumerable<T> arr,Action<T> foreachAction)
+        {
+            foreach (var a in arr)
+                foreachAction?.Invoke(a);
+        }
     }
 }

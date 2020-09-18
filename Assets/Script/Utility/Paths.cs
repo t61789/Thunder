@@ -8,7 +8,6 @@ namespace Thunder.Utility
         public static string DocumentPath;
         public static string DocumentPathD;
         public static char Div = '/';
-        
 
 #if UNITY_EDITOR
         public static string BundleBasePath = @"E:\AssetBundles" + Div + "StandaloneWindows";
@@ -21,6 +20,22 @@ namespace Thunder.Utility
         public static string LogPath = Application.persistentDataPath+"ThunderLog.txt";
 #endif
         public static string BundleBasePathD = BundleBasePath + Div;
+
+        public static readonly string DllBundle = @"dll";
+        public static readonly string PrefabBundle = @"prefabs";
+        public static readonly string UIBundle = @"ui";
+        public static readonly string ValuesBundle = @"values";
+        public static readonly string DatabaseBundle = @"database";
+        public static readonly string LuaBundle = @"lua";
+        public static readonly string Normal = @"normal";
+
+        public static readonly string DllBundleD = DllBundle + Div;
+        public static readonly string PrefabBundleD = PrefabBundle + Div;
+        public static readonly string UIBundleD = UIBundle + Div;
+        public static readonly string ValuesBundleD = ValuesBundle + Div;
+        public static readonly string DatabaseBundleD = DatabaseBundle + Div;
+        public static readonly string LuaBundleD = LuaBundle + Div;
+        public static readonly string NormalD = Normal + Div;
 
         static Paths()
         {
@@ -40,10 +55,5 @@ namespace Thunder.Utility
             if (!Directory.Exists(BundleBasePath))
                 Directory.CreateDirectory(BundleBasePath);
         }
-    }
-
-    public class Fuck
-    {
-        private int a;
     }
 }

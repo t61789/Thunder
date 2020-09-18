@@ -23,7 +23,7 @@ namespace Thunder.Utility
         private void FixedUpdate()
         {
             if (!_Particle.isPlaying)
-                Stable.ObjectPool.Recycle(this);
+                ObjectPool.Ins.Recycle(this);
         }
 
         public void BeforeOpReset()

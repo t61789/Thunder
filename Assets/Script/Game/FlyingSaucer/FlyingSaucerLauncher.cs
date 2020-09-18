@@ -2,6 +2,7 @@
 using Thunder.Entity;
 using Thunder.Sys;
 using Thunder.Tool;
+using Thunder.Tool.ObjectPool;
 using Thunder.UI;
 using Thunder.Utility;
 using UnityEngine;
@@ -102,7 +103,7 @@ namespace Thunder.Game.FlyingSaucer
             _Launcher.position = _Trans.position + force.normalized;
             _Launcher.rotation = Quaternion.LookRotation(force);
 
-            Stable.ObjectPool.Alloc<FlyingSaucer>(null, null, "flyingSaucer", x =>
+            ObjectPool.Ins.Alloc<FlyingSaucer>(null, null, "flyingSaucer", x =>
             {
                 x.transform.position = _Launcher.position;
                 x.Launch(force);
@@ -120,7 +121,7 @@ namespace Thunder.Game.FlyingSaucer
             _LaunchCounter.Recount();
             Vector3 force = _Trans.localToWorldMatrix * dir.normalized * LaunchSpeed;
 
-            Stable.ObjectPool.Alloc<FlyingSaucer>(null, null, "flyingSaucer", x =>
+            ObjectPool.Ins.Alloc<FlyingSaucer>(null, null, "flyingSaucer", x =>
             {
                 x.transform.position = _Launcher.position;
                 x.Launch(force);

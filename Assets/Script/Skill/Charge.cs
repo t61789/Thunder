@@ -32,10 +32,10 @@
     //        //playerController = GetComponent<PlayerController>();
     //        insideObject = false;
 
-    //        Values values = Sys.Stable.Value.GetValue<Values>("skill" + Paths.Div + "charge");
+    //        Values values = Sys.ValueSys.Ins.GetValue<Values>("skill" + Paths.Div + "charge");
 
     //        damageCoeffient = values.damageCoeffient;
-    //        protonSword = Instantiate(Sys.Stable.Bundle.GetAsset<GameObject>(values.protonSwordPrefab));
+    //        protonSword = Instantiate(Sys.BundleSys.Ins.GetAsset<GameObject>(values.protonSwordPrefab));
     //        protonSword.transform.SetParent(transform);
     //        protonSword.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
     //        protonSword.transform.localPosition = values.protonSwordPosition;
@@ -48,20 +48,20 @@
 
     //    private void Update()
     //    {
-    //        if (Sys.Stable.Control.RequestUp(KeyCode.Space, "playerControl"))
+    //        if (Sys.ControlSys.Ins.RequestUp(KeyCode.Space, "playerControl"))
     //        {
     //            if (!insideObject)
     //                EndSkill();
 
-    //            Sys.Stable.Control.Release(KeyCode.Space, "playerControl");
+    //            Sys.ControlSys.Ins.Release(KeyCode.Space, "playerControl");
     //        }
 
-    //        if (Sys.Stable.Control.RequestDown(KeyCode.Space, "playerControl"))
+    //        if (Sys.ControlSys.Ins.RequestDown(KeyCode.Space, "playerControl"))
     //        {
     //            if (!insideObject)
     //                StartSkill();
 
-    //            Sys.Stable.Control.Release(KeyCode.Space, "playerControl");
+    //            Sys.ControlSys.Ins.Release(KeyCode.Space, "playerControl");
     //        }
     //    }
 

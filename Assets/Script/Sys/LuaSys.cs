@@ -1,15 +1,18 @@
 ﻿using LuaInterface;
 using System.Collections.Generic;
 using System.Linq;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 
 namespace Thunder.Sys
 {
-    public class LuaSys
+    public class LuaSys:IBaseSys
     {
-        private static readonly string DefaultBundle = BundleSys.LuaBundleD + BundleSys.Normal;
+        public static LuaSys Ins { get; private set; }
+
+        private static readonly string DefaultBundle = Paths.LuaBundleD + Paths.Normal;
 
         private const string UtilityFunc =
 @"Utility={}
@@ -39,7 +42,9 @@ end";
 
         public LuaSys()
         {
+            Ins = this;
             StartLua();
+            Application.quitting += Dispose;
         }
 
         public void StartLua()
@@ -137,14 +142,14 @@ end";
         private bool LoadFromBundle(AssetId id)
         {
             bool have = false;
-            foreach (var textAsset in Stable.Bundle.GetAllAsset<TextAsset>(id.BundleGroup, id.Bundle))
+            foreach (var textAsset in BundleSys.Ins.GetAllAsset<TextAsset>(id.BundleGroup, id.Bundle))
             {
                 id.Name = textAsset.name;
                 if (_LoadedFile.ContainsKey(id)) continue;
                 _LoadedFile.Add(id, textAsset.text);
                 have = true;
             }
-            Stable.Bundle.ReleaseBundle(id.BundleGroup, id.Bundle);
+            BundleSys.Ins.ReleaseBundle(id.BundleGroup, id.Bundle);
             return have;
         }
 
@@ -152,6 +157,19 @@ end";
         {
             Assert.IsTrue(Started, "LuaState未启动");
             return _UtilityScope.Invoke<LuaTable>("GetEmptyTable");
+        }
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+            
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+        }
+
+        public void OnApplicationExit()
+        {
         }
     }
 }

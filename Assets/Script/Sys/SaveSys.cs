@@ -51,7 +51,7 @@ namespace Thunder.Sys
             if (Directory.Exists(savePath))
                 return false;
 
-            DataTable dirStruct = Stable.DataBase["directory_struct"].Select(null, new (string, object)[] { ("id", "save") });
+            DataTable dirStruct = DataBaseSys.Ins["directory_struct"].Select(null, new (string, object)[] { ("id", "save") });
 
             Stack<string> stack = new Stack<string>();
             stack.Push("");

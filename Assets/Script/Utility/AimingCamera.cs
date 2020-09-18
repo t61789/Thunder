@@ -32,7 +32,7 @@ namespace Thunder.Utility
             //if (Target == null) return;
             //Vector3 targetPos = Target.position + TargetOffset;
             //Vector3 dir = (_TargetDir - targetPos).normalized * Radius;
-            //Vector3 input = Stable.Control.RequireKey("Axis2", 0).Axis;
+            //Vector3 input = ControlSys.Ins.RequireKey("Axis2", 0).Axis;
             //dir = Quaternion.AngleAxis(Sensitive * input.x, Vector3.up)*dir;
             //_TargetDir = dir + targetPos;
             //float preEulerx = Trans.localEulerAngles.x;
@@ -55,7 +55,7 @@ namespace Thunder.Utility
             //if (Target == null) return;
             //Vector3 targetPos = Target.position + TargetOffset;
             //Vector3 dir = (_TargetDir - targetPos).normalized * Radius;
-            //Vector3 input = Stable.Control.RequireKey("Axis2", 0).Axis;
+            //Vector3 input = ControlSys.Ins.RequireKey("Axis2", 0).Axis;
             //float yRotAngle = Sensitive * input.x;
             //Quaternion targetRot = Quaternion.AngleAxis(yRotAngle, Vector3.up);
             //dir = targetRot * dir;
@@ -72,7 +72,7 @@ namespace Thunder.Utility
             //Trans.localEulerAngles = dir;
 
             //if (Target == null) return;
-            //Vector3 input = Stable.Control.RequireKey("Axis2", 0).Axis;
+            //Vector3 input = ControlSys.Ins.RequireKey("Axis2", 0).Axis;
             //float yRotAngle = Sensitive * input.x;
             //_TargetDir = Quaternion.AngleAxis(yRotAngle, Vector3.up) * _TargetDir;
             //Vector3 eulerAngle = Trans.eulerAngles;
@@ -84,7 +84,7 @@ namespace Thunder.Utility
             //Trans.eulerAngles = eulerAngle;
 
             //if (Target == null) return;
-            //Vector3 input = Stable.Control.RequireKey("Axis2", 0).Axis;
+            //Vector3 input = ControlSys.Ins.RequireKey("Axis2", 0).Axis;
             //float yRotAngle = Sensitive * input.x;
             //_TargetDir = Quaternion.AngleAxis(yRotAngle, Vector3.up) * _TargetDir;
             //Vector3 dir = Vector3.Cross(_TargetDir, Vector3.up);
@@ -96,7 +96,7 @@ namespace Thunder.Utility
             //_TargetRot.z = 0;
 
             if (Target == null) return;
-            Vector3 input = Stable.Control.RequireKey("Axis2", 0).Axis;
+            Vector3 input = ControlSys.Ins.RequireKey("Axis2", 0).Axis;
             float yRotAngle = Sensitive * input.x;
             _TargetDir = Quaternion.AngleAxis(yRotAngle, Vector3.up) * _TargetDir;
             Vector3 dir = Vector3.Cross(_TargetDir, Vector3.up);

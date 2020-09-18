@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Thunder.Sys
 {
-    public class DataBaseSys
+    public class DataBaseSys : IBaseSys
     {
         // 按照组(Group)读取，一个bundle内只包含一个dll和多张表
         // 每个组包含一个dll和一个bundle，bundle由多张表构成
@@ -20,13 +21,20 @@ namespace Thunder.Sys
         //  D2
         //  ..
 
-        private static readonly string DefaultBundle = BundleSys.DatabaseBundleD + BundleSys.Normal;
+        public static DataBaseSys Ins;
+
+        private static readonly string DefaultBundle = Paths.DatabaseBundleD + Paths.Normal;
 
         private readonly Dictionary<AssetId, TableUnit> _Tables = new Dictionary<AssetId, TableUnit>();
 
         public DataTable this[string table] => GetTable(table);
         public DataTable this[string bundle, string table] => GetTable(null, bundle, table);
         public DataTable this[string bundleGroup, string bundle, string table] => GetTable(bundleGroup, bundle, table);
+
+        public DataBaseSys()
+        {
+            Ins = this;
+        }
 
         public DataTable GetTable(string tablePath)
         {
@@ -118,7 +126,7 @@ namespace Thunder.Sys
 
         private void LoadBundle(string bundleGroup, string bundle)
         {
-            var assets = Stable.Bundle.GetAllAsset<TextAsset>(bundleGroup, bundle);
+            var assets = BundleSys.Ins.GetAllAsset<TextAsset>(bundleGroup, bundle);
 
             foreach (var item in assets)
             {
@@ -127,7 +135,7 @@ namespace Thunder.Sys
                 _Tables.Add(id, new TableUnit(default, item.text));
             }
 
-            Stable.Bundle.ReleaseBundle(bundleGroup, bundle);
+            BundleSys.Ins.ReleaseBundle(bundleGroup, bundle);
         }
 
         #endregion
@@ -193,7 +201,7 @@ namespace Thunder.Sys
 
         //    const string ser = "serializer";
 
-        //    var assets = Stable.Bundle.GetAllAsset<TextAsset>(bundleGroup, bundle);
+        //    var assets = BundleSys.Ins.GetAllAsset<TextAsset>(bundleGroup, bundle);
         //    var dllBytes = assets.FirstOrDefault(x => x.name == ser)?.bytes;
         //    Assert.IsNotNull(dllBytes, $"未在 {bundleGroup}!{bundle} 中找到解析dll");
         //    var serializers = Dll2Serializer(bundleGroup, bundle, dllBytes);
@@ -205,7 +213,7 @@ namespace Thunder.Sys
         //        _Tables.Add(id, new TableUnit(default, item.bytes, serializers[id]));
         //    }
 
-        //    Stable.Bundle.ReleaseBundle(bundleGroup, bundle);
+        //    BundleSys.Ins.ReleaseBundle(bundleGroup, bundle);
         //}
 
         //private DataTable LoadFromProtobuf(Serializer serializer, byte[] data)
@@ -319,6 +327,21 @@ namespace Thunder.Sys
         //    return new DataTable(fieldsBuff, temp_rows);
         //}
         #endregion
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+            
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+
+        }
+
+        public void OnApplicationExit()
+        {
+            
+        }
     }
 
     public struct DataTable : IEnumerable<DataTable.Row>

@@ -96,7 +96,7 @@ namespace Thunder.Entity
 
 
             // 移动
-            Vector2 ctrlDir = Stable.Control.RequireKey("Axis1", 0).Axis;
+            Vector2 ctrlDir = ControlSys.Ins.RequireKey("Axis1", 0).Axis;
             ctrlDir = Movable ? ctrlDir : Vector2.zero;
             if (_FixedReaded || ctrlDir != Vector2.zero)
             {
@@ -115,14 +115,14 @@ namespace Thunder.Entity
             tempX *= JumpWeaponOffsetAngle;
             _WeaponAttachPoint.localEulerAngles = new Vector3(Mathf.LerpAngle(_WeaponAttachPoint.localEulerAngles.x, tempX, WalkShakeDampFactor), 0);
 
-            if (Stable.Control.RequireKey("LockCursor", 0).Down)
+            if (ControlSys.Ins.RequireKey("LockCursor", 0).Down)
                 SwitchLockCursor();
-            ControlInfo c = Stable.Control.RequireKey("Squat", 0);
+            ControlInfo c = ControlSys.Ins.RequireKey("Squat", 0);
             if (c.Down && Movable)
                 Squat(true);
             else if (c.Up)
                 Squat(false);
-            if (Stable.Control.RequireKey("Jump", 0).Down && Movable)
+            if (ControlSys.Ins.RequireKey("Jump", 0).Down && Movable)
                 Jump();
         }
 
@@ -152,7 +152,7 @@ namespace Thunder.Entity
         private void FixedUpdate()
         {
             // 视角
-            Vector2 ctrlDir = Stable.Control.RequireKey("Axis2", 0).Axis;
+            Vector2 ctrlDir = ControlSys.Ins.RequireKey("Axis2", 0).Axis;
 
             Vector2 ctrlEuler = MoveToEuler(ctrlDir);
             if (ctrlDir != Vector2.zero)
@@ -211,7 +211,7 @@ namespace Thunder.Entity
 
         private static void SwitchLockCursor()
         {
-            Stable.Control.LockCursor = !Stable.Control.LockCursor;
+            ControlSys.Ins.LockCursor = !ControlSys.Ins.LockCursor;
         }
 
         private void Squat(bool down)

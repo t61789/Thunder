@@ -2544,6 +2544,16 @@ PrefabInstance:
       propertyPath: Target
       value: 
       objectReference: {fileID: 270711951}
+    - target: {fileID: 3201936088183968915, guid: f709366029e994545a16a5a3d56e1fdf,
+        type: 3}
+      propertyPath: DepthTexture.Shader
+      value: 
+      objectReference: {fileID: 4800000, guid: 256e8a03c36a0c84299948a47f0c5e19, type: 3}
+    - target: {fileID: 3201936088183968915, guid: f709366029e994545a16a5a3d56e1fdf,
+        type: 3}
+      propertyPath: DepthTexture.Enable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3201936088183968918, guid: f709366029e994545a16a5a3d56e1fdf,
         type: 3}
       propertyPath: Target

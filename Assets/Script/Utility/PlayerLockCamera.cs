@@ -57,7 +57,7 @@ namespace Thunder.Utility
                 new Vector4(0, 1, 0, 0),
                 new Vector4(p2TDirFlat.x, 0, p2TDirFlat.z, 0),
                 new Vector4(playerPos.x, playerPos.y, playerPos.z, 1));
-            float scrollDelta = Stable.Control.RequireKey("Axis3", 0).Axis.x * ScrollSensitive;
+            float scrollDelta = ControlSys.Ins.RequireKey("Axis3", 0).Axis.x * ScrollSensitive;
             _TargetShoulderScale = Mathf.Clamp(_TargetShoulderScale - scrollDelta, 0, MaxShoulderScale);
             ShoulderScale = Mathf.Lerp(ShoulderScale, _TargetShoulderScale, SmoothFactor);
 

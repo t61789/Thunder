@@ -11,9 +11,9 @@ namespace Thunder.UI
     {
         public void StartLoadSave()
         {
-            if (Sys.Stable.UI.IsUIOpened("LoadSaveListPlane"))
+            if (Sys.UISys.Ins.IsUIOpened("LoadSaveListPlane"))
             {
-                Sys.Stable.UI.CloseUI("LoadSaveListPlane");
+                Sys.UISys.Ins.CloseUI("LoadSaveListPlane");
                 return;
             }
 
@@ -30,19 +30,19 @@ namespace Thunder.UI
                 });
             }
 
-            Sys.Stable.UI.OpenUI<ListPlane>("listPlane", UIName, true, UiInitType.CenterParent, x =>
+            Sys.UISys.Ins.OpenUI<ListPlane>("listPlane", UIName, true, UiInitType.CenterParent, x =>
                 x.Init(new ListPlane.Parameters(1, "normalButton", (500, 150), (50, 50), (0, 0)), inits));
         }
 
         public void StartCreateSave()
         {
-            Sys.Stable.Instance.LoadSceneAsync("CreateSaveScene");
+            Sys.Stable.Ins.LoadSceneAsync("CreateSaveScene");
         }
 
         public void LoadSave(Button button)
         {
-            Sys.Stable.Save = SaveSys.LoadSave(button.transform.Find("Text").GetComponent<Text>().text);
-            Sys.Stable.Instance.LoadSceneAsync("LevelScene");
+            //Sys.Stable.Save = SaveSys.LoadSave(button.transform.Find("Text").GetComponent<Text>().text);
+            Sys.Stable.Ins.LoadSceneAsync("LevelScene");
         }
     }
 

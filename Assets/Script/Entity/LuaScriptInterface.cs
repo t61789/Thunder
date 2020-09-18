@@ -64,13 +64,13 @@ namespace Thunder.Entity
                               !string.IsNullOrEmpty(command[0]) &&
                               !string.IsNullOrEmpty(command[1]), $"{name} 的Lua脚本格式有误：{scriptScope}");
 
-                Stable.Lua.ExecuteFile(command[0]);
+                LuaSys.Ins.ExecuteFile(command[0]);
             }
             else
             {
                 using (FileStream fs = File.OpenRead(debugScriptScope))
                 {
-                    Stable.Lua.ExecuteCommand(new StreamReader(fs).ReadToEnd());
+                    LuaSys.Ins.ExecuteCommand(new StreamReader(fs).ReadToEnd());
                 }
                 command = new string[2];
                 command[1] = Path.GetFileNameWithoutExtension(debugScriptScope);
@@ -78,16 +78,16 @@ namespace Thunder.Entity
 
             if (!LuaScopeBuffer.TryGetValue(command[1], out LuaScope))
             {
-                LuaScope = Stable.Lua.LuaState[command[1]] as LuaTable;
+                LuaScope = LuaSys.Ins.LuaState[command[1]] as LuaTable;
                 LuaScopeBuffer.Add(command[1], LuaScope);
             }
 
-            Data = Stable.Lua.GetEmptyTable();
+            Data = LuaSys.Ins.GetEmptyTable();
             Inject(Data);
             GetLuaFunc("Init", true)?.Call(Data, this);
 
             if (_ClearBufferRegistered) return;
-            Stable.Lua.StateDisposedEvent.AddListener(ClearBuffer);
+            LuaSys.Ins.StateDisposedEvent.AddListener(ClearBuffer);
             _ClearBufferRegistered = true;
         }
 
@@ -153,7 +153,7 @@ namespace Thunder.Entity
             LuaFuncBuffer.Clear();
             InjectInfoBuffer.Clear();
             _ClearBufferRegistered = false;
-            Stable.Lua.StateDisposedEvent.RemoveListener(ClearBuffer);
+            LuaSys.Ins.StateDisposedEvent.RemoveListener(ClearBuffer);
         }
 
         private void CheckLuaState()

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Thunder.Sys;
 using Thunder.Tool;
+using Thunder.Tool.ObjectPool;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -30,17 +31,17 @@ namespace Thunder.Entity
 
         public static void Create(Vector3 pos,Vector3 normal)
         {
-            BulletHole hole = Stable.ObjectPool.Alloc<BulletHole>("bulletHole",x=>x.Init(pos,normal,Instance.Sprites.RandomTake()));
+            BulletHole hole = ObjectPool.Ins.Alloc<BulletHole>("bulletHole",x=>x.Init(pos,normal,Instance.Sprites.RandomTake()));
             hole= Instance._BulletHoles.Insert(hole);
             if(hole!=null)
-                Stable.ObjectPool.Recycle(hole);
+                ObjectPool.Ins.Recycle(hole);
         }
 
         private void Clear()
         {
             BulletHole hole = _BulletHoles.Remove();
             if (hole != null)
-                Stable.ObjectPool.Recycle(hole);
+                ObjectPool.Ins.Recycle(hole);
             _ClearCounter.Recount();
         }
     }

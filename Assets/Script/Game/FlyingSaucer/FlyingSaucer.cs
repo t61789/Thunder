@@ -30,7 +30,7 @@ namespace Thunder.Game.FlyingSaucer
         {
             _Trans.rotation = Quaternion.LookRotation(_Rb.velocity);
             if (Time.time - _LifeTimeCount > LifeTime)
-                Stable.ObjectPool.Recycle(this);
+                ObjectPool.Ins.Recycle(this);
         }
 
         public void Launch(Vector3 force)
@@ -41,8 +41,8 @@ namespace Thunder.Game.FlyingSaucer
         public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
         {
             _Rb.AddForceAtPosition(hitDir.normalized * damage * ForceScale, hitPos, ForceMode.Impulse);
-            Stable.ObjectPool.Alloc<SelfDestroyPartical>(null, null, "hitParticle", x => x.transform.position = _Trans.position);
-            Stable.ObjectPool.Recycle(this);
+            ObjectPool.Ins.Alloc<SelfDestroyPartical>(null, null, "hitParticle", x => x.transform.position = _Trans.position);
+            ObjectPool.Ins.Recycle(this);
             PublicEvents.FlyingSaucerHit?.Invoke();
         }
 

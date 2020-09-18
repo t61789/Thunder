@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Thunder.Sys
 {
-    public class ValueSys
+    public class ValueSys:IBaseSys
     {
         #region xml
 
@@ -89,7 +90,7 @@ namespace Thunder.Sys
         //    int index = valuePath.LastIndexOf(Paths.Div);
         //    if (index == -1)
         //    {
-        //        bundlePath = BundleSys.Normal;
+        //        bundlePath = Paths.Normal;
         //        valuePath = bundlePath + Paths.Div + valuePath;
         //    }
         //    else
@@ -154,7 +155,7 @@ namespace Thunder.Sys
         //    List<(string, string)> result = new List<(string, string)>();
 
         //    StringBuilder pathBuilder = new StringBuilder();
-        //    string temp = BundleSys.ValuesBundleD + bundlePath;
+        //    string temp = Paths.ValuesBundleD + bundlePath;
         //    foreach (var item in System.System.bundle.GetAllAsset<TextAsset>(temp))
         //    {
         //        pathBuilder.Clear();
@@ -169,7 +170,9 @@ namespace Thunder.Sys
         //    return result;
         //}
 
-        private static readonly string DefaultBundle = BundleSys.ValuesBundleD + BundleSys.Normal;
+        public static ValueSys Ins { get; private set; }
+
+        private static readonly string DefaultBundle = Paths.ValuesBundleD + Paths.Normal;
 
         private struct ValueUnit
         {
@@ -184,6 +187,11 @@ namespace Thunder.Sys
         }
 
         private readonly Dictionary<AssetId, ValueUnit> _Values = new Dictionary<AssetId, ValueUnit>();
+
+        public ValueSys()
+        {
+            Ins = this;
+        }
 
         public T GetValue<T>(string valuePath)
         {
@@ -220,12 +228,25 @@ namespace Thunder.Sys
 
         private void LoadBundle(AssetId id)
         {
-            foreach (var asset in Stable.Bundle.GetAllAsset<TextAsset>(id.BundleGroup, id.Bundle))
+            foreach (var asset in BundleSys.Ins.GetAllAsset<TextAsset>(id.BundleGroup, id.Bundle))
             {
                 id.Name = asset.name;
                 if (_Values.ContainsKey(id)) continue;
                 _Values.Add(id, new ValueUnit(asset.text));
             }
+        }
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+            
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+        }
+
+        public void OnApplicationExit()
+        {
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Thunder.Utility
         private void FixedUpdate()
         {
             if (Target == null) return;
-            Vector3 deltaAxis = Stable.Control.RequireKey("Axis2", 0).Axis * Sensitive;
+            Vector3 deltaAxis = ControlSys.Ins.RequireKey("Axis2", 0).Axis * Sensitive;
 
             _TargetRot.y += deltaAxis.x;
             _TargetRot.x -= deltaAxis.y;
@@ -42,7 +42,7 @@ namespace Thunder.Utility
 
             _FixedRot = Quaternion.Lerp(_FixedRot, Quaternion.Euler(_TargetRot), SmoothFactor);
 
-            float scrollDelta = Stable.Control.RequireKey("Axis3", 0).Axis.x * Sensitive;
+            float scrollDelta = ControlSys.Ins.RequireKey("Axis3", 0).Axis.x * Sensitive;
             _TargetFollowRange = Mathf.Clamp(_TargetFollowRange - scrollDelta, 0, MaxFollowRange);
             FollowRange = Mathf.Lerp(FollowRange, _TargetFollowRange, SmoothFactor);
 

@@ -26,13 +26,13 @@ namespace Thunder.UI
         public void OK()
         {
             dialogResult = DialogResult.Ok;
-            Sys.Stable.UI.CloseUI(UIName);
+            Sys.UISys.Ins.CloseUI(UIName);
         }
 
         public void Cancel()
         {
             dialogResult = DialogResult.Cancel;
-            Sys.Stable.UI.CloseUI(UIName);
+            Sys.UISys.Ins.CloseUI(UIName);
         }
 
         public void Update()

@@ -51,7 +51,7 @@ namespace Thunder.Game.FlyingSaucer
 
         private void Start()
         {
-            LogPanel.Instance.LogSystem((string)(Stable.DataBase.GetTable("message").SelectOnce("value", new (string, object)[]{
+            LogPanel.Instance.LogSystem((string)(DataBaseSys.Ins.GetTable("message").SelectOnce("value", new (string, object)[]{
                 ("key","flyingSaucerWelcome")})));
         }
 
@@ -79,12 +79,12 @@ namespace Thunder.Game.FlyingSaucer
 
         public void LeaveGameArea(Collider c)
         {
-            Stable.UI.CloseUI(ScoreBoard.UIName);
+            UISys.Ins.CloseUI(ScoreBoard.UIName);
         }
 
         private void GameStartDelay()
         {
-            Stable.UI.OpenUI(ScoreBoard.UIName);
+            UISys.Ins.OpenUI(ScoreBoard.UIName);
         }
 
         private void GameStart()
@@ -100,7 +100,7 @@ namespace Thunder.Game.FlyingSaucer
             PublicEvents.FlyingSaucerGameEnd?.Invoke(true);
             string endMsg = $"Game over, you have got {_CurScore} score";
             LogPanel.Instance.LogSystem(endMsg);
-            Stable.UI.CloseUI(ScoreBoard.UIName);
+            UISys.Ins.CloseUI(ScoreBoard.UIName);
             TurnCounter.PauseAutoCount();
         }
     }

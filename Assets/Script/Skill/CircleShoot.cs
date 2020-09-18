@@ -18,7 +18,7 @@
     //    {
     //        skillCdCount = 0;
 
-    //        Values values = Sys.Stable.Value.GetValue<Values>("skill" + Paths.Div + "circleShoot");
+    //        Values values = Sys.ValueSys.Ins.GetValue<Values>("skill" + Paths.Div + "circleShoot");
 
     //        SkillCd = values.skillCd;
     //        BulletNum = values.bulletNum;
@@ -36,7 +36,7 @@
 
     //    protected virtual void Update()
     //    {
-    //        if (Time.time - skillCdCount >= SkillCd && Sys.Stable.Control.RequestDown(KeyCode.Space, "playerControl"))
+    //        if (Time.time - skillCdCount >= SkillCd && Sys.ControlSys.Ins.RequestDown(KeyCode.Space, "playerControl"))
     //        {
     //            StartCoroutine(Shoot());
     //            skillCdCount = Time.time;

@@ -129,7 +129,6 @@ public static class LuaBinder
 		Thunder_Utility_GlobalBufferWrap.Register(L);
 		Thunder_Utility_GlobalSettingsWrap.Register(L);
 		Thunder_Utility_PathsWrap.Register(L);
-		Thunder_Utility_FuckWrap.Register(L);
 		Thunder_Utility_PlayerLockCameraWrap.Register(L);
 		Thunder_Utility_PostProcessingControllerWrap.Register(L);
 		Thunder_Utility_SelfDestroyParticalWrap.Register(L);

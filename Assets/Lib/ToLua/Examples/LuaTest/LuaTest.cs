@@ -7,7 +7,7 @@ public class LuaTest : MonoBehaviour
 {
     private void Awake()
     {
-        //bs.luaState = Stable.Lua.LuaState;
+        //bs.luaState = LuaSys.Ins.LuaState;
     }
 
     private void OnGUI()
@@ -23,14 +23,14 @@ end";
             for (int j = 0; j < 3; j++)
             {
                 const int loop = 1000000;
-                Stable.Lua.ExecuteCommand(str);
-                LuaTable table = Stable.Lua.LuaState["TestScope"] as LuaTable;
+                LuaSys.Ins.ExecuteCommand(str);
+                LuaTable table = LuaSys.Ins.LuaState["TestScope"] as LuaTable;
                 LuaFunction func = table.GetLuaFunction("Read");
 
                 float time = Time.realtimeSinceStartup;
                 for (int i = 0; i < loop; i++)
                 {
-                    Stable.Lua.LuaState.Call("TestScope.Read", 1, true);
+                    LuaSys.Ins.LuaState.Call("TestScope.Read", 1, true);
                 }
                 Debug.Log($"From state:{Time.realtimeSinceStartup - time}");
                 time = Time.realtimeSinceStartup;

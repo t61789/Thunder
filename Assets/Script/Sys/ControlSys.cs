@@ -14,8 +14,10 @@ namespace Thunder.Sys
 
     // 优先在InputManager中定义的操作中查找，再在已注入的词典中查找，Axis映射到x轴上
 
-    public class ControlSys : MonoBehaviour
+    public class ControlSys : MonoBehaviour,IBaseSys
     {
+        public static ControlSys Ins { get; private set; }
+
         private readonly Dictionary<string, ControlInfo> _CusKey =
             new Dictionary<string, ControlInfo>();
 
@@ -63,6 +65,7 @@ namespace Thunder.Sys
 
         private void Awake()
         {
+            Ins = this;
 #if UNITY_STANDALONE || UNITY_EDITOR
             if (_LockCursor) _LockCursor = false;
 #endif
@@ -133,6 +136,21 @@ namespace Thunder.Sys
             // 滚轮 Axis3
             InjectValue("Axis3", new ControlInfo(Input.mouseScrollDelta.y * Vector3.right, true, false, false));
 #endif
+        }
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+            
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+            
+        }
+
+        public void OnApplicationExit()
+        {
+            
         }
     }
 

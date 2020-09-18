@@ -49,7 +49,7 @@
     //    public void Remove()
     //    {
     //        if (aimRing != null)
-    //            Sys.Stable.UI.CloseUI(aimRing.UIName);
+    //            Sys.UISys.Ins.CloseUI(aimRing.UIName);
     //        Destroy(this);
     //    }
 
@@ -59,7 +59,7 @@
 
     //        controller = GetComponent<Controller>();
 
-    //        var i = Sys.Stable.DataBase[TABLE_NAME].Select(null, new (string, object)[] { (INPUT_ID, controller.InputId) });
+    //        var i = Sys.DataBaseSys.Ins[TABLE_NAME].Select(null, new (string, object)[] { (INPUT_ID, controller.InputId) });
     //        if (i.IsEmpty)
     //            Debug.LogWarning("No input named " + name + " in database, input will be invalid");
 
@@ -74,7 +74,7 @@
     //        }
 
     //        if (aimRing)
-    //            this.aimRing = Sys.Stable.UI.OpenUI<AimRing>("aimRing", UiInitType.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
+    //            this.aimRing = Sys.UISys.Ins.OpenUI<AimRing>("aimRing", UiInitType.CenterParent, x => x.Init(gameObject.GetComponent<Aircraft>()));
     //    }
 
     //    private void Update()
@@ -101,30 +101,30 @@
     //    private void KeyStay(ControlStruct c)
     //    {
     //        KeyCode k = (KeyCode)c.key;
-    //        if (Sys.Stable.Control.RequestStay(k, REQUEST_TYPE))
+    //        if (Sys.ControlSys.Ins.RequestStay(k, REQUEST_TYPE))
     //        {
     //            controller.ControlKeys.SetBool(c.propName, true);
-    //            Sys.Stable.Control.Release(k, REQUEST_TYPE);
+    //            Sys.ControlSys.Ins.Release(k, REQUEST_TYPE);
     //        }
     //    }
 
     //    private void KeyDown(ControlStruct c)
     //    {
     //        KeyCode k = (KeyCode)c.key;
-    //        if (Sys.Stable.Control.RequestDown(k, REQUEST_TYPE))
+    //        if (Sys.ControlSys.Ins.RequestDown(k, REQUEST_TYPE))
     //        {
     //            controller.ControlKeys.SetBool(c.propName, true);
-    //            Sys.Stable.Control.Release(k, REQUEST_TYPE);
+    //            Sys.ControlSys.Ins.Release(k, REQUEST_TYPE);
     //        }
     //    }
 
     //    private void KeyUp(ControlStruct c)
     //    {
     //        KeyCode k = (KeyCode)c.key;
-    //        if (Sys.Stable.Control.RequestUp(k, REQUEST_TYPE))
+    //        if (Sys.ControlSys.Ins.RequestUp(k, REQUEST_TYPE))
     //        {
     //            controller.ControlKeys.SetBool(c.propName, true);
-    //            Sys.Stable.Control.Release(k, REQUEST_TYPE);
+    //            Sys.ControlSys.Ins.Release(k, REQUEST_TYPE);
     //        }
     //    }
 
