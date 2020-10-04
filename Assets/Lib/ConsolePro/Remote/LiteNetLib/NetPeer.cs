@@ -180,7 +180,7 @@ namespace FlyingWormConsole3.LiteNetLib
 
         private void SendConnectRequest()
         {
-            //Get connect key bytes
+            //Get connect Key bytes
             byte[] keyData = Encoding.UTF8.GetBytes(_peerListener.ConnectKey);
 
             //Make initial packet

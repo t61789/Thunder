@@ -3,10 +3,10 @@ using UnityEngine;
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityPlayerPrefs
 {
     [TaskCategory("Unity/PlayerPrefs")]
-    [TaskDescription("Stores the value with the specified key from the PlayerPrefs.")]
+    [TaskDescription("Stores the value with the specified Key from the PlayerPrefs.")]
     public class GetInt : Action
     {
-        [Tooltip("The key to store")]
+        [Tooltip("The Key to store")]
         public SharedString key;
         [Tooltip("The default value")]
         public SharedInt defaultValue;

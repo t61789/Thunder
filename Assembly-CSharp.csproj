@@ -84,6 +84,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\GetAxis.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Decorators\Interrupt.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_DataTableWrap.cs" />
+    <Compile Include="Assets\Script\Utility\LRUCache.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetSqrMagnitude.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_KeyCodeWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Core\LuaUnityLibs.cs" />
@@ -277,8 +278,8 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_CounterWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedVector4.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Test_GenerateAlphaWrap.cs" />
-    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\PlayerPrefs\DeleteKey.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Actions\BehaviorTreeReference.cs" />
+    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\PlayerPrefs\DeleteKey.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\MoveRotation.cs" />
     <Compile Include="Assets\Script\UI\SurvivalLiUI.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PlayerLockCameraWrap.cs" />

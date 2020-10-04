@@ -2161,7 +2161,7 @@ GameObject:
   - component: {fileID: 2023841753}
   - component: {fileID: 2023841754}
   m_Layer: 0
-  m_Name: PublicVar
+  m_Name: Stable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2190,10 +2190,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2023841752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c5d7cf29fe414d4ca7ccaa2ab9c1b8a, type: 3}
+  m_Script: {fileID: 11500000, guid: f15b8c925c921ae42bb3bae289fd8aa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Log: {fileID: 0}
 --- !u!1 &2083674108
 GameObject:
   m_ObjectHideFlags: 0
@@ -2552,7 +2551,7 @@ PrefabInstance:
     - target: {fileID: 3201936088183968915, guid: f709366029e994545a16a5a3d56e1fdf,
         type: 3}
       propertyPath: DepthTexture.Enable
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3201936088183968918, guid: f709366029e994545a16a5a3d56e1fdf,
         type: 3}

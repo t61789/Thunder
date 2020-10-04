@@ -57,8 +57,6 @@ end";
             LuaBinder.Bind(_LuaState);
             DelegateFactory.Init();
 
-            Application.quitting += Dispose;
-
             Started = true;
 
             ExecuteCommand(UtilityFunc);
@@ -67,7 +65,7 @@ end";
 
         public void Dispose()
         {
-            Assert.IsTrue(Started, "不可重复请先Dispose，请先启动LuaState");
+            Assert.IsTrue(Started, "不可重复Dispose，请先启动LuaState");
             _UtilityScope = null;
             _LuaState.Dispose();
             StateDisposedEvent?.Invoke();

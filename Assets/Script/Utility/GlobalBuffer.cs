@@ -17,33 +17,33 @@
 
         //private static readonly Dictionary<string, ObjUnit> buffer = new Dictionary<string, ObjUnit>();
 
-        //public static bool Add(string key, object value,bool cover=false ,bool stable = false)
+        //public static bool Add(string Key, object value,bool cover=false ,bool stable = false)
         //{
         //    if (cover)
-        //        buffer.Remove(key);
+        //        buffer.Remove(Key);
 
-        //    if (buffer.TryGetValue(key, out _))
+        //    if (buffer.TryGetValue(Key, out _))
         //        return false;
 
-        //    buffer.Add(key, new ObjUnit(value, stable));
+        //    buffer.Add(Key, new ObjUnit(value, stable));
         //    return true;
         //}
 
-        //public static object Get(string key)
+        //public static object Get(string Key)
         //{
-        //    if (buffer.TryGetValue(key, out ObjUnit result))
+        //    if (buffer.TryGetValue(Key, out ObjUnit result))
         //    {
         //        if (!result.stable)
-        //            buffer.Remove(key);
+        //            buffer.Remove(Key);
         //        return result.obj;
         //    }
 
         //    return null;
         //}
 
-        //public static bool Remove(string key)
+        //public static bool Remove(string Key)
         //{
-        //    return buffer.Remove(key);
+        //    return buffer.Remove(Key);
         //}
 
         //public static void Clear()

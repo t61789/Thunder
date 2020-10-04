@@ -181,7 +181,7 @@ namespace DG.Tweening
             t.plugOptions.useLocalPosition = true;
             return t;
         }
-        // Used by path editor when creating the actual tween, so it can pass a pre-compiled path
+        // Used by path editor when creating the actual tween, so it can pass a Pre-compiled path
         internal static TweenerCore<Vector3, Path, PathOptions> DOPath(
             this Rigidbody target, Path path, float duration, PathMode pathMode = PathMode.Full3D
         )

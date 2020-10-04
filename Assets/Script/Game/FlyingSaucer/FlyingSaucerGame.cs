@@ -52,7 +52,7 @@ namespace Thunder.Game.FlyingSaucer
         private void Start()
         {
             LogPanel.Instance.LogSystem((string)(DataBaseSys.Ins.GetTable("message").SelectOnce("value", new (string, object)[]{
-                ("key","flyingSaucerWelcome")})));
+                ("Key","flyingSaucerWelcome")})));
         }
 
         private void SaucerHit()

@@ -68,7 +68,7 @@ namespace BehaviorDesigner.Runtime.Tasks
             {
                 executionStatus = childStatus;
                 // If the execution status is failure then a new task needs to be selected. Remove the current task from the available children
-                // and select the next highest utility child. 
+                // and select the Next highest utility child. 
                 if (executionStatus == TaskStatus.Failure)
                 {
                     availableChildren.Remove(childIndex);

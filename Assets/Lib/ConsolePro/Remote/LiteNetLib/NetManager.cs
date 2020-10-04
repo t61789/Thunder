@@ -171,7 +171,7 @@ namespace FlyingWormConsole3.LiteNetLib
         /// NetManager constructor with maxConnections = 1 (usable for client)
         /// </summary>
         /// <param name="listener">Network events listener</param>
-        /// <param name="connectKey">Application key (must be same with remote host for establish connection)</param>
+        /// <param name="connectKey">Application Key (must be same with remote host for establish connection)</param>
         public NetManager(INetEventListener listener, string connectKey) : this(listener, 1, connectKey)
         {
 
@@ -182,7 +182,7 @@ namespace FlyingWormConsole3.LiteNetLib
         /// </summary>
         /// <param name="listener">Network events listener</param>
         /// <param name="maxConnections">Maximum connections (incoming and outcoming)</param>
-        /// <param name="connectKey">Application key (must be same with remote host for establish connection)</param>
+        /// <param name="connectKey">Application Key (must be same with remote host for establish connection)</param>
         public NetManager(INetEventListener listener, int maxConnections, string connectKey)
         {
             _logicThread = new NetThread("LogicThread", DefaultUpdateTime, UpdateLogic);
@@ -619,7 +619,7 @@ namespace FlyingWormConsole3.LiteNetLib
                     string peerKey = Encoding.UTF8.GetString(packet.RawData, 13, packet.Size - 13);
                     if (peerKey != _connectKey)
                     {
-                        NetUtils.DebugWrite(ConsoleColor.Cyan, "[NM] Peer connect reject. Invalid key: " + peerKey);
+                        NetUtils.DebugWrite(ConsoleColor.Cyan, "[NM] Peer connect reject. Invalid Key: " + peerKey);
                         return;
                     }
 

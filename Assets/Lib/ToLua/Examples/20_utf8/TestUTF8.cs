@@ -15,8 +15,8 @@ public class TestUTF8 : LuaClient
         local s = '遍历字符串'                                        
 
         for i in utf8.byte_indices(s) do            
-            local next = utf8.next(s, i)                   
-            print(s:sub(i, next and next -1))
+            local Next = utf8.Next(s, i)                   
+            print(s:sub(i, Next and Next -1))
         end   
 
         local s1 = '天下风云出我辈'        

@@ -1,5 +1,6 @@
 ﻿using Thunder.Entity;
 using Thunder.Sys;
+using Thunder.Tool;
 using Thunder.Tool.ObjectPool;
 using Thunder.Utility;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Thunder.Game.FlyingSaucer
     {
         public float ForceScale;
         public float LifeTime = 5;
+        public float FlyingDirForceFactor;
 
         protected Rigidbody _Rb;
         protected float _LifeTimeCount;
@@ -28,7 +30,9 @@ namespace Thunder.Game.FlyingSaucer
 
         private void FixedUpdate()
         {
-            _Trans.rotation = Quaternion.LookRotation(_Rb.velocity);
+            float flyingForceFactor = _Rb.velocity.sqrMagnitude * FlyingDirForceFactor;
+
+            _Trans.rotation = Quaternion.Lerp(_Trans.rotation,Quaternion.LookRotation(_Rb.velocity),flyingForceFactor);
             if (Time.time - _LifeTimeCount > LifeTime)
                 ObjectPool.Ins.Recycle(this);
         }

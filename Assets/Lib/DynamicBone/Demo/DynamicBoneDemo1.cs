@@ -12,7 +12,7 @@ public class DynamicBoneDemo1 : MonoBehaviour
 
     void OnGUI()
     {
-        GUI.Label(new Rect(50, 50, 200, 20), "Press arrow key to move");
+        GUI.Label(new Rect(50, 50, 200, 20), "Press arrow Key to move");
         Animation a = m_Player.GetComponentInChildren<Animation>();
         a.enabled = GUI.Toggle(new Rect(50, 70, 200, 20), a.enabled, "Play Animation");
 

@@ -6,7 +6,7 @@
     //    private const string INPUT_ID = "input_id";
     //    private const string PROPERTY_FIELD = "property_name";
     //    private const string CONTROL_TYPE_FIELD = "control_type";
-    //    private const string KEY_FIELD = "key";
+    //    private const string KEY_FIELD = "Key";
     //    private const string REQUEST_TYPE = "playerControl";
 
     //    public static bool Controlable = true;
@@ -14,7 +14,7 @@
     //    [Serializable]
     //    public struct ControlStruct
     //    {
-    //        public int key;
+    //        public int Key;
     //        public string propName;
     //        public Act act;
     //    }
@@ -67,7 +67,7 @@
     //        {
     //            controlStructs.Add(new ControlStruct()
     //            {
-    //                key = (int)item[KEY_FIELD],
+    //                Key = (int)item[KEY_FIELD],
     //                propName = (string)item[PROPERTY_FIELD],
     //                act = (Act)Delegate.CreateDelegate(typeof(Act), this, (string)item[CONTROL_TYPE_FIELD])
     //            });
@@ -100,7 +100,7 @@
 
     //    private void KeyStay(ControlStruct c)
     //    {
-    //        KeyCode k = (KeyCode)c.key;
+    //        KeyCode k = (KeyCode)c.Key;
     //        if (Sys.ControlSys.Ins.RequestStay(k, REQUEST_TYPE))
     //        {
     //            controller.ControlKeys.SetBool(c.propName, true);
@@ -110,7 +110,7 @@
 
     //    private void KeyDown(ControlStruct c)
     //    {
-    //        KeyCode k = (KeyCode)c.key;
+    //        KeyCode k = (KeyCode)c.Key;
     //        if (Sys.ControlSys.Ins.RequestDown(k, REQUEST_TYPE))
     //        {
     //            controller.ControlKeys.SetBool(c.propName, true);
@@ -120,7 +120,7 @@
 
     //    private void KeyUp(ControlStruct c)
     //    {
-    //        KeyCode k = (KeyCode)c.key;
+    //        KeyCode k = (KeyCode)c.Key;
     //        if (Sys.ControlSys.Ins.RequestUp(k, REQUEST_TYPE))
     //        {
     //            controller.ControlKeys.SetBool(c.propName, true);
@@ -135,22 +135,22 @@
 
     //    private void VJoystick(ControlStruct c)
     //    {
-    //        controller.ControlKeys.SetVector(c.propName, Joystick.GetValue(c.key).val);
+    //        controller.ControlKeys.SetVector(c.propName, Joystick.GetValue(c.Key).val);
     //    }
 
     //    private void VJoystickClick(ControlStruct c)
     //    {
-    //        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).click);
+    //        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.Key).click);
     //    }
 
     //    private void VJoystickDoubleClick(ControlStruct c, bool clear)
     //    {
-    //        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).doubleClick);
+    //        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.Key).doubleClick);
     //    }
 
     //    private void VJoystickHolding(ControlStruct c, bool clear)
     //    {
-    //        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.key).holding);
+    //        controller.ControlKeys.SetBool(c.propName, Joystick.GetValue(c.Key).holding);
     //    }
     //}
 }
