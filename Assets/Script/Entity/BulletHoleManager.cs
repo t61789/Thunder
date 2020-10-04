@@ -20,13 +20,13 @@ namespace Thunder.Entity
         public Sprite[] Sprites;
 
         private CircleBuffer<BulletHole> _BulletHoles;
-        private Counter _ClearCounter;
+        private AutoCounter _ClearCounter;
 
         private void Awake()
         {
             Instance = this;
             _BulletHoles = new CircleBuffer<BulletHole>(HolesLimit);
-            _ClearCounter = new Counter(ClearTime).OnComplete(Clear).ToAutoCounter(this);
+            _ClearCounter = new AutoCounter(this, ClearTime).OnComplete(Clear);
         }
 
         public static void Create(Vector3 pos,Vector3 normal)

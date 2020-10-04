@@ -12,7 +12,7 @@ namespace Thunder.Game.FlyingSaucer
 
         private bool _Started;
         private bool _Requested;
-        private Counter _ReRequestCounter;
+        private SimpleCounter _ReRequestSimpleCounter;
         private Color _BaseColor;
 
         private Material _Mat;
@@ -21,19 +21,19 @@ namespace Thunder.Game.FlyingSaucer
         {
             PublicEvents.FlyingSaucerGameStart.AddListener(()=>_Started=true);
             PublicEvents.FlyingSaucerGameEnd.AddListener(GameEnd);
-            _ReRequestCounter = new Counter(ReRequestTime,false);
+            _ReRequestSimpleCounter = new SimpleCounter(ReRequestTime,false);
             _Mat = GetComponent<MeshRenderer>().StandaloneMaterial();
             _BaseColor = _Mat.GetColor("_Light");
         }
 
         public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
         {
-            if (!_ReRequestCounter.Completed || _Started) return;
+            if (!_ReRequestSimpleCounter.Completed || _Started) return;
 
             _Requested = !_Requested;
             _Mat.SetColor("_Light", _Requested?RequestedColor:_BaseColor);
             PublicEvents.FlyingSaucerGameRequest?.Invoke(_Requested);
-            _ReRequestCounter.Recount();
+            _ReRequestSimpleCounter.Recount();
             LogPanel.Instance.LogSystem(_Requested
                 ? "Please stand on the start point to start the game"
                 : "You have canceled the game");

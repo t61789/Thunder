@@ -445,7 +445,7 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_RigidbodyWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Quaternion\Identity.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_DataBaseSysWrap.cs" />
-    <Compile Include="Assets\Script\Utility\Counter.cs" />
+    <Compile Include="Assets\Script\Utility\SimpleCounter.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\IsAlive.cs" />
     <Compile Include="Assets\Script\Utility\AimingCamera.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\SetMass.cs" />
@@ -767,6 +767,7 @@
     <Compile Include="Assets\Script\Utility\GlobalSettings.cs" />
     <Compile Include="Assets\Script\Entity\Gun.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\CrossFade.cs" />
+    <Compile Include="Assets\Script\Utility\Counter.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Composites\ParallelSelector.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetVelocityUpdateMode.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\GetDeltaRotation.cs" />
@@ -870,6 +871,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\GetForwardVector.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\IsKinematic.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\System_Collections_IEnumeratorWrap.cs" />
+    <Compile Include="Assets\Script\Utility\AutoCounter.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Quaternion\Dot.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_UI_ButtonWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PostProcessing_SsaoWrap.cs" />
@@ -1006,6 +1008,8 @@
     <Compile Include="Assets\Lib\ToLua\Reflection\LuaField.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\System_NullObjectWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PathsWrap.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_AutoCounterWrap.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_SimpleCounterWrap.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro.cginc" />

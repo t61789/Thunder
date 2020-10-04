@@ -31,9 +31,9 @@ namespace Thunder.Game.FlyingSaucer
         private PerlinNoise _LaunchDirNoise;
         private PerlinNoise _LaunchForceNoise;
         private Transform _Launcher;
-        private Counter _StartLaunchCounter;
+        private AutoCounter _StartLaunchCounter;
         private int _Countdown;
-        private Counter _LaunchCounter;
+        private SimpleCounter _LaunchSimpleCounter;
 
         public enum LaunchModeE
         {
@@ -48,10 +48,10 @@ namespace Thunder.Game.FlyingSaucer
             _LaunchDirNoise = new PerlinNoise(LaunchDirRandomSmooth);
             _LaunchForceNoise = new PerlinNoise(LaunchForceRandomSmooth);
 
-            _StartLaunchCounter = new Counter(0).ToAutoCounter(this,false);
+            _StartLaunchCounter = new AutoCounter(this, 0, false);
             PublicEvents.FlyingSaucerGameStartDelay.AddListener(() => StartLaunchDelay(DelayTime));
             PublicEvents.FlyingSaucerGameEnd.AddListener(x => Enable = false);
-            _LaunchCounter = new Counter(LaunchInterval);
+            _LaunchSimpleCounter = new SimpleCounter(LaunchInterval);
         }
 
         private Vector3 GetNextForceDir(Vector3 playerFaceDir)
@@ -96,8 +96,8 @@ namespace Thunder.Game.FlyingSaucer
         {
             if (PlayerTrans == null) return;
 
-            if (!_LaunchCounter.Completed) return;
-            _LaunchCounter.Recount();
+            if (!_LaunchSimpleCounter.Completed) return;
+            _LaunchSimpleCounter.Recount();
 
             Vector3 force = GetNextForceDir(PlayerTrans.rotation * Vector3.forward);
             _Launcher.position = _Trans.position + force.normalized;
@@ -117,8 +117,8 @@ namespace Thunder.Game.FlyingSaucer
             _Launcher.localPosition = dir;
             _Launcher.rotation = Quaternion.LookRotation(dir);
 
-            if (!_LaunchCounter.Completed) return;
-            _LaunchCounter.Recount();
+            if (!_LaunchSimpleCounter.Completed) return;
+            _LaunchSimpleCounter.Recount();
             Vector3 force = _Trans.localToWorldMatrix * dir.normalized * LaunchSpeed;
 
             ObjectPool.Ins.Alloc<FlyingSaucer>(null, null, "flyingSaucer", x =>
@@ -130,14 +130,14 @@ namespace Thunder.Game.FlyingSaucer
 
         public void StartLaunchDelay(int delay = -1)
         {
-            _StartLaunchCounter.TimeLimit = delay;
+            _StartLaunchCounter.Recount(delay);
             _StartLaunchCounter.OnComplete(() =>
             {
                 Enable = true;
                 PublicEvents.FlyingSaucerGameStart?.Invoke();
-                _StartLaunchCounter.PauseAutoCount();
+                _StartLaunchCounter.Pause();
                 LogPanel.Instance.LogSystem("Game start!!!");
-            }).ResumeAutoCount(true);
+            }).Resume();
             _Countdown = delay;
         }
     }

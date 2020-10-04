@@ -119,6 +119,7 @@ public static class LuaBinder
 		Thunder_Utility_AimingCameraWrap.Register(L);
 		Thunder_Utility_AreaTriggerWrap.Register(L);
 		Thunder_Utility_AudioControllerWrap.Register(L);
+		Thunder_Utility_AutoCounterWrap.Register(L);
 		Thunder_Utility_BulletSpreadWrap.Register(L);
 		Thunder_Utility_CheckWrap.Register(L);
 		Thunder_Utility_CounterWrap.Register(L);
@@ -132,6 +133,7 @@ public static class LuaBinder
 		Thunder_Utility_PlayerLockCameraWrap.Register(L);
 		Thunder_Utility_PostProcessingControllerWrap.Register(L);
 		Thunder_Utility_SelfDestroyParticalWrap.Register(L);
+		Thunder_Utility_SimpleCounterWrap.Register(L);
 		Thunder_Utility_StickyInputDicWrap.Register(L);
 		Thunder_Utility_BaseCameraWrap.Register(L);
 		L.BeginModule("PostProcessing");

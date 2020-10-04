@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Thunder.Utility
 {
+    /// <summary>
+    /// 粘滞输入，通过设置按键的生存时间来延长输入
+    /// </summary>
     public class StickyInputDic
     {
         private struct InputUnit

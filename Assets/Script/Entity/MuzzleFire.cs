@@ -14,7 +14,7 @@ namespace Thunder.Entity
         public float LifeTime;
         public Sprite[] Sprites = new Sprite[0];
 
-        private Counter _LifeTimeCounter;
+        private AutoCounter _LifeTimeCounter;
         private SpriteRenderer _SpriteRenderer;
         private Light _FireLight;
 
@@ -24,11 +24,11 @@ namespace Thunder.Entity
             _FireLight = transform.Find("fireLight").GetComponent<Light>();
             _FireLight.enabled = false;
             PublicEvents.GunFire.AddListener(Fire);
-            _LifeTimeCounter = new Counter(LifeTime).OnComplete(() =>
+            _LifeTimeCounter = new AutoCounter(this, LifeTime).OnComplete(() =>
             {
                 _SpriteRenderer.sprite = null;
                 _FireLight.enabled = false;
-            }).ToAutoCounter(this);
+            });
             Install();
         }
 

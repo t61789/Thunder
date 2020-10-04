@@ -54,14 +54,14 @@ public class TestCoroutine : MonoBehaviour
     {
         GUI.Label(new Rect(Screen.width / 2 - 300, Screen.height / 2 - 200, 600, 400), tips);
 
-        if (GUI.Button(new Rect(50, 50, 120, 45), "Start Counter"))
+        if (GUI.Button(new Rect(50, 50, 120, 45), "Start SimpleCounter"))
         {
             tips = null;
             LuaFunction func = lua.GetFunction("StartDelay");
             func.Call();
             func.Dispose();
         }
-        else if (GUI.Button(new Rect(50, 150, 120, 45), "Stop Counter"))
+        else if (GUI.Button(new Rect(50, 150, 120, 45), "Stop SimpleCounter"))
         {
             LuaFunction func = lua.GetFunction("StopDelay");
             func.Call();

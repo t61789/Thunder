@@ -102,7 +102,7 @@ public class TestCoroutine2 : LuaClient
     {
         GUI.Label(new Rect(Screen.width / 2 - 300, Screen.height / 2 - 200, 600, 400), tips);
 
-        if (GUI.Button(new Rect(50, 50, 120, 45), "Start Counter"))
+        if (GUI.Button(new Rect(50, 50, 120, 45), "Start SimpleCounter"))
         {
             if (!beStart)
             {
@@ -113,7 +113,7 @@ public class TestCoroutine2 : LuaClient
                 func.Dispose();
             }
         }
-        else if (GUI.Button(new Rect(50, 150, 120, 45), "Stop Counter"))
+        else if (GUI.Button(new Rect(50, 150, 120, 45), "Stop SimpleCounter"))
         {
             if (beStart)
             {

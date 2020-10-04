@@ -24,8 +24,8 @@ namespace Thunder.Game.FlyingSaucer
         public delegate void DelDataChanged(float score,int batter, int hits);
         public static event DelDataChanged OnDataChanged;
 
-        public Counter TurnCounter { get; private set; }
-        public Counter BatterFadeCounter { get; private set; }
+        public AutoCounter TurnSimpleCounter { get; private set; }
+        public AutoCounter BatterFadeCounter { get; private set; }
 
         private int _Batter;
         private float _CurScore;
@@ -35,13 +35,13 @@ namespace Thunder.Game.FlyingSaucer
         {
             PublicEvents.FlyingSaucerHit.AddListener(SaucerHit);
 
-            BatterFadeCounter = new Counter(BatterFadeTime).OnComplete(() =>
+            BatterFadeCounter = new AutoCounter(this,BatterFadeTime).OnComplete(() =>
             {
                 _Batter = 0;
                 BroadCastData();
-            }).ToAutoCounter(this,false);
+            });
 
-            TurnCounter = new Counter(TurnTime).OnComplete(() =>GameEnd(true)).ToAutoCounter(this,false);
+            TurnSimpleCounter = new AutoCounter(this,TurnTime).OnComplete(() =>GameEnd(true));
 
             Instance = this;
 
@@ -92,7 +92,7 @@ namespace Thunder.Game.FlyingSaucer
             _Batter = 0;
             _CurHit = 0;
             _CurScore = 0;
-            TurnCounter.ResumeAutoCount(true);
+            TurnSimpleCounter.Resume();
         }
 
         private void GameEnd(bool completely)
@@ -101,7 +101,7 @@ namespace Thunder.Game.FlyingSaucer
             string endMsg = $"Game over, you have got {_CurScore} score";
             LogPanel.Instance.LogSystem(endMsg);
             UISys.Ins.CloseUI(ScoreBoard.UIName);
-            TurnCounter.PauseAutoCount();
+            TurnSimpleCounter.Pause().Recount();
         }
     }
 }
