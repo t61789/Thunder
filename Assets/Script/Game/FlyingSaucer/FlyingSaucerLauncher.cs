@@ -1,9 +1,7 @@
 ﻿using System;
 using Thunder.Entity;
-using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.Tool.ObjectPool;
-using Thunder.UI;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,14 +10,12 @@ namespace Thunder.Game.FlyingSaucer
 {
     public class FlyingSaucerLauncher : BaseEntity
     {
-        public int DelayTime;
         public float TurnSpeed;
         public float LaunchInterval;
         public float LaunchSpeed;
         public bool Enable;
         public Transform PlayerTrans;
 
-        // todo 新发射方式等待测试
         public Vector3 LaunchBaseDir;
         public float LaunchRandAngle;
         public Vector2 LaunchForce;
@@ -31,9 +27,7 @@ namespace Thunder.Game.FlyingSaucer
         private PerlinNoise _LaunchDirNoise;
         private PerlinNoise _LaunchForceNoise;
         private Transform _Launcher;
-        private AutoCounter _StartLaunchCounter;
-        private int _Countdown;
-        private SimpleCounter _LaunchSimpleCounter;
+        private SimpleCounter _LaunchCounter;
 
         public enum LaunchModeE
         {
@@ -48,10 +42,12 @@ namespace Thunder.Game.FlyingSaucer
             _LaunchDirNoise = new PerlinNoise(LaunchDirRandomSmooth);
             _LaunchForceNoise = new PerlinNoise(LaunchForceRandomSmooth);
 
-            _StartLaunchCounter = new AutoCounter(this, 0, false);
-            PublicEvents.FlyingSaucerGameStartDelay.AddListener(() => StartLaunchDelay(DelayTime));
-            PublicEvents.FlyingSaucerGameEnd.AddListener(x => Enable = false);
-            _LaunchSimpleCounter = new SimpleCounter(LaunchInterval);
+            PublicEvents.GameEnd.AddListener((x, y) =>
+            {
+                if(x==GameType.FlyingSaucer)
+                    Enable = false;
+            });
+            _LaunchCounter = new SimpleCounter(LaunchInterval);
         }
 
         private Vector3 GetNextForceDir(Vector3 playerFaceDir)
@@ -69,12 +65,6 @@ namespace Thunder.Game.FlyingSaucer
 
         private void FixedUpdate()
         {
-            if (_Countdown != 0 && _StartLaunchCounter.TimeCount > DelayTime - _Countdown)
-            {
-                LogPanel.Instance.LogSystem($"Game will start in {_Countdown} seconds");
-                _Countdown--;
-            }
-
             if (!Enable)
                 return;
 
@@ -96,8 +86,8 @@ namespace Thunder.Game.FlyingSaucer
         {
             if (PlayerTrans == null) return;
 
-            if (!_LaunchSimpleCounter.Completed) return;
-            _LaunchSimpleCounter.Recount();
+            if (!_LaunchCounter.Completed) return;
+            _LaunchCounter.Recount();
 
             Vector3 force = GetNextForceDir(PlayerTrans.rotation * Vector3.forward);
             _Launcher.position = _Trans.position + force.normalized;
@@ -117,8 +107,8 @@ namespace Thunder.Game.FlyingSaucer
             _Launcher.localPosition = dir;
             _Launcher.rotation = Quaternion.LookRotation(dir);
 
-            if (!_LaunchSimpleCounter.Completed) return;
-            _LaunchSimpleCounter.Recount();
+            if (!_LaunchCounter.Completed) return;
+            _LaunchCounter.Recount();
             Vector3 force = _Trans.localToWorldMatrix * dir.normalized * LaunchSpeed;
 
             ObjectPool.Ins.Alloc<FlyingSaucer>(null, null, "flyingSaucer", x =>
@@ -126,19 +116,6 @@ namespace Thunder.Game.FlyingSaucer
                 x.transform.position = _Launcher.position;
                 x.Launch(force);
             });
-        }
-
-        public void StartLaunchDelay(int delay = -1)
-        {
-            _StartLaunchCounter.Recount(delay);
-            _StartLaunchCounter.OnComplete(() =>
-            {
-                Enable = true;
-                PublicEvents.FlyingSaucerGameStart?.Invoke();
-                _StartLaunchCounter.Pause();
-                LogPanel.Instance.LogSystem("Game start!!!");
-            }).Resume();
-            _Countdown = delay;
         }
     }
 }

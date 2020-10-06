@@ -24,7 +24,7 @@ namespace Thunder.Game.FlyingSaucer
         public delegate void DelDataChanged(float score,int batter, int hits);
         public static event DelDataChanged OnDataChanged;
 
-        public AutoCounter TurnSimpleCounter { get; private set; }
+        public AutoCounter TurnCounter { get; private set; }
         public AutoCounter BatterFadeCounter { get; private set; }
 
         private int _Batter;
@@ -35,18 +35,19 @@ namespace Thunder.Game.FlyingSaucer
         {
             PublicEvents.FlyingSaucerHit.AddListener(SaucerHit);
 
+
             BatterFadeCounter = new AutoCounter(this,BatterFadeTime).OnComplete(() =>
             {
                 _Batter = 0;
                 BroadCastData();
             });
 
-            TurnSimpleCounter = new AutoCounter(this,TurnTime).OnComplete(() =>GameEnd(true));
+            TurnCounter = new AutoCounter(this,TurnTime,false).OnComplete(() =>GameEnd(true));
 
             Instance = this;
 
-            PublicEvents.FlyingSaucerGameStart.AddListener(GameStart);
-            PublicEvents.FlyingSaucerGameStartDelay.AddListener(GameStartDelay);
+            PublicEvents.GameStart.AddListener(GameStart);
+            PublicEvents.GameStartDelay.AddListener(GameStartDelay);
         }
 
         private void Start()
@@ -82,26 +83,28 @@ namespace Thunder.Game.FlyingSaucer
             UISys.Ins.CloseUI(ScoreBoard.UIName);
         }
 
-        private void GameStartDelay()
+        private void GameStartDelay(GameType type)
         {
+            if (type != GameType.FlyingSaucer) return;
             UISys.Ins.OpenUI(ScoreBoard.UIName);
         }
 
-        private void GameStart()
+        private void GameStart(GameType type)
         {
+            if (type != GameType.FlyingSaucer) return;
             _Batter = 0;
             _CurHit = 0;
             _CurScore = 0;
-            TurnSimpleCounter.Resume();
+            TurnCounter.Resume();
         }
 
         private void GameEnd(bool completely)
         {
-            PublicEvents.FlyingSaucerGameEnd?.Invoke(true);
+            PublicEvents.GameEnd?.Invoke( GameType.FlyingSaucer,true);
             string endMsg = $"Game over, you have got {_CurScore} score";
             LogPanel.Instance.LogSystem(endMsg);
             UISys.Ins.CloseUI(ScoreBoard.UIName);
-            TurnSimpleCounter.Pause().Recount();
+            TurnCounter.Pause().Recount();
         }
     }
 }

@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{73E538E0-7869-3587-4F76-9F420634E53E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -76,6 +77,10 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PostProcessing_DepthTextureWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\17_Inherit\TestInherit.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SphereCollider\SetCenter.cs" />
+    <Compile Include="Assets\Script\Game\GameRequester.cs" />
+    <Compile Include="Assets\Script\Game\GameStartStandPoint.cs" />
+    <Compile Include="Assets\Script\Game\SpotShooting\SpotShootingGame.cs" />
+    <Compile Include="Assets\Script\Game\SpotShooting\SpotShootingTarget.cs" />
     <Compile Include="Assets\Script\Utility\BulletSpread.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\FloatClamp.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\LuaInterface_LuaInjectionStationWrap.cs" />
@@ -317,7 +322,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedBool.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedObjectList.cs" />
     <Compile Include="Assets\Lib\ToLua\Core\TypeTraits.cs" />
-    <Compile Include="Assets\Script\Game\FlyingSaucer\FlyingSaucerSwitcher.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\GetTime.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\IsMouseUp.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedInt.cs" />
@@ -494,7 +498,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\ActiveSelf.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Actions\Reflection\GetPropertyValue.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Timeline\IsPaused.cs" />
-    <Compile Include="Assets\Script\Utility\Check.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\GetComponent.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector2\GetVector3.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_RenderTextureWrap.cs" />
@@ -556,7 +559,6 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_LuaSysWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\SetShadowSoftnessFade.cs" />
     <Compile Include="Assets\Lib\ToLua\Core\ObjectPool.cs" />
-    <Compile Include="Assets\Script\Game\FlyingSaucer\FlyingSaucerShootPoint.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\PlayerPrefs\SetInt.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Game_FlyingSaucer_FlyingSaucerWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedVector2.cs" />
@@ -980,7 +982,7 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_UI_LevelPlaneWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\TestInjection\BaseTestWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_CharacterControllerWrap.cs" />
-    <Compile Include="Assets\Script\Utility\Events.cs" />
+    <Compile Include="Assets\Script\Utility\PublicEvents.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\FindGameObjectsWithTag.cs" />
     <Compile Include="Assets\Script\Utility\PostProcessing\AimScope.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\11_Delegate\TestDelegate.cs" />
@@ -1012,54 +1014,54 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_SimpleCounterWrap.cs" />
   </ItemGroup>
   <ItemGroup>
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
-     <None Include="Assets\Bundle\Shader\MotionBlurShader.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
-     <None Include="Assets\Bundle\Shader\LDepthOfFieldShader.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
-     <None Include="Assets\Lib\DOTween\DOTween.dll" />
-     <None Include="Assets\Lib\ToLua\Injection\InjectionBlackList.txt" />
-     <None Include="Assets\Bundle\Shader\SsaoShader.shader" />
-     <None Include="Assets\Bundle\Shader\BloomShader.shader" />
-     <None Include="Assets\Bundle\Shader\RebuildWorldPosShader.shader" />
-     <None Include="Assets\Bundle\Shader\PanelShader.shader" />
-     <None Include="Assets\Bundle\Shader\SMotionBlurShader.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
-     <None Include="Assets\Bundle\Shader\AimScopeShader.shader" />
-     <None Include="Assets\Lib\DOTween\readme.txt" />
-     <None Include="Assets\Lib\Behavior Designer\Runtime\BehaviorDesigner.Runtime.dll" />
-     <None Include="Assets\Bundle\Shader\RingShader.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
-     <None Include="Assets\Bundle\Shader\HideShader.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
-     <None Include="Assets\link.xml" />
-     <None Include="Assets\Lib\ToLua\readme.txt" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
-     <None Include="Assets\Bundle\Shader\SpriteShader.shader" />
-     <None Include="Assets\Bundle\Shader\DynamicUI.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
-     <None Include="Assets\Bundle\Shader\DepthOfFieldShader.shader" />
-     <None Include="Assets\Lib\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
-     <None Include="Assets\Bundle\Shader\DepthTextureShader.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
-     <None Include="Assets\Bundle\Shader\AnimeShader.shader" />
-     <None Include="Assets\Lib\ToLua\Injection\LuaInjectionSkipPaths.txt" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
-     <None Include="Assets\Bundle\Shader\GaussBlurShader.shader" />
-     <None Include="Assets\Bundle\Shader\AimPointShader.shader" />
-     <None Include="Assets\Lib\DynamicBone\ReadMe.txt" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
-     <None Include="Assets\Bundle\Shader\EdgeDetectShader.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
-     <None Include="Assets\Bundle\Shader\BSCShader.shader" />
-     <None Include="Assets\Lib\DOTween\DOTween.XML" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
-     <None Include="Assets\Bundle\Shader\HDepthOfFieldShader.shader" />
-     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
+    <None Include="Assets\Bundle\Shader\MotionBlurShader.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\Bundle\Shader\LDepthOfFieldShader.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\Lib\DOTween\DOTween.dll" />
+    <None Include="Assets\Lib\ToLua\Injection\InjectionBlackList.txt" />
+    <None Include="Assets\Bundle\Shader\SsaoShader.shader" />
+    <None Include="Assets\Bundle\Shader\BloomShader.shader" />
+    <None Include="Assets\Bundle\Shader\RebuildWorldPosShader.shader" />
+    <None Include="Assets\Bundle\Shader\PanelShader.shader" />
+    <None Include="Assets\Bundle\Shader\SMotionBlurShader.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\Bundle\Shader\AimScopeShader.shader" />
+    <None Include="Assets\Lib\DOTween\readme.txt" />
+    <None Include="Assets\Lib\Behavior Designer\Runtime\BehaviorDesigner.Runtime.dll" />
+    <None Include="Assets\Bundle\Shader\RingShader.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+    <None Include="Assets\Bundle\Shader\HideShader.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\link.xml" />
+    <None Include="Assets\Lib\ToLua\readme.txt" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\Bundle\Shader\SpriteShader.shader" />
+    <None Include="Assets\Bundle\Shader\DynamicUI.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Bundle\Shader\DepthOfFieldShader.shader" />
+    <None Include="Assets\Lib\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
+    <None Include="Assets\Bundle\Shader\DepthTextureShader.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Bundle\Shader\AnimeShader.shader" />
+    <None Include="Assets\Lib\ToLua\Injection\LuaInjectionSkipPaths.txt" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\Bundle\Shader\GaussBlurShader.shader" />
+    <None Include="Assets\Bundle\Shader\AimPointShader.shader" />
+    <None Include="Assets\Lib\DynamicBone\ReadMe.txt" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\Bundle\Shader\EdgeDetectShader.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\Bundle\Shader\BSCShader.shader" />
+    <None Include="Assets\Lib\DOTween\DOTween.XML" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\Bundle\Shader\HDepthOfFieldShader.shader" />
+    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
     <Reference Include="UnityEngine">
       <HintPath>E:\Programs\Unity\2020.2.0a16\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
@@ -1676,6 +1678,7 @@
       <Name>Unity.AssetBundleBrowser.Editor</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

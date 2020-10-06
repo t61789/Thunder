@@ -791,7 +791,7 @@ namespace Thunder.Tool
 
             var baseSqu = new[] { 0, 2, 1, 2, 3, 1 };
             var triangles = new List<int>();
-            for (int i = 0; i < detail; i++) 
+            for (int i = 0; i < detail; i++)
                 triangles.AddRange(baseSqu.Select(t => (i * 2 + t) % (detail * 2)));
 
             mesh.vertices = vertex.ToArray();
@@ -1403,9 +1403,9 @@ namespace Thunder.Tool
         /// <param name="src"></param>
         /// <param name="downSample"></param>
         /// <returns></returns>
-        public static RenderTexture GetTemporary(this RenderTexture src,int downSample=1)
+        public static RenderTexture GetTemporary(this RenderTexture src, int downSample = 1)
         {
-            return RenderTexture.GetTemporary(src.width/downSample,src.height/downSample,0);
+            return RenderTexture.GetTemporary(src.width / downSample, src.height / downSample, 0);
         }
 
         /// <summary>
@@ -1437,8 +1437,33 @@ namespace Thunder.Tool
         /// <returns></returns>
         public static T RandomTake<T>(this T[] arr)
         {
-            if (arr == null || arr.Length==0) return default;
-            return arr[RandomInt(0,arr.Length-1)];
+            if (arr == null || arr.Length == 0) return default;
+            return arr[RandomInt(0, arr.Length - 1)];
+        }
+
+        /// <summary>
+        /// 在数组的指定范围内随机获取一个元素
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr"></param>
+        /// <param name="start">起始下标</param>
+        /// <param name="end">结束下标</param>
+        /// <returns></returns>
+        public static T RandomTake<T>(this T[] arr,int start,int end)
+        {
+            if (arr == null || arr.Length == 0) return default;
+            return arr[RandomInt(start, end)];
+        }
+
+        /// <summary>
+        /// 获取数组最后一个元素的下标
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr"></param>
+        /// <returns></returns>
+        public static int End<T>(this T[] arr)
+        {
+            return arr.Length - 1;
         }
 
         /// <summary>
@@ -1477,10 +1502,24 @@ namespace Thunder.Tool
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
         /// <param name="foreachAction"></param>
-        public static void Foreach<T>(this IEnumerable<T> arr,Action<T> foreachAction)
+        public static void Foreach<T>(this IEnumerable<T> arr, Action<T> foreachAction)
         {
             foreach (var a in arr)
                 foreachAction?.Invoke(a);
+        }
+
+        /// <summary>
+        /// 交换数组中的两个元素
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr"></param>
+        /// <param name="index1"></param>
+        /// <param name="index2"></param>
+        public static void Swap<T>(this T[] arr, int index1, int index2)
+        {
+            var temp = arr[index1];
+            arr[index1] = arr[index2];
+            arr[index2] = temp;
         }
     }
 }

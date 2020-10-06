@@ -11,9 +11,15 @@ namespace Thunder.Utility
     public abstract class Counter
     {
         /// <summary>
-        /// 当前计时与目标时间的插值，未经clamp处理
+        /// 当前计时与目标时间的插值，经过clamp处理
         /// </summary>
         public float Interpolant =>
+            Tools.InLerp(0, _TimeLimit, TimeCount);
+
+        /// <summary>
+        /// 当前计时与目标时间的插值，未经clamp处理
+        /// </summary>
+        public float InterpolantUc =>
             Tools.InLerpUc(0, _TimeLimit, TimeCount);
 
         /// <summary>

@@ -46,7 +46,7 @@ namespace Thunder.Utility
                            Path.DirectorySeparatorChar +
                            "Thunder";
 #elif UNITY_ANDROID && !UNITY_EDITOR
-        DocumentPath = Application.persistentDataPath +Div +"Doc";
+            DocumentPath = Application.persistentDataPath +Div +"Doc";
 #endif
             DocumentPathD = DocumentPath + Div;
 
