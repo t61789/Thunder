@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Thunder.Entity.Weapon;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -13,9 +14,9 @@ namespace Thunder.Entity
         protected override void Enter(Collider collider)
         {
             Player player = collider.GetComponent<Player>();
-            if (player == null || Gun.Instance==null)
+            if (player == null || BaseWeapon.Ins==null)
                 return;
-            Gun.Instance.FillAmmo();
+            BaseWeapon.Ins.FillAmmo();
         }
     }
 }

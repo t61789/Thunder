@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Thunder.Entity.Weapon;
 using Thunder.Tool;
 using Thunder.Utility;
 using UnityEngine;
@@ -34,8 +35,9 @@ namespace Thunder.Entity
 
         private void Install()
         {
-            transform.localPosition = Gun.Instance.MuzzleFirePos;
-            Sprites = Gun.Instance.MuzzleFireSprites;
+            var gun = (MachineGun) BaseWeapon.Ins;
+            transform.localPosition = gun.MuzzleFirePos;
+            Sprites = gun.MuzzleFireSprites;
         }
 
         private void Fire()

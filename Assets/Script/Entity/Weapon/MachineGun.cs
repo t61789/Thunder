@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.Tool.BuffData;
@@ -9,12 +12,10 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 
-namespace Thunder.Entity
+namespace Thunder.Entity.Weapon
 {
-    public class Gun : BaseEntity
+    public class MachineGun:BaseWeapon
     {
-        public static Gun Instance;
-
         public bool Safety = false;
         public float FireInterval = 0.2f;
         public float CameraRecoliDampTime = 0.1f;
@@ -26,21 +27,11 @@ namespace Thunder.Entity
         public int BurstMode = 0;
         public bool ScopeAllowed = false;
         public float Damage = 20;
-        public float MagazineMaxAmmo = 30;
-        public float MagazineAmmo = 30;
-        public float BackupMaxAmmo = 90;
-        public float BackupAmmo = 90;
-        /// <summary>
-        /// MagazineMaxAmmo MagazineAmmo BackupAmmo
-        /// </summary>
-        [HideInInspector]
-        public UnityEvent<float, float, float> OnAmmoChange;
         public Vector3 MuzzleFirePos;
         public Sprite[] MuzzleFireSprites;
 
         private Animator _Animator;
         private float _FireIntervalCount;
-        private Player _Player;
         private Vector2 _CurCameraRecoilAddition;
         private float _CameraRecoliDampTimeCount;
         private Vector2 _CameraStart;
@@ -56,7 +47,7 @@ namespace Thunder.Entity
         private readonly StickyInputDic _StickyInputDic = new StickyInputDic();
         private bool _AimScopeBeforeReload;
         private bool _Reloading;
-        private readonly int[] _FireModeLoop = {0, 1,3};
+        private readonly int[] _FireModeLoop = { 0, 1, 3 };
 
         private const string SQUAT = "squat";
         private const string HANG = "hang";
@@ -78,8 +69,6 @@ namespace Thunder.Entity
             _BaseAimScopeFov = _GunCamera.fieldOfView;
             _AimScopeSensitiveScale = AimScopeFov / _BaseAimScopeFov;
             _StickyInputDic.AddBool(RELOAD, 0.7f);
-
-            Instance = this;
         }
 
         private void Update()
@@ -90,7 +79,7 @@ namespace Thunder.Entity
 
             if (param)
             {
-                if (MagazineAmmo == 0)
+                if (AmmoGroup.Magzine == 0)
                 {
                     if (fire.Down)
                         _AutoReload = true;
@@ -118,10 +107,9 @@ namespace Thunder.Entity
             }
             _Animator.SetBool("Fire", param);
 
-            param = (ControlSys.Ins.RequireKey(RELOAD, 0).Down && MagazineAmmo != MagazineMaxAmmo ||
-                    _AutoReload) &&
-                    BackupAmmo != 0 &&
-                    !_Reloading;
+            param = AmmoGroup.ReloadConfirm() &&
+                    !_Reloading &&
+                    (ControlSys.Ins.RequireKey(RELOAD, 0).Down || _AutoReload);
 
             _StickyInputDic.SetBool(RELOAD, param);
             if (param && !_Reloading)
@@ -141,12 +129,10 @@ namespace Thunder.Entity
 
         private readonly List<Vector3> _Spreads = new List<Vector3>();
 
-        public void Reload()
+        public override void Reload()
         {
-            float ammoDiff = MagazineMaxAmmo - MagazineAmmo;
-            MagazineAmmo += Mathf.Min(ammoDiff, BackupAmmo);
-            BackupAmmo -= ammoDiff;
-            BackupAmmo = BackupAmmo < 0 ? 0 : BackupAmmo;
+            AmmoGroup.Reload();
+            AmmoGroup.InvokeOnAmmoChanged();
 
             _AutoReload = false;
 
@@ -155,12 +141,7 @@ namespace Thunder.Entity
 
             _Reloading = false;
 
-            OnAmmoChange?.Invoke(MagazineMaxAmmo, MagazineAmmo, BackupAmmo);
-        }
-
-        public void BroadCastAmmo()
-        {
-            OnAmmoChange?.Invoke(MagazineMaxAmmo, MagazineAmmo, BackupAmmo);
+            
         }
 
         public void SetSafety(int value)
@@ -168,11 +149,10 @@ namespace Thunder.Entity
             Safety = value != 0;
         }
 
-        public void FillAmmo()
+        public override void FillAmmo()
         {
-            BackupAmmo = BackupMaxAmmo;
-            MagazineAmmo = MagazineMaxAmmo;
-            OnAmmoChange?.Invoke(MagazineMaxAmmo,MagazineAmmo,BackupAmmo);
+            AmmoGroup.FillUp(false);
+            AmmoGroup.InvokeOnAmmoChanged();
         }
 
         private int LoopFireMode()
@@ -185,7 +165,7 @@ namespace Thunder.Entity
             return BurstMode;
         }
 
-        private void Fire()
+        public override void Fire()
         {
             Vector3 dir = _BulletSpread.GetNextBulletDir(FireInterval);
             dir = Camera.main.transform.localToWorldMatrix * dir;
@@ -196,7 +176,7 @@ namespace Thunder.Entity
                 _Spreads.Add(hit.point);
                 if (_Spreads.Count > 50)
                     _Spreads.RemoveAt(0);
-                BulletHoleManager.Create(hit.point,hit.normal);
+                BulletHoleManager.Create(hit.point, hit.normal);
                 hit.transform.GetComponent<IShootable>()?.GetShoot(hit.point, dir, Damage);
             }
 
@@ -206,10 +186,10 @@ namespace Thunder.Entity
             _Player.ViewRotTargetAddition(stay);
             _CameraRecoliDampTimeCount = Time.time;
 
-            MagazineAmmo--;
-            OnAmmoChange?.Invoke(MagazineMaxAmmo, MagazineAmmo, BackupAmmo);
+            AmmoGroup.Magzine--;
+            AmmoGroup.InvokeOnAmmoChanged();
 
-            
+
             PublicEvents.GunFire?.Invoke();
         }
 
@@ -235,7 +215,7 @@ namespace Thunder.Entity
             AimPoint.Instance.SetAimValue(OverHeatFactor.Average());
         }
 
-        private void PlayerSquat(bool squating, bool hanging)
+        protected override void PlayerSquat(bool squating, bool hanging)
         {
             if (squating)
             {
@@ -251,7 +231,7 @@ namespace Thunder.Entity
             }
         }
 
-        private void PlayerHanging(bool squating, bool hanging)
+        protected override void PlayerHanging(bool squating, bool hanging)
         {
             if (hanging)
             {

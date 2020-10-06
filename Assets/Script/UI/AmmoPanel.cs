@@ -1,4 +1,5 @@
 ﻿using Thunder.Entity;
+using Thunder.Entity.Weapon;
 using Thunder.Utility;
 using TMPro;
 
@@ -13,11 +14,11 @@ namespace Thunder.UI
         private void Start()
         {
             _Text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            Gun.Instance.OnAmmoChange.AddListener((max, mag, backup) =>
+            BaseWeapon.Ins.AmmoGroup.OnAmmoChanged += ammoGroup =>
             {
-                _AmmoStr = $"{mag}/{max}  {backup}";
+                _AmmoStr = $"{ammoGroup.Magzine}/{ammoGroup.MagzineMax}  {ammoGroup.Backup}";
                 SetText();
-            });
+            };
             PublicEvents.GunFireModeChange.AddListener(x =>
             {
                 switch (x)
@@ -37,7 +38,7 @@ namespace Thunder.UI
                 }
                 SetText();
             });
-            Gun.Instance.BroadCastAmmo();
+            BaseWeapon.Ins.AmmoGroup.InvokeOnAmmoChanged();
         }
 
         private void SetText()

@@ -103,6 +103,7 @@ public static class LuaBinder
 		L.RegFunction("Predicate_System_Action_Thunder_UI_BaseUI", System_Predicate_System_Action_Thunder_UI_BaseUI);
 		L.RegFunction("Action_System_Action_Thunder_UI_BaseUI", System_Action_System_Action_Thunder_UI_BaseUI);
 		L.RegFunction("Comparison_System_Action_Thunder_UI_BaseUI", System_Comparison_System_Action_Thunder_UI_BaseUI);
+		L.RegFunction("Action_Thunder_Entity_Weapon_AmmoGroup", System_Action_Thunder_Entity_Weapon_AmmoGroup);
 		L.BeginModule("IO");
 		System_IO_DirectoryWrap.Register(L);
 		System_IO_PathWrap.Register(L);
@@ -121,17 +122,16 @@ public static class LuaBinder
 		Thunder_Utility_AudioControllerWrap.Register(L);
 		Thunder_Utility_AutoCounterWrap.Register(L);
 		Thunder_Utility_BulletSpreadWrap.Register(L);
-		Thunder_Utility_CheckWrap.Register(L);
 		Thunder_Utility_CounterWrap.Register(L);
 		Thunder_Utility_DialogResultWrap.Register(L);
 		Thunder_Utility_UiInitTypeWrap.Register(L);
-		Thunder_Utility_PublicEventsWrap.Register(L);
 		Thunder_Utility_FreeLookCameraWrap.Register(L);
 		Thunder_Utility_GlobalBufferWrap.Register(L);
 		Thunder_Utility_GlobalSettingsWrap.Register(L);
 		Thunder_Utility_PathsWrap.Register(L);
 		Thunder_Utility_PlayerLockCameraWrap.Register(L);
 		Thunder_Utility_PostProcessingControllerWrap.Register(L);
+		Thunder_Utility_PublicEventsWrap.Register(L);
 		Thunder_Utility_SelfDestroyParticalWrap.Register(L);
 		Thunder_Utility_SimpleCounterWrap.Register(L);
 		Thunder_Utility_StickyInputDicWrap.Register(L);
@@ -234,12 +234,17 @@ public static class LuaBinder
 		Thunder_Skill_SkillWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Game");
+		Thunder_Game_GameTypeWrap.Register(L);
+		Thunder_Game_GameRequesterWrap.Register(L);
+		Thunder_Game_GameStartStandPointWrap.Register(L);
+		L.BeginModule("SpotShooting");
+		Thunder_Game_SpotShooting_SpotShootingGameWrap.Register(L);
+		Thunder_Game_SpotShooting_SpotShootingTargetWrap.Register(L);
+		L.EndModule();
 		L.BeginModule("FlyingSaucer");
 		Thunder_Game_FlyingSaucer_FlyingSaucerWrap.Register(L);
 		Thunder_Game_FlyingSaucer_FlyingSaucerGameWrap.Register(L);
 		Thunder_Game_FlyingSaucer_FlyingSaucerLauncherWrap.Register(L);
-		Thunder_Game_FlyingSaucer_FlyingSaucerShootPointWrap.Register(L);
-		Thunder_Game_FlyingSaucer_FlyingSaucerSwitcherWrap.Register(L);
 		L.BeginModule("FlyingSaucerGame");
 		L.RegFunction("DelDataChanged", Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
 		L.EndModule();
@@ -251,11 +256,16 @@ public static class LuaBinder
 		Thunder_Entity_BulletHoleWrap.Register(L);
 		Thunder_Entity_BulletHoleManagerWrap.Register(L);
 		Thunder_Entity_ControllerWrap.Register(L);
-		Thunder_Entity_GunWrap.Register(L);
 		Thunder_Entity_LuaScriptInterfaceWrap.Register(L);
 		Thunder_Entity_MuzzleFireWrap.Register(L);
 		Thunder_Entity_PeopleWrap.Register(L);
 		Thunder_Entity_PlayerWrap.Register(L);
+		L.BeginModule("Weapon");
+		Thunder_Entity_Weapon_BaseWeaponWrap.Register(L);
+		Thunder_Entity_Weapon_AmmoGroupWrap.Register(L);
+		Thunder_Entity_Weapon_CrossbowWrap.Register(L);
+		Thunder_Entity_Weapon_MachineGunWrap.Register(L);
+		L.EndModule();
 		L.EndModule();
 		L.BeginModule("Behavior");
 		Thunder_Behavior_DelegateFixedInvokeWrap.Register(L);
@@ -824,6 +834,33 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Thunder.UI.BaseUI>>>.Create(func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int System_Action_Thunder_Entity_Weapon_AmmoGroup(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateTraits<System.Action<Thunder.Entity.Weapon.AmmoGroup>>.Create(func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateTraits<System.Action<Thunder.Entity.Weapon.AmmoGroup>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

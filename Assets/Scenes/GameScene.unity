@@ -415,7 +415,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 184939597}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6643cd22d41ea3e4ab282de5ff5d20c4, type: 3}
+  m_Script: {fileID: 11500000, guid: 2986720490002a043b82921c02a06a65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   OnEnter:
@@ -427,6 +427,8 @@ MonoBehaviour:
   OnExit:
     m_PersistentCalls:
       m_Calls: []
+  GameType: 0
+  DelayTime: 5
 --- !u!65 &184939600
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -504,114 +506,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
         type: 3}
-      propertyPath: Enable
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: DelayTime
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
       propertyPath: PlayerTrans
       value: 
       objectReference: {fileID: 1257740588}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchBaseDir.x
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchBaseDir.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchRandAngle
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchForce.x
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchForce.y
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchDirNoise.StartPos.x
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchDirNoise.StartPos.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchDirNoise.Dir.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchDirNoise.Smooth
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchForceNoise.StartPos.x
-      value: 77
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchForceNoise.Dir.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchForceNoise.Smooth
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchForceNoise.Enable
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchDirNoise.Enable
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchDirRandomSmooth
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262964, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: LaunchForceRandomSmooth
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4703112061475262965, guid: e5f13fac6cc77d04f912634a765a65cc,
         type: 3}
       propertyPath: m_Name
       value: flyingSaucerLauncher
       objectReference: {fileID: 0}
-    - target: {fileID: 4703112061475262966, guid: e5f13fac6cc77d04f912634a765a65cc,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: e1e5a432f2e727f40a4a9d46a55adb61, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5f13fac6cc77d04f912634a765a65cc, type: 3}
 --- !u!1 &977196715
@@ -1143,9 +1045,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1285973565}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdf855a2071340b4eb6f22f544732693, type: 3}
+  m_Script: {fileID: 11500000, guid: 17dd7c052a16df04481e01289c8ff321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _EntityName: 
+  GameType: 0
   ReRequestTime: 3
   RequestedColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1313278080

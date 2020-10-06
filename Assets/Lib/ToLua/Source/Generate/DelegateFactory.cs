@@ -44,6 +44,7 @@ public class DelegateFactory
 		dict.Add(typeof(Thunder.Tool.BehaviorTree.ActionNode.DelAction), factory.Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		dict.Add(typeof(Thunder.Tool.BehaviorTree.ConditionNode.DelCondition), factory.Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
 		dict.Add(typeof(Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged), factory.Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
+		dict.Add(typeof(System.Action<Thunder.Entity.Weapon.AmmoGroup>), factory.System_Action_Thunder_Entity_Weapon_AmmoGroup);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -72,6 +73,7 @@ public class DelegateFactory
 		DelegateTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Init(factory.Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		DelegateTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Init(factory.Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
 		DelegateTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Init(factory.Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
+		DelegateTraits<System.Action<Thunder.Entity.Weapon.AmmoGroup>>.Init(factory.System_Action_Thunder_Entity_Weapon_AmmoGroup);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -100,6 +102,7 @@ public class DelegateFactory
 		TypeTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Init(factory.Check_Thunder_Tool_BehaviorTree_ActionNode_DelAction);
 		TypeTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Init(factory.Check_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
 		TypeTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Init(factory.Check_Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
+		TypeTraits<System.Action<Thunder.Entity.Weapon.AmmoGroup>>.Init(factory.Check_System_Action_Thunder_Entity_Weapon_AmmoGroup);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -128,6 +131,7 @@ public class DelegateFactory
 		StackTraits<Thunder.Tool.BehaviorTree.ActionNode.DelAction>.Push = factory.Push_Thunder_Tool_BehaviorTree_ActionNode_DelAction;
 		StackTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Push = factory.Push_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition;
 		StackTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Push = factory.Push_Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged;
+		StackTraits<System.Action<Thunder.Entity.Weapon.AmmoGroup>>.Push = factory.Push_System_Action_Thunder_Entity_Weapon_AmmoGroup;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -1802,6 +1806,63 @@ public class DelegateFactory
 	}
 
 	void Push_Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged(IntPtr L, Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_Thunder_Entity_Weapon_AmmoGroup_Event : LuaDelegate
+	{
+		public System_Action_Thunder_Entity_Weapon_AmmoGroup_Event(LuaFunction func) : base(func) { }
+		public System_Action_Thunder_Entity_Weapon_AmmoGroup_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(Thunder.Entity.Weapon.AmmoGroup param0)
+		{
+			func.BeginPCall();
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(Thunder.Entity.Weapon.AmmoGroup param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.PushObject(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<Thunder.Entity.Weapon.AmmoGroup> System_Action_Thunder_Entity_Weapon_AmmoGroup(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<Thunder.Entity.Weapon.AmmoGroup> fn = delegate(Thunder.Entity.Weapon.AmmoGroup param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_Thunder_Entity_Weapon_AmmoGroup_Event target = new System_Action_Thunder_Entity_Weapon_AmmoGroup_Event(func);
+			System.Action<Thunder.Entity.Weapon.AmmoGroup> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_Thunder_Entity_Weapon_AmmoGroup_Event target = new System_Action_Thunder_Entity_Weapon_AmmoGroup_Event(func, self);
+			System.Action<Thunder.Entity.Weapon.AmmoGroup> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_Thunder_Entity_Weapon_AmmoGroup(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<Thunder.Entity.Weapon.AmmoGroup>), L, pos);
+	}
+
+	void Push_System_Action_Thunder_Entity_Weapon_AmmoGroup(IntPtr L, System.Action<Thunder.Entity.Weapon.AmmoGroup> o)
 	{
 		ToLua.Push(L, o);
 	}
