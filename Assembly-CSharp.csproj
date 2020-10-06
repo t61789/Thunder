@@ -1018,6 +1018,8 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_BaseWeaponWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_CrossbowWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_MachineGunWrap.cs" />
+    <Compile Include="Assets\Script\Entity\Weapon\CrossbowArrow.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_CrossbowArrowWrap.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro.cginc" />

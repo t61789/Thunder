@@ -82,6 +82,15 @@ namespace Thunder.Entity.Weapon
                 Magzine = MagzineMax;
         }
 
+        /// <summary>
+        /// 判断弹匣是否为空
+        /// </summary>
+        /// <returns></returns>
+        public bool MagzineEmpty()
+        {
+            return Magzine == 0;
+        }
+
         public void InvokeOnAmmoChanged()
         {
             OnAmmoChanged?.Invoke(this);

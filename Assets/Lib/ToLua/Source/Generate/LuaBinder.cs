@@ -264,6 +264,7 @@ public static class LuaBinder
 		Thunder_Entity_Weapon_BaseWeaponWrap.Register(L);
 		Thunder_Entity_Weapon_AmmoGroupWrap.Register(L);
 		Thunder_Entity_Weapon_CrossbowWrap.Register(L);
+		Thunder_Entity_Weapon_CrossbowArrowWrap.Register(L);
 		Thunder_Entity_Weapon_MachineGunWrap.Register(L);
 		L.EndModule();
 		L.EndModule();

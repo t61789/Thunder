@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.Tool.BuffData;
@@ -10,7 +6,6 @@ using Thunder.UI;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Events;
 
 namespace Thunder.Entity.Weapon
 {
@@ -30,8 +25,8 @@ namespace Thunder.Entity.Weapon
         public Vector3 MuzzleFirePos;
         public Sprite[] MuzzleFireSprites;
 
+        private SimpleCounter _FireCounter;
         private Animator _Animator;
-        private float _FireIntervalCount;
         private Vector2 _CurCameraRecoilAddition;
         private float _CameraRecoliDampTimeCount;
         private Vector2 _CameraStart;
@@ -69,27 +64,26 @@ namespace Thunder.Entity.Weapon
             _BaseAimScopeFov = _GunCamera.fieldOfView;
             _AimScopeSensitiveScale = AimScopeFov / _BaseAimScopeFov;
             _StickyInputDic.AddBool(RELOAD, 0.7f);
+            _FireCounter = new SimpleCounter(FireInterval);
+            _FireCounter.Complete();
         }
 
         private void Update()
         {
             if (!Safety) return;
             ControlInfo fire = ControlSys.Ins.RequireKey("Fire1", 0);
-            bool param = Time.time - _FireIntervalCount >= FireInterval;
+            bool param = true;
 
-            if (param)
+            if (_FireCounter.Completed)
             {
                 if (AmmoGroup.Magzine == 0)
                 {
                     if (fire.Down)
                         _AutoReload = true;
                     param = false;
-
                 }
                 else if (BurstMode == 0 && fire.Stay)
-                {
                     Fire();
-                }
                 else if (fire.Down || _BurstCount > 0)
                 {
                     if (_BurstCount == 0)
@@ -98,12 +92,10 @@ namespace Thunder.Entity.Weapon
                     Fire();
                 }
                 else
-                {
                     param = false;
-                }
 
                 if (param)
-                    _FireIntervalCount = Time.time;
+                    _FireCounter.Recount();
             }
             _Animator.SetBool("Fire", param);
 
@@ -140,8 +132,6 @@ namespace Thunder.Entity.Weapon
                 SwitchAimScope();
 
             _Reloading = false;
-
-            
         }
 
         public void SetSafety(int value)

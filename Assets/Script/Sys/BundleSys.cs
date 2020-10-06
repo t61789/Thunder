@@ -330,6 +330,9 @@ namespace Thunder.Sys
         public readonly string Bundle;
         public string Name;
 
+        private static readonly LRUCache<string, AssetId> _Cache = 
+            new LRUCache<string, AssetId>(GlobalSettings.AssetIdCacheSize);
+
         public AssetId(string bundleGroup, string bundle, string name, string defaultBundle)
         {
             BundleGroup = Path.GetFullPath(bundleGroup ?? Paths.BundleBasePath);
@@ -337,12 +340,24 @@ namespace Thunder.Sys
             Name = name;
         }
 
+        public static AssetId CreateAssetId(string assetPath, string defaultBundle)
+        {
+            if (_Cache.Contains(assetPath)) return _Cache.Get(assetPath);
+            var split = assetPath?.Split('!');
+            split = split ?? new string[1];
+            // ReSharper disable once PossibleNullReferenceException
+            Assert.IsTrue(split.Length <= 3, $"路径不正确：{assetPath}");
+            var result =  CreateAssetId(split, defaultBundle);
+            _Cache.Put(assetPath,result);
+            return result;
+        }
+
         public static bool BundleEquals(AssetId id1, AssetId id2)
         {
             return id1.BundleGroup == id2.BundleGroup && id1.Bundle == id2.Bundle;
         }
 
-        public static AssetId CreateAssetId(string[] assetArr, string defaultBundle)
+        private static AssetId CreateAssetId(string[] assetArr, string defaultBundle)
         {
             Assert.IsTrue(assetArr != null && assetArr.Length <= 3, "asset数组格式不正确");
             var newa = new string[3];
@@ -350,15 +365,6 @@ namespace Thunder.Sys
             // ReSharper disable once PossibleNullReferenceException
             Array.Copy(assetArr, 0, newa, 3 - assetArr.Length, assetArr.Length);
             return new AssetId(newa[0], newa[1], newa[2], defaultBundle);
-        }
-
-        public static AssetId CreateAssetId(string assetPath, string defaultBundle)
-        {
-            var split = assetPath?.Split('!');
-            split = split ?? new string[1];
-            // ReSharper disable once PossibleNullReferenceException
-            Assert.IsTrue(split.Length <= 3, $"路径不正确：{assetPath}");
-            return CreateAssetId(split, defaultBundle);
         }
     }
 }

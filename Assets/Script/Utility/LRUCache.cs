@@ -31,6 +31,11 @@ namespace Thunder.Utility
             }
         }
 
+        public bool Contains(K key)
+        {
+            return _Dic.TryGetValue(key, out _);
+        }
+
         public V Get(K key)
         {
             int result;
