@@ -19,7 +19,7 @@ public class System_Collections_Generic_DictionaryWrap
         L.RegFunction("ContainsValue", ContainsValue);
         L.RegFunction("GetObjectData", GetObjectData);
         L.RegFunction("OnDeserialization", OnDeserialization);
-        L.RegFunction("Remove", Remove);
+        L.RegFunction("Dequeue", Remove);
         L.RegFunction("TryGetValue", TryGetValue);
         L.RegFunction("GetEnumerator", GetEnumerator);
         L.RegVar("this", _this, null);
@@ -293,7 +293,7 @@ public class System_Collections_Generic_DictionaryWrap
             Type kt;
             object obj = ToLua.CheckGenericObject(L, 1, typeof(Dictionary<,>), out kt);
             object arg0 = ToLua.CheckVarObject(L, 2, kt);
-            bool o = (bool)LuaMethodCache.CallSingleMethod("Remove", obj, arg0);
+            bool o = (bool)LuaMethodCache.CallSingleMethod("Dequeue", obj, arg0);
             LuaDLL.lua_pushboolean(L, o);
             return 1;
         }

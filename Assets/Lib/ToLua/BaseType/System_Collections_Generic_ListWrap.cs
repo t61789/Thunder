@@ -28,7 +28,7 @@ public class System_Collections_Generic_ListWrap
         L.RegFunction("Insert", Insert);
         L.RegFunction("InsertRange", InsertRange);
         L.RegFunction("LastIndexOf", LastIndexOf);
-        L.RegFunction("Remove", Remove);
+        L.RegFunction("Dequeue", Remove);
         L.RegFunction("RemoveAll", RemoveAll);
         L.RegFunction("RemoveAt", RemoveAt);
         L.RegFunction("RemoveRange", RemoveRange);
@@ -577,7 +577,7 @@ public class System_Collections_Generic_ListWrap
             Type argType = null;
             object obj = ToLua.CheckGenericObject(L, 1, typeof(List<>), out argType);
             object arg0 = ToLua.CheckVarObject(L, 2, argType);
-            bool o = (bool)LuaMethodCache.CallSingleMethod("Remove", obj, arg0);
+            bool o = (bool)LuaMethodCache.CallSingleMethod("Dequeue", obj, arg0);
             LuaDLL.lua_pushboolean(L, o);
             return 1;
         }

@@ -41,7 +41,7 @@ public class System_StringWrap
         L.RegFunction("Clone", Clone);
         L.RegFunction("Insert", Insert);
         L.RegFunction("Replace", Replace);
-        L.RegFunction("Remove", Remove);
+        L.RegFunction("Dequeue", Remove);
         L.RegFunction("Format", Format);
         L.RegFunction("Copy", Copy);
         L.RegFunction("Concat", Concat);
@@ -1441,7 +1441,7 @@ public class System_StringWrap
             }
             else
             {
-                return LuaDLL.luaL_throw(L, "invalid arguments to method: System.String.Remove");
+                return LuaDLL.luaL_throw(L, "invalid arguments to method: System.String.Dequeue");
             }
         }
         catch (Exception e)

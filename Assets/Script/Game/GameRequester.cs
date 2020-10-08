@@ -53,7 +53,7 @@ namespace Thunder.Game
             _Mat.SetColor("_Light", _Requested ? RequestedColor : _BaseColor);
             PublicEvents.GameRequest?.Invoke(GameType,_Requested);
             _ReRequestSimpleCounter.Recount();
-            LogPanel.Instance.LogSystem(_Requested
+            LogPanel.Ins.LogSystem(_Requested
                 ? "Please stand on the start point to start the game"
                 : "You have canceled the game");
         }

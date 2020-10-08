@@ -1021,7 +1021,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\LookAt.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\SetShadows.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector2\ClampMagnitude.cs" />
-    <Compile Include="Assets\Script\Utility\CircleBuffer.cs" />
+    <Compile Include="Assets\Script\Utility\CircleQueue.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\21_String\TestString.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector2\GetSqrMagnitude.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedString.cs" />
@@ -1039,6 +1039,9 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_JsonTableRecieverWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_PickupableWeaponWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_MeleeAttackAreaWrap.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_ItemInfoWrap.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PackageItemInfoWrap.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PackageCellWrap.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro.cginc" />

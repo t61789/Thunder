@@ -17,7 +17,7 @@ public class System_Collections_Generic_Dictionary_int_TestAccountWrap
         L.RegFunction("ContainsValue", ContainsValue);
         L.RegFunction("GetObjectData", GetObjectData);
         L.RegFunction("OnDeserialization", OnDeserialization);
-        L.RegFunction("Remove", Remove);
+        L.RegFunction("Dequeue", Remove);
         L.RegFunction("TryGetValue", TryGetValue);
         L.RegFunction("GetEnumerator", GetEnumerator);
         L.RegFunction("New", _CreateSystem_Collections_Generic_Dictionary_int_TestAccount);

@@ -19,27 +19,27 @@ namespace Thunder.Entity
         public int HolesLimit=20;
         public Sprite[] Sprites;
 
-        private CircleBuffer<BulletHole> _BulletHoles;
+        private CircleQueue<BulletHole> _BulletHoles;
         private AutoCounter _ClearCounter;
 
         private void Awake()
         {
             Instance = this;
-            _BulletHoles = new CircleBuffer<BulletHole>(HolesLimit);
+            _BulletHoles = new CircleQueue<BulletHole>(HolesLimit);
             _ClearCounter = new AutoCounter(this, ClearTime).OnComplete(Clear);
         }
 
         public static void Create(Vector3 pos,Vector3 normal)
         {
             BulletHole hole = ObjectPool.Ins.Alloc<BulletHole>("bulletHole",x=>x.Init(pos,normal,Instance.Sprites.RandomTake()));
-            hole= Instance._BulletHoles.Insert(hole);
+            hole= Instance._BulletHoles.Enqueue(hole);
             if(hole!=null)
                 ObjectPool.Ins.Recycle(hole);
         }
 
         private void Clear()
         {
-            BulletHole hole = _BulletHoles.Remove();
+            BulletHole hole = _BulletHoles.Dequeue();
             if (hole != null)
                 ObjectPool.Ins.Recycle(hole);
             _ClearCounter.Recount();

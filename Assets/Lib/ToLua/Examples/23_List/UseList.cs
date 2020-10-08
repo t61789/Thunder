@@ -99,10 +99,10 @@ public class UseList : LuaClient
                     print('LastIndexOf is ok')
                 end
 
-                list:Remove(123)
+                list:Dequeue(123)
 
                 if list[0] ~= 123 then
-                    print('Remove is ok')
+                    print('Dequeue is ok')
                 end
 
                 list:Insert(0, 123)

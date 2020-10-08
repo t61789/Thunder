@@ -40,7 +40,7 @@ namespace LuaInterface
             self.AddRef();
 
             _add = self.GetLuaFunction("Add");
-            _remove = self.GetLuaFunction("Remove");
+            _remove = self.GetLuaFunction("Dequeue");
             //_call = self.GetLuaFunction("__call");            
         }
 

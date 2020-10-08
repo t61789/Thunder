@@ -58,7 +58,7 @@ namespace Thunder.Game.FlyingSaucer
                     in DataBaseSys.Ins["message"]
                 where row["Key"] == "flyingSaucerWelcome"
                 select row["value"]).FirstOrDefault();
-            LogPanel.Instance.LogSystem(message);
+            LogPanel.Ins.LogSystem(message);
         }
 
         private void SaucerHit()
@@ -107,7 +107,7 @@ namespace Thunder.Game.FlyingSaucer
         {
             PublicEvents.GameEnd?.Invoke( GameType.FlyingSaucer,true);
             string endMsg = $"Game over, you have got {_CurScore} score";
-            LogPanel.Instance.LogSystem(endMsg);
+            LogPanel.Ins.LogSystem(endMsg);
             UISys.Ins.CloseUI(ScoreBoard.UIName);
             TurnCounter.Pause().Recount();
         }

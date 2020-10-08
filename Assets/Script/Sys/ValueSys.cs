@@ -53,7 +53,7 @@ namespace Thunder.Sys
         //            try
         //            {
         //                T result = (T)new XmlSerializer(typeof(T)).Deserialize(element.CreateReader());
-        //                unSerialized.Remove(path);
+        //                unSerialized.Dequeue(path);
         //                serialized.Add(path, result);
         //                return result;
         //            }
@@ -125,7 +125,7 @@ namespace Thunder.Sys
         //    if (unDeserializedBuffer.TryGetValue(valuePath, out string json))
         //    {
         //        T result = JsonConvert.DeserializeObject<T>(json);
-        //        unDeserializedBuffer.Remove(valuePath);
+        //        unDeserializedBuffer.Dequeue(valuePath);
         //        buffer.Add(valuePath, result);
         //        return result;
         //    }

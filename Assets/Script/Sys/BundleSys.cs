@@ -106,7 +106,7 @@ namespace Thunder.Sys
         //            foreach (var item in b.dependencies)
         //                _LoadQueue.Enqueue(item);
         //            b.Bundle.Unload(true);
-        //            bundles.Remove(curBundle);
+        //            bundles.Dequeue(curBundle);
         //        }
         //        else
         //            return false;

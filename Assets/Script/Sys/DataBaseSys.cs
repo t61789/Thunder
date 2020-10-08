@@ -63,7 +63,7 @@ namespace Thunder.Sys
 
     //    private bool DeleteTable(AssetId id)
     //    {
-    //        return _Tables.Remove(id);
+    //        return _Tables.Dequeue(id);
     //    }
 
     //    /// <summary>
@@ -81,7 +81,7 @@ namespace Thunder.Sys
     //        var keys = _Tables.Keys.Where(x => x.Bundle == id.Bundle && x.BundleGroup == id.BundleGroup).ToArray();
 
     //        foreach (var tableId in keys)
-    //            _Tables.Remove(tableId);
+    //            _Tables.Dequeue(tableId);
     //    }
 
     //    private static AssetId CreateId(string bundleGroup, string bundle, string name)

@@ -20,7 +20,7 @@
         //public static bool Add(string Key, object value,bool cover=false ,bool stable = false)
         //{
         //    if (cover)
-        //        buffer.Remove(Key);
+        //        buffer.Dequeue(Key);
 
         //    if (buffer.TryGetValue(Key, out _))
         //        return false;
@@ -34,16 +34,16 @@
         //    if (buffer.TryGetValue(Key, out ObjUnit result))
         //    {
         //        if (!result.stable)
-        //            buffer.Remove(Key);
+        //            buffer.Dequeue(Key);
         //        return result.obj;
         //    }
 
         //    return null;
         //}
 
-        //public static bool Remove(string Key)
+        //public static bool Dequeue(string Key)
         //{
-        //    return buffer.Remove(Key);
+        //    return buffer.Dequeue(Key);
         //}
 
         //public static void Clear()

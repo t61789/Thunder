@@ -58,7 +58,8 @@ namespace Thunder.Utility
             else
             {
                 int temp = _Last;
-                _Dic.Remove(_Nodes[temp].Key);
+                if(_Nodes[temp].Key!=null)
+                    _Dic.Remove(_Nodes[temp].Key);
                 // 若前方为-1则说明缓冲区大小为1，这里不为1
                 // 所以将尾部节点的数据抛弃，重新赋值后放置在首部
                 // 为1则跳过这些操作

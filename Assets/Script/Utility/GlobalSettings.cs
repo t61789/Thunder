@@ -7,8 +7,9 @@
         public const float CampMaxFriendliness = 100;
         public const float CampNeutralValue = 30;
         public const int AssetIdCacheSize = 20;
+        public const int PackageItemInfoBuffer = 10;
+        
         public const int WeaponBeltSize = 6;
-
         public const string MainWeapon1KeyName = "switchMainWeapon1";
         public const string MainWeapon2KeyName = "switchMainWeapon2";
         public const string SecondaryKeyName = "switchSecondaryWeapon";

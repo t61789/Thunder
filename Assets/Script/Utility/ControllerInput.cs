@@ -43,10 +43,10 @@
 
     //    public static void RemoveFrom(GameObject gameObject)
     //    {
-    //        gameObject.GetComponent<ControllerInput>().Remove();
+    //        gameObject.GetComponent<ControllerInput>().Dequeue();
     //    }
 
-    //    public void Remove()
+    //    public void Dequeue()
     //    {
     //        if (aimRing != null)
     //            Sys.UISys.Ins.CloseUI(aimRing.UIName);
@@ -83,7 +83,7 @@
 
     //        if (controller == null)
     //        {
-    //            Remove();
+    //            Dequeue();
     //            return;
     //        }
 

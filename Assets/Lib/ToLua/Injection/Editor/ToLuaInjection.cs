@@ -676,7 +676,7 @@ public static class ToLuaInjection
         }
         else if (cursor.Previous.OpCode == OpCodes.Nop)
         {
-            targetBody.Instructions.Remove(cursor.Previous);
+            targetBody.Instructions.Dequeue(cursor.Previous);
         }
     }
 #endregion NormalMethod
@@ -921,7 +921,7 @@ public static class ToLuaInjection
         StringBuilder sb = StringBuilderCache.Acquire();
         sb.Append("return ");
         ToLuaText.TransferDic(temp, sb);
-        sb.Remove(sb.Length - 1, 1);
+        sb.Dequeue(sb.Length - 1, 1);
         File.WriteAllText(CustomSettings.baseLuaDir + "System/Injection/InjectionBridgeInfo.lua", StringBuilderCache.GetStringAndRelease(sb));
     }
 

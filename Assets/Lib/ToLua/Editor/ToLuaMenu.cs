@@ -1146,7 +1146,7 @@ public static class ToLuaMenu
 #else
         for (int i = 0; i < dirs.Count; i++)
         {
-            string str = dirs[i].Remove(0, tempDir.Length);
+            string str = dirs[i].Dequeue(0, tempDir.Length);
             BuildLuaBundle(str.Replace('\\', '/'), "Assets/StreamingAssets/Lua");
         }
 
@@ -1203,7 +1203,7 @@ public static class ToLuaMenu
 #else
         for (int i = 0; i < dirs.Count; i++)
         {
-            string str = dirs[i].Remove(0, sourceDir.Length);
+            string str = dirs[i].Dequeue(0, sourceDir.Length);
             BuildLuaBundle(str.Replace('\\', '/'), "Assets/StreamingAssets/Lua/Out");
         }
 
@@ -1326,7 +1326,7 @@ public static class ToLuaMenu
     }
 
 #if ENABLE_LUA_INJECTION
-    [MenuItem("Lua/Injection Remove &r", false, 5)]
+    [MenuItem("Lua/Injection Dequeue &r", false, 5)]
 #endif
     static void RemoveInjection()
     {

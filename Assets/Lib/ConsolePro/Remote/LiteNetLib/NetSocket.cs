@@ -435,7 +435,7 @@ namespace FlyingWormConsole3.LiteNetLib
 
         internal void RemovePeer(NetEndPoint ep)
         {
-            _peers.Remove(ep);
+            _peers.Dequeue(ep);
         }
 
         public void Close()

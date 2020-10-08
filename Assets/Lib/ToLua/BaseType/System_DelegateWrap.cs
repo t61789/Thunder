@@ -13,7 +13,7 @@ public class System_DelegateWrap
         L.RegFunction("GetObjectData", GetObjectData);
         L.RegFunction("GetInvocationList", GetInvocationList);
         L.RegFunction("Combine", Combine);
-        L.RegFunction("Remove", Remove);
+        L.RegFunction("Dequeue", Remove);
         L.RegFunction("RemoveAll", RemoveAll);
         L.RegFunction("Destroy", Destroy);
         L.RegFunction("GetHashCode", GetHashCode);

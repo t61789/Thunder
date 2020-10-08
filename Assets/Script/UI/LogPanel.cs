@@ -9,63 +9,32 @@ namespace Thunder.UI
 {
     public class LogPanel : BaseUI
     {
-        #region old code
-        //[HideInInspector]
-        //public TextMeshProUGUI textMesh;
-
-        //public bool ResizeWithText;
-        //public Vector2 Interval;
-
-        //protected override void Awake()
-        //{
-        //    base.Awake();
-        //    textMesh = transform.Find("Text").GetComponent<TextMeshProUGUI>();
-        //}
-
-        //private void Resize()
-        //{
-        //    RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width + Interval.x);
-        //    RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, textMesh.rectTransform.rect.height + Interval.y);
-        //}
-
-        //public string GetText()
-        //{
-        //    return textMesh.text;
-        //}
-
-        //public void SetText(string text)
-        //{
-        //    textMesh.SetText(text);
-        //    Resize();
-        //}
-        #endregion
-
-        public static LogPanel Instance;
+        public static LogPanel Ins;
 
         public int MaxBufferSize;
 
         private int _LogPointer;
-        private CircleBuffer<string> _LogBuffer;
-        private CircleBuffer<TextMeshProUGUI> _TextBuffer;
+        private CircleQueue<string> _LogQueue;
+        private TextMeshProUGUI[] _TextQueue;
 
         protected override void Awake()
         {
             base.Awake();
-            Instance = this;
-            _LogBuffer = new CircleBuffer<string>(MaxBufferSize);
+            Ins = this;
+            _LogQueue = new CircleQueue<string>(MaxBufferSize);
             var l =
-                (from Transform rectTran in RectTrans select rectTran.GetComponent<TextMeshProUGUI>()).ToList();
+                (from Transform rectTran 
+                    in RectTrans 
+                    select rectTran.GetComponent<TextMeshProUGUI>()).ToList();
             l.Reverse();
-            _TextBuffer = new CircleBuffer<TextMeshProUGUI>(l.Count);
-            foreach (var textMeshProUgui in l)
-                _TextBuffer.Insert(textMeshProUgui);
+            _TextQueue = l.ToArray();
             RePaint(0);
         }
 
         public void MoveView(bool up)
         {
             _LogPointer += (up ? 1 : -1);
-            int diff = _LogBuffer.ElementSize - _TextBuffer.ElementSize;
+            int diff = _LogQueue.Count - _TextQueue.Length;
             _LogPointer = _LogPointer.Clamp(0, diff < 0 ? 0 : diff);
             RePaint(_LogPointer);
         }
@@ -76,8 +45,8 @@ namespace Thunder.UI
                 _LogPointer = 0;
             else
             {
-                int diff = _LogBuffer.ElementSize - _TextBuffer.ElementSize;
-                _LogPointer = _LogBuffer.ElementSize.Clamp(0, diff < 0 ? 0 : diff);
+                int diff = _LogQueue.Count - _TextQueue.Length;
+                _LogPointer = _LogQueue.Count.Clamp(0, diff < 0 ? 0 : diff);
             }
             RePaint(_LogPointer);
         }
@@ -85,21 +54,21 @@ namespace Thunder.UI
         private void RePaint(int startPos)
         {
             int i = 0;
-            for (; i < _TextBuffer.ElementSize && (i + startPos) < _LogBuffer.ElementSize; i++)
-                _TextBuffer[i].text = _LogBuffer[i + startPos];
-            for (; i < _TextBuffer.ElementSize; i++)
-                _TextBuffer[i].text = null;
+            for (; i < _TextQueue.Length && (i + startPos) < _LogQueue.Count; i++)
+                _TextQueue[i].text = _LogQueue[i + startPos,true];
+            for (; i < _TextQueue.Length; i++)
+                _TextQueue[i].text = null;
         }
 
         public void Log(string msg)
         {
-            _LogBuffer.Insert(msg, false);
+            _LogQueue.Enqueue(msg, false);
             if (_LogPointer == 0)
                 RePaint(0);
             else
             {
                 _LogPointer++;
-                if (_LogBuffer.ElementSize < _TextBuffer.ElementSize)
+                if (_LogQueue.Count < _TextQueue.Length)
                     RePaint(--_LogPointer);
             }
         }

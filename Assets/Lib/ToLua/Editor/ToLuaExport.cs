@@ -644,7 +644,7 @@ public static class ToLuaExport
         {
             Type genericType = type.GetGenericTypeDefinition();
 
-            if (genericType == typeof(Dictionary<,>) && mi.Name == "Remove")
+            if (genericType == typeof(Dictionary<,>) && mi.Name == "Dequeue")
             {
                 MethodBase mb = (MethodBase)mi;
                 return mb.GetParameters().Length == 2;
@@ -3892,7 +3892,7 @@ public static class ToLuaExport
 
             if (ld != null && ld.func == func)
             {
-                obj = Delegate.Remove(obj, ds[i]);
+                obj = Delegate.Dequeue(obj, ds[i]);
                 state.DelayDispose(ld.func);
                 break;
             }
@@ -3907,7 +3907,7 @@ public static class ToLuaExport
 
         if (remove == null)
         {
-            obj = Delegate.Remove(obj, dg);
+            obj = Delegate.Dequeue(obj, dg);
             return obj;
         }
 
@@ -3920,7 +3920,7 @@ public static class ToLuaExport
 
             if (ld != null && ld == remove)
             {
-                obj = Delegate.Remove(obj, ds[i]);
+                obj = Delegate.Dequeue(obj, ds[i]);
                 state.DelayDispose(ld.func);
                 state.DelayDispose(ld.self);
                 break;

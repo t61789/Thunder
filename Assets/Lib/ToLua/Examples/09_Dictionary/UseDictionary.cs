@@ -53,7 +53,7 @@ public class UseDictionary : MonoBehaviour
                 print('----------------------over----------------------')                
 
                 print('kick '..map[2].name)
-                map:Remove(2)
+                map:Dequeue(2)
                 iter = map:GetEnumerator() 
 
                 while iter:MoveNext() do

@@ -58,7 +58,7 @@ public class ToLua_System_Delegate
 
                     if (ld != null && ld.func == func && ld.self == null)
                     {
-                        arg0 = Delegate.Remove(arg0, ds[i]);
+                        arg0 = Delegate.Dequeue(arg0, ds[i]);
                         state.DelayDispose(ld.func);
                         break;
                     }
