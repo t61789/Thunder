@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Thunder.Entity;
+using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.UI;
 using Thunder.Utility;

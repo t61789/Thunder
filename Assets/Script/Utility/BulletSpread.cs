@@ -121,6 +121,12 @@ namespace Thunder.Utility
             _SpreadCValue = Mathf.Lerp(SpreadC.x, SpreadC.y, OverHeatFactor.z);
         }
 
+        public void Reset()
+        {
+            OverHeatFactor = Vector3.zero;
+            SetSpreadScale();
+        }
+
         private float GetSpeed(float time, Vector2 limit, float fireInterval = 0)
         {
             if (fireInterval == 0) return (limit.y - limit.x) * Time.fixedDeltaTime / time;

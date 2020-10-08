@@ -9,6 +9,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 using Random = System.Random;
 
 namespace Thunder.Tool
@@ -1520,6 +1521,16 @@ namespace Thunder.Tool
             var temp = arr[index1];
             arr[index1] = arr[index2];
             arr[index2] = temp;
+        }
+
+        /// <summary>
+        /// 获取目标物体的一个克隆
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static GameObject GetInstantiate(this GameObject obj)
+        {
+            return Object.Instantiate(obj);
         }
     }
 }

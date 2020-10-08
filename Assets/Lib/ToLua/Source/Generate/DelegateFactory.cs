@@ -45,6 +45,7 @@ public class DelegateFactory
 		dict.Add(typeof(Thunder.Tool.BehaviorTree.ConditionNode.DelCondition), factory.Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
 		dict.Add(typeof(Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged), factory.Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
 		dict.Add(typeof(System.Action<Thunder.Entity.Weapon.AmmoGroup>), factory.System_Action_Thunder_Entity_Weapon_AmmoGroup);
+		dict.Add(typeof(System.Action<UnityEngine.Collider>), factory.System_Action_UnityEngine_Collider);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -74,6 +75,7 @@ public class DelegateFactory
 		DelegateTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Init(factory.Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
 		DelegateTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Init(factory.Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
 		DelegateTraits<System.Action<Thunder.Entity.Weapon.AmmoGroup>>.Init(factory.System_Action_Thunder_Entity_Weapon_AmmoGroup);
+		DelegateTraits<System.Action<UnityEngine.Collider>>.Init(factory.System_Action_UnityEngine_Collider);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -103,6 +105,7 @@ public class DelegateFactory
 		TypeTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Init(factory.Check_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition);
 		TypeTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Init(factory.Check_Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged);
 		TypeTraits<System.Action<Thunder.Entity.Weapon.AmmoGroup>>.Init(factory.Check_System_Action_Thunder_Entity_Weapon_AmmoGroup);
+		TypeTraits<System.Action<UnityEngine.Collider>>.Init(factory.Check_System_Action_UnityEngine_Collider);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -132,6 +135,7 @@ public class DelegateFactory
 		StackTraits<Thunder.Tool.BehaviorTree.ConditionNode.DelCondition>.Push = factory.Push_Thunder_Tool_BehaviorTree_ConditionNode_DelCondition;
 		StackTraits<Thunder.Game.FlyingSaucer.FlyingSaucerGame.DelDataChanged>.Push = factory.Push_Thunder_Game_FlyingSaucer_FlyingSaucerGame_DelDataChanged;
 		StackTraits<System.Action<Thunder.Entity.Weapon.AmmoGroup>>.Push = factory.Push_System_Action_Thunder_Entity_Weapon_AmmoGroup;
+		StackTraits<System.Action<UnityEngine.Collider>>.Push = factory.Push_System_Action_UnityEngine_Collider;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -1863,6 +1867,63 @@ public class DelegateFactory
 	}
 
 	void Push_System_Action_Thunder_Entity_Weapon_AmmoGroup(IntPtr L, System.Action<Thunder.Entity.Weapon.AmmoGroup> o)
+	{
+		ToLua.Push(L, o);
+	}
+
+	class System_Action_UnityEngine_Collider_Event : LuaDelegate
+	{
+		public System_Action_UnityEngine_Collider_Event(LuaFunction func) : base(func) { }
+		public System_Action_UnityEngine_Collider_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+
+		public void Call(UnityEngine.Collider param0)
+		{
+			func.BeginPCall();
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+
+		public void CallWithSelf(UnityEngine.Collider param0)
+		{
+			func.BeginPCall();
+			func.Push(self);
+			func.Push(param0);
+			func.PCall();
+			func.EndPCall();
+		}
+	}
+
+	public System.Action<UnityEngine.Collider> System_Action_UnityEngine_Collider(LuaFunction func, LuaTable self, bool flag)
+	{
+		if (func == null)
+		{
+			System.Action<UnityEngine.Collider> fn = delegate(UnityEngine.Collider param0) { };
+			return fn;
+		}
+
+		if(!flag)
+		{
+			System_Action_UnityEngine_Collider_Event target = new System_Action_UnityEngine_Collider_Event(func);
+			System.Action<UnityEngine.Collider> d = target.Call;
+			target.method = d.Method;
+			return d;
+		}
+		else
+		{
+			System_Action_UnityEngine_Collider_Event target = new System_Action_UnityEngine_Collider_Event(func, self);
+			System.Action<UnityEngine.Collider> d = target.CallWithSelf;
+			target.method = d.Method;
+			return d;
+		}
+	}
+
+	bool Check_System_Action_UnityEngine_Collider(IntPtr L, int pos)
+	{
+		return TypeChecker.CheckDelegateType(typeof(System.Action<UnityEngine.Collider>), L, pos);
+	}
+
+	void Push_System_Action_UnityEngine_Collider(IntPtr L, System.Action<UnityEngine.Collider> o)
 	{
 		ToLua.Push(L, o);
 	}

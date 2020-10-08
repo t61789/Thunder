@@ -16,6 +16,7 @@ namespace Thunder.Entity
         [SerializeField]
         private string _EntityName;
 
+        public Transform Trans => _Trans;
         protected Transform _Trans;
 
         protected virtual void Awake()

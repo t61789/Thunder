@@ -195,7 +195,7 @@ namespace Thunder.Sys
 
         public T GetValue<T>(string valuePath)
         {
-            return GetValue<T>(AssetId.CreateAssetId(valuePath, DefaultBundle));
+            return GetValue<T>(AssetId.Create(valuePath, DefaultBundle));
         }
 
         public T GetValue<T>(string bundleGroup, string bundle, string name)

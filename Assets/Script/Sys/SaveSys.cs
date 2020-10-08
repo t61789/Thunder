@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
 using Thunder.Utility;
 
 namespace Thunder.Sys
@@ -51,7 +53,12 @@ namespace Thunder.Sys
             if (Directory.Exists(savePath))
                 return false;
 
-            DataTable dirStruct = DataBaseSys.Ins["directory_struct"].Select(null, new (string, object)[] { ("id", "save") });
+            //DataTable dirStruct = DataBaseSys.Ins["directory_struct"].Select(null, new (string, object)[] { ("id", "save") });
+            var dirs = (
+                from row
+                    in DataBaseSys.Ins["directory_struct"]
+                where row["id"] == "save"
+                select row).ToArray();
 
             Stack<string> stack = new Stack<string>();
             stack.Push("");
@@ -66,8 +73,7 @@ namespace Thunder.Sys
             {
                 string node = stack.Pop();
 
-                DataTable curTable = dirStruct.Select(null, new (string, object)[] { (PARENT, Path.GetFileName(node)) });
-                foreach (var item in curTable)
+                foreach (var item in dirs.Where(x=>x[PARENT]==Path.GetFileName(node)))
                     stack.Push(node + Path.DirectorySeparatorChar + item[NAME] as string + item[EXTENSION] as string);
                 result.Add(node);
             }

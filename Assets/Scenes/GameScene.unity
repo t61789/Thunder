@@ -781,7 +781,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &1256596979
 BoxCollider:
@@ -1769,12 +1769,12 @@ PrefabInstance:
     - target: {fileID: 8418497469617955726, guid: 69e57acc97a09ae4b95974a49b448333,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 338.8
+      value: 339
       objectReference: {fileID: 0}
     - target: {fileID: 8418497469617955726, guid: 69e57acc97a09ae4b95974a49b448333,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -234.2
+      value: -234
       objectReference: {fileID: 0}
     - target: {fileID: 8418497469617955726, guid: 69e57acc97a09ae4b95974a49b448333,
         type: 3}

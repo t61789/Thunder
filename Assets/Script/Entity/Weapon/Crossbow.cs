@@ -88,5 +88,17 @@ namespace Thunder.Entity.Weapon
         {
             AmmoGroup.FillUp(false);
         }
+
+        public override void TakeOut()
+        {
+        }
+
+        public override void PutBack()
+        {
+        }
+
+        public override void Drop()
+        {
+        }
     }
 }

@@ -24,6 +24,11 @@ namespace Thunder.Entity.Weapon
             _Player.OnHanging.AddListener(PlayerHanging);
         }
 
+        protected virtual void OnEnable()
+        {
+            TakeOut();
+        }
+
         protected abstract void PlayerSquat(bool squatting, bool hanging);
 
         protected abstract void PlayerHanging(bool squatting, bool hanging);
@@ -33,6 +38,12 @@ namespace Thunder.Entity.Weapon
         public abstract void Reload();
 
         public abstract void FillAmmo();
+
+        public abstract void TakeOut();
+
+        public abstract void PutBack();
+
+        public abstract void Drop();
     }
 
     [Serializable]

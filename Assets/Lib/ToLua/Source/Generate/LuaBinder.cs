@@ -104,6 +104,7 @@ public static class LuaBinder
 		L.RegFunction("Action_System_Action_Thunder_UI_BaseUI", System_Action_System_Action_Thunder_UI_BaseUI);
 		L.RegFunction("Comparison_System_Action_Thunder_UI_BaseUI", System_Comparison_System_Action_Thunder_UI_BaseUI);
 		L.RegFunction("Action_Thunder_Entity_Weapon_AmmoGroup", System_Action_Thunder_Entity_Weapon_AmmoGroup);
+		L.RegFunction("Action_UnityEngine_Collider", System_Action_UnityEngine_Collider);
 		L.BeginModule("IO");
 		System_IO_DirectoryWrap.Register(L);
 		System_IO_PathWrap.Register(L);
@@ -128,6 +129,7 @@ public static class LuaBinder
 		Thunder_Utility_FreeLookCameraWrap.Register(L);
 		Thunder_Utility_GlobalBufferWrap.Register(L);
 		Thunder_Utility_GlobalSettingsWrap.Register(L);
+		Thunder_Utility_PackageWrap.Register(L);
 		Thunder_Utility_PathsWrap.Register(L);
 		Thunder_Utility_PlayerLockCameraWrap.Register(L);
 		Thunder_Utility_PostProcessingControllerWrap.Register(L);
@@ -221,7 +223,10 @@ public static class LuaBinder
 		Thunder_Sys_ControlSysWrap.Register(L);
 		Thunder_Sys_ControlInfoWrap.Register(L);
 		Thunder_Sys_DataBaseSysWrap.Register(L);
-		Thunder_Sys_DataTableWrap.Register(L);
+		Thunder_Sys_JsonTableRecieverWrap.Register(L);
+		Thunder_Sys_TableWrap.Register(L);
+		Thunder_Sys_RowWrap.Register(L);
+		Thunder_Sys_CellWrap.Register(L);
 		Thunder_Sys_EventBroadcasterWrap.Register(L);
 		Thunder_Sys_BaseEventWrap.Register(L);
 		Thunder_Sys_LuaSysWrap.Register(L);
@@ -259,13 +264,21 @@ public static class LuaBinder
 		Thunder_Entity_LuaScriptInterfaceWrap.Register(L);
 		Thunder_Entity_MuzzleFireWrap.Register(L);
 		Thunder_Entity_PeopleWrap.Register(L);
+		Thunder_Entity_PickupableItemWrap.Register(L);
 		Thunder_Entity_PlayerWrap.Register(L);
 		L.BeginModule("Weapon");
 		Thunder_Entity_Weapon_BaseWeaponWrap.Register(L);
 		Thunder_Entity_Weapon_AmmoGroupWrap.Register(L);
 		Thunder_Entity_Weapon_CrossbowWrap.Register(L);
 		Thunder_Entity_Weapon_CrossbowArrowWrap.Register(L);
+		Thunder_Entity_Weapon_LongSwordWrap.Register(L);
 		Thunder_Entity_Weapon_MachineGunWrap.Register(L);
+		Thunder_Entity_Weapon_BurstControllerWrap.Register(L);
+		Thunder_Entity_Weapon_RecoliControllerWrap.Register(L);
+		Thunder_Entity_Weapon_AimScopeControllerWrap.Register(L);
+		Thunder_Entity_Weapon_MeleeAttackAreaWrap.Register(L);
+		Thunder_Entity_Weapon_PickupableWeaponWrap.Register(L);
+		Thunder_Entity_Weapon_UnarmedWrap.Register(L);
 		L.EndModule();
 		L.EndModule();
 		L.BeginModule("Behavior");
@@ -862,6 +875,33 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<System.Action<Thunder.Entity.Weapon.AmmoGroup>>.Create(func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int System_Action_UnityEngine_Collider(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateTraits<System.Action<UnityEngine.Collider>>.Create(func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateTraits<System.Action<UnityEngine.Collider>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

@@ -98,7 +98,7 @@ end";
         }
         public void ExecuteFile(string path, bool require = true)
         {
-            ExecuteFile(AssetId.CreateAssetId(path, DefaultBundle), require);
+            ExecuteFile(AssetId.Create(path, DefaultBundle), require);
         }
 
         public void ExecuteFile(string bundleGroup, string bundle, string name, bool require = true)

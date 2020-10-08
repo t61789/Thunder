@@ -333,21 +333,30 @@ namespace Thunder.Sys
         private static readonly LRUCache<string, AssetId> _Cache = 
             new LRUCache<string, AssetId>(GlobalSettings.AssetIdCacheSize);
 
-        public AssetId(string bundleGroup, string bundle, string name, string defaultBundle)
+        public AssetId(string bundleGroup, string bundle, string name, string defaultBundle=null)
         {
             BundleGroup = Path.GetFullPath(bundleGroup ?? Paths.BundleBasePath);
             Bundle = bundle ?? defaultBundle;
             Name = name;
         }
 
-        public static AssetId CreateAssetId(string assetPath, string defaultBundle)
+        /// <summary>
+        /// 格式 [bundleGroup!][bundle!]asset
+        /// </summary>
+        /// <param name="assetPath"></param>
+        /// <param name="defaultBundle"></param>
+        /// <returns></returns>
+        public static AssetId Create(string assetPath, string defaultBundle=null)
         {
             if (_Cache.Contains(assetPath)) return _Cache.Get(assetPath);
-            var split = assetPath?.Split('!');
-            split = split ?? new string[1];
-            // ReSharper disable once PossibleNullReferenceException
+            var split = assetPath.Split('!');
+            split = split.Length == 0 ? new string[1] : split;
             Assert.IsTrue(split.Length <= 3, $"路径不正确：{assetPath}");
-            var result =  CreateAssetId(split, defaultBundle);
+
+            var newa = new string[3];
+            Array.Copy(split, 0, newa, 3 - split.Length, split.Length);
+            var result = new AssetId(newa[0], newa[1], newa[2], defaultBundle);
+            
             _Cache.Put(assetPath,result);
             return result;
         }
@@ -355,16 +364,6 @@ namespace Thunder.Sys
         public static bool BundleEquals(AssetId id1, AssetId id2)
         {
             return id1.BundleGroup == id2.BundleGroup && id1.Bundle == id2.Bundle;
-        }
-
-        private static AssetId CreateAssetId(string[] assetArr, string defaultBundle)
-        {
-            Assert.IsTrue(assetArr != null && assetArr.Length <= 3, "asset数组格式不正确");
-            var newa = new string[3];
-            // ReSharper disable once AssignNullToNotNullAttribute
-            // ReSharper disable once PossibleNullReferenceException
-            Array.Copy(assetArr, 0, newa, 3 - assetArr.Length, assetArr.Length);
-            return new AssetId(newa[0], newa[1], newa[2], defaultBundle);
         }
     }
 }

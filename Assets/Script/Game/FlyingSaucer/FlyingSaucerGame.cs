@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlTypes;
+using System.Linq;
 using Thunder.Entity;
 using Thunder.Sys;
 using Thunder.Tool;
@@ -52,8 +53,12 @@ namespace Thunder.Game.FlyingSaucer
 
         private void Start()
         {
-            LogPanel.Instance.LogSystem((string)(DataBaseSys.Ins.GetTable("message").SelectOnce("value", new (string, object)[]{
-                ("Key","flyingSaucerWelcome")})));
+            string message = (
+                from row
+                    in DataBaseSys.Ins["message"]
+                where row["Key"] == "flyingSaucerWelcome"
+                select row["value"]).FirstOrDefault();
+            LogPanel.Instance.LogSystem(message);
         }
 
         private void SaucerHit()

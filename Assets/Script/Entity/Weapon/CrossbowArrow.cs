@@ -64,7 +64,7 @@ namespace Thunder.Entity.Weapon
         {
             _HitSomeone = false;
             _LifeTimeCounter.Complete(false);
-            _Rb.useGravity = false;
+            _Rb.useGravity = false; 
         }
 
         public void BeforeOpRecycle()

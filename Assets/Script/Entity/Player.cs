@@ -1,7 +1,9 @@
 ﻿using BehaviorDesigner.Runtime.Tasks.Unity.UnityCharacterController;
+using Thnder.Utility;
 using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.Tool.BuffData;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -54,6 +56,8 @@ namespace Thunder.Entity
         public float JumpWeaponOffsetAngle = 7;
         public float SquatWalkSpeedScale = 0.5f;
 
+        private WeaponBelt _WeaponBelt;
+        private WeaponBeltInput _WeaponBeltInput;
         private Transform _PivotTrans;
         private Transform _WeaponAttachPoint;
         private Rigidbody _Rb;
@@ -86,6 +90,9 @@ namespace Thunder.Entity
 
             _TargetRot.y = _Trans.localEulerAngles.y;
             _TargetRot.x = _PivotTrans.localEulerAngles.x;
+
+            _WeaponBelt = new WeaponBelt(GlobalSettings.WeaponBeltSize, _WeaponAttachPoint);
+            _WeaponBeltInput = new WeaponBeltInput(_WeaponBelt);
         }
 
         private void Update()
@@ -124,6 +131,8 @@ namespace Thunder.Entity
                 Squat(false);
             if (ControlSys.Ins.RequireKey("Jump", 0).Down && Movable)
                 Jump();
+
+            _WeaponBeltInput.InputCheck();
         }
 
         private static Vector2 EulerAdd(Vector2 e1, Vector2 e2)

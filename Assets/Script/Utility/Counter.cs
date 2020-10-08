@@ -32,6 +32,11 @@ namespace Thunder.Utility
         /// </summary>
         public abstract bool Completed { get; }
 
+        /// <summary>
+        /// 计时上限
+        /// </summary>
+        public float TimeLimit => _TimeLimit;
+
         protected float _TimeLimit;
         protected float _TimeCountStart;
 
