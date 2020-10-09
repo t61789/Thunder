@@ -19,8 +19,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-using System;
+using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class ToLuaNode<T>
 {
@@ -31,8 +32,8 @@ public class ToLuaNode<T>
     public int layer;
 }
 
-public class ToLuaTree<T>
-{
+public class ToLuaTree<T> 
+{       
     public ToLuaNode<T> _root = null;
     private List<ToLuaNode<T>> _list = null;
 
@@ -92,7 +93,7 @@ public class ToLuaTree<T>
         begin(node);
 
         for (int i = 0; i < node.childs.Count; i++)
-        {
+        {            
             DepthFirstTraversal(begin, end, node.childs[i]);
         }
 

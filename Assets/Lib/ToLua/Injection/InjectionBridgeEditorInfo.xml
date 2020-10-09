@@ -118,7 +118,7 @@
     <Method Name="GetObjectData" PublishedName="GetObjectData" Signature="GetObjectData-IntPtr" FullSignature="System.Int32 System_Collections_Generic_Dictionary_int_TestAccountWrap::GetObjectData(System.IntPtr)" Index="66" />
     <Method Name="OnDeserialization" PublishedName="OnDeserialization" Signature="OnDeserialization-IntPtr" FullSignature="System.Int32 System_Collections_Generic_Dictionary_int_TestAccountWrap::OnDeserialization(System.IntPtr)" Index="67" />
     <Method Name="Register" PublishedName="Register" Signature="Register-LuaState" FullSignature="System.Void System_Collections_Generic_Dictionary_int_TestAccountWrap::Register(LuaInterface.LuaState)" Index="55" />
-    <Method Name="Dequeue" PublishedName="Dequeue" Signature="Dequeue-IntPtr" FullSignature="System.Int32 System_Collections_Generic_Dictionary_int_TestAccountWrap::Dequeue(System.IntPtr)" Index="68" />
+    <Method Name="Remove" PublishedName="Remove" Signature="Remove-IntPtr" FullSignature="System.Int32 System_Collections_Generic_Dictionary_int_TestAccountWrap::Remove(System.IntPtr)" Index="68" />
     <Method Name="set_Item" PublishedName="set_Item" Signature="set_Item-IntPtr" FullSignature="System.Int32 System_Collections_Generic_Dictionary_int_TestAccountWrap::set_Item(System.IntPtr)" Index="61" />
     <Method Name="TryGetValue" PublishedName="TryGetValue" Signature="TryGetValue-IntPtr" FullSignature="System.Int32 System_Collections_Generic_Dictionary_int_TestAccountWrap::TryGetValue(System.IntPtr)" Index="69" />
   </Type>

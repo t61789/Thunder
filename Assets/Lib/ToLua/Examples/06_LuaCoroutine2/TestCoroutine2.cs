@@ -1,8 +1,9 @@
-﻿using LuaInterface;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
+using LuaInterface;
 
 //两套协同勿交叉使用，类unity原生，大量使用效率低
-public class TestCoroutine2 : LuaClient
+public class TestCoroutine2 : LuaClient 
 {
     string script =
     @"
@@ -75,7 +76,7 @@ public class TestCoroutine2 : LuaClient
 
     void Start()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -90,7 +91,7 @@ public class TestCoroutine2 : LuaClient
 
     new void OnApplicationQuit()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);
@@ -102,7 +103,7 @@ public class TestCoroutine2 : LuaClient
     {
         GUI.Label(new Rect(Screen.width / 2 - 300, Screen.height / 2 - 200, 600, 400), tips);
 
-        if (GUI.Button(new Rect(50, 50, 120, 45), "Start SimpleCounter"))
+        if (GUI.Button(new Rect(50, 50, 120, 45), "Start Counter"))
         {
             if (!beStart)
             {
@@ -113,7 +114,7 @@ public class TestCoroutine2 : LuaClient
                 func.Dispose();
             }
         }
-        else if (GUI.Button(new Rect(50, 150, 120, 45), "Stop SimpleCounter"))
+        else if (GUI.Button(new Rect(50, 150, 120, 45), "Stop Counter"))
         {
             if (beStart)
             {

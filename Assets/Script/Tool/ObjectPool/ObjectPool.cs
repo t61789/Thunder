@@ -226,7 +226,7 @@ namespace Thunder.Tool.ObjectPool
             {
                 if (_ObjectQueue.Count == 0) return;
                 IObjectPool aop = _ObjectQueue.Dequeue();
-                aop.AfterOpDestroy();
+                aop.OpDestroy();
             }
 
             public bool QueueIsEmpty()
@@ -304,7 +304,7 @@ namespace Thunder.Tool.ObjectPool
             }
 
             (aop as MonoBehaviour)?.gameObject.SetActive(true);
-            aop.BeforeOpReset();
+            aop.OpReset();
 
             T result = aop as T;
             init?.Invoke(result);
@@ -339,7 +339,7 @@ namespace Thunder.Tool.ObjectPool
 
         public void Recycle(IObjectPool obj)
         {
-            obj.BeforeOpRecycle();
+            obj.OpRecycle();
             GameObject mono = (obj as MonoBehaviour)?.gameObject;
             mono?.SetActive(false);
             mono?.transform.SetParent(Sys.Stable.Container);
@@ -394,8 +394,8 @@ namespace Thunder.Tool.ObjectPool
     public interface IObjectPool
     {
         AssetId AssetId { get; set; }
-        void BeforeOpReset();
-        void BeforeOpRecycle();
-        void AfterOpDestroy();
+        void OpReset();
+        void OpRecycle();
+        void OpDestroy();
     }
 }

@@ -1,147 +1,252 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using BehaviorDesigner.Runtime;
 using Thunder.Entity.Weapon;
 using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.Utility;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Thnder.Utility
 {
-    public class  WeaponBelt
+    public class WeaponBelt
     {
-        // todo 亟待测试，bug可能很多
-        private readonly Transform _WeaponContainer;
-        private int _CurWeapon;
-        private readonly BaseWeapon[] _Belt;
-        private int _PreWeapon = -1;
-
-        private const int STATIC_INDEX = 0;
-
-        public WeaponBelt(int capacity,Transform weaponContainer)
+        private readonly struct WeaponInfo
         {
-            _Belt = new BaseWeapon[capacity];
-            _WeaponContainer = weaponContainer;
+            public readonly string Type;
+            public readonly string PrefabPath;
 
-            AddWeapon(STATIC_INDEX,GlobalSettings.UnarmedAssetPath);
-            _CurWeapon = STATIC_INDEX;
+            public WeaponInfo(string type, string prefabPath)
+            {
+                Type = type;
+                PrefabPath = prefabPath;
+            }
         }
 
+        // todo 亟待测试，bug可能很多
+        private readonly Transform _WeaponContainer;
+        private readonly WeaponBeltCell[] _Belt;
+        private int _CurWeapon = -1;
+        private int _PreWeapon = -1;
+        private readonly BaseWeapon _Unarmed;
+        private const int SHIELD_VALUE = 0;
+        private readonly Dictionary<int, WeaponInfo> _WeaponInfoDic;
+        private readonly Dictionary<string, int> _Keys;
+
+        public WeaponBelt(string[] cellTypes, Transform weaponContainer)
+        {
+            var builder = new StringBuilder();
+            const string switc = "switch";
+            _Keys = new Dictionary<string, int>();
+            _Belt = new WeaponBeltCell[cellTypes.Length];
+            for (int i = 0; i < cellTypes.Length; i++)
+            {
+                _Belt[i].Type = cellTypes[i];
+
+                builder.Clear();
+                builder.Append(switc);
+                var str = cellTypes[i];
+                if (str.Length > 0 && str[0] >= 'a' && str[0] <= 'z')
+                {
+                    builder.Append(str[0] - ('a' - 'A'));
+                    if(str.Length>1)
+                        builder.Append(str.Substring(1));
+                }
+                else
+                    builder.Append(str);
+                _Keys.Add(builder.ToString(),i);
+            }
+
+            _Unarmed = CreateWeapon(_WeaponInfoDic[GlobalSettings.UnarmedId].PrefabPath);
+
+            _WeaponContainer = weaponContainer;
+            _WeaponInfoDic = QueryDic();
+        }
+
+        /// <summary>
+        /// 切换为目标单元格内的武器
+        /// </summary>
+        /// <param name="index"></param>
         public void SwitchWeapon(int index)
         {
-            if (_Belt[index] == null || index==_CurWeapon) return;
+            if (_Belt[index].Weapon == null || index == _CurWeapon) return;
             PutBackWeapon(_CurWeapon);
             TakeOutWeapon(index);
             _PreWeapon = _CurWeapon;
             _CurWeapon = index;
         }
 
+        /// <summary>
+        /// 切换为之前所持的武器
+        /// </summary>
         public void SwitchWeaponToPre()
         {
             if (_PreWeapon == -1) return;
             SwitchWeapon(_PreWeapon);
         }
 
-        public void AddWeapon(int index, string prefabPath)
+        /// <summary>
+        /// 顺序查找第一个可以放入的单元格
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>是否成功放入</returns>
+        public bool AddWeapon(int id)
         {
-            if (_Belt[index]!=null)
-                DestroyWeapon(index);
-            var newWeapon = BundleSys.Ins.GetAsset<GameObject>(prefabPath).
-                GetInstantiate().GetComponent<BaseWeapon>();
+            var info = _WeaponInfoDic[id];
+            var type = info.Type;
+            int index = -1;
+            for(int i=0;i<_Belt.Length;i++)
+                if (_Belt[i].Type == type && _Belt[i].Weapon == null)
+                {
+                    index = i;
+                    break;
+                }
+            if (index == -1) return false;
+
+            var newWeapon = CreateWeapon(info.PrefabPath);
             newWeapon.Trans.SetParent(_WeaponContainer);
-            _Belt[index] = newWeapon;
-            if(index==_CurWeapon)
-                TakeOutWeapon(index);
-            else
-                PutBackWeapon(index);
+            _Belt[index].Weapon = newWeapon;
+            if(_CurWeapon==-1)
+                SwitchWeapon(index);
+            return true;
         }
 
-        public void DropWeapon()
+        /// <summary>
+        /// 设定指定位置的武器
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="offset">若有多个相同类型的槽位，offset指示第几个槽位，从0开始</param>
+        /// <returns>被覆盖的武器id，-1为空或是未找到可用槽位</returns>
+        public int SetWeapon(int id, int offset=0)
         {
-            if (_CurWeapon == STATIC_INDEX) return;
-            DestroyWeapon(_CurWeapon);
-            if(_PreWeapon!=-1)
-                TakeOutWeapon(_PreWeapon);
-            else
-                while (_Belt[_CurWeapon] == null)
+            var info = _WeaponInfoDic[id];
+            int index = 0;
+            for (; index < _Belt.Length; index++)
+                if (_Belt[index].Type == info.Type)
                 {
-                    _CurWeapon++;
-                    _CurWeapon %= _Belt.Length;
+                    offset--;
+                    if (offset < 0)
+                        break;
                 }
 
-            _PreWeapon = -1;
-            TakeOutWeapon(_CurWeapon);
+            if (index == _Belt.Length) return -1;
 
-            //todo 丢出可碰撞的模型
+            int result;
+            if (_Belt[index].Weapon == null)
+                result = -1;
+            else 
+                result = _Belt[index].Weapon.ItemId;
+            if (index == _CurWeapon) DestroyWeapon(index);
+            _Belt[index].Weapon = CreateWeapon(info.PrefabPath);
+            return result;
         }
 
-        private void TakeOutWeapon(int index)
+        /// <summary>
+        /// 丢弃当前所持的武器
+        /// </summary>
+        public void DropCurrentWeapon()
         {
-            PutBackWeapon(_CurWeapon);
-            _Belt[index].gameObject.SetActive(true);
-            _Belt[index].TakeOut();
+            if (_CurWeapon == -1) return;
+
+
+            int index = _CurWeapon;
+            int saveId = _Belt[_CurWeapon].Weapon.ItemId;
+            DestroyWeapon(_CurWeapon);
+            if (_PreWeapon != -1)
+                TakeOutWeapon(_PreWeapon);
+            else
+            {
+                do index = (index + 1).Repeat(_Belt.Length);
+                while (_Belt[index].Weapon == null && index!=_CurWeapon);
+                if (index == _CurWeapon) index = -1;
+            }
+
+            _PreWeapon = -1;
+            TakeOutWeapon(index);
+
+            PublicEvents.DropItem?.Invoke(saveId);
+
             _CurWeapon = index;
         }
 
-        private void PutBackWeapon(int index)
-        {
-            _Belt[index].PutBack();
-            _Belt[index].gameObject.SetActive(false);
-        }
-
-        private void DestroyWeapon(int index)
-        {
-            if(_CurWeapon==index)
-                PutBackWeapon(index);
-            Object.Destroy(_Belt[index].gameObject);
-            _Belt[index] = null;
-        }
-    }
-
-    public class WeaponBeltInput
-    {
-        private readonly WeaponBelt _WeaponBelt;
-        private readonly string[] _KeyDic;
-        private const int SHIELD_VALUE = 0;
-
-        public WeaponBeltInput(WeaponBelt weaponBelt)
-        {
-            _WeaponBelt = weaponBelt;
-            _KeyDic = new []
-            {
-                GlobalSettings.MainWeapon1KeyName,
-                GlobalSettings.MainWeapon2KeyName,
-                GlobalSettings.SecondaryKeyName,
-                GlobalSettings.MeleeWeaponKeyName,
-                GlobalSettings.ThrowingWeaponKeyName
-            };
-        }
-
+        /// <summary>
+        /// 检测玩家输入，做出相应操作
+        /// </summary>
         public void InputCheck()
         {
             if (ControlSys.Ins.RequireKey(GlobalSettings.PreWeaponKeyName, SHIELD_VALUE).Down)
-            {
-                _WeaponBelt.SwitchWeaponToPre();
-            }
+                SwitchWeaponToPre();
             else
-                for (int i=0;i<_KeyDic.Length;i++)
+                foreach (var pairs in
+                    _Keys.Where(pairs =>
+                        ControlSys.Ins.RequireKey(pairs.Key, SHIELD_VALUE).Down))
                 {
-                    if (!ControlSys.Ins.RequireKey(_KeyDic[i], SHIELD_VALUE).Down) continue;
-                    _WeaponBelt.SwitchWeapon(i+1);
+                    SwitchWeapon(pairs.Value);
                     break;
                 }
 
             if (ControlSys.Ins.RequireKey(GlobalSettings.DropWeaponKeyName, SHIELD_VALUE).Down)
+                DropCurrentWeapon();
+        }
+
+        private void TakeOutWeapon(int index)
+        {
+            if (index == _CurWeapon) return;
+            var weapon = index == -1 ? _Unarmed : _Belt[index].Weapon;
+            weapon.gameObject.SetActive(true);
+            weapon.TakeOut();
+        }
+
+        private void PutBackWeapon(int index)
+        {
+            var weapon = index == -1 ? _Unarmed : _Belt[index].Weapon;
+            weapon.PutBack();
+            weapon.gameObject.SetActive(false);
+        }
+
+        private void DestroyWeapon(int index)
+        {
+            if (index == -1) return;
+
+            if (_CurWeapon == index)
             {
-                _WeaponBelt.DropWeapon();
+                _Belt[index].Weapon.PutBack();
+                _Belt[index].Weapon.gameObject.SetActive(false);
             }
+
+            Object.Destroy(_Belt[index].Weapon.gameObject);
+            _Belt[index].Weapon = null;
+        }
+
+        private static BaseWeapon CreateWeapon(string prefabPath)
+        {
+            return BundleSys.Ins.GetAsset<GameObject>(prefabPath).
+                GetInstantiate().GetComponent<BaseWeapon>();
+        }
+
+        private static Dictionary<int, WeaponInfo> QueryDic()
+        {
+            var selected1 =
+                from row in DataBaseSys.Ins["item_info"]
+                where row["type"] == "weapon"
+                select new { id = (int)row["id"], prefabPath = (string)row["prefab_path"] };
+            var selected2 =
+                from row in DataBaseSys.Ins["weapon_info"]
+                join row1 in selected1 on row["id"] equals row1.id
+                select new { row1.id, info = new WeaponInfo(row["type"], row1.prefabPath) };
+            return selected2.ToDictionary(x => x.id, x => x.info);
+        }
+    }
+
+    public struct WeaponBeltCell
+    {
+        public string Type;
+        public BaseWeapon Weapon;
+
+        public WeaponBeltCell(string type, BaseWeapon weapon)
+        {
+            Type = type;
+            Weapon = weapon;
         }
     }
 }

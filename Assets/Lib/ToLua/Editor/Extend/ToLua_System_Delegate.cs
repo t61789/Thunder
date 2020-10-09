@@ -1,7 +1,8 @@
-﻿using LuaInterface;
+﻿using System;
+using LuaInterface;
 
 public class ToLua_System_Delegate
-{
+{    
     public static string AdditionNameSpace = "System.Collections.Generic";
 
     [NoToLuaAttribute]
@@ -58,7 +59,7 @@ public class ToLua_System_Delegate
 
                     if (ld != null && ld.func == func && ld.self == null)
                     {
-                        arg0 = Delegate.Dequeue(arg0, ds[i]);
+                        arg0 = Delegate.Remove(arg0, ds[i]);
                         state.DelayDispose(ld.func);
                         break;
                     }

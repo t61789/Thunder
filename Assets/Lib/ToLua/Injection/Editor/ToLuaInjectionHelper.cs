@@ -1,9 +1,10 @@
 ﻿#if ENABLE_LUA_INJECTION
-using Mono.Cecil;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
 using Unity.CecilTools;
+using System.Linq;
 
 [Flags]
 public enum InjectFilter
@@ -108,7 +109,7 @@ public static class ToLuaInjectionHelper
             {
                 if (baseType.IsGenericInstance)
                 {
-                    MethodReference baseMethodRef = baseType.Module.ImportReference(baseMethodDef);
+                    MethodReference baseMethodRef = baseType.Module.Import(baseMethodDef);
                     var baseTypeInstance = (GenericInstanceType)baseType;
                     return baseMethodRef.MakeGenericMethod(baseTypeInstance.GenericArguments.ToArray());
                 }
@@ -116,7 +117,7 @@ public static class ToLuaInjectionHelper
             }
             else baseMethodDef = null;
 
-            baseType = baseTypeDef.BaseType;
+           baseType = baseTypeDef.BaseType;
         }
 
         return baseMethodDef;

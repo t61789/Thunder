@@ -1,7 +1,8 @@
-﻿using LuaInterface;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
+using LuaInterface;
 
-public class AccessingEnum : MonoBehaviour
+public class AccessingEnum : MonoBehaviour 
 {
     string script =
         @"
@@ -37,9 +38,9 @@ public class AccessingEnum : MonoBehaviour
 
     LuaState state = null;
 
-    void Start()
+    void Start () 
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -57,16 +58,16 @@ public class AccessingEnum : MonoBehaviour
         func.Push(Space.World);
         func.PCall();
         func.EndPCall();
-        func.Dispose();
+        func.Dispose();        
         func = null;
-    }
+	}
     void OnApplicationQuit()
     {
         state.CheckTop();
         state.Dispose();
         state = null;
 
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);

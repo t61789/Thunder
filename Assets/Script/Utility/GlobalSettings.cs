@@ -1,21 +1,41 @@
-﻿namespace Thunder.Utility
+﻿using Newtonsoft.Json;
+using Thunder.Sys;
+using UnityEngine;
+
+namespace Thunder.Utility
 {
     public class GlobalSettings
     {
         public const string DefaultCamp = "Unknown";
         public const int CampMapSize = 64;
-        public const float CampMaxFriendliness = 100;
-        public const float CampNeutralValue = 30;
+        public const int CampMaxFriendliness = 100;
+        public const int CampNeutralValue = 30;
         public const int AssetIdCacheSize = 20;
         public const int PackageItemInfoBuffer = 10;
-        
-        public const int WeaponBeltSize = 6;
-        public const string MainWeapon1KeyName = "switchMainWeapon1";
-        public const string MainWeapon2KeyName = "switchMainWeapon2";
-        public const string SecondaryKeyName = "switchSecondaryWeapon";
-        public const string MeleeWeaponKeyName = "switchMeleeWeapon";
-        public const string ThrowingWeaponKeyName = "switchThrowingWeapon";
-        public const string PreWeaponKeyName = "swichPreWeapon";
+
+        public const string MainWeaponType = "mainWeapon";
+        public const string SecondaryWeaponType = "secondaryWeapon";
+        public const string MeleeWeaponType = "meleeWeapon";
+        public const string ThrowingWeaponType = "throwingWeapon";
+        public static string[] WeaponTypes = 
+        {
+            MainWeaponType,
+            SecondaryWeaponType,
+            MeleeWeaponType,
+            ThrowingWeaponType,
+        };
+
+        // 切换按键命名规则：switch+首字母大写的weapontype，在尾部添加初始为0的数字
+        // 重复则+1
+        public static string[] WeaponBeltCellTypes =
+        {
+            MainWeaponType,
+            MainWeaponType,
+            SecondaryWeaponType,
+            MeleeWeaponType,
+            ThrowingWeaponType
+        };
+        public const string PreWeaponKeyName = "switchPreWeapon";
         public const string DropWeaponKeyName = "dropWeapon";
 
         public const string FireKeyName = "Fire1";
@@ -25,5 +45,9 @@
         public const string CrossbowArrowAssetPath = "crossbowArrow";
         public const string UnarmedAssetPath = "unarmed";
         public const string MeleeAttackAreaAssetPath = "meleeAttackArea";
+
+        public const string ItemInfoTableName = "item_info";
+
+        public const int UnarmedId = 1;
     }
 }

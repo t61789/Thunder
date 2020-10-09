@@ -1,6 +1,6 @@
-﻿using LuaInterface;
+﻿using UnityEngine;
+using LuaInterface;
 using System;
-using UnityEngine;
 using Debugger = LuaInterface.Debugger;
 
 namespace LuaInterface
@@ -11,7 +11,7 @@ namespace LuaInterface
     }
 }
 
-public class PassStruct : LuaClient
+public class PassStruct : LuaClient 
 {
     private string script =
         @"
@@ -80,7 +80,7 @@ public class PassStruct : LuaClient
 
     bool CheckRectType(IntPtr L, int pos)
     {
-        return LuaDLL.tolua_getvaluetype(L, pos) == LuaValueType.Rect;
+        return LuaDLL.tolua_getvaluetype(L, pos) == LuaValueType.Rect;        
     }
 
     bool CheckNullRectType(IntPtr L, int pos)
@@ -114,7 +114,7 @@ public class PassStruct : LuaClient
     new void OnApplicationQuit()
     {
         base.OnApplicationQuit();
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);
@@ -123,7 +123,7 @@ public class PassStruct : LuaClient
 
     new void Awake()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -158,7 +158,7 @@ public class PassStruct : LuaClient
     }
 
     LuaFunction NewRect = null;
-    LuaFunction GetRect = null;
+    LuaFunction GetRect = null;    
 
     protected override LuaFileUtils InitLoader()
     {
@@ -167,7 +167,7 @@ public class PassStruct : LuaClient
 
     private void OnGUI()
     {
-        GUI.Label(new Rect(Screen.width / 2 - 220, Screen.height / 2 - 200, 400, 400), tips);
+        GUI.Label(new Rect(Screen.width / 2 - 220, Screen.height / 2 - 200, 400, 400), tips);        
     }
 
     //屏蔽，例子不需要运行

@@ -1,13 +1,18 @@
 ﻿using System;
 using BehaviorDesigner.Runtime.Tasks;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Thunder.Entity.Weapon
 {
-    public abstract class BaseWeapon : BaseEntity
+    public abstract class BaseWeapon : BaseEntity,IItem
     {
         public static BaseWeapon Ins;
+        public int ItemId => _ItemId;
+
+        [SerializeField]
+        private int _ItemId;
         public AmmoGroup AmmoGroup;
 
         protected Player _Player;

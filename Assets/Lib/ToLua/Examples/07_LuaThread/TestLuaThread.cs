@@ -1,7 +1,8 @@
-﻿using LuaInterface;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
+using LuaInterface;
 
-public class TestLuaThread : MonoBehaviour
+public class TestLuaThread : MonoBehaviour 
 {
     string script =
         @"
@@ -37,9 +38,9 @@ public class TestLuaThread : MonoBehaviour
     LuaThread thread = null;
     string tips = null;
 
-    void Start()
+    void Start () 
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -60,7 +61,7 @@ public class TestLuaThread : MonoBehaviour
         func = null;
 
         thread.Resume(10);
-    }
+	}
 
     void OnApplicationQuit()
     {
@@ -72,7 +73,7 @@ public class TestLuaThread : MonoBehaviour
 
         state.Dispose();
         state = null;
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);
@@ -100,15 +101,15 @@ public class TestLuaThread : MonoBehaviour
             int ret = -1;
 
             if (thread != null && thread.Resume(true, out ret) == (int)LuaThreadStatus.LUA_YIELD)
-            {
+            {                
                 Debugger.Log("lua yield: " + ret);
             }
         }
         else if (GUI.Button(new Rect(10, 150, 120, 40), "Close Thread"))
         {
             if (thread != null)
-            {
-                thread.Dispose();
+            {                
+                thread.Dispose();                
                 thread = null;
             }
         }

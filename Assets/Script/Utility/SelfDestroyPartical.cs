@@ -26,16 +26,16 @@ namespace Thunder.Utility
                 ObjectPool.Ins.Recycle(this);
         }
 
-        public void BeforeOpReset()
+        public void OpReset()
         {
 
         }
 
-        public void BeforeOpRecycle()
+        public void OpRecycle()
         {
         }
 
-        public void AfterOpDestroy()
+        public void OpDestroy()
         {
 
         }

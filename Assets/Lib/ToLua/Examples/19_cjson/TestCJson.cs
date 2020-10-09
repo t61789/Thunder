@@ -1,5 +1,6 @@
-﻿using LuaInterface;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
+using LuaInterface;
 
 public class TestCJson : LuaClient
 {
@@ -17,16 +18,16 @@ public class TestCJson : LuaClient
     {
         return new LuaResLoader();
     }
-
+    
     protected override void OpenLibs()
     {
         base.OpenLibs();
-        OpenCJson();
+        OpenCJson();                   
     }
 
     protected override void OnLoadFinished()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -41,7 +42,7 @@ public class TestCJson : LuaClient
         func.Push(str);
         func.PCall();
         func.EndPCall();
-        func.Dispose();
+        func.Dispose();                        
     }
 
     //屏蔽，例子不需要运行
@@ -59,7 +60,7 @@ public class TestCJson : LuaClient
     {
         base.OnApplicationQuit();
 
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020	
+#if UNITY_5 || UNITY_2017 || UNITY_2018	
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);

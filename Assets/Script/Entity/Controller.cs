@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Thunder.Entity
 {
-    public class Controller : LuaScriptInterface
+    public class Controller : LuaInterface
     {
         public string ControllerName
         {

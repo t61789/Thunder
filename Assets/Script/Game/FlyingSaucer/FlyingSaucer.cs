@@ -50,17 +50,17 @@ namespace Thunder.Game.FlyingSaucer
             PublicEvents.FlyingSaucerHit?.Invoke();
         }
 
-        public void BeforeOpReset()
+        public void OpReset()
         {
 
         }
 
-        public void BeforeOpRecycle()
+        public void OpRecycle()
         {
 
         }
 
-        public void AfterOpDestroy()
+        public void OpDestroy()
         {
 
         }

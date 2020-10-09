@@ -1,11 +1,12 @@
-﻿using LuaInterface;
+﻿using UnityEngine;
 using System;
-using UnityEngine;
+using System.Collections;
+using LuaInterface;
 
 public sealed class TestEventListener : MonoBehaviour
 {
     public delegate void VoidDelegate(GameObject go);
-    public delegate void OnClick(GameObject go);
+    public delegate void OnClick(GameObject go);    
     public OnClick onClick = delegate { };
 
     public event OnClick onClickEvent = delegate { };
@@ -16,7 +17,7 @@ public sealed class TestEventListener : MonoBehaviour
     {
         Debugger.Log("SetOnFinished OnClick");
     }
-
+    
     public void SetOnFinished(VoidDelegate click)
     {
         Debugger.Log("SetOnFinished VoidDelegate");

@@ -20,9 +20,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 using System;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace LuaInterface
 {
@@ -41,34 +43,34 @@ namespace LuaInterface
     //让byte[] 压入成为lua string 而不是数组 userdata
     //也可以使用LuaByteBufferAttribute来标记byte[]
     public struct LuaByteBuffer
-    {
+    {        
         public LuaByteBuffer(IntPtr source, int len)
-            : this()
+            : this()            
         {
             buffer = new byte[len];
             Length = len;
             Marshal.Copy(source, buffer, 0, len);
         }
-
+        
         public LuaByteBuffer(byte[] buf)
             : this()
         {
             buffer = buf;
-            Length = buf.Length;
+            Length = buf.Length;            
         }
 
         public LuaByteBuffer(byte[] buf, int len)
             : this()
-        {
+        {            
             buffer = buf;
             Length = len;
         }
 
-        public LuaByteBuffer(System.IO.MemoryStream stream)
-            : this()
+        public LuaByteBuffer(System.IO.MemoryStream stream)   
+            : this()         
         {
             buffer = stream.GetBuffer();
-            Length = (int)stream.Length;
+            Length = (int)stream.Length;            
         }
 
         public static implicit operator LuaByteBuffer(System.IO.MemoryStream stream)
@@ -76,14 +78,14 @@ namespace LuaInterface
             return new LuaByteBuffer(stream);
         }
 
-        public byte[] buffer;
+        public byte[] buffer;    
 
         public int Length
         {
             get;
             private set;
-        }
-    }
+        }    
+    }   
 
     public class LuaOut<T> { }
     //public class LuaOutMetatable {}
@@ -96,7 +98,7 @@ namespace LuaInterface
     {
         public LuaFunction func = null;
         public LuaTable self = null;
-        public MethodInfo method = null;
+        public MethodInfo method = null; 
 
         public LuaDelegate(LuaFunction func)
         {
@@ -128,7 +130,7 @@ namespace LuaInterface
         }
 
         public override bool Equals(object o)
-        {
+        {                                    
             if (o == null) return func == null && self == null;
             LuaDelegate ld = o as LuaDelegate;
 
@@ -168,18 +170,18 @@ namespace LuaInterface
             return a.func != null;
         }
 
-        public static bool operator ==(LuaDelegate a, LuaDelegate b)
+        public static bool operator == (LuaDelegate a, LuaDelegate b)
         {
             return CompareLuaDelegate(a, b);
         }
 
-        public static bool operator !=(LuaDelegate a, LuaDelegate b)
+        public static bool operator != (LuaDelegate a, LuaDelegate b)
         {
             return !CompareLuaDelegate(a, b);
         }
         public override int GetHashCode()
         {
-            return RuntimeHelpers.GetHashCode(this);
+            return RuntimeHelpers.GetHashCode(this);            
         }
     }
 
@@ -191,7 +193,7 @@ namespace LuaInterface
             int count = t.GetArrayRank();
 
             if (count == 1)
-            {
+            {                
                 return "[]";
             }
 
@@ -216,7 +218,7 @@ namespace LuaInterface
             {
                 string str = GetTypeName(t.GetElementType());
                 str += GetArrayRank(t);
-                return str;
+                return str;                
             }
             else if (t.IsByRef)
             {
@@ -392,7 +394,7 @@ namespace LuaInterface
             {
                 return t.ToString();
             }
-        }
+        }        
 
         public static double ToDouble(object obj)
         {
@@ -437,7 +439,7 @@ namespace LuaInterface
             {
                 char c = Convert.ToChar(obj);
                 return (double)c;
-            }
+            }            
             else if (t == typeof(short))
             {
                 Int16 n = Convert.ToInt16(obj);
@@ -469,7 +471,7 @@ namespace LuaInterface
 
             return baseType;
         }
-    }
+    }       
 
     /*[NoToLuaAttribute]
     public struct LuaInteger64

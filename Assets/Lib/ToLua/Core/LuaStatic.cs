@@ -20,6 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 using System;
+using System.IO;
+using System.Text;
 
 namespace LuaInterface
 {
@@ -96,7 +98,7 @@ namespace LuaInterface
             LuaState state = LuaState.Get(L);
             LuaDLL.lua_getref(L, state.PackBounds);
         }
-
+        
         public static int GetArrayMetatable(IntPtr L)
         {
             LuaState state = LuaState.Get(L);
@@ -107,7 +109,7 @@ namespace LuaInterface
         {
             LuaState state = LuaState.Get(L);
             return state.TypeMetatable;
-        }
+        }        
 
         public static int GetDelegateMetatable(IntPtr L)
         {
@@ -132,7 +134,7 @@ namespace LuaInterface
             LuaState state = LuaState.Get(L);
             obj = state.GetEnumObj(e);
             return state.EnumMetatable;
-        }
+        }        
 
         public static LuaCSFunction GetPreModule(IntPtr L, Type t)
         {

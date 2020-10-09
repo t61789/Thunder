@@ -264,11 +264,12 @@ public static class LuaBinder
 		Thunder_Entity_BulletHoleWrap.Register(L);
 		Thunder_Entity_BulletHoleManagerWrap.Register(L);
 		Thunder_Entity_ControllerWrap.Register(L);
-		Thunder_Entity_LuaScriptInterfaceWrap.Register(L);
+		Thunder_Entity_LuaInterfaceWrap.Register(L);
 		Thunder_Entity_MuzzleFireWrap.Register(L);
 		Thunder_Entity_PeopleWrap.Register(L);
 		Thunder_Entity_PickupableItemWrap.Register(L);
 		Thunder_Entity_PlayerWrap.Register(L);
+		Thunder_Entity_DropperWrap.Register(L);
 		L.BeginModule("Weapon");
 		Thunder_Entity_Weapon_BaseWeaponWrap.Register(L);
 		Thunder_Entity_Weapon_AmmoGroupWrap.Register(L);
@@ -280,7 +281,6 @@ public static class LuaBinder
 		Thunder_Entity_Weapon_RecoliControllerWrap.Register(L);
 		Thunder_Entity_Weapon_AimScopeControllerWrap.Register(L);
 		Thunder_Entity_Weapon_MeleeAttackAreaWrap.Register(L);
-		Thunder_Entity_Weapon_PickupableWeaponWrap.Register(L);
 		Thunder_Entity_Weapon_UnarmedWrap.Register(L);
 		L.EndModule();
 		L.EndModule();

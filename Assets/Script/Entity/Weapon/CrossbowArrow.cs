@@ -60,19 +60,19 @@ namespace Thunder.Entity.Weapon
 
         public AssetId AssetId { get; set; }
 
-        public void BeforeOpReset()
+        public void OpReset()
         {
             _HitSomeone = false;
             _LifeTimeCounter.Complete(false);
             _Rb.useGravity = false; 
         }
 
-        public void BeforeOpRecycle()
+        public void OpRecycle()
         {
             
         }
 
-        public void AfterOpDestroy()
+        public void OpDestroy()
         {
         }
     }

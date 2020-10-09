@@ -1,4 +1,5 @@
-﻿using LuaInterface;
+﻿using System;
+using LuaInterface;
 
 public class ToLua_LuaInterface_EventObject
 {

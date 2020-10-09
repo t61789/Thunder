@@ -166,20 +166,20 @@ namespace Thunder.Entity.Weapon
             _Player.ViewRotAddition(addition);
             if(stay!=Vector2.zero)_Player.ViewRotTargetAddition(stay);
 
-            AimPoint.Instance.SetAimValue(OverHeatFactor.Average());
+            AimPoint.Ins.SetAimValue(OverHeatFactor.Average());
         }
 
         protected override void PlayerSquat(bool squating, bool hanging)
         {
             if (squating)
             {
-                AimPoint.Instance.AimSizeScale.AddBuff(_BulletSpread.SquatSpreadScale, SQUAT, BuffData.Operator.Mul, 0);
+                AimPoint.Ins.AimSizeScale.AddBuff(_BulletSpread.SquatSpreadScale, SQUAT, BuffData.Operator.Mul, 0);
                 _BulletSpread.SpreadScale.AddBuff(_BulletSpread.SquatSpreadScale, SQUAT, BuffData.Operator.Mul, 0);
                 _BulletSpread.SetSpreadScale();
             }
             else
             {
-                AimPoint.Instance.AimSizeScale.RemoveBuff(SQUAT);
+                AimPoint.Ins.AimSizeScale.RemoveBuff(SQUAT);
                 _BulletSpread.SpreadScale.RemoveBuff(SQUAT);
                 _BulletSpread.SetSpreadScale();
             }
@@ -189,13 +189,13 @@ namespace Thunder.Entity.Weapon
         {
             if (hanging)
             {
-                AimPoint.Instance.AimSizeScale.AddBuff(_BulletSpread.HangingSpreadScale, HANG, BuffData.Operator.Mul, 0);
+                AimPoint.Ins.AimSizeScale.AddBuff(_BulletSpread.HangingSpreadScale, HANG, BuffData.Operator.Mul, 0);
                 _BulletSpread.SpreadScale.AddBuff(_BulletSpread.HangingSpreadScale, HANG, BuffData.Operator.Mul, 0);
                 _BulletSpread.SetSpreadScale();
             }
             else
             {
-                AimPoint.Instance.AimSizeScale.RemoveBuff(HANG);
+                AimPoint.Ins.AimSizeScale.RemoveBuff(HANG);
                 _BulletSpread.SpreadScale.RemoveBuff(HANG);
                 _BulletSpread.SetSpreadScale();
             }

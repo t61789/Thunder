@@ -1532,5 +1532,30 @@ namespace Thunder.Tool
         {
             return Object.Instantiate(obj);
         }
+
+        /// <summary>
+        /// 在一个区间内循环
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static int Repeat(this int val, int length)
+        {
+            val %= length;
+            if (val > 0) return val;
+            val += length;
+            return val;
+        }
+
+        /// <summary>
+        /// 在一个区间内循环
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static float Repeat(this float val, float length)
+        {
+            return Mathf.Repeat(val, length);
+        }
     }
 }

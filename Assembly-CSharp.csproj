@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\Bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_2020_2_0;UNITY_2020_2;UNITY_2020;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;USE_SEARCH_ENGINE_API;SCENE_TEMPLATE_MODULE;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_2020_2_0;UNITY_2020_2;UNITY_2020;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -69,6 +69,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Composites\Sequence.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Quaternion\Euler.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CapsuleCollider\GetDirection.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_PickupableItemWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetCenterOfMass.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_GameObjectWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\11_Delegate\TestEventListener.cs" />
@@ -102,7 +103,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Decorators\Inverter.cs" />
     <Compile Include="Assets\Lib\DOTween\Modules\DOTweenModuleAudio.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_UiInitTypeWrap.cs" />
-    <Compile Include="Assets\Script\Entity\Weapon\PickupableWeapon.cs" />
     <Compile Include="Assets\Script\Entity\Weapon\BaseWeapon.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\GetEnableEmission.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\WakeUp.cs" />
@@ -157,13 +157,14 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Actions\Reflection\InvokeMethod.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Behavior_SwitcherWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\BehaviorDesigner_Runtime_Tasks_ActionWrap.cs" />
-    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\GetCookieSize.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_RowWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_AreaTriggerWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\01_HelloWorld\HelloWorld.cs" />
+    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\GetCookieSize.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\PlayDelayed.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_UI_SurvivalNoliUIWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\GetLoop.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_AudioBehaviourWrap.cs" />
+    <Compile Include="Assets\Lib\ToLua\Examples\01_HelloWorld\HelloWorld.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Behavior_IsNotNullWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_BulletHoleManagerWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_UI_BaseUIWrap.cs" />
@@ -174,7 +175,6 @@
     <Compile Include="Assets\Script\Entity\BulletHole.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CapsuleCollider\GetHeight.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\String\SetString.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_LuaScriptInterfaceWrap.cs" />
     <Compile Include="Assets\Script\Behavior\DelegateInvoke.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\INetEventListener.cs" />
     <Compile Include="Assets\Script\Utility\PostProcessing\GaussBlur.cs" />
@@ -198,7 +198,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetAngularVelocity.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\IntComparison.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\System_Collections_Generic_ListWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\DelegateFactory.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\UseGravity.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Conditionals\HasReceivedEvent.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector2\Lerp.cs" />
@@ -221,7 +220,7 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_SphereColliderWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\GetEmissionRate.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\GetTag.cs" />
-    <Compile Include="Assets\Script\Entity\LuaScriptInterface.cs" />
+    <Compile Include="Assets\Script\Entity\LuaInterface.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Tool_PerlinNoiseWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\BoolFlip.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\LuaInterface_DebuggerWrap.cs" />
@@ -306,6 +305,7 @@
     <Compile Include="Assets\Script\Game\GameStartStandPoint.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\20_utf8\TestUTF8.cs" />
     <Compile Include="Assets\Script\Utility\Package.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_JsonTableRecieverWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasExitedCollision.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_MachineGunWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\GetIntegerParameter.cs" />
@@ -335,6 +335,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector2\GetXY.cs" />
     <Compile Include="Assets\Script\Behavior\GetCurrentGameObject.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\EntryTask.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_ItemInfoWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\PlayerPrefs\GetFloat.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\NetEndPoint.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\WakeUp.cs" />
@@ -378,7 +379,6 @@
     <Compile Include="Assets\Script\Game\FlyingSaucer\FlyingSaucer.cs" />
     <Compile Include="Assets\Lib\ToLua\Reflection\LuaProperty.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\SetLayerWeight.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\LuaTest\LuaTest.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Physics\Raycast.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedVector2.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Debug\LogValue.cs" />
@@ -482,9 +482,10 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Test_SaveTestWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedObjectList.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Timeline\IsPlaying.cs" />
-    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\GetKey.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PackageWrap.cs" />
     <Compile Include="Assets\Test\GenerateAlpha.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_UI_LogPanelWrap.cs" />
+    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\GetKey.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\BehaviorDesigner_Runtime_Tasks_DecoratorWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\GetFloatParameter.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_GlobalSettingsWrap.cs" />
@@ -823,6 +824,7 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_Matrix4x4Wrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CapsuleCollider\SetHeight.cs" />
     <Compile Include="Assets\Lib\DOTween\Modules\DOTweenModulePhysics2D.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_CellWrap.cs" />
     <Compile Include="Assets\Script\UI\InputDialog.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\GetMousePosition.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animation\CrossFadeQueued.cs" />
@@ -835,10 +837,11 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedObject.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\NetPeer.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_BehaviourWrap.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PackageItemInfoWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetPriority.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Actions\Reflection\SetFieldValue.cs" />
-    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CharacterController\HasColliderHit.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\SetStartSpeed.cs" />
+    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CharacterController\HasColliderHit.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetScheduledEndTime.cs" />
     <Compile Include="Assets\Lib\DOTween\Modules\DOTweenModuleUI.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedTransform.cs" />
@@ -1008,8 +1011,9 @@
     <Compile Include="Assets\Script\Utility\PostProcessing\AimScope.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\11_Delegate\TestDelegate.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\CompareTag.cs" />
-    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\SetEulerAngles.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_TableWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\LuaInterface_LuaConstructorWrap.cs" />
+    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\SetEulerAngles.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\InterruptMatchTarget.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_BoxColliderWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Tool_BehaviorTree_BehaviorTreeWrap.cs" />
@@ -1017,6 +1021,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedVector3Int.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\Resume.cs" />
     <Compile Include="Assets\Script\Tool\BehaviorTree\ActionNode.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PackageCellWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\09_Dictionary\TestAccountWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\LookAt.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\SetShadows.cs" />
@@ -1031,17 +1036,11 @@
     <Compile Include="Assets\Lib\ToLua\Reflection\LuaField.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\System_NullObjectWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PathsWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_PickupableItemWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_CellWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PackageWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_TableWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_RowWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Sys_JsonTableRecieverWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_PickupableWeaponWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_MeleeAttackAreaWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_ItemInfoWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PackageItemInfoWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Utility_PackageCellWrap.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\DelegateFactory.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_LuaInterfaceWrap.cs" />
+    <Compile Include="Assets\Script\Utility\IItem.cs" />
+    <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_DropperWrap.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
@@ -1079,6 +1078,7 @@
      <None Include="Assets\Lib\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
      <None Include="Assets\Bundle\Shader\AnimeShader.shader" />
      <None Include="Assets\Lib\ToLua\Injection\LuaInjectionSkipPaths.txt" />
+     <None Include="Assets\Bundle\Lua\Normal\PickupableWeapon.txt" />
      <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
      <None Include="Assets\Bundle\Shader\GaussBlurShader.shader" />
      <None Include="Assets\Bundle\Shader\AimPointShader.shader" />

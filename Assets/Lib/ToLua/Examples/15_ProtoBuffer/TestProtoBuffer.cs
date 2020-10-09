@@ -1,6 +1,9 @@
 ﻿//#define USE_PROTOBUF_NET
-using LuaInterface;
 using UnityEngine;
+using System.Collections;
+using LuaInterface;
+using System;
+using System.IO;
 
 #if USE_PROTOBUF_NET
 using ProtoBuf;
@@ -77,7 +80,7 @@ public class TestProtoBuffer : LuaClient
     //pb_data = msg.data    
     new void Awake()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -159,7 +162,7 @@ public class TestProtoBuffer : LuaClient
     new void OnApplicationQuit()
     {
         base.Destroy();
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);

@@ -1,5 +1,8 @@
-﻿using LuaInterface;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections.Generic;
+using LuaInterface;
+using System;
+using System.Reflection;
 
 
 public class TestReflection : LuaClient
@@ -81,7 +84,7 @@ public class TestReflection : LuaClient
     }
 
     protected override void OnLoadFinished()
-    {
+    {        
         base.OnLoadFinished();
 
         /*Type t = typeof(TestExport);
@@ -136,6 +139,6 @@ public class TestReflection : LuaClient
 
     void OnGUI()
     {
-        GUI.Label(new Rect(Screen.width / 2 - 250, Screen.height / 2 - 150, 500, 300), tips);
+        GUI.Label(new Rect(Screen.width / 2 - 250, Screen.height / 2 - 150, 500, 300), tips);       
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -74,7 +75,7 @@ namespace LuaInterface
 
         public IntPtr LuaNewState()
         {
-            return LuaDLL.luaL_newstate();
+            return LuaDLL.luaL_newstate();            
         }
 
         public void LuaOpenJit()
@@ -83,7 +84,7 @@ namespace LuaInterface
             //某些机型如三星arm64在jit on模式下会崩溃，临时关闭这里
             if (IntPtr.Size == 8)
             {
-                LuaDLL.luaL_dostring(L, "jit.off()");
+                LuaDLL.luaL_dostring(L, "jit.off()");                                                
             }
             else if (!LuaDLL.luaL_dostring(L, jit))
             {
@@ -103,7 +104,7 @@ namespace LuaInterface
         public IntPtr LuaNewThread()
         {
             return LuaDLL.lua_newthread(L);
-        }
+        }        
 
         public IntPtr LuaAtPanic(IntPtr panic)
         {
@@ -417,7 +418,7 @@ namespace LuaInterface
 
         public void LuaNewTable()
         {
-            LuaDLL.lua_createtable(L, 0, 0);
+            LuaDLL.lua_createtable(L, 0 , 0);
         }
 
         public void LuaPushFunction(LuaCSFunction func)
@@ -540,7 +541,7 @@ namespace LuaInterface
 
             if (status != 0)
             {
-                return false;
+                return false;                
             }
 
             return LuaDLL.lua_pcall(L, 0, LuaDLL.LUA_MULTRET, 0) == 0;
@@ -646,48 +647,48 @@ namespace LuaInterface
         public int LuaGetStack(int level, ref Lua_Debug ar)
         {
             return LuaDLL.lua_getstack(L, level, ref ar);
-        }
-
+        }   
+           
         public int LuaGetInfo(string what, ref Lua_Debug ar)
         {
             return LuaDLL.lua_getinfo(L, what, ref ar);
         }
-
+        
         public string LuaGetLocal(ref Lua_Debug ar, int n)
         {
             return LuaDLL.lua_getlocal(L, ref ar, n);
         }
-
+        
         public string LuaSetLocal(ref Lua_Debug ar, int n)
         {
             return LuaDLL.lua_setlocal(L, ref ar, n);
         }
-
+        
         public string LuaGetUpvalue(int funcindex, int n)
         {
             return LuaDLL.lua_getupvalue(L, funcindex, n);
         }
-
+        
         public string LuaSetUpvalue(int funcindex, int n)
         {
             return LuaDLL.lua_setupvalue(L, funcindex, n);
         }
-
+        
         public int LuaSetHook(LuaHookFunc func, int mask, int count)
         {
             return LuaDLL.lua_sethook(L, func, mask, count);
         }
-
+        
         public LuaHookFunc LuaGetHook()
         {
             return LuaDLL.lua_gethook(L);
         }
-
-        public int LuaGetHookMask()
+        
+        public  int LuaGetHookMask()
         {
             return LuaDLL.lua_gethookmask(L);
         }
-
+        
         public int LuaGetHookCount()
         {
             return LuaDLL.lua_gethookcount(L);

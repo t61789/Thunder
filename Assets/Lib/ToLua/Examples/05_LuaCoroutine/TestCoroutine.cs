@@ -1,25 +1,27 @@
-﻿using LuaInterface;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
+using System.Collections;
+using LuaInterface;
 
 //例子5和6展示的两套协同系统勿交叉使用，此为推荐方案
-public class TestCoroutine : MonoBehaviour
+public class TestCoroutine : MonoBehaviour 
 {
     public TextAsset luaFile = null;
     private LuaState lua = null;
     private LuaLooper looper = null;
 
-    void Awake()
+	void Awake () 
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
 #endif        
         new LuaResLoader();
-        lua = new LuaState();
+        lua  = new LuaState();
         lua.Start();
         LuaBinder.Bind(lua);
-        DelegateFactory.Init();
+        DelegateFactory.Init();         
         looper = gameObject.AddComponent<LuaLooper>();
         looper.luaState = lua;
 
@@ -27,7 +29,7 @@ public class TestCoroutine : MonoBehaviour
         LuaFunction f = lua.GetFunction("TestCortinue");
         f.Call();
         f.Dispose();
-        f = null;
+        f = null;        
     }
 
     void OnApplicationQuit()
@@ -35,7 +37,7 @@ public class TestCoroutine : MonoBehaviour
         looper.Destroy();
         lua.Dispose();
         lua = null;
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);
@@ -54,14 +56,14 @@ public class TestCoroutine : MonoBehaviour
     {
         GUI.Label(new Rect(Screen.width / 2 - 300, Screen.height / 2 - 200, 600, 400), tips);
 
-        if (GUI.Button(new Rect(50, 50, 120, 45), "Start SimpleCounter"))
+        if (GUI.Button(new Rect(50, 50, 120, 45), "Start Counter"))
         {
             tips = null;
             LuaFunction func = lua.GetFunction("StartDelay");
             func.Call();
             func.Dispose();
         }
-        else if (GUI.Button(new Rect(50, 150, 120, 45), "Stop SimpleCounter"))
+        else if (GUI.Button(new Rect(50, 150, 120, 45), "Stop Counter"))
         {
             LuaFunction func = lua.GetFunction("StopDelay");
             func.Call();

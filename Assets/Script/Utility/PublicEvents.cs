@@ -6,7 +6,15 @@ namespace Thunder.Utility
 {
     public class PublicEvents
     {
+        /// <summary>
+        /// 显示一条信息
+        /// </summary>
         public static UnityEvent<string> LogMessage = new UnityEvent<string>();
+        /// <summary>
+        /// 拾取物品
+        /// <br/>物品id
+        /// </summary>
+        public static UnityEvent<int> PickupItem = new UnityEvent<int>();
 
         /// <summary>
         /// 请求进行游戏<br/>请求true，取消请求false
@@ -46,5 +54,10 @@ namespace Thunder.Utility
         /// 被击中的靶子
         /// </summary>
         public static UnityEvent<SpotShootingTarget> SpotShootingTargetHit = new UnityEvent<SpotShootingTarget>();
+
+        /// <summary>
+        /// 有物品被玩家丢弃
+        /// </summary>
+        public static UnityEvent<int> DropItem = new UnityEvent<int>();
     }
 }

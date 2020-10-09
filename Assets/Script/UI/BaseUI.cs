@@ -73,14 +73,14 @@ namespace Thunder.UI
             return gameObject;
         }
 
-        public void AfterOpDestroy()
+        public void OpDestroy()
         {
             Destroy(gameObject);
         }
 
         public AssetId AssetId { get; set; }
 
-        public void BeforeOpRecycle()
+        public void OpRecycle()
         {
 
         }
@@ -130,7 +130,7 @@ namespace Thunder.UI
             Dragging?.Invoke(this, eventData);
         }
 
-        public void BeforeOpReset()
+        public void OpReset()
         {
 
         }

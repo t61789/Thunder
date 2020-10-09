@@ -1,6 +1,8 @@
-﻿using LuaInterface;
+﻿using UnityEngine;
+using System.Collections;
+using LuaInterface;
 using System.Collections.Generic;
-using UnityEngine;
+using System;
 
 //需要导出委托类型如下：
 //System.Predicate<int>
@@ -99,10 +101,10 @@ public class UseList : LuaClient
                     print('LastIndexOf is ok')
                 end
 
-                list:Dequeue(123)
+                list:Remove(123)
 
                 if list[0] ~= 123 then
-                    print('Dequeue is ok')
+                    print('Remove is ok')
                 end
 
                 list:Insert(0, 123)
@@ -144,8 +146,7 @@ public class UseList : LuaClient
 
     protected override void OnLoadFinished()
     {
-
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -164,7 +165,7 @@ public class UseList : LuaClient
         func.PCall();
         func.EndPCall();
         func.Dispose();
-        func = null;
+        func = null;        
     }
 
     string tips;
@@ -178,7 +179,7 @@ public class UseList : LuaClient
     new void OnApplicationQuit()
     {
         base.OnApplicationQuit();
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);

@@ -209,7 +209,7 @@ public class DelegateFactory
 
             if (ld != null && ld.func == func)
             {
-                obj = Delegate.Dequeue(obj, ds[i]);
+                obj = Delegate.Remove(obj, ds[i]);
                 state.DelayDispose(ld.func);
                 break;
             }
@@ -224,7 +224,7 @@ public class DelegateFactory
 
         if (remove == null)
         {
-            obj = Delegate.Dequeue(obj, dg);
+            obj = Delegate.Remove(obj, dg);
             return obj;
         }
 
@@ -237,7 +237,7 @@ public class DelegateFactory
 
             if (ld != null && ld == remove)
             {
-                obj = Delegate.Dequeue(obj, ds[i]);
+                obj = Delegate.Remove(obj, ds[i]);
                 state.DelayDispose(ld.func);
                 state.DelayDispose(ld.self);
                 break;

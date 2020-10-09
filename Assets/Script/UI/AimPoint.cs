@@ -8,7 +8,7 @@ namespace Thunder.UI
 {
     public class AimPoint : BaseUI
     {
-        public static AimPoint Instance;
+        public static AimPoint Ins;
 
         [SerializeField]
         private Vector2 _AimSize;
@@ -53,7 +53,7 @@ namespace Thunder.UI
 
             ResetAll();
 
-            Instance = this;
+            Ins = this;
         }
 
         public void Hit()

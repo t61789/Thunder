@@ -1,20 +1,20 @@
 #if ENABLE_LUA_INJECTION
-using CustomCecilRocks;
-using LuaInterface;
+using System;
+using System.IO;
+using System.Xml;
+using System.Text;
+using System.Linq;
+using UnityEngine;
+using UnityEditor;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Xml;
 using Unity.CecilTools;
 using Unity.CecilTools.Extensions;
-using UnityEditor;
+using CustomCecilRocks; 
+using System.Reflection;
+using LuaInterface;
 using UnityEditor.Callbacks;
-using UnityEngine;
+using System.Collections.Generic;
 using MethodBody = Mono.Cecil.Cil.MethodBody;
 
 class InjectedMethodInfo
@@ -117,7 +117,7 @@ public static class ToLuaInjection
             EditorPrefs.SetInt(Application.dataPath + "WaitForInjection", 0);
         }
     }
-
+	
     [MenuItem("Lua/Inject All &i", false, 5)]
     static void InjectByMenu()
     {
@@ -175,7 +175,7 @@ public static class ToLuaInjection
                     foreach (var type in module.Types)
                     {
                         ++cursor;
-                        EditorUtility.DisplayProgressBar("Injecting:" + module.FileName, type.FullName, (float)cursor / typesCount);
+                        EditorUtility.DisplayProgressBar("Injecting:" + module.FullyQualifiedName, type.FullName, (float)cursor / typesCount);
                         if (!InjectProcess(assembly, type))
                         {
                             EditorUtility.ClearProgressBar();
@@ -676,7 +676,7 @@ public static class ToLuaInjection
         }
         else if (cursor.Previous.OpCode == OpCodes.Nop)
         {
-            targetBody.Instructions.Dequeue(cursor.Previous);
+            targetBody.Instructions.Remove(cursor.Previous);
         }
     }
 #endregion NormalMethod
@@ -921,7 +921,7 @@ public static class ToLuaInjection
         StringBuilder sb = StringBuilderCache.Acquire();
         sb.Append("return ");
         ToLuaText.TransferDic(temp, sb);
-        sb.Dequeue(sb.Length - 1, 1);
+        sb.Remove(sb.Length - 1, 1);
         File.WriteAllText(CustomSettings.baseLuaDir + "System/Injection/InjectionBridgeInfo.lua", StringBuilderCache.GetStringAndRelease(sb));
     }
 

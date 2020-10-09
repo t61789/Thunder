@@ -1,6 +1,6 @@
-﻿using LuaInterface;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
+using LuaInterface;
 
 public sealed class TestAccount
 {
@@ -16,7 +16,7 @@ public sealed class TestAccount
     }
 }
 
-public class UseDictionary : MonoBehaviour
+public class UseDictionary : MonoBehaviour 
 {
     Dictionary<int, TestAccount> map = new Dictionary<int, TestAccount>();
 
@@ -53,7 +53,7 @@ public class UseDictionary : MonoBehaviour
                 print('----------------------over----------------------')                
 
                 print('kick '..map[2].name)
-                map:Dequeue(2)
+                map:Remove(2)
                 iter = map:GetEnumerator() 
 
                 while iter:MoveNext() do
@@ -63,9 +63,9 @@ public class UseDictionary : MonoBehaviour
             end                        
         ";
 
-    void Awake()
+	void Awake () 
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -95,7 +95,7 @@ public class UseDictionary : MonoBehaviour
 
     void OnApplicationQuit()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);

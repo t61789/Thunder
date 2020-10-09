@@ -1,8 +1,9 @@
-﻿using LuaInterface;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
+using LuaInterface;
 
-public class ToLua_UnityEngine_Object
-{
+public class ToLua_UnityEngine_Object     
+{        
     public static string DestroyDefined =
 @"        try
         {
@@ -32,7 +33,7 @@ public class ToLua_UnityEngine_Object
         {
             return LuaDLL.toluaL_exception(L, e);
         }";
-
+    
     public static string DestroyImmediateDefined =
 @"        try
         {
@@ -202,7 +203,7 @@ public class ToLua_UnityEngine_Object
     [UseDefinedAttribute]
     public static void Destroy(Object obj)
     {
-
+        
     }
 
     [UseDefinedAttribute]

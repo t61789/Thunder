@@ -1,8 +1,9 @@
-﻿using LuaInterface;
-using UnityEngine;
+﻿using UnityEngine;
+using System.IO;
+using LuaInterface;
 
 //use menu Lua->Copy lua files to Resources. 之后才能发布到手机
-public class TestCustomLoader : LuaClient
+public class TestCustomLoader : LuaClient 
 {
     string tips = "Test custom loader";
 
@@ -26,7 +27,7 @@ public class TestCustomLoader : LuaClient
 
     new void Awake()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += Logger;
 #else
         Application.RegisterLogCallback(Logger);
@@ -38,7 +39,7 @@ public class TestCustomLoader : LuaClient
     {
         base.OnApplicationQuit();
 
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= Logger;
 #else
         Application.RegisterLogCallback(null);

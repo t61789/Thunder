@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Thunder.Tool;
 using Thunder.Utility;
 using TMPro;
@@ -62,7 +61,7 @@ namespace Thunder.UI
 
         public void Log(string msg)
         {
-            _LogQueue.Enqueue(msg, false);
+            _LogQueue.Enqueue(msg);
             if (_LogPointer == 0)
                 RePaint(0);
             else

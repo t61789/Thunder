@@ -1,4 +1,6 @@
-﻿using LuaInterface;
+﻿using UnityEngine;
+using System.Collections;
+using LuaInterface;
 using System;
 
 public class ToLua_UnityEngine_GameObject
@@ -289,7 +291,7 @@ public class ToLua_UnityEngine_GameObject
 		}";
 
 
-    public static string AddComponentDefined =
+    public static string AddComponentDefined = 
 @"		IntPtr L0 = LuaException.L;
 
         try

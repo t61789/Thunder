@@ -1,11 +1,12 @@
-﻿using LuaInterface;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
-#pragma warning disable 618
+using LuaInterface;
+using System;
+
 //click Lua/Build lua bundle
-public class TestABLoader : MonoBehaviour
+public class TestABLoader : MonoBehaviour 
 {
     int bundleCount = int.MaxValue;
     string tips = null;
@@ -31,7 +32,7 @@ public class TestABLoader : MonoBehaviour
             --bundleCount;
             LuaFileUtils.Instance.AddSearchBundle(name, www.assetBundle);
             www.Dispose();
-        }
+        }                     
     }
 
     IEnumerator LoadFinished()
@@ -48,7 +49,7 @@ public class TestABLoader : MonoBehaviour
     {
         string streamingPath = Application.streamingAssetsPath.Replace('\\', '/');
 
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
 #if UNITY_ANDROID && !UNITY_EDITOR
         string main = streamingPath + "/" + LuaConst.osDir + "/" + LuaConst.osDir;
 #else
@@ -58,7 +59,7 @@ public class TestABLoader : MonoBehaviour
         yield return www;
 
         AssetBundleManifest manifest = (AssetBundleManifest)www.assetBundle.LoadAsset("AssetBundleManifest");
-        List<string> list = new List<string>(manifest.GetAllAssetBundles());
+        List<string> list = new List<string>(manifest.GetAllAssetBundles());        
 #else
         //此处应该配表获取
         List<string> list = new List<string>() { "lua.unity3d", "lua_cjson.unity3d", "lua_system.unity3d", "lua_unityengine.unity3d", "lua_protobuf.unity3d", "lua_misc.unity3d", "lua_socket.unity3d", "lua_system_reflection.unity3d" };
@@ -75,7 +76,7 @@ public class TestABLoader : MonoBehaviour
             string path = "file:///" + streamingPath + "/" + LuaConst.osDir + "/" + str;
 #endif
             string name = Path.GetFileNameWithoutExtension(str);
-            StartCoroutine(CoLoadBundle(name, path));
+            StartCoroutine(CoLoadBundle(name, path));            
         }
 
         yield return StartCoroutine(LoadFinished());
@@ -83,7 +84,7 @@ public class TestABLoader : MonoBehaviour
 
     void Awake()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -112,7 +113,7 @@ public class TestABLoader : MonoBehaviour
 
     void OnApplicationQuit()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);
@@ -120,7 +121,7 @@ public class TestABLoader : MonoBehaviour
     }
 
     void OnBundleLoad()
-    {
+    {                
         LuaState state = new LuaState();
         state.Start();
         state.DoString("print('hello tolua#:'..tostring(Vector3.zero))");
@@ -130,5 +131,5 @@ public class TestABLoader : MonoBehaviour
         func.Dispose();
         state.Dispose();
         state = null;
-    }
+	}	
 }

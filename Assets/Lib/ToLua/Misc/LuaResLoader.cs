@@ -21,9 +21,10 @@ SOFTWARE.
 */
 //优先读取persistentDataPath/系统/Lua 目录下的文件（默认下载目录）
 //未找到文件怎读取 Resources/Lua 目录下文件（仍没有使用LuaFileUtil读取）
+using UnityEngine;
 using LuaInterface;
 using System.IO;
-using UnityEngine;
+using System.Text;
 
 public class LuaResLoader : LuaFileUtils
 {
@@ -73,7 +74,7 @@ public class LuaResLoader : LuaFileUtils
 
         if (Path.GetExtension(fileName) == ".lua")
         {
-            fileName = fileName.Substring(0, fileName.Length - 4);
+            fileName = fileName.Substring(0, fileName.Length - 4);            
         }
 
         using (CString.Block())
@@ -87,7 +88,7 @@ public class LuaResLoader : LuaFileUtils
 
             sb.Append("\n\tno file './Resources/").Append(fileName).Append(".lua'")
               .Append("\n\tno file '").Append(LuaConst.luaResDir).Append('/')
-              .Append(fileName).Append(".lua'");
+			  .Append(fileName).Append(".lua'");
             sb = sb.Replace("?", fileName);
 
             return sb.ToString();
@@ -124,8 +125,8 @@ public class LuaResLoader : LuaFileUtils
         string path = fileName;
 
         if (!Path.IsPathRooted(fileName))
-        {
-            path = string.Format("{0}/{1}", LuaConst.luaResDir, fileName);
+        {            
+            path = string.Format("{0}/{1}", LuaConst.luaResDir, fileName);            
         }
 
         if (File.Exists(path))

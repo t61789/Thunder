@@ -1,8 +1,13 @@
-﻿using BehaviorDesigner.Runtime.Tasks.Unity.UnityCharacterController;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityCharacterController;
 using Thnder.Utility;
 using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.Tool.BuffData;
+using Thunder.Tool.ObjectPool;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Events;
@@ -55,9 +60,11 @@ namespace Thunder.Entity
         public float SquatOffset = 0.5f;
         public float JumpWeaponOffsetAngle = 7;
         public float SquatWalkSpeedScale = 0.5f;
+        public float DropItemForce = 2;
 
-        private WeaponBelt _WeaponBelt;
-        private WeaponBeltInput _WeaponBeltInput;
+        public Dropper Dropper {private set; get; }
+        public WeaponBelt WeaponBelt { private set; get; }
+        
         private Transform _PivotTrans;
         private Transform _WeaponAttachPoint;
         private Rigidbody _Rb;
@@ -91,8 +98,10 @@ namespace Thunder.Entity
             _TargetRot.y = _Trans.localEulerAngles.y;
             _TargetRot.x = _PivotTrans.localEulerAngles.x;
 
-            _WeaponBelt = new WeaponBelt(GlobalSettings.WeaponBeltSize, _WeaponAttachPoint);
-            _WeaponBeltInput = new WeaponBeltInput(_WeaponBelt);
+            WeaponBelt = new WeaponBelt(GlobalSettings.WeaponBeltCellTypes, _WeaponAttachPoint);
+            Dropper = new Dropper(DropItemForce,()=>_Trans.position,()=> _PivotTrans.rotation);
+
+            PublicEvents.DropItem.AddListener(Drop);
         }
 
         private void Update()
@@ -132,32 +141,9 @@ namespace Thunder.Entity
             if (ControlSys.Ins.RequireKey("Jump", 0).Down && Movable)
                 Jump();
 
-            _WeaponBeltInput.InputCheck();
+            WeaponBelt.InputCheck();
         }
-
-        private static Vector2 EulerAdd(Vector2 e1, Vector2 e2)
-        {
-            e1.y += e2.y;
-            e1.x = Mathf.Clamp(e1.x + e2.x, -90, 90);
-
-            return e1;
-        }
-
-        private Vector2 MoveToEuler(Vector2 move)
-        {
-            return new Vector2(-move.y, move.x) * Sensitive;
-        }
-
-        public void ViewRotAddition(Vector2 rot)
-        {
-            _AdditionTargetRot = MoveToEuler(rot);
-        }
-
-        public void ViewRotTargetAddition(Vector2 rot)
-        {
-            _TargetRot = EulerAdd(_TargetRot, MoveToEuler(rot));
-        }
-
+        
         private void FixedUpdate()
         {
             // 视角
@@ -218,9 +204,19 @@ namespace Thunder.Entity
             }
         }
 
-        private static void SwitchLockCursor()
+        public void ViewRotAddition(Vector2 rot)
         {
-            ControlSys.Ins.LockCursor = !ControlSys.Ins.LockCursor;
+            _AdditionTargetRot = MoveToEuler(rot);
+        }
+
+        public void ViewRotTargetAddition(Vector2 rot)
+        {
+            _TargetRot = EulerAdd(_TargetRot, MoveToEuler(rot));
+        }
+
+        public void Drop(int id)
+        {
+            Dropper.Drop(id);
         }
 
         private void Squat(bool down)
@@ -266,10 +262,58 @@ namespace Thunder.Entity
             return rawHeight > radius2 ? rawHeight : radius2;
         }
 
+        private Vector2 MoveToEuler(Vector2 move)
+        {
+            return new Vector2(-move.y, move.x) * Sensitive;
+        }
+
+        private static Vector2 EulerAdd(Vector2 e1, Vector2 e2)
+        {
+            e1.y += e2.y;
+            e1.x = Mathf.Clamp(e1.x + e2.x, -90, 90);
+
+            return e1;
+        }
+
+        private static void SwitchLockCursor()
+        {
+            ControlSys.Ins.LockCursor = !ControlSys.Ins.LockCursor;
+        }
+
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position + _GroundRayStartOffset, transform.position + _GroundRayStartOffset + Vector3.down * GroundRayLength);
+        }
+    }
+
+    public class Dropper
+    {
+        private readonly float _LaunchForce;
+        private readonly Func<Vector3> _Pos;
+        private readonly Func<Quaternion> _Rot;
+        private readonly Dictionary<int, string> _DropableItemDic;
+
+        public Dropper(float launchForce,Func<Vector3> posGetter,Func<Quaternion> rotGetter)
+        {
+            _LaunchForce = launchForce;
+            _Pos = posGetter;
+            _Rot = rotGetter;
+
+            const string path = "pick_prefab_path";
+            _DropableItemDic = (
+                from row in DataBaseSys.Ins[GlobalSettings.ItemInfoTableName]
+                where !string.IsNullOrEmpty(row[path])
+                select new {id = (int) row["id"], prefabPath = (string) row[path] }).
+                ToDictionary(x=>x.id,x=>x.prefabPath);
+        }
+
+        public void Drop(int id)
+        {
+            var item = ObjectPool.Ins.Alloc<PickupableItem>(_DropableItemDic[id]);
+            var rot = _Rot();
+            var force = rot * Vector3.forward * _LaunchForce;
+            item.Launch(_Pos(),rot,force);
         }
     }
 }

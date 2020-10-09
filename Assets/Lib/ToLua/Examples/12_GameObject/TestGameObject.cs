@@ -1,7 +1,8 @@
-﻿using LuaInterface;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
+using LuaInterface;
 
-public class TestGameObject : MonoBehaviour
+public class TestGameObject: MonoBehaviour
 {
     private string script =
         @"                                                
@@ -29,7 +30,7 @@ public class TestGameObject : MonoBehaviour
 
     void Start()
     {
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived += ShowTips;
 #else
         Application.RegisterLogCallback(ShowTips);
@@ -45,11 +46,11 @@ public class TestGameObject : MonoBehaviour
     void Update()
     {
         lua.CheckTop();
-        lua.Collect();
+        lua.Collect();        
     }
 
     string tips = "";
-
+        
     void ShowTips(string msg, string stackTrace, LogType type)
     {
         tips += msg;
@@ -57,10 +58,10 @@ public class TestGameObject : MonoBehaviour
     }
 
     void OnApplicationQuit()
-    {
+    {        
         lua.Dispose();
         lua = null;
-#if UNITY_5 || UNITY_2017 || UNITY_2018 || UNITY_2019 || UNITY_2020
+#if UNITY_5 || UNITY_2017 || UNITY_2018
         Application.logMessageReceived -= ShowTips;
 #else
         Application.RegisterLogCallback(null);
