@@ -1,15 +1,16 @@
-﻿using Thunder.Utility;
+﻿using Thunder.Sys;
+using Thunder.Utility;
 using TMPro;
+using UnityEngine;
 
 namespace Thunder.UI
 {
     public class ConfirmDialog : BaseUI
     {
-        public TextMeshProUGUI textMesh;
-
         public DialogResult dialogResult;
 
         private string tempText;
+        public TextMeshProUGUI textMesh;
 
         protected override void Awake()
         {
@@ -26,13 +27,13 @@ namespace Thunder.UI
         public void OK()
         {
             dialogResult = DialogResult.Ok;
-            Sys.UISys.Ins.CloseUI(UIName);
+            UISys.Ins.CloseUI(UIName);
         }
 
         public void Cancel()
         {
             dialogResult = DialogResult.Cancel;
-            Sys.UISys.Ins.CloseUI(UIName);
+            UISys.Ins.CloseUI(UIName);
         }
 
         public void Update()
@@ -40,7 +41,7 @@ namespace Thunder.UI
             if (textMesh.text != tempText)
             {
                 tempText = textMesh.text;
-                RectTrans.SetSizeWithCurrentAnchors(UnityEngine.RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width);
+                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width);
             }
         }
     }

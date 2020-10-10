@@ -2,30 +2,29 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using Microsoft.Win32.SafeHandles;
 using UnityEngine;
 
 namespace Thunder.Tool
 {
     public class ConsoleWindow
     {
-        TextWriter oldOutput;
+        private const int STD_OUTPUT_HANDLE = -11;
+        private TextWriter _OldOutput;
 
         public void Initialize()
         {
-            if (!AttachConsole(0x0ffffffff))
-            {
-                AllocConsole();
-            }
+            if (!AttachConsole(0x0ffffffff)) AllocConsole();
 
-            oldOutput = Console.Out;
+            _OldOutput = Console.Out;
 
             try
             {
-                IntPtr stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-                Microsoft.Win32.SafeHandles.SafeFileHandle safeFileHandle = new Microsoft.Win32.SafeHandles.SafeFileHandle(stdHandle, true);
-                FileStream fileStream = new FileStream(safeFileHandle, FileAccess.Write);
-                Encoding encoding = global::System.Text.Encoding.ASCII;
-                StreamWriter standardOutput = new StreamWriter(fileStream, encoding);
+                var stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+                var safeFileHandle = new SafeFileHandle(stdHandle, true);
+                var fileStream = new FileStream(safeFileHandle, FileAccess.Write);
+                var encoding = Encoding.ASCII;
+                var standardOutput = new StreamWriter(fileStream, encoding);
                 standardOutput.AutoFlush = true;
                 Console.SetOut(standardOutput);
 
@@ -39,7 +38,7 @@ namespace Thunder.Tool
 
         public void Say(string condition, string stackTrace, LogType type)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("UnityEngine:>");
             sb.Append(type.ToString());
             sb.Append("\n");
@@ -53,7 +52,7 @@ namespace Thunder.Tool
 
         public void Shutdown()
         {
-            Console.SetOut(oldOutput);
+            Console.SetOut(_OldOutput);
             FreeConsole();
         }
 
@@ -62,21 +61,20 @@ namespace Thunder.Tool
             SetConsoleTitle(strName);
         }
 
-        private const int STD_OUTPUT_HANDLE = -11;
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool AttachConsole(uint dwProcessId);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool AttachConsole(uint dwProcessId);
+        private static extern bool AllocConsole();
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool AllocConsole();
+        private static extern bool FreeConsole();
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool FreeConsole();
-
-        [DllImport("kernel32.dll", EntryPoint = "GetStdHandle", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("kernel32.dll", EntryPoint = "GetStdHandle", SetLastError = true, CharSet = CharSet.Auto,
+            CallingConvention = CallingConvention.StdCall)]
         private static extern IntPtr GetStdHandle(int nStdHandle);
 
         [DllImport("kernel32.dll")]
-        static extern bool SetConsoleTitle(string lpConsoleTitle);
+        private static extern bool SetConsoleTitle(string lpConsoleTitle);
     }
 }

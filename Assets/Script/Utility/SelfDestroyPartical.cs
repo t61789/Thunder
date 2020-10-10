@@ -10,6 +10,18 @@ namespace Thunder.Utility
 
         public AssetId AssetId { get; set; }
 
+        public void OpReset()
+        {
+        }
+
+        public void OpRecycle()
+        {
+        }
+
+        public void OpDestroy()
+        {
+        }
+
         private void Awake()
         {
             _Particle = GetComponent<ParticleSystem>();
@@ -24,20 +36,6 @@ namespace Thunder.Utility
         {
             if (!_Particle.isPlaying)
                 ObjectPool.Ins.Recycle(this);
-        }
-
-        public void OpReset()
-        {
-
-        }
-
-        public void OpRecycle()
-        {
-        }
-
-        public void OpDestroy()
-        {
-
         }
     }
 }

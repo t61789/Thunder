@@ -1,20 +1,18 @@
-﻿using BehaviorDesigner.Runtime;
+﻿using System;
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-using System;
 using UnityEngine;
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Thunder.Behavior
 {
-    public class DelegateFixedInvoke : BehaviorDesigner.Runtime.Tasks.Action
+    public class DelegateFixedInvoke : Action
     {
-        public SharedObject sharedObject;
+        private bool fixedUpdating = true;
+        private NoArgMethod method;
 
         public string methodName;
-
-        private bool fixedUpdating = true;
-
-        private delegate void NoArgMethod();
-        private NoArgMethod method;
+        public SharedObject sharedObject;
 
         public override TaskStatus OnUpdate()
         {
@@ -23,8 +21,8 @@ namespace Thunder.Behavior
                 fixedUpdating = true;
                 return TaskStatus.Success;
             }
-            else
-                return TaskStatus.Running;
+
+            return TaskStatus.Running;
         }
 
         public override void OnFixedUpdate()
@@ -32,7 +30,7 @@ namespace Thunder.Behavior
             try
             {
                 if (method == null)
-                    method = (NoArgMethod)Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, methodName);
+                    method = (NoArgMethod) Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, methodName);
 
                 method();
             }
@@ -40,7 +38,10 @@ namespace Thunder.Behavior
             {
                 Debug.Log(e);
             }
+
             fixedUpdating = false;
         }
+
+        private delegate void NoArgMethod();
     }
 }

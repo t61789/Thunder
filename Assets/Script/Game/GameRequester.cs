@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thunder.Entity;
+﻿using Thunder.Entity;
 using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.UI;
@@ -12,24 +7,31 @@ using UnityEngine;
 
 namespace Thunder.Game
 {
-    public enum GameType
+    public class GameRequester : BaseEntity, IShootable
     {
-        FlyingSaucer,
-        SpotShooting
-    }
-
-    public class GameRequester:BaseEntity,IShootable
-    {
-        public GameType GameType;
-        public float ReRequestTime = 3;
-        public Color RequestedColor = Color.red;
-
-        private bool _Started;
-        private bool _Requested;
-        private SimpleCounter _ReRequestSimpleCounter;
         private Color _BaseColor;
 
         private Material _Mat;
+        private bool _Requested;
+        private SimpleCounter _ReRequestSimpleCounter;
+
+        private bool _Started;
+        public GameType GameType;
+        public Color RequestedColor = Color.red;
+        public float ReRequestTime = 3;
+
+        public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
+        {
+            if (!_ReRequestSimpleCounter.Completed || _Started) return;
+
+            _Requested = !_Requested;
+            _Mat.SetColor("_Light", _Requested ? RequestedColor : _BaseColor);
+            PublicEvents.GameRequest?.Invoke(GameType, _Requested);
+            _ReRequestSimpleCounter.Recount();
+            LogPanel.Ins.LogSystem(_Requested
+                ? TextSys.RequestGameSuccess
+                : TextSys.CancelGameRequest);
+        }
 
         protected override void Awake()
         {
@@ -45,20 +47,7 @@ namespace Thunder.Game
             _BaseColor = _Mat.GetColor("_Light");
         }
 
-        public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
-        {
-            if (!_ReRequestSimpleCounter.Completed || _Started) return;
-
-            _Requested = !_Requested;
-            _Mat.SetColor("_Light", _Requested ? RequestedColor : _BaseColor);
-            PublicEvents.GameRequest?.Invoke(GameType,_Requested);
-            _ReRequestSimpleCounter.Recount();
-            LogPanel.Ins.LogSystem(_Requested
-                ? "Please stand on the start point to start the game"
-                : "You have canceled the game");
-        }
-
-        private void GameEnd(GameType type,bool completely)
+        private void GameEnd(GameType type, bool completely)
         {
             if (type != GameType) return;
             _Requested = false;

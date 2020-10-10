@@ -1,23 +1,20 @@
-﻿using BehaviorDesigner.Runtime;
+﻿using System;
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-using System;
 using UnityEngine;
 
 namespace Thunder.Behavior
 {
     public class Switcher : Decorator
     {
+        private TaskStatus executionStatus = TaskStatus.Inactive;
+        private NoArgMethod failedMethod;
+        public string failedMethodName;
         private TaskStatus preTaskStatus = TaskStatus.Failure;
 
         public SharedObject sharedObject;
-        public string successMethodName;
-        public string failedMethodName;
-
-        private delegate TaskStatus NoArgMethod();
         private NoArgMethod successMethod;
-        private NoArgMethod failedMethod;
-
-        private TaskStatus executionStatus = TaskStatus.Inactive;
+        public string successMethodName;
 
         public override bool CanExecute()
         {
@@ -33,17 +30,21 @@ namespace Thunder.Behavior
         {
             try
             {
-                if (successMethodName != null && successMethodName != "" && status == TaskStatus.Success && preTaskStatus == TaskStatus.Failure)
+                if (successMethodName != null && successMethodName != "" && status == TaskStatus.Success &&
+                    preTaskStatus == TaskStatus.Failure)
                 {
                     if (successMethod == null)
-                        successMethod = (NoArgMethod)Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, successMethodName);
+                        successMethod = (NoArgMethod) Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value,
+                            successMethodName);
 
                     successMethod();
                 }
-                else if (failedMethodName != null && failedMethodName != "" && status == TaskStatus.Failure && preTaskStatus == TaskStatus.Success)
+                else if (failedMethodName != null && failedMethodName != "" && status == TaskStatus.Failure &&
+                         preTaskStatus == TaskStatus.Success)
                 {
                     if (failedMethod == null)
-                        failedMethod = (NoArgMethod)Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, failedMethodName);
+                        failedMethod = (NoArgMethod) Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value,
+                            failedMethodName);
 
                     failedMethod();
                 }
@@ -53,6 +54,7 @@ namespace Thunder.Behavior
                 Debug.LogError(e);
                 return TaskStatus.Failure;
             }
+
             preTaskStatus = status;
 
             return status;
@@ -62,5 +64,7 @@ namespace Thunder.Behavior
         {
             executionStatus = TaskStatus.Inactive;
         }
+
+        private delegate TaskStatus NoArgMethod();
     }
 }

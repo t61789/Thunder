@@ -1,32 +1,29 @@
 ﻿using DG.Tweening;
-using System.Linq;
-using Thunder.Game;
 using Thunder.Game.FlyingSaucer;
 using Thunder.Tool;
 using Thunder.Utility;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Thunder.UI
 {
     public class FlyingSaucerScoreBoard : BaseUI
     {
-        public Vector2 HitJumpTime;
-        public Vector2 HitJumpSizeScale;
-        public Color HitJumpColor;
-
-        private Vector2 _HitJumpBaseSize;
-        private Color _HitJumpBaseColor;
         private TextMeshProUGUI _BatterText;
         private RectTransform _BatterTextRectTrans;
-        private TextMeshProUGUI _ScoreText;
+        private Color _HitJumpBaseColor;
+
+        private Vector2 _HitJumpBaseSize;
         private Sequence _HitJumpTween;
+        private TextMeshProUGUI _ScoreText;
+        public Color HitJumpColor;
+        public Vector2 HitJumpSizeScale;
+        public Vector2 HitJumpTime;
 
         protected override void Awake()
         {
             base.Awake();
-            
+
             _BatterText = RectTrans.Find("BatterText").GetComponent<TextMeshProUGUI>();
             _BatterTextRectTrans = _BatterText.rectTransform;
             _ScoreText = RectTrans.Find("ScoreText").GetComponent<TextMeshProUGUI>();
@@ -40,7 +37,7 @@ namespace Thunder.UI
             _HitJumpTween.SetAutoKill(false);
             _HitJumpTween.Pause();
 
-            UpdateData(0,0,0);
+            UpdateData(0, 0, 0);
         }
 
         private void Start()
@@ -62,7 +59,7 @@ namespace Thunder.UI
 
         private void FixedUpdate()
         {
-            _BatterText.color = 
+            _BatterText.color =
                 Tools.Lerp(HitJumpColor, _HitJumpBaseColor, FlyingSaucerGame.Instance.BatterFadeCounter.Interpolant);
         }
     }

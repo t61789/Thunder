@@ -7,11 +7,11 @@ namespace Thunder
     [RequireComponent(typeof(Camera))]
     public class CameraController : MonoBehaviour
     {
-        public string CameraType;
-        private string _PreCameraType;
+        private readonly Dictionary<string, BaseCamera> _Cameras = new Dictionary<string, BaseCamera>();
 
         private BaseCamera _CurCamera;
-        private readonly Dictionary<string, BaseCamera> _Cameras = new Dictionary<string, BaseCamera>();
+        private string _PreCameraType;
+        public string CameraType;
 
         public void SwitchCamera(string cameraType)
         {
@@ -38,6 +38,4 @@ namespace Thunder
             SwitchCamera(CameraType);
         }
     }
-
 }
-

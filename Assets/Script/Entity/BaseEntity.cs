@@ -5,6 +5,10 @@ namespace Thunder.Entity
 {
     public class BaseEntity : MonoBehaviour
     {
+        [DontInject] [SerializeField] private string _EntityName;
+
+        protected Transform _Trans;
+
         public string EntityName
         {
             set => _EntityName = value;
@@ -12,12 +16,7 @@ namespace Thunder.Entity
             get => string.IsNullOrEmpty(_EntityName) ? name : _EntityName;
         }
 
-        [DontInject]
-        [SerializeField]
-        private string _EntityName;
-
         public Transform Trans => _Trans;
-        protected Transform _Trans;
 
         protected virtual void Awake()
         {

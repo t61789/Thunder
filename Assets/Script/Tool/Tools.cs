@@ -1,11 +1,11 @@
-﻿using DG.Tweening;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
@@ -16,19 +16,18 @@ namespace Thunder.Tool
 {
     public static class Tools
     {
-        public static Text LogContainer;
-
         public const long BigNumber = 9223372036854775;
+        public static Text LogContainer;
 
         public static Vector3 ScreenMiddle = new Vector3(Screen.width / 2f, Screen.height / 2f);
 
         public static Vector2 FarPosition = new Vector2(BigNumber, BigNumber);
 
-        private static readonly Random Random;
+        private static readonly Random _Random;
 
         static Tools()
         {
-            Random = new Random(Guid.NewGuid().GetHashCode());
+            _Random = new Random(Guid.NewGuid().GetHashCode());
         }
 
         public static void Log(string message)
@@ -36,46 +35,47 @@ namespace Thunder.Tool
             LogContainer.text = message;
         }
 
-        ///<summary>
-        ///获取鼠标世界坐标
-        ///</summary>
+        /// <summary>
+        ///     获取鼠标世界坐标
+        /// </summary>
         public static Vector3 GetMousePosition()
         {
-            return (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            return (Vector2) Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 
-        ///<summary>
-        ///将向量source的方向转至direction的方向
-        ///</summary>
+        /// <summary>
+        ///     将向量source的方向转至direction的方向
+        /// </summary>
         public static Vector2 ChangeVectorDirection(Vector2 source, Vector2 direction)
         {
             return direction.normalized * source.magnitude;
         }
 
-        ///<summary>
-        ///将origin的长度转为length
-        ///</summary>
+        /// <summary>
+        ///     将origin的长度转为length
+        /// </summary>
         public static Vector3 ChangeVectorLength(Vector3 origin, float length)
         {
             return origin.normalized * length;
         }
 
-        ///<summary>
-        ///判断两个向量是否近似相似，精确到0.1^precision
-        ///</summary>
+        /// <summary>
+        ///     判断两个向量是否近似相似，精确到0.1^precision
+        /// </summary>
         public static bool IfVectorAppromxiate(Vector3 v1, Vector3 v2, int n)
         {
-            float precisionF = Mathf.Pow(0.1f, n);
+            var precisionF = Mathf.Pow(0.1f, n);
 
-            return (Mathf.Abs(v1.x - v2.x) < precisionF && Mathf.Abs(v1.y - v2.y) < precisionF);
+            return Mathf.Abs(v1.x - v2.x) < precisionF && Mathf.Abs(v1.y - v2.y) < precisionF;
         }
+
         public static bool IfVectorAppromxiate(Vector3 v1, Vector3 v2, double precision)
         {
-            return (Mathf.Abs(v1.x - v2.x) < precision && Mathf.Abs(v1.y - v2.y) < precision);
+            return Mathf.Abs(v1.x - v2.x) < precision && Mathf.Abs(v1.y - v2.y) < precision;
         }
 
         /// <summary>
-        /// 判断两个向量是否近似相似
+        ///     判断两个向量是否近似相似
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
@@ -89,7 +89,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 判断两个数是否近似相似，精确到0.1^precision
+        ///     判断两个数是否近似相似，精确到0.1^precision
         /// </summary>
         /// <param name="n1"></param>
         /// <param name="n2"></param>
@@ -100,9 +100,9 @@ namespace Thunder.Tool
             return Mathf.Abs(n1 - n2) <= precision;
         }
 
-        ///<summary>
-        ///如果按下任意键
-        ///</summary>
+        /// <summary>
+        ///     如果按下任意键
+        /// </summary>
         public static bool IfKeyboardAny()
         {
             bool judge;
@@ -114,70 +114,67 @@ namespace Thunder.Tool
             return judge;
         }
 
-        ///<summary>
-        ///如果鼠标任意键正在按住
-        ///</summary>
+        /// <summary>
+        ///     如果鼠标任意键正在按住
+        /// </summary>
         public static bool IfMouseButtonAny()
         {
             return Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2);
         }
 
-        ///<summary>
-        ///如果按下鼠标任意键
-        ///</summary>
+        /// <summary>
+        ///     如果按下鼠标任意键
+        /// </summary>
         public static bool IfMouseButtonDownAny()
         {
             return Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2);
         }
 
-        ///<summary>
-        ///向量转欧拉角，针对2D
-        ///</summary>
+        /// <summary>
+        ///     向量转欧拉角，针对2D
+        /// </summary>
         public static Vector3 Vec2Eul(Vector2 source)
         {
-            float degree = Vector2.Angle(source, Vector2.right);
+            var degree = Vector2.Angle(source, Vector2.right);
             if (source.y < 0)
                 degree = 360 - degree;
 
             return new Vector3(0, 0, degree);
         }
 
-        ///<summary>
-        ///欧拉角转向量，针对2D
-        ///</summary>
+        /// <summary>
+        ///     欧拉角转向量，针对2D
+        /// </summary>
         public static Vector3 Eul2Vec(Vector3 source)
         {
             return new Vector3(
                 Mathf.Cos(source.z * Mathf.Deg2Rad),
-                (float)Math.Sin(source.z * Mathf.Deg2Rad), 0).normalized;
+                (float) Math.Sin(source.z * Mathf.Deg2Rad), 0).normalized;
         }
 
-        ///<summary>
-        ///获取游戏物体的所有子物体，包括子物体的子物体
-        ///</summary>
+        /// <summary>
+        ///     获取游戏物体的所有子物体，包括子物体的子物体
+        /// </summary>
         public static Transform[] GetAllGameObject(Transform target)
         {
-            List<Transform> objects = new List<Transform>
+            var objects = new List<Transform>
             {
                 target
             };
 
-            foreach (Transform temp in target)
-            {
-                objects.AddRange(GetAllGameObject(temp));
-            }
+            foreach (Transform temp in target) objects.AddRange(GetAllGameObject(temp));
 
             return objects.ToArray();
         }
 
-        ///<summary>
-        ///在半径为radius的球内产生随机向量
-        ///</summary>
+        /// <summary>
+        ///     在半径为radius的球内产生随机向量
+        /// </summary>
         public static Vector3 RandomVectorInSphere(float radius)
         {
-            float x = RandomNormal() * (RandomNormal() > 0.5 ? 1 : -1);
-            float y = RandomNormal() * (RandomNormal() > 0.5 ? 1 : -1);
-            float z = RandomNormal() * (RandomNormal() > 0.5 ? 1 : -1);
+            var x = RandomNormal() * (RandomNormal() > 0.5 ? 1 : -1);
+            var y = RandomNormal() * (RandomNormal() > 0.5 ? 1 : -1);
+            var z = RandomNormal() * (RandomNormal() > 0.5 ? 1 : -1);
 
             var direction = new Vector3(x, y, z).normalized;
             radius = RandomNormal() * radius;
@@ -185,30 +182,30 @@ namespace Thunder.Tool
             return direction * radius;
         }
 
-        ///<summary>
-        ///在半径为radius的圆内产生随机向量
-        ///</summary>
+        /// <summary>
+        ///     在半径为radius的圆内产生随机向量
+        /// </summary>
         public static Vector3 RandomVectorInCircle(float radius)
         {
             return Quaternion.AngleAxis(RandomFloat(0, 360), Vector3.forward) * Vector3.up * (RandomNormal() * radius);
         }
 
-        ///<summary>
-        ///关闭游戏
-        ///</summary>
+        /// <summary>
+        ///     关闭游戏
+        /// </summary>
         public static void ExitGame()
         {
             Application.Quit();
         }
 
-        ///<summary>
-        ///获取所有组件
-        ///</summary>
+        /// <summary>
+        ///     获取所有组件
+        /// </summary>
         public static T[] GetAllComponents<T>(Transform[] target)
         {
             var spriteT = new List<T>();
 
-            foreach (Transform temp in target)
+            foreach (var temp in target)
             {
                 var tempT = temp.GetComponent<T>();
 
@@ -222,66 +219,65 @@ namespace Thunder.Tool
                     ifGet = false;
                 }
 
-                if (ifGet)
-                {
-                    spriteT.Add(tempT);
-                }
+                if (ifGet) spriteT.Add(tempT);
             }
 
             return spriteT.ToArray();
         }
 
-        ///<summary>
-        ///格式化报错
-        ///</summary>
+        /// <summary>
+        ///     格式化报错
+        /// </summary>
         public static void LogError(GameObject go, string message)
         {
             Debug.LogError(go.name + " : " + message);
         }
-        ///<summary>
-        ///格式化报错
-        ///</summary>
+
+        /// <summary>
+        ///     格式化报错
+        /// </summary>
         public static void LogError(string scriptName, string message)
         {
             Debug.LogError(scriptName + " : " + message);
         }
-        ///<summary>
-        ///格式化报错
-        ///</summary>
+
+        /// <summary>
+        ///     格式化报错
+        /// </summary>
         public static void LogError(GameObject go, string scriptName, string message)
         {
             Debug.LogError(scriptName + " in " + go.name + " : " + message);
         }
 
-        ///<summary>
-        ///检测游戏物体上是否有某组件，若无则报错
-        ///</summary>
+        /// <summary>
+        ///     检测游戏物体上是否有某组件，若无则报错
+        /// </summary>
         public static void DetectCompement<T>(GameObject go)
         {
-            T compement = go.GetComponent<T>();
+            var compement = go.GetComponent<T>();
             if (compement == null)
                 Debug.LogError(compement.GetType() + " isn't attach in " + go.name);
         }
 
-        ///<summary>
-        ///vector2转vector3
-        ///</summary>
+        /// <summary>
+        ///     vector2转vector3
+        /// </summary>
         // ReSharper disable once InconsistentNaming
         public static Vector3 V2TV3(Vector2 v2)
         {
             return new Vector3(v2.x, v2.y, 0);
         }
 
-        ///<summary>
-        ///两点间检测所有碰撞射线的物体
-        ///</summary>
+        /// <summary>
+        ///     两点间检测所有碰撞射线的物体
+        /// </summary>
         public static RaycastHit2D[] Raycast2DBetween(Vector3 from, Vector3 to)
         {
             return Physics2D.RaycastAll(from, to - from, (to - from).magnitude);
         }
 
         /// <summary>
-        /// 获取当前帧率
+        ///     获取当前帧率
         /// </summary>
         public static float GetFps()
         {
@@ -289,22 +285,19 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取输入数的正负号
+        ///     获取输入数的正负号
         /// </summary>
         /// <param name="number"></param>
         /// <returns>正为1，负为-1，零为0</returns>
         public static int GetSign(float number)
         {
-            if (Mathf.Approximately(number, 0))
-            {
-                return 0;
-            }
+            if (Mathf.Approximately(number, 0)) return 0;
 
-            return (int)(Mathf.Abs(number) / number);
+            return (int) (Mathf.Abs(number) / number);
         }
 
         /// <summary>
-        /// 从path路径的分割精灵中获取指定段内的sprite数组
+        ///     从path路径的分割精灵中获取指定段内的sprite数组
         /// </summary>
         /// <param name="path"></param>
         /// <param name="from"></param>
@@ -312,18 +305,15 @@ namespace Thunder.Tool
         /// <returns></returns>
         public static Sprite[] GetSliceSprite(string path, int from, int to)
         {
-            Sprite[] temp = Resources.LoadAll<Sprite>(path);
-            List<Sprite> result = new List<Sprite>();
+            var temp = Resources.LoadAll<Sprite>(path);
+            var result = new List<Sprite>();
 
-            for (int i = from; i <= to; i++)
-            {
-                result.Add(temp[i]);
-            }
+            for (var i = from; i <= to; i++) result.Add(temp[i]);
             return result.ToArray();
         }
 
         /// <summary>
-        /// 向target向量添加add向量，限制长度为limit
+        ///     向target向量添加add向量，限制长度为limit
         /// </summary>
         /// <param name="target"></param>
         /// <param name="add"></param>
@@ -338,14 +328,14 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取指定区间内的整数集合
+        ///     获取指定区间内的整数集合
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
         public static int[] IntInSection(float from, float to)
         {
-            List<int> result = new List<int>();
+            var result = new List<int>();
 
             if (from > to)
             {
@@ -354,16 +344,13 @@ namespace Thunder.Tool
                 from = from - to;
             }
 
-            for (int i = (int)from; i < to; i++)
-            {
-                result.Add(i);
-            }
+            for (var i = (int) from; i < to; i++) result.Add(i);
 
             return result.ToArray();
         }
 
         /// <summary>
-        /// 解决分段问题
+        ///     解决分段问题
         /// </summary>
         /// <param name="unitLength">单元长度</param>
         /// <param name="length">总长度</param>
@@ -371,7 +358,8 @@ namespace Thunder.Tool
         /// <param name="intervalMin">最短间距</param>
         /// <param name="unitCount">单元数量</param>
         /// <param name="interval">间距</param>
-        public static void GetUnitInterval(float unitLength, float length, float intervalMax, float intervalMin, out int unitCount, out float interval)
+        public static void GetUnitInterval(float unitLength, float length, float intervalMax, float intervalMin,
+            out int unitCount, out float interval)
         {
             //   n:最大间距
             //   m:最小间距
@@ -388,7 +376,7 @@ namespace Thunder.Tool
             //b = -------
             //      x+1
 
-            int[] temp = Tools.IntInSection(
+            var temp = IntInSection(
                 (length + intervalMax) / (unitLength + intervalMax),
                 (length + intervalMin) / (unitLength + intervalMin));
 
@@ -398,24 +386,21 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 将字符串数组组合为一个字符串，用,隔开
+        ///     将字符串数组组合为一个字符串，用,隔开
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
         public static string CombineStringArray(string[] target)
         {
-            string result = "";
+            var result = "";
 
-            foreach (string temp in target)
-            {
-                result = result + "," + temp;
-            }
+            foreach (var temp in target) result = result + "," + temp;
 
             return result;
         }
 
         /// <summary>
-        /// 判断某点是否在两点构成的直线上
+        ///     判断某点是否在两点构成的直线上
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -426,35 +411,31 @@ namespace Thunder.Tool
             if (IfVectorAppromxiate(point, line1, 3) || IfVectorAppromxiate(point, line2, 3))
                 return true;
 
-            Vector3 temp1 = (line1 - line2).normalized;
-            Vector3 temp2 = (point - line2).normalized;
+            var temp1 = (line1 - line2).normalized;
+            var temp2 = (point - line2).normalized;
 
             return IfVectorAppromxiate(temp1, temp2, 3) || IfVectorAppromxiate(temp1, -temp2, 3);
         }
+
         public static bool IfPointOnLine(Vector3 line1, Vector3 line2, Vector3 point, double precision)
         {
-            float a = line1.y - line2.y;
-            float b = line2.x - line1.x;
-            float c = line1.x * line2.y - line2.x * line1.y;
+            var a = line1.y - line2.y;
+            var b = line2.x - line1.x;
+            var c = line1.x * line2.y - line2.x * line1.y;
 
             float distance = -1;
 
             if (IfAppromxiate(a, 0, 3) && IfAppromxiate(b, 0, 3))
-            {
                 distance = Mathf.Abs(point.y - distance);
-            }
             else
-            {
                 distance = Mathf.Abs((a * point.x + b * point.y + c) / Mathf.Sqrt(a * a + b * b));
-            }
             if (distance < precision)
                 return true;
-            else
-                return false;
+            return false;
         }
 
         /// <summary>
-        /// 判断某点是否在两点构成的线段上
+        ///     判断某点是否在两点构成的线段上
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -466,36 +447,33 @@ namespace Thunder.Tool
             if ((IfVectorAppromxiate(point, line1, 3) || IfVectorAppromxiate(point, line2, 3)) && !avoidEndpoint)
                 return true;
 
-            Vector3 temp1 = (line1 - line2);
-            Vector3 temp2 = (point - line2);
+            var temp1 = line1 - line2;
+            var temp2 = point - line2;
 
-            bool sameDir = IfVectorAppromxiate(temp1.normalized, temp2.normalized, 3);
+            var sameDir = IfVectorAppromxiate(temp1.normalized, temp2.normalized, 3);
 
-            bool inRange = temp1.magnitude > temp2.magnitude;
+            var inRange = temp1.magnitude > temp2.magnitude;
 
             return inRange && sameDir;
         }
-        public static bool IfPointOnSegment(Vector3 line1, Vector3 line2, Vector3 point, bool avoidEndpoint, double precision)
-        {
-            if (!IfPointOnLine(line1, line2, point, precision))
-            {
-                return false;
-            }
 
-            if ((IfVectorAppromxiate(point, line1, precision) || IfVectorAppromxiate(point, line2, precision)))
+        public static bool IfPointOnSegment(Vector3 line1, Vector3 line2, Vector3 point, bool avoidEndpoint,
+            double precision)
+        {
+            if (!IfPointOnLine(line1, line2, point, precision)) return false;
+
+            if (IfVectorAppromxiate(point, line1, precision) || IfVectorAppromxiate(point, line2, precision))
             {
                 if (avoidEndpoint)
                     return false;
-                else
-                    return true;
+                return true;
             }
 
             return false;
-
         }
 
         /// <summary>
-        /// 获取GUID
+        ///     获取GUID
         /// </summary>
         /// <returns></returns>
         public static string GetGuid()
@@ -504,56 +482,47 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取哈希表中的所有值，存入list
+        ///     获取哈希表中的所有值，存入list
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="hash"></param>
         /// <returns></returns>
         public static List<T> HashTableValueToList<T>(Hashtable hash)
         {
-            List<T> result = new List<T>();
-            foreach (object value in hash.Values)
-            {
-                result.Add((T)value);
-            }
+            var result = new List<T>();
+            foreach (var value in hash.Values) result.Add((T) value);
             return result;
         }
 
         /// <summary>
-        /// 获取哈希表中的所有键，存入list
+        ///     获取哈希表中的所有键，存入list
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="hash"></param>
         /// <returns></returns>
         public static List<T> HashTableKeyToList<T>(Hashtable hash)
         {
-            List<T> result = new List<T>();
-            foreach (object value in hash.Keys)
-            {
-                result.Add((T)value);
-            }
+            var result = new List<T>();
+            foreach (var value in hash.Keys) result.Add((T) value);
             return result;
         }
 
         /// <summary>
-        /// 获取所有文件
+        ///     获取所有文件
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public static string[] GetAllFiles(string path)
         {
             if (File.Exists(path))
-                return new[] { path };
+                return new[] {path};
 
             if (!Directory.Exists(path))
                 return new string[0];
 
-            List<string> result = new List<string>();
+            var result = new List<string>();
 
-            foreach (string tempDirectory in Directory.GetDirectories(path))
-            {
-                result.AddRange(GetAllFiles(tempDirectory));
-            }
+            foreach (var tempDirectory in Directory.GetDirectories(path)) result.AddRange(GetAllFiles(tempDirectory));
 
             result.AddRange(Directory.GetFiles(path));
 
@@ -561,7 +530,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取所有文件夹
+        ///     获取所有文件夹
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -570,12 +539,10 @@ namespace Thunder.Tool
             if (File.Exists(path) || !Directory.Exists(path))
                 return new string[0];
 
-            List<string> result = new List<string>();
+            var result = new List<string>();
 
-            foreach (string tempDirectory in Directory.GetDirectories(path))
-            {
+            foreach (var tempDirectory in Directory.GetDirectories(path))
                 result.AddRange(GetAllDirectories(tempDirectory));
-            }
 
             result.AddRange(Directory.GetDirectories(path));
 
@@ -583,7 +550,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 范围内随机的大量点
+        ///     范围内随机的大量点
         /// </summary>
         /// <param name="center"></param>
         /// <param name="radius"></param>
@@ -591,16 +558,13 @@ namespace Thunder.Tool
         /// <returns></returns>
         public static Vector3[] RandomPoints(Vector3 center, float radius, int number)
         {
-            List<Vector3> result = new List<Vector3>();
-            for (int i = 0; i < number; i++)
-            {
-                result.Add(Tools.RandomVectorInCircle(radius) + center);
-            }
+            var result = new List<Vector3>();
+            for (var i = 0; i < number; i++) result.Add(RandomVectorInCircle(radius) + center);
             return result.ToArray();
         }
 
         /// <summary>
-        /// from向to增加一定的量
+        ///     from向to增加一定的量
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -623,11 +587,12 @@ namespace Thunder.Tool
                 if (from < to)
                     from = to;
             }
+
             return from;
         }
 
         /// <summary>
-        /// 向量from向to增加一定的量
+        ///     向量from向to增加一定的量
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -635,7 +600,7 @@ namespace Thunder.Tool
         /// <returns></returns>
         public static Vector3 AddTo(Vector3 from, Vector3 to, float distance)
         {
-            Vector3 dir = (to - from).normalized;
+            var dir = (to - from).normalized;
             if (dir == Vector3.zero)
                 return to;
             from += dir * distance;
@@ -646,7 +611,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 向量转向的lerp
+        ///     向量转向的lerp
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -654,12 +619,12 @@ namespace Thunder.Tool
         /// <returns></returns>
         public static Vector3 LerpAngle(Vector3 from, Vector3 to, float t)
         {
-            float angle = Mathf.Lerp(0, Vector3.Angle(from, to), t);
+            var angle = Mathf.Lerp(0, Vector3.Angle(from, to), t);
             return Eul2Vec(new Vector3(0, 0, Vec2Eul(from).z + angle));
         }
 
         /// <summary>
-        /// list转string
+        ///     list转string
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="t"></param>
@@ -667,38 +632,38 @@ namespace Thunder.Tool
         /// <returns></returns>
         public static string List2String<T>(List<T> t, Func<T, object> f)
         {
-            StringBuilder sb = new StringBuilder(100);
+            var sb = new StringBuilder(100);
             t.ForEach(x => sb.Append("{" + f(x) + "}"));
             return sb.ToString();
         }
 
         /// <summary>
-        /// 向量转过一定的角度
+        ///     向量转过一定的角度
         /// </summary>
         /// <param name="source"></param>
         /// <param name="degree"></param>
         /// <returns></returns>
         public static Vector3 VecTurnDegree(Vector3 source, float degree)
         {
-            Vector3 temp = Vec2Eul(source);
+            var temp = Vec2Eul(source);
             temp.z += degree;
             return Eul2Vec(temp) * source.magnitude;
         }
 
         /// <summary>
-        /// 离散化坐标
+        ///     离散化坐标
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
         public static Vector2 Discretization(Vector2 source)
         {
-            source.x = (int)(source.x + (source.x >= 0 ? 0.5f : -0.5f));
-            source.y = (int)(source.y + (source.y >= 0 ? 0.5f : -0.5f));
+            source.x = (int) (source.x + (source.x >= 0 ? 0.5f : -0.5f));
+            source.y = (int) (source.y + (source.y >= 0 ? 0.5f : -0.5f));
             return source;
         }
 
         /// <summary>
-        /// 欧拉角平滑移动
+        ///     欧拉角平滑移动
         /// </summary>
         /// <param name="origin"></param>
         /// <param name="target"></param>
@@ -712,36 +677,32 @@ namespace Thunder.Tool
             if (target.z < 0)
                 target.z += 360;
 
-            Vector3 temp = new Vector3();
+            var temp = new Vector3();
             if (target.z < origin.z)
             {
                 if (origin.z - target.z >= 180)
                     return Vector3.SmoothDamp(origin + Vector3.forward * 360, target, ref temp, smoothTime, maxSpeed);
-                else
-                    return Vector3.SmoothDamp(origin, target, ref temp, smoothTime, maxSpeed);
+                return Vector3.SmoothDamp(origin, target, ref temp, smoothTime, maxSpeed);
             }
-            else
-            {
-                if (target.z - origin.z >= 180)
-                    return Vector3.SmoothDamp(origin, target - Vector3.forward * 360, ref temp, smoothTime, maxSpeed);
-                else
-                    return Vector3.SmoothDamp(origin, target, ref temp, smoothTime, maxSpeed);
-            }
+
+            if (target.z - origin.z >= 180)
+                return Vector3.SmoothDamp(origin, target - Vector3.forward * 360, ref temp, smoothTime, maxSpeed);
+            return Vector3.SmoothDamp(origin, target, ref temp, smoothTime, maxSpeed);
         }
 
         /// <summary>
-        /// 字符串转向量，形如：x_y_z
+        ///     字符串转向量，形如：x_y_z
         /// </summary>
         /// <param name="vector"></param>
         /// <returns></returns>
         public static Vector3 StringToVector3(string vector)
         {
-            string[] temp = vector.Split('_');
+            var temp = vector.Split('_');
             return new Vector3(float.Parse(temp[0]), float.Parse(temp[1]), float.Parse(temp[2]));
         }
 
         /// <summary>
-        /// 首字母大写
+        ///     首字母大写
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -754,7 +715,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 首字母小写
+        ///     首字母小写
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -768,31 +729,32 @@ namespace Thunder.Tool
 
         public static void LogTime(object label = null)
         {
-            Debug.Log("[" + label + "] " + DateTime.Now.Minute + "m:" + DateTime.Now.Second + "s:" + DateTime.Now.Millisecond + "mi");
+            Debug.Log("[" + label + "] " + DateTime.Now.Minute + "m:" + DateTime.Now.Second + "s:" +
+                      DateTime.Now.Millisecond + "mi");
         }
 
         /// <summary>
-        /// 创建一个圆环mesh，宽度1，半径1
+        ///     创建一个圆环mesh，宽度1，半径1
         /// </summary>
         /// <param name="detail"></param>
         /// <returns></returns>
         public static Mesh CreateRingMesh(int detail)
         {
-            Mesh mesh = new Mesh();
+            var mesh = new Mesh();
 
-            float angle = 360f / detail;
+            var angle = 360f / detail;
             var vertex = new List<Vector3>();
-            for (int i = 0; i < detail; i++)
+            for (var i = 0; i < detail; i++)
             {
-                float radius = angle * Mathf.Deg2Rad * i;
-                Vector3 temp = new Vector3(Mathf.Cos(radius), Mathf.Sin(radius));
+                var radius = angle * Mathf.Deg2Rad * i;
+                var temp = new Vector3(Mathf.Cos(radius), Mathf.Sin(radius));
                 vertex.Add(temp * 0.5f);
                 vertex.Add(temp * 1.5f);
             }
 
-            var baseSqu = new[] { 0, 2, 1, 2, 3, 1 };
+            var baseSqu = new[] {0, 2, 1, 2, 3, 1};
             var triangles = new List<int>();
-            for (int i = 0; i < detail; i++)
+            for (var i = 0; i < detail; i++)
                 triangles.AddRange(baseSqu.Select(t => (i * 2 + t) % (detail * 2)));
 
             mesh.vertices = vertex.ToArray();
@@ -802,7 +764,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 判断该类型是否有指定特性
+        ///     判断该类型是否有指定特性
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="type"></param>
@@ -814,7 +776,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 判断该属性是否有指定特性
+        ///     判断该属性是否有指定特性
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="type"></param>
@@ -826,7 +788,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 判断该字段是否有指定特性
+        ///     判断该字段是否有指定特性
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="type"></param>
@@ -838,15 +800,15 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 对词典添加键值对，若键已经存在，则修改对应的值
+        ///     对词典添加键值对，若键已经存在，则修改对应的值
         /// </summary>
-        /// <typeparam name="TK"></typeparam>
-        /// <typeparam name="TV"></typeparam>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
         /// <param name="dic"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="forceAdd"></param>
-        public static void AddOrModify<TK, TV>(this Dictionary<TK, TV> dic, TK key, TV value, bool forceAdd = false)
+        public static void AddOrModify<K, V>(this Dictionary<K, V> dic, K key, V value, bool forceAdd = false)
         {
             if (dic.TryGetValue(key, out _))
             {
@@ -854,19 +816,20 @@ namespace Thunder.Tool
                 dic[key] = value;
                 return;
             }
+
             dic.Add(key, value);
         }
 
         /// <summary>
-        /// 从词典中获取值，若键不存在，则添加键和空值并返回
+        ///     从词典中获取值，若键不存在，则添加键和空值并返回
         /// </summary>
-        /// <typeparam name="TK"></typeparam>
-        /// <typeparam name="TV"></typeparam>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
         /// <param name="dic"></param>
         /// <param name="key"></param>
         /// <param name="forceGet"></param>
         /// <returns></returns>
-        public static TV GetOrCreate<TK, TV>(this Dictionary<TK, TV> dic, TK key, bool forceGet = false)
+        public static V GetOrCreate<K, V>(this Dictionary<K, V> dic, K key, bool forceGet = false)
         {
             if (dic.TryGetValue(key, out var result))
                 return result;
@@ -882,7 +845,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 三维向量转四维，w值为1，表示坐标
+        ///     三维向量转四维，w值为1，表示坐标
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
@@ -892,7 +855,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 三维向量转四维，w值为0，表示方向
+        ///     三维向量转四维，w值为0，表示方向
         /// </summary>
         /// <param name="dir"></param>
         /// <returns></returns>
@@ -902,7 +865,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 思维向量转三维，使用正交除法，即xyz值均除以w。若w值为0则返回零向量
+        ///     思维向量转三维，使用正交除法，即xyz值均除以w。若w值为0则返回零向量
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
@@ -913,7 +876,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 判断指定坐标是否在摄像机的视野内
+        ///     判断指定坐标是否在摄像机的视野内
         /// </summary>
         /// <param name="pos"></param>
         /// <param name="camera"></param>
@@ -921,14 +884,14 @@ namespace Thunder.Tool
         public static bool InCameraView(Vector3 pos, Camera camera = null)
         {
             camera = camera ?? Camera.main;
-            Vector4 result = camera.projectionMatrix * camera.worldToCameraMatrix * pos.ToV4Pos();
-            bool x = result.x <= result.w && result.x >= -result.w;
-            bool y = result.y <= result.w && result.y >= -result.w;
+            var result = camera.projectionMatrix * camera.worldToCameraMatrix * pos.ToV4Pos();
+            var x = result.x <= result.w && result.x >= -result.w;
+            var y = result.y <= result.w && result.y >= -result.w;
             return x && y;
         }
 
         /// <summary>
-        /// 精确地Log一个向量
+        ///     精确地Log一个向量
         /// </summary>
         /// <param name="v"></param>
         public static void LogVector(Vector3 v)
@@ -937,7 +900,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 将y轴旋转角转向由target向量指定的方向
+        ///     将y轴旋转角转向由target向量指定的方向
         /// </summary>
         /// <param name="preLocalEulerAngleY">之前的旋转角</param>
         /// <param name="target">目标向量</param>
@@ -945,14 +908,14 @@ namespace Thunder.Tool
         /// <returns></returns>
         public static float TurnToVectorXz(float preLocalEulerAngleY, Vector3 target, float deltaAngle)
         {
-            float targetAngle =
+            var targetAngle =
                 Mathf.Sign(Vector3.Cross(Vector3.forward, target).y) *
                 Vector3.Angle(target, Vector3.forward);
             return Mathf.MoveTowardsAngle(preLocalEulerAngleY, targetAngle, deltaAngle);
         }
 
         /// <summary>
-        /// 递归地查找指定名称的物体，包括根物体
+        ///     递归地查找指定名称的物体，包括根物体
         /// </summary>
         /// <param name="root"></param>
         /// <param name="name"></param>
@@ -964,9 +927,9 @@ namespace Thunder.Tool
             findTrans.Push(root);
             while (findTrans.Count != 0)
             {
-                Transform curTrans = findTrans.Pop();
+                var curTrans = findTrans.Pop();
                 if (curTrans.name == name) return curTrans;
-                for (int i = 0; i < curTrans.childCount; i++)
+                for (var i = 0; i < curTrans.childCount; i++)
                     findTrans.Push(curTrans.GetChild(i));
             }
 
@@ -974,7 +937,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 将向量投影到xz平面上
+        ///     将向量投影到xz平面上
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -985,7 +948,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 将向量投影到xy平面上
+        ///     将向量投影到xy平面上
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -996,7 +959,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 将向量投影到yz平面上
+        ///     将向量投影到yz平面上
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -1007,7 +970,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 判断下标是否超出数组范围
+        ///     判断下标是否超出数组范围
         /// </summary>
         /// <param name="arr"></param>
         /// <param name="index"></param>
@@ -1018,7 +981,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获得形如 {x,y} 的字符串
+        ///     获得形如 {x,y} 的字符串
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1028,7 +991,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获得形如 {x,y,z} 的字符串
+        ///     获得形如 {x,y,z} 的字符串
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1038,7 +1001,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获得形如 {x,y,z,w} 的字符串
+        ///     获得形如 {x,y,z,w} 的字符串
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1048,7 +1011,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取指定的低维向量
+        ///     获取指定的低维向量
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1058,7 +1021,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取指定的低维向量
+        ///     获取指定的低维向量
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1068,7 +1031,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取指定的低维向量
+        ///     获取指定的低维向量
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1078,7 +1041,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取指定的低维向量
+        ///     获取指定的低维向量
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1088,7 +1051,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 对所有的分量取平均值
+        ///     对所有的分量取平均值
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1098,7 +1061,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 对所有的分量取平均值
+        ///     对所有的分量取平均值
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1108,7 +1071,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 对所有的分量取平均值
+        ///     对所有的分量取平均值
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1118,41 +1081,41 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 限定于360内
+        ///     限定于360内
         /// </summary>
         public static float LerpAngle(float a, float b, float t)
         {
-            float result = Mathf.LerpAngle(a, b, t);
+            var result = Mathf.LerpAngle(a, b, t);
             return result + (result < 0 ? 360 : 0);
         }
 
         /// <summary>
-        /// 返回给定范围内的随机float值
+        ///     返回给定范围内的随机float值
         /// </summary>
         public static float RandomFloat(float min, float max)
         {
-            float temp = (max - min) * RandomNormal();
+            var temp = (max - min) * RandomNormal();
             return min + temp;
         }
 
         /// <summary>
-        /// 返回给定范围内的随机int值，闭区间
+        ///     返回给定范围内的随机int值，闭区间
         /// </summary>
         public static int RandomInt(int min, int max)
         {
-            return Random.Next(min, max + 1);
+            return _Random.Next(min, max + 1);
         }
 
         /// <summary>
-        /// 返回0，1之间的float值
+        ///     返回0，1之间的float值
         /// </summary>
         public static float RandomNormal()
         {
-            return (float)Random.NextDouble();
+            return (float) _Random.NextDouble();
         }
 
         /// <summary>
-        /// 施密特正交化，获取新左手坐标系的三个轴
+        ///     施密特正交化，获取新左手坐标系的三个轴
         /// </summary>
         /// <param name="z"></param>
         /// <param name="auxiliary">辅助向量，用于构造坐标系</param>
@@ -1166,7 +1129,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 施密特正交化，获取新左手坐标系的变换矩阵
+        ///     施密特正交化，获取新左手坐标系的变换矩阵
         /// </summary>
         /// <param name="z"></param>
         /// <param name="auxiliary">辅助向量，用于构造坐标系</param>
@@ -1181,7 +1144,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 根据三个坐标轴以及坐标原点构造变换矩阵
+        ///     根据三个坐标轴以及坐标原点构造变换矩阵
         /// </summary>
         /// <param name="x">轴x</param>
         /// <param name="y">轴y</param>
@@ -1197,21 +1160,21 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 构造简单坐标变换矩阵，坐标系的y轴与世界坐标系平行
+        ///     构造简单坐标变换矩阵，坐标系的y轴与世界坐标系平行
         /// </summary>
         /// <param name="z">轴z</param>
         /// <param name="o">坐标原点</param>
         /// <returns></returns>
         public static Matrix4x4 BuildTransferMatrix(Vector3 z, Vector3 o = default)
         {
-            Vector3 y = Vector3.up;
+            var y = Vector3.up;
             z = z.normalized;
-            Vector3 x = Vector3.Cross(y, z);
+            var x = Vector3.Cross(y, z);
             return BuildTransferMatrix(x, y, z, o);
         }
 
         /// <summary>
-        /// 插值，经过clamp处理
+        ///     插值，经过clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1223,7 +1186,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 插值，未经clamp处理
+        ///     插值，未经clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1235,7 +1198,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 插值，经过clamp处理
+        ///     插值，经过clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1249,7 +1212,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 插值，未经clamp处理
+        ///     插值，未经clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1263,7 +1226,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 插值，经过clamp处理
+        ///     插值，经过clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1278,7 +1241,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 插值，未经clamp处理
+        ///     插值，未经clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1293,7 +1256,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 反插值，经过clamp处理。ab不可相等
+        ///     反插值，经过clamp处理。ab不可相等
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1306,7 +1269,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 反插值，未经clamp处理。ab不可相等
+        ///     反插值，未经clamp处理。ab不可相等
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1319,7 +1282,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取rect的尺寸
+        ///     获取rect的尺寸
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
@@ -1329,7 +1292,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取rect的坐标
+        ///     获取rect的坐标
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
@@ -1339,7 +1302,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 设置rectTransform的长宽
+        ///     设置rectTransform的长宽
         /// </summary>
         /// <param name="rt"></param>
         /// <param name="size"></param>
@@ -1350,7 +1313,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 生成改变固定尺寸的tween
+        ///     生成改变固定尺寸的tween
         /// </summary>
         /// <param name="rt"></param>
         /// <param name="endValue"></param>
@@ -1365,7 +1328,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// clamp函数的扩展方法形式
+        ///     clamp函数的扩展方法形式
         /// </summary>
         /// <param name="f"></param>
         /// <param name="a"></param>
@@ -1377,7 +1340,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// clamp01函数的扩展方法形式
+        ///     clamp01函数的扩展方法形式
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
@@ -1387,7 +1350,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// clamp函数的扩展方法形式
+        ///     clamp函数的扩展方法形式
         /// </summary>
         /// <param name="i"></param>
         /// <param name="a"></param>
@@ -1399,7 +1362,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 创建一个src尺寸/downSample大小的renderTexture
+        ///     创建一个src尺寸/downSample大小的renderTexture
         /// </summary>
         /// <param name="src"></param>
         /// <param name="downSample"></param>
@@ -1410,7 +1373,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// RenderTexture.ReleaseTemporary的扩展方法形式
+        ///     RenderTexture.ReleaseTemporary的扩展方法形式
         /// </summary>
         /// <param name="src"></param>
         public static void ReleaseTemporary(this RenderTexture src)
@@ -1419,19 +1382,19 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 独立一个新材质并赋给目标渲染器
+        ///     独立一个新材质并赋给目标渲染器
         /// </summary>
         /// <param name="re"></param>
         /// <returns></returns>
         public static Material StandaloneMaterial(this Renderer re)
         {
-            Material newMat = re.material;
+            var newMat = re.material;
             re.material = newMat;
             return newMat;
         }
 
         /// <summary>
-        /// 随机获取数组内的一个元素
+        ///     随机获取数组内的一个元素
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1443,21 +1406,21 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 在数组的指定范围内随机获取一个元素
+        ///     在数组的指定范围内随机获取一个元素
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
         /// <param name="start">起始下标</param>
         /// <param name="end">结束下标</param>
         /// <returns></returns>
-        public static T RandomTake<T>(this T[] arr,int start,int end)
+        public static T RandomTake<T>(this T[] arr, int start, int end)
         {
             if (arr == null || arr.Length == 0) return default;
             return arr[RandomInt(start, end)];
         }
 
         /// <summary>
-        /// 获取数组最后一个元素的下标
+        ///     获取数组最后一个元素的下标
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1468,7 +1431,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 向量全相乘
+        ///     向量全相乘
         /// </summary>
         /// <param name="v"></param>
         /// <param name="other"></param>
@@ -1479,7 +1442,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 查找第一个符合条件的对象，返回其下标
+        ///     查找第一个符合条件的对象，返回其下标
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1487,7 +1450,7 @@ namespace Thunder.Tool
         /// <returns></returns>
         public static int FindIndex<T>(this IEnumerable<T> arr, Func<T, bool> check)
         {
-            int count = 0;
+            var count = 0;
             foreach (var unit in arr)
             {
                 if (check(unit)) return count;
@@ -1498,7 +1461,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 遍历目标迭代器，对于每个元素执行foreachAction
+        ///     遍历目标迭代器，对于每个元素执行foreachAction
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1510,7 +1473,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 交换数组中的两个元素
+        ///     交换数组中的两个元素
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1524,7 +1487,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 获取目标物体的一个克隆
+        ///     获取目标物体的一个克隆
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -1534,7 +1497,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 在一个区间内循环
+        ///     在一个区间内循环
         /// </summary>
         /// <param name="val"></param>
         /// <param name="length"></param>
@@ -1548,7 +1511,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 在一个区间内循环
+        ///     在一个区间内循环
         /// </summary>
         /// <param name="val"></param>
         /// <param name="length"></param>

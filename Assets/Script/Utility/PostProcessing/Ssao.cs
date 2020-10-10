@@ -6,11 +6,11 @@ namespace Thunder.Utility.PostProcessing
     [Serializable]
     public class Ssao : BasePostProcessing
     {
-        [Range(0, 1)]
-        public float SamplerRange;
-        public float SamplerFactor = 0.05f;
         public float Contrast = 1;
         public Texture2D Noise;
+        public float SamplerFactor = 0.05f;
+
+        [Range(0, 1)] public float SamplerRange;
 
         public override void Init()
         {

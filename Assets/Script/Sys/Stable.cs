@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Thunder.Tool.ObjectPool;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Object = System.Object;
 
 namespace Thunder.Sys
 {
-    public class Stable:MonoBehaviour
+    public class Stable : MonoBehaviour
     {
-        public static bool SaveLog =
-#if UNITY_EDITOR
-            false;
+        public static bool SaveLog
+#if UNITY_EDITOR;
 #elif UNITY_STANDALONE_WIN
             true;
 #else
@@ -32,11 +26,14 @@ namespace Thunder.Sys
         private CampSys _CampSys;
         private ControlSys _ControlSys;
         private DataBaseSys _DataBaseSys;
+
         private LuaSys _LuaSys;
+
         //private SaveSys _SaveSys;
         private UISys _UISys;
         private ValueSys _ValueSys;
         private ObjectPool _ObjectPool;
+        private TextSys _TextSys;
 
         private bool _Loading;
         private AsyncOperation _LoadingAo;
@@ -50,7 +47,8 @@ namespace Thunder.Sys
                 if (SaveLog)
                     Application.logMessageReceived += (condition, stackTrace, logType) =>
                     {
-                        File.AppendAllText(Paths.LogPath, $"[condition]\n{condition}\n[stackTrace]\n{stackTrace}\n");
+                        File.AppendAllText(Paths.LogPath,
+                            $"[condition]\n{condition}\n[stackTrace]\n{stackTrace}\n");
                     };
                 SaveLog = false;
             }
@@ -65,11 +63,12 @@ namespace Thunder.Sys
             _CampSys = new CampSys();
             _ValueSys = new ValueSys();
             _ObjectPool = gameObject.AddComponent<ObjectPool>();
+            _TextSys = new TextSys(_DataBaseSys);
 
-            _Sys = (from field 
+            _Sys = (from field
                     in GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                    where field.FieldType.GetInterface("IBaseSys")!=null
-                    select (IBaseSys)field.GetValue(this)).ToArray();
+                where field.FieldType.GetInterface("IBaseSys") != null
+                select (IBaseSys) field.GetValue(this)).ToArray();
 
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnEnterScene;
@@ -85,10 +84,10 @@ namespace Thunder.Sys
             _Loading = true;
             _LoadingAo = SceneManager.LoadSceneAsync(sceneName);
             //_LoadingLoadPanel = UI.OpenUI("logPanel", UiInitType.CenterParent) as LogPanel;
-            StartCoroutine(LoadScene(_LoadingAo,sceneName));
+            StartCoroutine(LoadScene(_LoadingAo, sceneName));
         }
 
-        private IEnumerator LoadScene(AsyncOperation ao,string newScene)
+        private IEnumerator LoadScene(AsyncOperation ao, string newScene)
         {
             ao.allowSceneActivation = false;
             while (ao.progress < 0.9f)
@@ -103,7 +102,7 @@ namespace Thunder.Sys
             //    syss.OnSceneExit(_CurScene);
         }
 
-        private void OnEnterScene(Scene scene,LoadSceneMode mode)
+        private void OnEnterScene(Scene scene, LoadSceneMode mode)
         {
             Container = new GameObject("Container").transform;
             //foreach (var s in _Sys)

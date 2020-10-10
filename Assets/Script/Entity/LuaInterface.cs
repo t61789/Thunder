@@ -1,9 +1,9 @@
-﻿using LuaInterface;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using LuaInterface;
 using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.Utility;
@@ -15,24 +15,14 @@ using UnityEngine.Assertions;
 namespace Thunder.Entity
 {
     /// <summary>
-    /// Lua脚本路径格式 LuaScriptPath : LuaTable<br/>
+    ///     Lua脚本路径格式 LuaScriptPath : LuaTable<br />
     /// </summary>
     [Serializable]
     public class LuaInterface : BaseEntity
     {
-        public string LuaScriptScopePath;
-
-        public string DebugScopePath;
-
-        public bool UseDebugScopePath;
-
-        public bool InitAtStart;
-
-        public object InjectSource;
-
-        protected LuaTable LuaScope;
-
-        public LuaTable Data { private set; get; }
+        private const string UPDATE = "Update";
+        private const string FIXED_UPDATE = "FixedUpdate";
+        private const string LATE_UPDATE = "LateUpdate";
 
         private static readonly Dictionary<Type, (PropertyInfo[], FieldInfo[])> _InjectInfoBuffer =
             new Dictionary<Type, (PropertyInfo[], FieldInfo[])>();
@@ -45,9 +35,18 @@ namespace Thunder.Entity
 
         private static bool _ClearBufferRegistered;
 
-        private const string UPDATE = "Update";
-        private const string FIXED_UPDATE = "FixedUpdate";
-        private const string LATE_UPDATE = "LateUpdate";
+        public string DebugScopePath;
+
+        public bool InitAtStart;
+
+        public object InjectSource;
+
+        protected LuaTable LuaScope;
+        public string LuaScriptScopePath;
+
+        public bool UseDebugScopePath;
+
+        public LuaTable Data { private set; get; }
 
         protected override void Awake()
         {
@@ -76,10 +75,11 @@ namespace Thunder.Entity
             }
             else
             {
-                using (FileStream fs = File.OpenRead(debugScriptScope))
+                using (var fs = File.OpenRead(debugScriptScope))
                 {
                     LuaSys.Ins.ExecuteCommand(new StreamReader(fs).ReadToEnd());
                 }
+
                 command = new string[2];
                 command[1] = Path.GetFileNameWithoutExtension(debugScriptScope);
             }
@@ -103,12 +103,12 @@ namespace Thunder.Entity
         {
             InjectSource = InjectSource ?? GetComponent<BaseEntity>();
             Assert.IsNotNull(InjectSource, $"对象 {name} 的Lua接口未找到注入源");
-            Type curType = InjectSource.GetType();
+            var curType = InjectSource.GetType();
 
             if (!_InjectInfoBuffer.TryGetValue(curType, out var injectInfo))
             {
-                Type monoType = typeof(MonoBehaviour);
-                Type objType = typeof(object);
+                var monoType = typeof(MonoBehaviour);
+                var objType = typeof(object);
                 var proplist = new List<PropertyInfo>();
                 var fieldlist = new List<FieldInfo>();
 

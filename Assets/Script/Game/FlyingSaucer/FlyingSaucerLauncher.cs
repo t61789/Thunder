@@ -10,30 +10,30 @@ namespace Thunder.Game.FlyingSaucer
 {
     public class FlyingSaucerLauncher : BaseEntity
     {
-        public float TurnSpeed;
-        public float LaunchInterval;
-        public float LaunchSpeed;
-        public bool Enable;
-        public Transform PlayerTrans;
-
-        public Vector3 LaunchBaseDir;
-        public float LaunchRandAngle;
-        public Vector2 LaunchForce;
-        public float LaunchDirRandomSmooth;
-        public float LaunchForceRandomSmooth;
-        public LaunchModeE LaunchMode;
-        public UnityEvent OnSaucerHit;
-
-        private PerlinNoise _LaunchDirNoise;
-        private PerlinNoise _LaunchForceNoise;
-        private Transform _Launcher;
-        private SimpleCounter _LaunchCounter;
-
         public enum LaunchModeE
         {
             Circle,
             PlayerBased
         }
+
+        private SimpleCounter _LaunchCounter;
+
+        private PerlinNoise _LaunchDirNoise;
+        private Transform _Launcher;
+        private PerlinNoise _LaunchForceNoise;
+        public bool Enable;
+
+        public Vector3 LaunchBaseDir;
+        public float LaunchDirRandomSmooth;
+        public Vector2 LaunchForce;
+        public float LaunchForceRandomSmooth;
+        public float LaunchInterval;
+        public LaunchModeE LaunchMode;
+        public float LaunchRandAngle;
+        public float LaunchSpeed;
+        public UnityEvent OnSaucerHit;
+        public Transform PlayerTrans;
+        public float TurnSpeed;
 
         protected override void Awake()
         {
@@ -44,7 +44,7 @@ namespace Thunder.Game.FlyingSaucer
 
             PublicEvents.GameEnd.AddListener((x, y) =>
             {
-                if(x==GameType.FlyingSaucer)
+                if (x == GameType.FlyingSaucer)
                     Enable = false;
             });
             _LaunchCounter = new SimpleCounter(LaunchInterval);
@@ -52,10 +52,10 @@ namespace Thunder.Game.FlyingSaucer
 
         private Vector3 GetNextForceDir(Vector3 playerFaceDir)
         {
-            float limit = LaunchRandAngle;
-            float perlin = _LaunchDirNoise.GetNext();
+            var limit = LaunchRandAngle;
+            var perlin = _LaunchDirNoise.GetNext();
             limit = perlin * limit - limit / 2;
-            Vector3 targetDir = Quaternion.AngleAxis(limit, Vector3.forward) * LaunchBaseDir;
+            var targetDir = Quaternion.AngleAxis(limit, Vector3.forward) * LaunchBaseDir;
             perlin = _LaunchForceNoise.GetNext();
             targetDir = targetDir.normalized * Mathf.Lerp(LaunchForce.x, LaunchForce.y, perlin);
             targetDir = Tools.BuildTransferMatrix(playerFaceDir.ProjectToxz()) * targetDir;
@@ -79,7 +79,6 @@ namespace Thunder.Game.FlyingSaucer
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
         }
 
         private void PlayerBasedLaunch()
@@ -89,7 +88,7 @@ namespace Thunder.Game.FlyingSaucer
             if (!_LaunchCounter.Completed) return;
             _LaunchCounter.Recount();
 
-            Vector3 force = GetNextForceDir(PlayerTrans.rotation * Vector3.forward);
+            var force = GetNextForceDir(PlayerTrans.rotation * Vector3.forward);
             _Launcher.position = _Trans.position + force.normalized;
             _Launcher.rotation = Quaternion.LookRotation(force);
 
@@ -102,8 +101,8 @@ namespace Thunder.Game.FlyingSaucer
 
         private void CircleLaunch()
         {
-            float angle = (Time.time * TurnSpeed) % 360;
-            Vector3 dir = new Vector3(Mathf.Cos(angle), 1, Mathf.Sin(angle));
+            var angle = Time.time * TurnSpeed % 360;
+            var dir = new Vector3(Mathf.Cos(angle), 1, Mathf.Sin(angle));
             _Launcher.localPosition = dir;
             _Launcher.rotation = Quaternion.LookRotation(dir);
 

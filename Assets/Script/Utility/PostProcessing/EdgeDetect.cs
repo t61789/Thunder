@@ -6,12 +6,12 @@ namespace Thunder.Utility.PostProcessing
     [Serializable]
     public class EdgeDetect : BasePostProcessing
     {
-        [Range(0, 1)]
-        public float EdgesOnly = 0;
-        public Color EdgeColor = Color.black;
         public Color BackgroundColor = Color.white;
-        [Range(0, 3)]
-        public float EdgeFactor = 1;
+        public Color EdgeColor = Color.black;
+
+        [Range(0, 3)] public float EdgeFactor = 1;
+
+        [Range(0, 1)] public float EdgesOnly = 0;
 
         public override void Process(RenderTexture source, RenderTexture dest)
         {

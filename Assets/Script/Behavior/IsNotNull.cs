@@ -12,8 +12,7 @@ namespace Thunder.Behavior
         {
             if (go.Value == null)
                 return TaskStatus.Failure;
-            else
-                return TaskStatus.Success;
+            return TaskStatus.Success;
         }
     }
 }

@@ -14,26 +14,37 @@ namespace Thunder.Sys
 
     // 优先在InputManager中定义的操作中查找，再在已注入的词典中查找，Axis映射到x轴上
 
-    public class ControlSys : MonoBehaviour,IBaseSys
+    public class ControlSys : MonoBehaviour, IBaseSys
     {
-        public static ControlSys Ins { get; private set; }
-
-        private readonly Dictionary<string, ControlInfo> _CusKey =
+        private readonly Dictionary<string, ControlInfo> _BufferKey =
             new Dictionary<string, ControlInfo>();
 
-        private readonly Dictionary<string, ControlInfo> _BufferKey =
+        private readonly Dictionary<string, ControlInfo> _CusKey =
             new Dictionary<string, ControlInfo>();
 
         private readonly HashSet<string> _InvalidInputManagerKey =
             new HashSet<string>();
 
         public float ShieldValue = -1;
+        public static ControlSys Ins { get; private set; }
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+        }
+
+        public void OnApplicationExit()
+        {
+        }
 
         public ControlInfo RequireKey(string key, float shieldValue)
         {
             if (shieldValue < ShieldValue) return ControlInfo.Default;
 
-            ControlInfo fromInputManager = ControlInfo.Default;
+            var fromInputManager = ControlInfo.Default;
             if (!_InvalidInputManagerKey.Contains(key))
                 try
                 {
@@ -46,6 +57,7 @@ namespace Thunder.Sys
                 {
                     _InvalidInputManagerKey.Add(key);
                 }
+
             return _CusKey.TryGetValue(key, out var value) ? KeyConflict(fromInputManager, value) : fromInputManager;
         }
 
@@ -57,7 +69,7 @@ namespace Thunder.Sys
                 _BufferKey.Add(key, info);
         }
 
-        private static ControlInfo KeyConflict(ControlInfo ctr1, ControlInfo ctr2)   // ctr1优先
+        private static ControlInfo KeyConflict(ControlInfo ctr1, ControlInfo ctr2) // ctr1优先
         {
             if (ctr1.Equals(ControlInfo.Default) && !ctr2.Equals(ControlInfo.Default)) return ctr2;
             return ctr1;
@@ -74,7 +86,6 @@ namespace Thunder.Sys
         private void Update()
         {
             SpecialInject();
-
         }
 
         private void FixedUpdate()
@@ -93,9 +104,39 @@ namespace Thunder.Sys
             _BufferKey.Clear();
         }
 
+        private void SpecialInject()
+        {
 #if UNITY_STANDALONE || UNITY_EDITOR
-        private readonly KeyCode[] _CodesArr = { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D };
-        private readonly Vector2[] _DirsArr = { Vector2.up, Vector2.left, Vector2.down, Vector2.right };
+
+            // wasd轴 Axis1
+            Vector2 dir = default;
+            var stay = 0;
+            for (var i = 0; i < _CodesArr.Length; i++)
+            {
+                if (!Input.GetKey(_CodesArr[i])) continue;
+                stay++;
+                dir += _DirsArr[i];
+            }
+
+            dir = dir.normalized;
+
+            var up = _CodesArr.Any(Input.GetKeyUp) && stay == 1;
+            var down = _CodesArr.Any(Input.GetKeyDown) && stay == 1;
+
+            InjectValue("Axis1", new ControlInfo(dir, stay > 0, down, up));
+
+            // 鼠标 Axis2
+            var cursorAxis = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            InjectValue("Axis2", new ControlInfo(cursorAxis, true, false, false));
+
+            // 滚轮 Axis3
+            InjectValue("Axis3", new ControlInfo(Input.mouseScrollDelta.y * Vector3.right, true, false, false));
+#endif
+        }
+
+#if UNITY_STANDALONE || UNITY_EDITOR
+        private readonly KeyCode[] _CodesArr = {KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D};
+        private readonly Vector2[] _DirsArr = {Vector2.up, Vector2.left, Vector2.down, Vector2.right};
 
         public bool LockCursor
         {
@@ -106,52 +147,9 @@ namespace Thunder.Sys
                 _LockCursor = value;
             }
         }
+
         private bool _LockCursor;
 #endif
-
-        private void SpecialInject()
-        {
-#if UNITY_STANDALONE || UNITY_EDITOR
-
-            // wasd轴 Axis1
-            Vector2 dir = default;
-            int stay = 0;
-            for (int i = 0; i < _CodesArr.Length; i++)
-            {
-                if (!Input.GetKey(_CodesArr[i])) continue;
-                stay++;
-                dir += _DirsArr[i];
-            }
-            dir = dir.normalized;
-
-            bool up = _CodesArr.Any(Input.GetKeyUp) && stay == 1;
-            bool down = _CodesArr.Any(Input.GetKeyDown) && stay == 1;
-
-            InjectValue("Axis1", new ControlInfo(dir, stay > 0, down, up));
-
-            // 鼠标 Axis2
-            Vector2 cursorAxis = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-            InjectValue("Axis2", new ControlInfo(cursorAxis, true, false, false));
-
-            // 滚轮 Axis3
-            InjectValue("Axis3", new ControlInfo(Input.mouseScrollDelta.y * Vector3.right, true, false, false));
-#endif
-        }
-
-        public void OnSceneEnter(string preScene, string curScene)
-        {
-            
-        }
-
-        public void OnSceneExit(string curScene)
-        {
-            
-        }
-
-        public void OnApplicationExit()
-        {
-            
-        }
     }
 
     public struct ControlInfo

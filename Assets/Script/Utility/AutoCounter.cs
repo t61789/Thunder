@@ -1,16 +1,29 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Thunder.Utility
 {
-    public class AutoCounter:Counter
+    public class AutoCounter : Counter
     {
+        private float _CountPauseSave;
+        private bool _HasExcutedCompleteCallBack;
+        private Action _OnCompleteCallBack;
+        private bool _Running;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="parent">协程附着对象</param>
+        /// <param name="timeLimit"></param>
+        /// <param name="countAtStart"></param>
+        public AutoCounter(MonoBehaviour parent, float timeLimit, bool countAtStart = true) : base(timeLimit,
+            countAtStart)
+        {
+            _TimeCountStart = Time.time;
+            _Running = countAtStart;
+            parent.StartCoroutine(Count());
+        }
+
         public override float TimeCount
         {
             get
@@ -22,24 +35,6 @@ namespace Thunder.Utility
         }
 
         public override bool Completed => _HasExcutedCompleteCallBack;
-
-        private float _CountPauseSave;
-        private Action _OnCompleteCallBack;
-        private bool _HasExcutedCompleteCallBack;
-        private bool _Running;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parent">协程附着对象</param>
-        /// <param name="timeLimit"></param>
-        /// <param name="countAtStart"></param>
-        public AutoCounter(MonoBehaviour parent,float timeLimit, bool countAtStart = true) : base(timeLimit, countAtStart)
-        {
-            _TimeCountStart = Time.time;
-            _Running = countAtStart;
-            parent.StartCoroutine(Count());
-        }
 
         public override Counter Recount(float timeLimit = -1)
         {
@@ -66,7 +61,7 @@ namespace Thunder.Utility
         }
 
         /// <summary>
-        /// 启用自动计时后调用该回调函数
+        ///     启用自动计时后调用该回调函数
         /// </summary>
         /// <param name="callBack">回调函数</param>
         /// <returns></returns>
@@ -77,7 +72,7 @@ namespace Thunder.Utility
         }
 
         /// <summary>
-        /// 恢复自动计时，如果当前正在自动计时，则重置计数
+        ///     恢复自动计时，如果当前正在自动计时，则重置计数
         /// </summary>
         /// <returns></returns>
         public AutoCounter Resume()
@@ -88,7 +83,7 @@ namespace Thunder.Utility
         }
 
         /// <summary>
-        /// 暂停自动计时
+        ///     暂停自动计时
         /// </summary>
         /// <returns></returns>
         public AutoCounter Pause()

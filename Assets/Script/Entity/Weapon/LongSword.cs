@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Thunder.Entity.Weapon
 {
-    public class LongSword:BaseWeapon
+    public class LongSword : BaseWeapon
     {
         public float AttackAreaFadeTime = 0.5f;
         public Vector3 AttackRange;
-        public float Damage=20;
+        public float Damage = 20;
 
         protected override void PlayerSquat(bool squatting, bool hanging)
         {
@@ -22,7 +22,7 @@ namespace Thunder.Entity.Weapon
         {
             var rot = Camera.main.transform.rotation;
             var area = ObjectPool.Ins.Alloc<MeleeAttackArea>(GlobalSettings.MeleeAttackAreaAssetPath);
-            area.Init(_Player.Trans.position,rot,AttackRange,AttackAreaFadeTime);
+            area.Init(_Player.Trans.position, rot, AttackRange, AttackAreaFadeTime);
             area.HitEnter += HitTarget;
         }
 
@@ -30,7 +30,7 @@ namespace Thunder.Entity.Weapon
         {
             var shoot = target.GetComponent<IShootable>();
             shoot?.GetShoot(target.transform.position,
-                target.transform.position-_Player.Trans.position,
+                target.transform.position - _Player.Trans.position,
                 Damage);
         }
 

@@ -4,9 +4,8 @@ namespace Thunder.Tool.BehaviorTree
 {
     public class Node
     {
-        public int id;
-
         public List<Node> child;
+        public int id;
 
         public Node(int id)
         {
@@ -25,7 +24,6 @@ namespace Thunder.Tool.BehaviorTree
 
         public virtual void ReciveReturnResult(bool value)
         {
-
         }
     }
 }

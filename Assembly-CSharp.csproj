@@ -81,6 +81,7 @@
     <Compile Include="Assets\Script\Entity\Weapon\Unarmed.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_UnarmedWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\Thunder_Entity_Weapon_RecoliControllerWrap.cs" />
+    <Compile Include="Assets\Script\Sys\TextSys.cs" />
     <Compile Include="Assets\Script\Utility\BulletSpread.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\FloatClamp.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\LuaInterface_LuaInjectionStationWrap.cs" />

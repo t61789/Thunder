@@ -11,26 +11,24 @@ namespace Thunder.UI
     {
         public void StartLoadSave()
         {
-            if (Sys.UISys.Ins.IsUIOpened("LoadSaveListPlane"))
+            if (UISys.Ins.IsUIOpened("LoadSaveListPlane"))
             {
-                Sys.UISys.Ins.CloseUI("LoadSaveListPlane");
+                UISys.Ins.CloseUI("LoadSaveListPlane");
                 return;
             }
 
-            List<Action<BaseUI>> inits = new List<Action<BaseUI>>();
+            var inits = new List<Action<BaseUI>>();
             foreach (var item in Directory.GetDirectories(Paths.DocumentPath))
-            {
                 inits.Add(x =>
                 {
-                    Button b = x.GetComponent<Button>();
+                    var b = x.GetComponent<Button>();
                     b.transform.Find("Text").GetComponent<Text>().text = Path.GetFileName(item);
                     b.onClick.AddListener(() => LoadSave(b));
 
                     x.InitRect(UiInitType.FillParent);
                 });
-            }
 
-            Sys.UISys.Ins.OpenUI<ListPlane>("listPlane", UIName, true, UiInitType.CenterParent, x =>
+            UISys.Ins.OpenUI<ListPlane>("listPlane", UIName, true, UiInitType.CenterParent, x =>
                 x.Init(new ListPlane.Parameters(1, "normalButton", (500, 150), (50, 50), (0, 0)), inits));
         }
 
@@ -45,6 +43,4 @@ namespace Thunder.UI
             Sys.Stable.Ins.LoadSceneAsync("LevelScene");
         }
     }
-
-
 }

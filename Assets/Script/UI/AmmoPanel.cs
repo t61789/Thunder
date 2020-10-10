@@ -1,5 +1,4 @@
-﻿using Thunder.Entity;
-using Thunder.Entity.Weapon;
+﻿using Thunder.Entity.Weapon;
 using Thunder.Utility;
 using TMPro;
 
@@ -7,9 +6,9 @@ namespace Thunder.UI
 {
     public class AmmoPanel : BaseUI
     {
-        private TextMeshProUGUI _Text;
         private string _AmmoStr;
         private string _FireModeStr;
+        private TextMeshProUGUI _Text;
 
         private void Start()
         {
@@ -36,6 +35,7 @@ namespace Thunder.UI
                         _FireModeStr = " F ";
                         break;
                 }
+
                 SetText();
             });
             BaseWeapon.Ins.AmmoGroup.InvokeOnAmmoChanged();

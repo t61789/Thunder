@@ -2,9 +2,8 @@
 
 namespace Thunder.Behavior
 {
-    interface IDelegateInvoke
+    internal interface IDelegateInvoke
     {
         Type GetCurType();
     }
 }
-

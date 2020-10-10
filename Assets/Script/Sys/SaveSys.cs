@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 using Thunder.Utility;
 
 namespace Thunder.Sys
@@ -10,13 +9,16 @@ namespace Thunder.Sys
     [JsonObject(MemberSerialization.OptOut)]
     public class SaveSys
     {
-        [JsonIgnore]
-        public string curSaveName;
-
-        [JsonIgnore]
-        private string savedJson;
+        [JsonIgnore] public string curSaveName;
 
         public SortedSet<int> levelComplete;
+
+        [JsonIgnore] private string savedJson;
+
+        private SaveSys()
+        {
+            levelComplete = new SortedSet<int>();
+        }
 
         //public Ship.CreateShipParam playerShipParam;
 
@@ -26,20 +28,15 @@ namespace Thunder.Sys
             this.savedJson = savedJson;
         }
 
-        private SaveSys()
-        {
-            levelComplete = new SortedSet<int>();
-        }
-
         public static SaveSys LoadSave(string saveName)
         {
-            string saveJsonRPath = Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar + "save.json";
+            var saveJsonRPath = Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar + "save.json";
 
-            string path = Paths.DocumentPathD + saveName + saveJsonRPath;
+            var path = Paths.DocumentPathD + saveName + saveJsonRPath;
 
-            string json = File.ReadAllText(path);
+            var json = File.ReadAllText(path);
 
-            SaveSys result = JsonConvert.DeserializeObject<SaveSys>(json);
+            var result = JsonConvert.DeserializeObject<SaveSys>(json);
 
             if (result == null) result = new SaveSys();
             result.Init(saveName, json);
@@ -49,7 +46,7 @@ namespace Thunder.Sys
 
         public static bool CreateSaveDir(string saveName)
         {
-            string savePath = Paths.DocumentPathD + saveName;
+            var savePath = Paths.DocumentPathD + saveName;
             if (Directory.Exists(savePath))
                 return false;
 
@@ -60,10 +57,10 @@ namespace Thunder.Sys
                 where row["id"] == "save"
                 select row).ToArray();
 
-            Stack<string> stack = new Stack<string>();
+            var stack = new Stack<string>();
             stack.Push("");
 
-            List<string> result = new List<string>();
+            var result = new List<string>();
 
             const string NAME = "name";
             const string EXTENSION = "extension";
@@ -71,21 +68,19 @@ namespace Thunder.Sys
 
             while (stack.Count != 0)
             {
-                string node = stack.Pop();
+                var node = stack.Pop();
 
-                foreach (var item in dirs.Where(x=>x[PARENT]==Path.GetFileName(node)))
-                    stack.Push(node + Path.DirectorySeparatorChar + item[NAME] as string + item[EXTENSION] as string);
+                foreach (var item in dirs.Where(x => x[PARENT] == Path.GetFileName(node)))
+                    stack.Push(node + Path.DirectorySeparatorChar + item[NAME] + item[EXTENSION]);
                 result.Add(node);
             }
 
 
             foreach (var item in result)
-            {
                 if (Path.GetExtension(item) == "")
                     Directory.CreateDirectory(savePath + item);
                 else
                     File.Create(savePath + item).Close();
-            }
 
             return true;
         }
@@ -93,18 +88,21 @@ namespace Thunder.Sys
         public void Save(string json = null)
         {
             if (json != null && !json.Equals(string.Empty))
-                File.WriteAllText(Paths.DocumentPathD + curSaveName + Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar + "save.json", json);
+                File.WriteAllText(
+                    Paths.DocumentPathD + curSaveName + Path.DirectorySeparatorChar + "data" +
+                    Path.DirectorySeparatorChar + "save.json", json);
             else
-                File.WriteAllText(Paths.DocumentPathD + curSaveName + Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar + "save.json", JsonConvert.SerializeObject(this));
+                File.WriteAllText(
+                    Paths.DocumentPathD + curSaveName + Path.DirectorySeparatorChar + "data" +
+                    Path.DirectorySeparatorChar + "save.json", JsonConvert.SerializeObject(this));
         }
 
         public string Check()
         {
-            string unsavedJson = JsonConvert.SerializeObject(this);
+            var unsavedJson = JsonConvert.SerializeObject(this);
             if (unsavedJson.GetHashCode() != savedJson.GetHashCode())
                 return unsavedJson;
-            else
-                return null;
+            return null;
         }
     }
 }

@@ -5,26 +5,34 @@ namespace Thunder.Tool
 {
     public class CompareVec : IComparable
     {
-        public Vector3 vec;
+        public Vector3 Vec;
+
         public CompareVec(Vector3 v)
         {
-            vec = v;
+            Vec = v;
         }
 
         public int CompareTo(object obj)
         {
-            Vector3 next = Vector3.zero;
-            try { next = ((CompareVec)obj).vec; } catch { return 0; }
+            Vector3 next;
+            try
+            {
+                next = ((CompareVec) obj).Vec;
+            }
+            catch
+            {
+                return 0;
+            }
 
-            if (vec.x > next.x)
+            if (Vec.x > next.x)
                 return 1;
-            else if (vec.x < next.x)
+            if (Vec.x < next.x)
                 return -1;
-            else if (vec.y < next.y)
+            if (Vec.y < next.y)
                 return 1;
-            else if (vec.y > next.y)
+            if (Vec.y > next.y)
                 return -1;
-            else return 0;
+            return 0;
         }
     }
 }

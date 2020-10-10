@@ -10,11 +10,11 @@ namespace Thunder.UI
     {
         public static LogPanel Ins;
 
-        public int MaxBufferSize;
-
         private int _LogPointer;
         private CircleQueue<string> _LogQueue;
         private TextMeshProUGUI[] _TextQueue;
+
+        public int MaxBufferSize;
 
         protected override void Awake()
         {
@@ -22,8 +22,8 @@ namespace Thunder.UI
             Ins = this;
             _LogQueue = new CircleQueue<string>(MaxBufferSize);
             var l =
-                (from Transform rectTran 
-                    in RectTrans 
+                (from Transform rectTran
+                        in RectTrans
                     select rectTran.GetComponent<TextMeshProUGUI>()).ToList();
             l.Reverse();
             _TextQueue = l.ToArray();
@@ -32,8 +32,8 @@ namespace Thunder.UI
 
         public void MoveView(bool up)
         {
-            _LogPointer += (up ? 1 : -1);
-            int diff = _LogQueue.Count - _TextQueue.Length;
+            _LogPointer += up ? 1 : -1;
+            var diff = _LogQueue.Count - _TextQueue.Length;
             _LogPointer = _LogPointer.Clamp(0, diff < 0 ? 0 : diff);
             RePaint(_LogPointer);
         }
@@ -41,20 +41,23 @@ namespace Thunder.UI
         public void MoveViewLimit(bool bottom)
         {
             if (bottom)
+            {
                 _LogPointer = 0;
+            }
             else
             {
-                int diff = _LogQueue.Count - _TextQueue.Length;
+                var diff = _LogQueue.Count - _TextQueue.Length;
                 _LogPointer = _LogQueue.Count.Clamp(0, diff < 0 ? 0 : diff);
             }
+
             RePaint(_LogPointer);
         }
 
         private void RePaint(int startPos)
         {
-            int i = 0;
-            for (; i < _TextQueue.Length && (i + startPos) < _LogQueue.Count; i++)
-                _TextQueue[i].text = _LogQueue[i + startPos,true];
+            var i = 0;
+            for (; i < _TextQueue.Length && i + startPos < _LogQueue.Count; i++)
+                _TextQueue[i].text = _LogQueue[i + startPos, true];
             for (; i < _TextQueue.Length; i++)
                 _TextQueue[i].text = null;
         }
@@ -63,7 +66,9 @@ namespace Thunder.UI
         {
             _LogQueue.Enqueue(msg);
             if (_LogPointer == 0)
+            {
                 RePaint(0);
+            }
             else
             {
                 _LogPointer++;
@@ -79,6 +84,7 @@ namespace Thunder.UI
         }
 
         #region guiTest
+
         //private void OnGUI()
         //{
         //    if (GUI.Button(new Rect(0, 0, 700, 300), "up"))
@@ -102,6 +108,7 @@ namespace Thunder.UI
         //{
         //    Log((count++).ToString());
         //}
+
         #endregion
     }
 }

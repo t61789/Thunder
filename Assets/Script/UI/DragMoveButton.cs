@@ -6,14 +6,9 @@ namespace Thunder.UI
     public class DragMoveButton : MonoBehaviour, IBeginDragHandler, IDragHandler
     {
         private RectTransform parentRectTrans;
-
-        private Vector3 recordParentPos;
         private Vector3 recordMousePos;
 
-        private void Awake()
-        {
-            parentRectTrans = transform.parent as RectTransform;
-        }
+        private Vector3 recordParentPos;
 
         public void OnBeginDrag(PointerEventData eventData)
         {
@@ -23,9 +18,14 @@ namespace Thunder.UI
 
         public void OnDrag(PointerEventData eventData)
         {
-            Vector3 delta = Input.mousePosition - recordMousePos;
+            var delta = Input.mousePosition - recordMousePos;
 
             parentRectTrans.position = recordParentPos + delta;
+        }
+
+        private void Awake()
+        {
+            parentRectTrans = transform.parent as RectTransform;
         }
     }
 }

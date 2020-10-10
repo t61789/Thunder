@@ -1,78 +1,21 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Thunder.Sys
 {
-    public class ValueSys:IBaseSys
+    public class ValueSys : IBaseSys
     {
-        #region xml
+        private static readonly string DefaultBundle = Paths.ValuesBundleD + Paths.Normal;
 
-        //private Dictionary<string, object> serialized = new Dictionary<string, object>();
-        //private Dictionary<string, XElement> unSerialized = new Dictionary<string, XElement>();
+        private readonly Dictionary<AssetId, ValueUnit> _Values = new Dictionary<AssetId, ValueUnit>();
 
-        //public ValueManager()
-        //{
-        //    try
-        //    {
-        //        foreach (var item in PublicVar.bundleManager.GetAllAsset<TextAsset>("values"))//文件
-        //        {
-        //            string sb = item.name;
-        //            XDocument xdoc = XDocument.Parse(item.text);
-        //            foreach (var item1 in xdoc.Root.Elements())//结构体
-        //                unSerialized.Add(sb + "/" + item1.Attribute("name").Value, item1);
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Debug.LogError("Load value settings failed");
-        //        throw;
-        //    }
-        //}
-
-        //public T GetValue<T>(string path)
-        //{
-        //    if (serialized.TryGetValue(path, out object value))
-        //    {
-        //        try
-        //        {
-        //            return (T)value;
-        //        }
-        //        catch (Exception)
-        //        {
-        //            Debug.LogError(path + " is not type of " + typeof(T).Name);
-        //            return default;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (unSerialized.TryGetValue(path, out XElement element))
-        //        {
-        //            try
-        //            {
-        //                T result = (T)new XmlSerializer(typeof(T)).Deserialize(element.CreateReader());
-        //                unSerialized.Dequeue(path);
-        //                serialized.Add(path, result);
-        //                return result;
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Debug.LogError(path + " Serialize failed");
-        //                Debug.LogError(e);
-        //                return default;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Debug.LogError("No such struct named " + path);
-        //            return default;
-        //        }
-        //    }
-        //}
-
-        #endregion
+        public ValueSys()
+        {
+            Ins = this;
+        }
 
         //private readonly Dictionary<string, string> unDeserializedBuffer = new Dictionary<string, string>();
         //private readonly Dictionary<string, object> buffer = new Dictionary<string, object>();
@@ -172,25 +115,16 @@ namespace Thunder.Sys
 
         public static ValueSys Ins { get; private set; }
 
-        private static readonly string DefaultBundle = Paths.ValuesBundleD + Paths.Normal;
-
-        private struct ValueUnit
+        public void OnSceneEnter(string preScene, string curScene)
         {
-            public string UnDes;
-            public object Des;
-
-            public ValueUnit(string unDes)
-            {
-                UnDes = unDes;
-                Des = null;
-            }
         }
 
-        private readonly Dictionary<AssetId, ValueUnit> _Values = new Dictionary<AssetId, ValueUnit>();
-
-        public ValueSys()
+        public void OnSceneExit(string curScene)
         {
-            Ins = this;
+        }
+
+        public void OnApplicationExit()
+        {
         }
 
         public T GetValue<T>(string valuePath)
@@ -205,13 +139,13 @@ namespace Thunder.Sys
 
         private T GetValue<T>(AssetId id)
         {
-            for (int i = 0; i < 2; i++)
+            for (var i = 0; i < 2; i++)
             {
-                if (_Values.TryGetValue(id, out var value) && value.UnDes == null) return (T)value.Des;
+                if (_Values.TryGetValue(id, out var value) && value.UnDes == null) return (T) value.Des;
 
                 if (value.UnDes != null)
                 {
-                    T result = JsonConvert.DeserializeObject<T>(value.UnDes);
+                    var result = JsonConvert.DeserializeObject<T>(value.UnDes);
                     value.Des = result;
                     value.UnDes = null;
                     _Values[id] = value;
@@ -220,7 +154,8 @@ namespace Thunder.Sys
 
                 LoadBundle(id);
 
-                Assert.IsTrue(_Values.TryGetValue(id, out _), $"未在 {id.BundleGroup}!{id.Bundle} 内找到名为 {id.Name} 的table");
+                Assert.IsTrue(_Values.TryGetValue(id, out _),
+                    $"未在 {id.BundleGroup}!{id.Bundle} 内找到名为 {id.Name} 的table");
             }
 
             return default;
@@ -236,17 +171,82 @@ namespace Thunder.Sys
             }
         }
 
-        public void OnSceneEnter(string preScene, string curScene)
+        private struct ValueUnit
         {
-            
+            public string UnDes;
+            public object Des;
+
+            public ValueUnit(string unDes)
+            {
+                UnDes = unDes;
+                Des = null;
+            }
         }
 
-        public void OnSceneExit(string curScene)
-        {
-        }
+        #region xml
 
-        public void OnApplicationExit()
-        {
-        }
+        //private Dictionary<string, object> serialized = new Dictionary<string, object>();
+        //private Dictionary<string, XElement> unSerialized = new Dictionary<string, XElement>();
+
+        //public ValueManager()
+        //{
+        //    try
+        //    {
+        //        foreach (var item in PublicVar.bundleManager.GetAllAsset<TextAsset>("values"))//文件
+        //        {
+        //            string sb = item.name;
+        //            XDocument xdoc = XDocument.Parse(item.text);
+        //            foreach (var item1 in xdoc.Root.Elements())//结构体
+        //                unSerialized.Add(sb + "/" + item1.Attribute("name").Value, item1);
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        Debug.LogError("Load value settings failed");
+        //        throw;
+        //    }
+        //}
+
+        //public T GetValue<T>(string path)
+        //{
+        //    if (serialized.TryGetValue(path, out object value))
+        //    {
+        //        try
+        //        {
+        //            return (T)value;
+        //        }
+        //        catch (Exception)
+        //        {
+        //            Debug.LogError(path + " is not type of " + typeof(T).Name);
+        //            return default;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (unSerialized.TryGetValue(path, out XElement element))
+        //        {
+        //            try
+        //            {
+        //                T result = (T)new XmlSerializer(typeof(T)).Deserialize(element.CreateReader());
+        //                unSerialized.Dequeue(path);
+        //                serialized.Add(path, result);
+        //                return result;
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                Debug.LogError(path + " Serialize failed");
+        //                Debug.LogError(e);
+        //                return default;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Debug.LogError("No such struct named " + path);
+        //            return default;
+        //        }
+        //    }
+        //}
+
+        #endregion
     }
 }

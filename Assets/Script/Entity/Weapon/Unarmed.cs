@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Thunder.Entity.Weapon
+﻿namespace Thunder.Entity.Weapon
 {
-    public class Unarmed:BaseWeapon
+    public class Unarmed : BaseWeapon
     {
         protected override void PlayerSquat(bool squatting, bool hanging)
         {

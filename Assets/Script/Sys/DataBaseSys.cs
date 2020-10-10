@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
+using Newtonsoft.Json;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -10,6 +9,7 @@ using UnityEngine.Assertions;
 namespace Thunder.Sys
 {
     #region oldcode
+
     //public class DataBaseSys : IBaseSys
     //{
     //    // 按照组(Group)读取，一个bundle内只包含一个dll和多张表
@@ -495,7 +495,9 @@ namespace Thunder.Sys
     //    }
     //}
     //#endregion
+
     #endregion
+
     public class DataBaseSys : IBaseSys
     {
         // 按照组(Group)读取，一个bundle内只包含一个dll和多张表
@@ -510,44 +512,44 @@ namespace Thunder.Sys
         //  ..
 
         public static DataBaseSys Ins;
-        private struct TableUnit
-        {
-            public Table Deserialized;
-            public string UnDeserialized;
-
-            public TableUnit(Table deserialized, string unDeserialized)
-            {
-                Deserialized = deserialized;
-                UnDeserialized = unDeserialized;
-            }
-        }
 
         private static readonly string _DefaultBundle = Paths.DatabaseBundleD + Paths.Normal;
         private readonly Dictionary<AssetId, TableUnit> _Tables = new Dictionary<AssetId, TableUnit>();
-
-        public Table this[string tablePath] => GetTable(tablePath);
 
         public DataBaseSys()
         {
             Ins = this;
         }
 
-        /// <summary>
-        /// 谨慎使用，若删除表后再获取会引起大量的重复载入
-        /// </summary>
+        public Table this[string tablePath] => GetTable(tablePath);
 
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+        }
+
+        public void OnApplicationExit()
+        {
+        }
+
+        /// <summary>
+        ///     谨慎使用，若删除表后再获取会引起大量的重复载入
+        /// </summary>
         public bool DeleteTable(string tablePath)
         {
             return _Tables.Remove(AssetId.Create(tablePath, _DefaultBundle));
         }
 
         /// <summary>
-        /// 删除指定bundle的所有表
+        ///     删除指定bundle的所有表
         /// </summary>
         /// <param name="bundlePath"></param>
         public void DeleteAllTable(string bundlePath)
         {
-            var id = AssetId.Create(bundlePath,_DefaultBundle);
+            var id = AssetId.Create(bundlePath, _DefaultBundle);
             var keys = _Tables.Keys.Where(x => x.Bundle == id.Bundle && x.BundleGroup == id.BundleGroup).ToArray();
 
             foreach (var tableId in keys)
@@ -557,7 +559,7 @@ namespace Thunder.Sys
         public Table GetTable(string tablePath)
         {
             var id = AssetId.Create(tablePath, _DefaultBundle);
-            for (int i = 0; i < 2; i++)
+            for (var i = 0; i < 2; i++)
             {
                 if (_Tables.TryGetValue(id, out var value) && value.UnDeserialized == null) return value.Deserialized;
 
@@ -572,7 +574,8 @@ namespace Thunder.Sys
 
                 LoadBundle(id);
 
-                Assert.IsTrue(_Tables.TryGetValue(id, out _), $"未在 {id.BundleGroup}!{id.Bundle} 内找到名为 {id.Name} 的table");
+                Assert.IsTrue(_Tables.TryGetValue(id, out _),
+                    $"未在 {id.BundleGroup}!{id.Bundle} 内找到名为 {id.Name} 的table");
             }
 
             return default;
@@ -580,7 +583,7 @@ namespace Thunder.Sys
 
         public void LoadBundle(string bundlePath)
         {
-            LoadBundle(AssetId.Create(bundlePath,_DefaultBundle));
+            LoadBundle(AssetId.Create(bundlePath, _DefaultBundle));
         }
 
         private void LoadBundle(AssetId id)
@@ -597,19 +600,16 @@ namespace Thunder.Sys
             BundleSys.Ins.ReleaseBundle(id.BundleGroup, id.Bundle);
         }
 
-        public void OnSceneEnter(string preScene, string curScene)
+        private struct TableUnit
         {
+            public Table Deserialized;
+            public string UnDeserialized;
 
-        }
-
-        public void OnSceneExit(string curScene)
-        {
-
-        }
-
-        public void OnApplicationExit()
-        {
-
+            public TableUnit(Table deserialized, string unDeserialized)
+            {
+                Deserialized = deserialized;
+                UnDeserialized = unDeserialized;
+            }
         }
     }
 
@@ -619,36 +619,47 @@ namespace Thunder.Sys
         public object[][] Rows;
     }
 
-    public class Table:IEnumerable<Row>
+    public class Table : IEnumerable<Row>
     {
-        private readonly Dictionary<string, int> _FieldsDic;
         private readonly string[] _Fields;
+        private readonly Dictionary<string, int> _FieldsDic;
         private readonly Row[] _Rows;
 
         public Table(JsonTableReciever json)
         {
-            _Fields = json.Fields ??new string[0];
+            _Fields = json.Fields ?? new string[0];
             _FieldsDic = new Dictionary<string, int>();
-            for(int i=0;i<_Fields.Length;i++)
-                _FieldsDic.Add(_Fields[i],i);
+            for (var i = 0; i < _Fields.Length; i++)
+                _FieldsDic.Add(_Fields[i], i);
 
             _Rows = new Row[json.Rows.Length];
-            for (int i = 0; i < json.Rows.Length; i++)
+            for (var i = 0; i < json.Rows.Length; i++)
             {
-                for (int j = 0; j < _Fields.Length; j++)
-                {
+                for (var j = 0; j < _Fields.Length; j++)
                     switch (json.Rows[i][j])
                     {
                         case long _:
-                            json.Rows[i][j] = (int)(long)json.Rows[i][j];
+                            json.Rows[i][j] = (int) (long) json.Rows[i][j];
                             break;
                         case double _:
-                            json.Rows[i][j] = (float)(double)json.Rows[i][j];
+                            json.Rows[i][j] = (float) (double) json.Rows[i][j];
                             break;
                     }
-                }
-                _Rows[i] = new Row(this,i,json.Rows[i]);
+
+                _Rows[i] = new Row(this, i, json.Rows[i]);
             }
+        }
+
+        public Row this[int index] => _Rows[index];
+
+        public IEnumerator<Row> GetEnumerator()
+        {
+            return ((IEnumerable<Row>) _Rows).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _Rows.GetEnumerator();
         }
 
         public string GetField(int index)
@@ -661,53 +672,31 @@ namespace Thunder.Sys
             return _FieldsDic[field];
         }
 
-        public Row this[int index] => _Rows[index];
-
         public Row GetRow(int index)
         {
             return _Rows[index];
         }
-
-        public IEnumerator<Row> GetEnumerator()
-        {
-            return ((IEnumerable<Row>)_Rows).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _Rows.GetEnumerator();
-        }
     }
 
-    public class Row:IEnumerable<Cell>
+    public class Row : IEnumerable<Cell>
     {
-        public Table Table { get; }
-        public int Index { get; }
-
         private readonly Cell[] _Cells;
 
-        public Row(Table table,int index,IReadOnlyList<object> data)
+        public Row(Table table, int index, IReadOnlyList<object> data)
         {
             Table = table;
             Index = index;
             _Cells = new Cell[data.Count];
-            for (int i = 0; i < data.Count; i++)
-                _Cells[i] = new Cell(Table,i, data[i]);
+            for (var i = 0; i < data.Count; i++)
+                _Cells[i] = new Cell(Table, i, data[i]);
         }
+
+        public Table Table { get; }
+        public int Index { get; }
 
         public Cell this[int index] => _Cells[index];
 
         public Cell this[string field] => _Cells[Table.GetField(field)];
-
-        public Cell GetCell(int index)
-        {
-            return _Cells[index];
-        }
-
-        public Cell GetCell(string field)
-        {
-            return _Cells[Table.GetField(field)];
-        }
 
         public IEnumerator<Cell> GetEnumerator()
         {
@@ -717,6 +706,16 @@ namespace Thunder.Sys
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _Cells.GetEnumerator();
+        }
+
+        public Cell GetCell(int index)
+        {
+            return _Cells[index];
+        }
+
+        public Cell GetCell(string field)
+        {
+            return _Cells[Table.GetField(field)];
         }
     }
 
@@ -745,18 +744,17 @@ namespace Thunder.Sys
 
         public static implicit operator float(Cell c)
         {
-            return (float)c._Data;
+            return (float) c._Data;
         }
 
         public static implicit operator string(Cell c)
         {
-            return (string)c._Data;
+            return (string) c._Data;
         }
 
         public static implicit operator bool(Cell c)
         {
-            return (bool)c._Data;
+            return (bool) c._Data;
         }
     }
 }
-

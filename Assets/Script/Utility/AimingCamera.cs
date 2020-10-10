@@ -6,20 +6,20 @@ namespace Thunder.Utility
 {
     public class AimingCamera : BaseCamera
     {
-        public Transform Target;
+        private Vector3 _TargetDir;
+        private Vector3 _TargetPos;
+        private Vector3 _TargetRot;
         public float OffsetAngle;
         public float Radius;
-        public float Sensitive;
-        public float UpAngleLimit;
-        public Vector3 TargetOffset;
-        [Range(0, 1)]
-        public float SmoothFactor;
 
         public bool RealTimeUpdate;
+        public float Sensitive;
 
-        private Vector3 _TargetDir;
-        private Vector3 _TargetRot;
-        private Vector3 _TargetPos;
+        [Range(0, 1)] public float SmoothFactor;
+
+        public Transform Target;
+        public Vector3 TargetOffset;
+        public float UpAngleLimit;
 
         private void OnEnable()
         {
@@ -96,10 +96,10 @@ namespace Thunder.Utility
             //_TargetRot.z = 0;
 
             if (Target == null) return;
-            Vector3 input = ControlSys.Ins.RequireKey("Axis2", 0).Axis;
-            float yRotAngle = Sensitive * input.x;
+            var input = ControlSys.Ins.RequireKey("Axis2", 0).Axis;
+            var yRotAngle = Sensitive * input.x;
             _TargetDir = Quaternion.AngleAxis(yRotAngle, Vector3.up) * _TargetDir;
-            Vector3 dir = Vector3.Cross(_TargetDir, Vector3.up);
+            var dir = Vector3.Cross(_TargetDir, Vector3.up);
             dir = Quaternion.AngleAxis(OffsetAngle, Vector3.up) * dir;
 
             _TargetRot.y = Vector3.SignedAngle(Vector3.forward, dir, Vector3.up);
@@ -126,7 +126,8 @@ namespace Thunder.Utility
         {
             //if (Target == null) return;
 
-            Trans.position = Vector3.Lerp(Trans.position, _TargetDir * Radius + Target.position + TargetOffset, SmoothFactor);
+            Trans.position = Vector3.Lerp(Trans.position, _TargetDir * Radius + Target.position + TargetOffset,
+                SmoothFactor);
             //Trans.position = _TargetDir * Radius + Target.position + TargetOffset;
             //Trans.rotation = Quaternion.Lerp(Trans.rotation,Quaternion.Euler(_TargetRot),SmoothFactor);
             Trans.rotation = Quaternion.Euler(_TargetRot);

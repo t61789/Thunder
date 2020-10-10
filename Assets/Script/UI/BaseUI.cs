@@ -9,8 +9,23 @@ using UnityEngine.EventSystems;
 namespace Thunder.UI
 {
     [RequireComponent(typeof(RectTransform))]
-    public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler,
+        IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter, IBeginDragHandler, IEndDragHandler, IDragHandler
     {
+        public delegate void AfterOpenDel(BaseUI baseUi);
+
+        public delegate void BeforeCloseDel(BaseUI baseUi);
+
+        public delegate void CloseCheck(BaseUI baseUi, ref bool result);
+
+        public delegate void PointerDel(BaseUI baseUi, PointerEventData eventData);
+
+        [SerializeField] private string _UIName;
+
+        [HideInInspector] public BaseUI Dialog;
+
+        [HideInInspector] public RectTransform RectTrans;
+
         public bool Stable = false;
 
         public string UIName
@@ -20,57 +35,25 @@ namespace Thunder.UI
             get => string.IsNullOrEmpty(_UIName) ? name : _UIName;
         }
 
-        [SerializeField]
-        private string _UIName;
-
-        [HideInInspector]
-        public RectTransform RectTrans;
-
-        public delegate void PointerDel(BaseUI baseUi, PointerEventData eventData);
-        public event PointerDel PointerDown;
-        public event PointerDel PointerEnter;
-        public event PointerDel PointerClick;
-        public event PointerDel PointerExit;
-        public event PointerDel PointerUp;
-        public event PointerDel DragStart;
-        public event PointerDel DragEnd;
-        public event PointerDel Dragging;
-
-        public delegate void AfterOpenDel(BaseUI baseUi);
-        public event AfterOpenDel OnAfterOpen;
-        public delegate void BeforeCloseDel(BaseUI baseUi);
-        public event BeforeCloseDel OnBeforeClose;
-        public delegate void CloseCheck(BaseUI baseUi, ref bool result);
-        public event CloseCheck OnCloseCheck;
-
-        [HideInInspector]
-        public BaseUI Dialog;
-
-        protected virtual void Awake()
+        public void OnBeginDrag(PointerEventData eventData)
         {
-            UIName = UIName ?? name;
-            RectTrans = transform as RectTransform;
+            DragStart?.Invoke(this, eventData);
         }
 
-        public virtual void AfterOpen()
+        public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
         {
-            OnAfterOpen?.Invoke(this);
+            if (Dialog == null) return true;
+            return !Dialog.gameObject.activeSelf;
         }
 
-        public virtual bool BeforeClose()
+        public void OnDrag(PointerEventData eventData)
         {
-            bool result = true;
-            OnCloseCheck?.Invoke(this, ref result);
-            if (!result)
-                return false;
-
-            OnBeforeClose?.Invoke(this);
-            return true;
+            Dragging?.Invoke(this, eventData);
         }
 
-        public GameObject GetGameObject()
+        public void OnEndDrag(PointerEventData eventData)
         {
-            return gameObject;
+            DragEnd?.Invoke(this, eventData);
         }
 
         public void OpDestroy()
@@ -82,12 +65,10 @@ namespace Thunder.UI
 
         public void OpRecycle()
         {
-
         }
 
-        public virtual void ObjectPoolReset(Hashtable arg)
+        public void OpReset()
         {
-
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -115,24 +96,47 @@ namespace Thunder.UI
             PointerUp?.Invoke(this, eventData);
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
+        public event PointerDel PointerDown;
+        public event PointerDel PointerEnter;
+        public event PointerDel PointerClick;
+        public event PointerDel PointerExit;
+        public event PointerDel PointerUp;
+        public event PointerDel DragStart;
+        public event PointerDel DragEnd;
+        public event PointerDel Dragging;
+        public event AfterOpenDel OnAfterOpen;
+        public event BeforeCloseDel OnBeforeClose;
+        public event CloseCheck OnCloseCheck;
+
+        protected virtual void Awake()
         {
-            DragStart?.Invoke(this, eventData);
+            UIName = UIName ?? name;
+            RectTrans = transform as RectTransform;
         }
 
-        public void OnEndDrag(PointerEventData eventData)
+        public virtual void AfterOpen()
         {
-            DragEnd?.Invoke(this, eventData);
+            OnAfterOpen?.Invoke(this);
         }
 
-        public void OnDrag(PointerEventData eventData)
+        public virtual bool BeforeClose()
         {
-            Dragging?.Invoke(this, eventData);
+            var result = true;
+            OnCloseCheck?.Invoke(this, ref result);
+            if (!result)
+                return false;
+
+            OnBeforeClose?.Invoke(this);
+            return true;
         }
 
-        public void OpReset()
+        public GameObject GetGameObject()
         {
+            return gameObject;
+        }
 
+        public virtual void ObjectPoolReset(Hashtable arg)
+        {
         }
 
         public void SetAnchor(Vector2 anchorMax, Vector2 anchorMin)
@@ -152,23 +156,14 @@ namespace Thunder.UI
             RectTrans.position = pos;
         }
 
-        public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
-        {
-            if (Dialog == null) return true;
-            return !Dialog.gameObject.activeSelf;
-        }
-
         public void Close()
         {
-            Sys.UISys.Ins.CloseUI(UIName);
+            UISys.Ins.CloseUI(UIName);
         }
 
         public void InitRect(UiInitType action)
         {
-            if ((action & UiInitType.MiddleAnchor) != 0)
-            {
-                RectTrans.anchorMin = RectTrans.anchorMax = Vector2.one / 2;
-            }
+            if ((action & UiInitType.MiddleAnchor) != 0) RectTrans.anchorMin = RectTrans.anchorMax = Vector2.one / 2;
 
             if ((action & UiInitType.FillAnchor) != 0)
             {
@@ -176,15 +171,9 @@ namespace Thunder.UI
                 RectTrans.anchorMin = Vector2.zero;
             }
 
-            if ((action & UiInitType.FillSize) != 0)
-            {
-                RectTrans.offsetMin = RectTrans.offsetMax = Vector2.zero;
-            }
+            if ((action & UiInitType.FillSize) != 0) RectTrans.offsetMin = RectTrans.offsetMax = Vector2.zero;
 
-            if ((action & UiInitType.PositionMiddleOfAnchor) != 0)
-            {
-                RectTrans.anchoredPosition = Vector2.zero;
-            }
+            if ((action & UiInitType.PositionMiddleOfAnchor) != 0) RectTrans.anchoredPosition = Vector2.zero;
         }
 
         // [Assetid]:[FunctionName]
@@ -194,14 +183,14 @@ namespace Thunder.UI
             // ReSharper disable once PossibleNullReferenceException
             var s = func.Split(':');
             Assert.IsTrue(s.Length == 2, $"命令不正确：{func}");
-            Sys.LuaSys.Ins.ExecuteFile(s[0]);
-            Sys.LuaSys.Ins.ExecuteCommand(s[1]);
+            LuaSys.Ins.ExecuteFile(s[0]);
+            LuaSys.Ins.ExecuteCommand(s[1]);
         }
 
         public void ExecuteLuaCmd(string cmd)
         {
             Assert.IsFalse(string.IsNullOrEmpty(cmd), $"命令不正确：{cmd}");
-            Sys.LuaSys.Ins.ExecuteCommand(cmd);
+            LuaSys.Ins.ExecuteCommand(cmd);
         }
     }
 }

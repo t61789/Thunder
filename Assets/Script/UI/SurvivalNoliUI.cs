@@ -5,11 +5,11 @@ namespace Thunder.UI
 {
     public class SurvivalNoliUI : BaseUI
     {
-        private string surviveTimePreText = "";
+        private Text score;
         private string scorePreText = "";
 
         private Text surviveTime;
-        private Text score;
+        private string surviveTimePreText = "";
 
         protected override void Awake()
         {

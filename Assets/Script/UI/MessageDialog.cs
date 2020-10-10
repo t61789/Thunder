@@ -11,9 +11,10 @@ namespace Thunder.UI
             base.Awake();
             text = transform.Find("Text").GetComponent<Text>();
         }
+
         public void Init(string message)
         {
-            text.text = message;//
+            text.text = message; //
         }
     }
 }

@@ -7,37 +7,29 @@ namespace Thunder.UI
 {
     public class Joystick : BaseUI
     {
-        public struct Value
-        {
-            public Vector3 val;
-            public bool click;
-            public bool doubleClick;
-            public bool holding;
-        }
-
         private static Value[] values = new Value[0];
-
-        public bool StablePanel;
-        public int Index;
-        public float Radius = 203.6f;
-        public float CapRadius = 59.21f;
-        public float ShowTime = 0.1f;
-        public float HideTime = 1f;
-        public float StayTime = 0.7f;
+        private float alphaCount;
 
         private BaseUI cap;
+        public float CapRadius = 59.21f;
+        private float curAlpha;
+        private bool dragging;
+        private float fadeCount;
+        public float HideTime = 1f;
+        private Material imageMaterial;
+        public int Index;
         private BaseUI panel;
         private Image panelImage;
-        private bool dragging;
-        private float curAlpha;
-        private float alphaCount;
-        private float fadeCount;
-        private Material imageMaterial;
+        public float Radius = 203.6f;
+        public float ShowTime = 0.1f;
+
+        public bool StablePanel;
+        public float StayTime = 0.7f;
 
         protected void Start()
         {
-            List<Value> valueList = new List<Value>(values);
-            for (int i = valueList.Count; i <= Index; i++)
+            var valueList = new List<Value>(values);
+            for (var i = valueList.Count; i <= Index; i++)
                 valueList.Add(new Value());
             values = valueList.ToArray();
 
@@ -92,8 +84,8 @@ namespace Thunder.UI
 
         private void CapDragStart(BaseUI baseUI, PointerEventData eventData)
         {
-            Vector2 pos = eventData.position;
-            if ((pos - (Vector2)cap.RectTrans.position).magnitude < CapRadius)
+            var pos = eventData.position;
+            if ((pos - (Vector2) cap.RectTrans.position).magnitude < CapRadius)
             {
                 dragging = true;
                 if (!StablePanel)
@@ -130,7 +122,7 @@ namespace Thunder.UI
         {
             if (dragging)
             {
-                Vector3 temp = (Vector3)eventData.position - panel.RectTrans.position;
+                var temp = (Vector3) eventData.position - panel.RectTrans.position;
                 if (StablePanel)
                 {
                     if (temp.magnitude > Radius)
@@ -146,6 +138,7 @@ namespace Thunder.UI
                         panel.RectTrans.position = -temp.normalized * Radius + cap.RectTrans.position;
                     }
                 }
+
                 values[Index].val = temp.normalized * (temp.magnitude / Radius);
             }
         }
@@ -175,6 +168,14 @@ namespace Thunder.UI
             if (index < 0 || index >= values.Length)
                 return new Value();
             return values[index];
+        }
+
+        public struct Value
+        {
+            public Vector3 val;
+            public bool click;
+            public bool doubleClick;
+            public bool holding;
         }
     }
 }

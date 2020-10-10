@@ -1,14 +1,15 @@
-﻿using BehaviorDesigner.Runtime;
+﻿using System;
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Thunder.Behavior
 {
     public class GetDistance : Action
     {
+        public SharedFloat distance;
         public SharedGameObject obj1;
         public SharedGameObject obj2;
-
-        public SharedFloat distance;
 
         public override TaskStatus OnUpdate()
         {
@@ -17,7 +18,7 @@ namespace Thunder.Behavior
                 distance.Value = (obj1.Value.transform.position - obj2.Value.transform.position).magnitude;
                 return TaskStatus.Success;
             }
-            catch (global::System.Exception)
+            catch (Exception)
             {
                 return TaskStatus.Failure;
                 throw;

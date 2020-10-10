@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using Thunder.Sys;
-using UnityEngine;
-
-namespace Thunder.Utility
+﻿namespace Thunder.Utility
 {
     public class GlobalSettings
     {
@@ -17,24 +13,6 @@ namespace Thunder.Utility
         public const string SecondaryWeaponType = "secondaryWeapon";
         public const string MeleeWeaponType = "meleeWeapon";
         public const string ThrowingWeaponType = "throwingWeapon";
-        public static string[] WeaponTypes = 
-        {
-            MainWeaponType,
-            SecondaryWeaponType,
-            MeleeWeaponType,
-            ThrowingWeaponType,
-        };
-
-        // 切换按键命名规则：Switch+首字母大写的weapontype，在尾部添加初始为0的数字
-        // 重复则+1
-        public static string[] WeaponBeltCellTypes =
-        {
-            MainWeaponType,
-            MainWeaponType,
-            SecondaryWeaponType,
-            MeleeWeaponType,
-            ThrowingWeaponType
-        };
         public const string PreWeaponKeyName = "SwitchPreWeapon";
         public const string DropWeaponKeyName = "DropWeapon";
 
@@ -50,5 +28,24 @@ namespace Thunder.Utility
         public const string ItemInfoTableName = "item_info";
 
         public const int UnarmedId = 1;
+
+        public static string[] WeaponTypes =
+        {
+            MainWeaponType,
+            SecondaryWeaponType,
+            MeleeWeaponType,
+            ThrowingWeaponType
+        };
+
+        // 切换按键命名规则：Switch+首字母大写的weapontype，在尾部添加初始为0的数字
+        // 重复则+1
+        public static string[] WeaponBeltCellTypes =
+        {
+            MainWeaponType,
+            MainWeaponType,
+            SecondaryWeaponType,
+            MeleeWeaponType,
+            ThrowingWeaponType
+        };
     }
 }

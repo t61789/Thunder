@@ -10,13 +10,8 @@ namespace Thunder.UI
 
         private RectTransform parentRect;
         private Vector3 recordMousePos;
-        private Vector3 recordParentSize;
         private Vector3 recordParentPos;
-
-        private void Awake()
-        {
-            parentRect = transform.parent as RectTransform;
-        }
+        private Vector3 recordParentSize;
 
         public void OnBeginDrag(PointerEventData eventData)
         {
@@ -27,9 +22,9 @@ namespace Thunder.UI
 
         public void OnDrag(PointerEventData eventData)
         {
-            Vector3 delta = Input.mousePosition - recordMousePos;
+            var delta = Input.mousePosition - recordMousePos;
 
-            float temp = recordParentSize.x + delta.x;
+            var temp = recordParentSize.x + delta.x;
             if (temp > maxSize.x)
             {
                 temp = maxSize.x;
@@ -40,6 +35,7 @@ namespace Thunder.UI
                 temp = minSize.x;
                 delta.x = minSize.x - recordParentSize.x;
             }
+
             parentRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, temp);
 
             temp = recordParentSize.y - delta.y;
@@ -53,9 +49,15 @@ namespace Thunder.UI
                 temp = minSize.y;
                 delta.y = -minSize.y + recordParentSize.y;
             }
+
             parentRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, temp);
 
             parentRect.position = recordParentPos + delta / 2;
+        }
+
+        private void Awake()
+        {
+            parentRect = transform.parent as RectTransform;
         }
     }
 }

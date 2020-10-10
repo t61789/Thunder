@@ -6,22 +6,22 @@ namespace Thunder.Tool
 {
     public class DisposableDictionary
     {
-        private Dictionary<string, int> intDic = new Dictionary<string, int>();
-        private Dictionary<string, float> floatDic = new Dictionary<string, float>();
-        private Dictionary<string, Vector3> vectorDic = new Dictionary<string, Vector3>();
-        private Dictionary<string, bool> boolDic = new Dictionary<string, bool>();
+        private readonly Dictionary<string, bool> _BoolDic = new Dictionary<string, bool>();
+        private readonly Dictionary<string, float> _FloatDic = new Dictionary<string, float>();
+        private readonly Dictionary<string, int> _IntDic = new Dictionary<string, int>();
+        private readonly Dictionary<string, Vector3> _VectorDic = new Dictionary<string, Vector3>();
 
         public int GetInt(string key, int defaultValue = 0)
         {
             try
             {
-                int result = intDic[key];
-                intDic[key] = defaultValue;
+                var result = _IntDic[key];
+                _IntDic[key] = defaultValue;
                 return result;
             }
             catch (Exception)
             {
-                intDic.Add(key, defaultValue);
+                _IntDic.Add(key, defaultValue);
                 return defaultValue;
             }
         }
@@ -30,11 +30,11 @@ namespace Thunder.Tool
         {
             try
             {
-                intDic[key] = value;
+                _IntDic[key] = value;
             }
             catch (Exception)
             {
-                intDic.Add(key, value);
+                _IntDic.Add(key, value);
             }
         }
 
@@ -42,13 +42,13 @@ namespace Thunder.Tool
         {
             try
             {
-                float result = floatDic[key];
-                floatDic[key] = defaultValue;
+                var result = _FloatDic[key];
+                _FloatDic[key] = defaultValue;
                 return result;
             }
             catch (Exception)
             {
-                floatDic.Add(key, defaultValue);
+                _FloatDic.Add(key, defaultValue);
                 return defaultValue;
             }
         }
@@ -57,11 +57,11 @@ namespace Thunder.Tool
         {
             try
             {
-                floatDic[key] = value;
+                _FloatDic[key] = value;
             }
             catch (Exception)
             {
-                floatDic.Add(key, value);
+                _FloatDic.Add(key, value);
             }
         }
 
@@ -69,13 +69,13 @@ namespace Thunder.Tool
         {
             try
             {
-                Vector3 result = vectorDic[key];
-                vectorDic[key] = defaultValue;
+                var result = _VectorDic[key];
+                _VectorDic[key] = defaultValue;
                 return result;
             }
             catch (Exception)
             {
-                vectorDic.Add(key, defaultValue);
+                _VectorDic.Add(key, defaultValue);
                 return defaultValue;
             }
         }
@@ -84,11 +84,11 @@ namespace Thunder.Tool
         {
             try
             {
-                vectorDic[key] = value;
+                _VectorDic[key] = value;
             }
             catch (Exception)
             {
-                vectorDic.Add(key, value);
+                _VectorDic.Add(key, value);
             }
         }
 
@@ -96,13 +96,13 @@ namespace Thunder.Tool
         {
             try
             {
-                bool result = boolDic[key];
-                boolDic[key] = defaultValue;
+                var result = _BoolDic[key];
+                _BoolDic[key] = defaultValue;
                 return result;
             }
             catch (Exception)
             {
-                boolDic.Add(key, defaultValue);
+                _BoolDic.Add(key, defaultValue);
                 return defaultValue;
             }
         }
@@ -111,11 +111,11 @@ namespace Thunder.Tool
         {
             try
             {
-                boolDic[key] = value;
+                _BoolDic[key] = value;
             }
             catch (Exception)
             {
-                boolDic.Add(key, value);
+                _BoolDic.Add(key, value);
             }
         }
     }

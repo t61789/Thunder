@@ -20,20 +20,20 @@ namespace Thunder.Tool.BuffData
             Div
         }
 
-        public struct Unit
-        {
-            public string Name;
-            public Operator Op;
-            public float Priority;
-            public BuffData BuffData;
+        private readonly List<Unit> _Child = new List<Unit>();
 
-            public Unit(string name, Operator op, float priority, BuffData buffData)
-            {
-                Name = name;
-                Op = op;
-                Priority = priority;
-                BuffData = buffData;
-            }
+        private readonly StringBuilder _Sb = new StringBuilder();
+
+        [SerializeField] private float _BaseData;
+
+        private float _CurData;
+        private bool _CurDataChanged;
+
+        [HideInInspector] public UnityEvent DataChanged;
+
+        public BuffData(float baseData)
+        {
+            BaseData = baseData;
         }
 
         public float BaseData
@@ -46,8 +46,6 @@ namespace Thunder.Tool.BuffData
                 ReCalculateData();
             }
         }
-        [SerializeField]
-        private float _BaseData;
 
         public float CurData
         {
@@ -65,28 +63,14 @@ namespace Thunder.Tool.BuffData
                 Parent?.ReCalculateData();
             }
         }
-        private float _CurData;
-        private bool _CurDataChanged;
 
-        [HideInInspector]
-        public BuffData Parent { get; set; }
-
-        [HideInInspector]
-        public UnityEvent DataChanged;
-
-        private readonly List<Unit> _Child = new List<Unit>();
-
-        public BuffData(float baseData)
-        {
-            BaseData = baseData;
-        }
+        [HideInInspector] public BuffData Parent { get; set; }
 
         public void ReCalculateData()
         {
             // 递归修改所有父节点的当前值
-            float newData = BaseData;
+            var newData = BaseData;
             foreach (var t in _Child)
-            {
                 switch (t.Op)
                 {
                     case Operator.Add:
@@ -104,7 +88,6 @@ namespace Thunder.Tool.BuffData
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
 
             CurData = newData;
         }
@@ -113,16 +96,17 @@ namespace Thunder.Tool.BuffData
         {
             newBuff.Parent = this;
             _Child.Add(new Unit(name, op, priority, newBuff));
-            for (int i = _Child.Count - 1; i > 0; i--)
-            {
+            for (var i = _Child.Count - 1; i > 0; i--)
                 if (_Child[i - 1].Priority > _Child[i].Priority)
                 {
-                    Unit temp = _Child[i - 1];
+                    var temp = _Child[i - 1];
                     _Child[i - 1] = _Child[i];
                     _Child[i] = temp;
                 }
-                else break;
-            }
+                else
+                {
+                    break;
+                }
 
             ReCalculateData();
 
@@ -131,13 +115,14 @@ namespace Thunder.Tool.BuffData
 
         public void RemoveBuff(BuffData buf)
         {
-            for (int i = 0; i < _Child.Count; i++)
+            for (var i = 0; i < _Child.Count; i++)
             {
                 if (_Child[i].BuffData != buf) continue;
                 _Child[i].BuffData.Parent = null;
                 _Child.RemoveAt(i);
                 return;
             }
+
             ReCalculateData();
 
             DataChanged?.Invoke();
@@ -145,13 +130,14 @@ namespace Thunder.Tool.BuffData
 
         public void RemoveBuff(string name)
         {
-            for (int i = 0; i < _Child.Count; i++)
+            for (var i = 0; i < _Child.Count; i++)
             {
                 if (_Child[i].Name != name) continue;
                 _Child[i].BuffData.Parent = null;
                 _Child.RemoveAt(i);
                 break;
             }
+
             ReCalculateData();
 
             DataChanged?.Invoke();
@@ -244,7 +230,6 @@ namespace Thunder.Tool.BuffData
             return v1.CurData * v2;
         }
 
-        private readonly StringBuilder _Sb = new StringBuilder();
         public override string ToString()
         {
             return CurData.ToString();
@@ -271,6 +256,21 @@ namespace Thunder.Tool.BuffData
 
             return _Sb.ToString();
         }
-    }
 
+        public struct Unit
+        {
+            public string Name;
+            public Operator Op;
+            public float Priority;
+            public BuffData BuffData;
+
+            public Unit(string name, Operator op, float priority, BuffData buffData)
+            {
+                Name = name;
+                Op = op;
+                Priority = priority;
+                BuffData = buffData;
+            }
+        }
+    }
 }

@@ -1,49 +1,46 @@
-﻿using System;
-using System.Data.SqlTypes;
-using System.Linq;
-using Thunder.Entity;
+﻿using System.Linq;
 using Thunder.Sys;
 using Thunder.Tool;
 using Thunder.UI;
 using Thunder.Utility;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Thunder.Game.FlyingSaucer
 {
-    public class FlyingSaucerGame:MonoBehaviour
+    public class FlyingSaucerGame : MonoBehaviour
     {
+        public delegate void DelDataChanged(float score, int batter, int hits);
+
         public static FlyingSaucerGame Instance;
 
-        public FlyingSaucerScoreBoard ScoreBoard;
-
-        public float TurnTime;
-        public float ScorePerHit;
+        private int _Batter;
+        private int _CurHit;
+        private float _CurScore;
         public float BatterFadeTime;
         public int MaxEffectiveBatter;
         public int MaxScoreMagnification;
-        public delegate void DelDataChanged(float score,int batter, int hits);
-        public static event DelDataChanged OnDataChanged;
+
+        public FlyingSaucerScoreBoard ScoreBoard;
+        public float ScorePerHit;
+
+        public float TurnTime;
 
         public AutoCounter TurnCounter { get; private set; }
         public AutoCounter BatterFadeCounter { get; private set; }
-
-        private int _Batter;
-        private float _CurScore;
-        private int _CurHit;
+        public static event DelDataChanged OnDataChanged;
 
         private void Awake()
         {
             PublicEvents.FlyingSaucerHit.AddListener(SaucerHit);
 
 
-            BatterFadeCounter = new AutoCounter(this,BatterFadeTime).OnComplete(() =>
+            BatterFadeCounter = new AutoCounter(this, BatterFadeTime).OnComplete(() =>
             {
                 _Batter = 0;
                 BroadCastData();
             });
 
-            TurnCounter = new AutoCounter(this,TurnTime,false).OnComplete(() =>GameEnd(true));
+            TurnCounter = new AutoCounter(this, TurnTime, false).OnComplete(() => GameEnd(true));
 
             Instance = this;
 
@@ -63,7 +60,7 @@ namespace Thunder.Game.FlyingSaucer
 
         private void SaucerHit()
         {
-            float magnification = Tools.Lerp(1, MaxScoreMagnification,
+            var magnification = Tools.Lerp(1, MaxScoreMagnification,
                 Tools.InLerp(0, MaxEffectiveBatter, _Batter));
             _CurScore += ScorePerHit * magnification;
             _Batter++;
@@ -75,12 +72,11 @@ namespace Thunder.Game.FlyingSaucer
 
         private void BroadCastData()
         {
-            OnDataChanged?.Invoke(_CurScore,_Batter,_CurHit);
+            OnDataChanged?.Invoke(_CurScore, _Batter, _CurHit);
         }
 
         public void EnterGameArea(Collider c)
         {
-            
         }
 
         public void LeaveGameArea(Collider c)
@@ -105,8 +101,8 @@ namespace Thunder.Game.FlyingSaucer
 
         private void GameEnd(bool completely)
         {
-            PublicEvents.GameEnd?.Invoke( GameType.FlyingSaucer,true);
-            string endMsg = $"Game over, you have got {_CurScore} score";
+            PublicEvents.GameEnd?.Invoke(GameType.FlyingSaucer, true);
+            var endMsg = $"Game over, you have got {_CurScore} score";
             LogPanel.Ins.LogSystem(endMsg);
             UISys.Ins.CloseUI(ScoreBoard.UIName);
             TurnCounter.Pause().Recount();

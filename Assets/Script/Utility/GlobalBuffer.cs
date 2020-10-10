@@ -3,6 +3,7 @@
     public class GlobalBuffer
     {
         #region Dictionary
+
         //private struct ObjUnit
         //{
         //    public object obj;
@@ -64,6 +65,7 @@
         //    }
         //    return sb.ToString();
         //}
+
         #endregion
     }
 }

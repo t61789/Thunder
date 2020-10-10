@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Thunder.Tool.BehaviorTree
 {
     public class BehaviorTree : MonoBehaviour
     {
-        public List<Node> nodes;
         public Node firstNode;
+        public List<Node> nodes;
 
-        void FixedUpdate()
+        private void FixedUpdate()
         {
             Process();
         }
@@ -17,7 +18,7 @@ namespace Thunder.Tool.BehaviorTree
         {
             firstNode = null;
             nodes.Clear();
-            global::System.GC.Collect();
+            GC.Collect();
         }
 
         public void AddNode(Node node, int parentId)
@@ -29,6 +30,7 @@ namespace Thunder.Tool.BehaviorTree
                 Debug.LogError("Id " + node.id + "已存在");
                 return;
             }
+
             nodes.Add(node);
             nodes.Find(x => x.id == parentId)?.child.Add(node);
         }
@@ -38,10 +40,10 @@ namespace Thunder.Tool.BehaviorTree
             if (firstNode == null)
                 return;
 
-            List<Node> stack = new List<Node>() { firstNode };
+            var stack = new List<Node> {firstNode};
             while (stack.Count != 0)
             {
-                Node newNode = stack[stack.Count - 1].Action();
+                var newNode = stack[stack.Count - 1].Action();
                 if (newNode == null)
                 {
                     if (stack.Count > 1)
@@ -49,7 +51,9 @@ namespace Thunder.Tool.BehaviorTree
                     stack.RemoveAt(stack.Count - 1);
                 }
                 else
+                {
                     stack.Add(newNode);
+                }
             }
         }
     }

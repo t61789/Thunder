@@ -3,11 +3,11 @@
     public class ConditionNode : Node
     {
         public delegate bool DelCondition();
+
+        public bool actionOver;
         public DelCondition condition;
 
-        public bool result = false;
-
-        public bool actionOver = false;
+        public bool result;
 
         public ConditionNode(int id, DelCondition condition) : base(id)
         {

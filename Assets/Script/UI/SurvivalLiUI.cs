@@ -5,13 +5,12 @@ namespace Thunder.UI
 {
     public class SurvivalLiUI : BaseUI
     {
-        private string surviveTimePreText = "";
+        private float maxTime;
+        private Text score;
         private string scorePreText = "";
 
         private Text surviveTime;
-        private Text score;
-
-        private float maxTime;
+        private string surviveTimePreText = "";
 
         public void Init(float maxTime)
         {

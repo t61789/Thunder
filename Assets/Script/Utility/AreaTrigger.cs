@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace Thunder.Utility
 {
-    public class AreaTrigger:MonoBehaviour
+    public class AreaTrigger : MonoBehaviour
     {
         public UnityEvent<Collider> OnEnter;
-        public UnityEvent<Collider> OnStay;
         public UnityEvent<Collider> OnExit;
+        public UnityEvent<Collider> OnStay;
 
         protected virtual void OnTriggerEnter(Collider collider)
         {
@@ -34,17 +29,14 @@ namespace Thunder.Utility
 
         protected virtual void Enter(Collider collider)
         {
-
         }
 
         protected virtual void Stay(Collider collider)
         {
-            
         }
 
         protected virtual void Exit(Collider collider)
         {
-
         }
     }
 }

@@ -5,9 +5,8 @@ namespace Thunder.Utility
 {
     public class AudioController : MonoBehaviour
     {
-        public AudioClip[] AudioClips;
-
         private AudioSource _AudioSource;
+        public AudioClip[] AudioClips;
 
         private void Awake()
         {

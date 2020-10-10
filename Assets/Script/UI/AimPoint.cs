@@ -8,39 +8,40 @@ namespace Thunder.UI
 {
     public class AimPoint : BaseUI
     {
+        private const string ProperyName = "_TransparentMag";
         public static AimPoint Ins;
 
-        [SerializeField]
-        private Vector2 _AimSize;
-        public Vector2 HitSize;
+        private readonly GameObject[] _Images = new GameObject[8];
+        private Material _AimMat;
+
+        [SerializeField] private Vector2 _AimSize;
+
+        private float _AimValue;
+
+        private Material _HitMat;
+        private float _HitStayTimeCount;
+        private bool _Hitting;
+
+        [HideInInspector] public BuffData AimSizeScale = 1;
+
         public Sprite AimTex;
-        public Sprite HitTex;
+        public float AimTime = 0.02f;
         public RectTransform AimTrans;
+        public float HitFadeTime = 1;
+        public Shader HitShader;
+        public Vector2 HitSize;
+        public float HitStayTime = 0.8f;
+        public Sprite HitTex;
+        public float HitTime = 0.3f;
         public RectTransform HitTrans;
+
         public float AimValue
         {
             get => _AimValue;
             set => SetAimValue(value);
         }
-        private float _AimValue;
-        public float AimTime = 0.02f;
-        public float HitTime = 0.3f;
-        public float HitStayTime = 0.8f;
-        public float HitFadeTime = 1;
-        public Shader HitShader;
 
-        [HideInInspector]
-        public BuffData AimSizeScale = 1;
         public Vector2 AimSize => _AimSize * AimSizeScale.CurData;
-
-        private Material _HitMat;
-        private Material _AimMat;
-        private bool _Hitting;
-        private float _HitStayTimeCount;
-
-        private readonly GameObject[] _Images = new GameObject[8];
-
-        private const string ProperyName = "_TransparentMag";
 
         protected override void Awake()
         {
@@ -76,7 +77,7 @@ namespace Thunder.UI
         public void SetAimValue(float value)
         {
             _AimValue = value;
-            float size = Mathf.Lerp(AimSize.x, AimSize.y, value);
+            var size = Mathf.Lerp(AimSize.x, AimSize.y, value);
             AimTrans.sizeDelta = new Vector2(size, size);
         }
 
@@ -94,17 +95,17 @@ namespace Thunder.UI
         {
             foreach (var img in _Images)
                 Destroy(img);
-            Vector3 anchor = Vector3.up;
-            Quaternion rot = Quaternion.AngleAxis(90, Vector3.forward);
-            Quaternion curRot = Quaternion.AngleAxis(0, Vector3.forward);
-            for (int i = 0; i < 8; i++)
+            var anchor = Vector3.up;
+            var rot = Quaternion.AngleAxis(90, Vector3.forward);
+            var curRot = Quaternion.AngleAxis(0, Vector3.forward);
+            for (var i = 0; i < 8; i++)
             {
-                GameObject go = new GameObject();
-                Image img = go.AddComponent<Image>();
+                var go = new GameObject();
+                var img = go.AddComponent<Image>();
                 img.sprite = i < 4 ? AimTex : HitTex;
                 img.material = i < 4 ? _AimMat : _HitMat;
                 img.SetNativeSize();
-                RectTransform rt = go.transform as RectTransform;
+                var rt = go.transform as RectTransform;
                 rt.SetParent(i < 4 ? AimTrans : HitTrans);
                 rt.anchorMin = rt.anchorMax = (anchor + Vector3.one) / 2;
                 rt.anchoredPosition = Vector2.zero;

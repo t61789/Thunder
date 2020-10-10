@@ -6,11 +6,10 @@ namespace Thunder.Utility.PostProcessing
     [Serializable]
     public class LDepthOfField : GaussBlur
     {
-        [Range(0, 1)]
-        public float MiddleDepth = 0.5f;
+        private Material _GaussBlurMat;
         public Shader GaussBlurShader;
 
-        private Material _GaussBlurMat;
+        [Range(0, 1)] public float MiddleDepth = 0.5f;
 
         public override void Init()
         {
@@ -21,7 +20,7 @@ namespace Thunder.Utility.PostProcessing
 
         public override void Process(RenderTexture source, RenderTexture dest)
         {
-            RenderTexture gauss = RenderTexture.GetTemporary(source.width, source.height, 0);
+            var gauss = RenderTexture.GetTemporary(source.width, source.height, 0);
             Blur(Iterations, BlurSpread, DownSample, source, gauss, _GaussBlurMat);
             _Mat.SetTexture("_Gauss", gauss);
             _Mat.SetFloat("_MiddleDepth", MiddleDepth);

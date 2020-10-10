@@ -11,42 +11,14 @@ namespace Thunder.UI
 {
     public class ListPlane : BaseUI
     {
-        [GenerateWrap]
-        public struct Parameters
-        {
-            public int rowCount;
-            public Vector2 elementSize;
-            public Vector2 elementInterval;
-            public string elementName;
-            public Vector2 planeSize;
-
-            public Parameters(int rowCount, string elementName, Vector2 elementSize, Vector2 elementInterval, Vector2 planeSize)
-            {
-                this.rowCount = rowCount;
-                this.elementSize = elementSize;
-                this.elementInterval = elementInterval;
-                this.elementName = elementName;
-                this.planeSize = planeSize;
-            }
-
-            public Parameters(int rowCount, string elementName, (float x, float y) elementSize, (float x, float y) elementInterval, (float x, float y) planeSize)
-            {
-                this.rowCount = rowCount;
-                this.elementSize = new Vector2(elementSize.x, elementSize.y);
-                this.elementInterval = new Vector2(elementInterval.x, elementInterval.y);
-                this.elementName = elementName;
-                this.planeSize = new Vector2(planeSize.x, planeSize.y);
-            }
-        }
-
         protected const string ELEMENT = "element";
-        protected Vector2 scrollRange;
-        protected (Scrollbar x, Scrollbar y) scrollbar;
-        protected RectTransform maskTrans;
-        protected RectTransform elementsTrans;
+        protected Queue<RectTransform> elementContainers = new Queue<RectTransform>();
 
         protected List<BaseUI> elements = new List<BaseUI>();
-        protected Queue<RectTransform> elementContainers = new Queue<RectTransform>();
+        protected RectTransform elementsTrans;
+        protected RectTransform maskTrans;
+        protected (Scrollbar x, Scrollbar y) scrollbar;
+        protected Vector2 scrollRange;
 
         protected override void Awake()
         {
@@ -90,9 +62,12 @@ namespace Thunder.UI
         {
             if (parameters.elementSize.x == 0)
             {
-                parameters.elementSize.x = (maskTrans.rect.width - (parameters.rowCount - 1) * parameters.elementInterval.x) / parameters.rowCount;
+                parameters.elementSize.x =
+                    (maskTrans.rect.width - (parameters.rowCount - 1) * parameters.elementInterval.x) /
+                    parameters.rowCount;
                 parameters.planeSize.x = 0;
             }
+
             if (parameters.elementSize.y == 0)
                 parameters.elementSize.y = parameters.elementSize.x;
 
@@ -101,9 +76,12 @@ namespace Thunder.UI
 
             elementsTrans.anchoredPosition = Vector3.zero;
 
-            Vector2 interval = new Vector2(parameters.elementInterval.x + parameters.elementSize.x, parameters.elementInterval.y + parameters.elementSize.y);
-            int temp = (inits.Count - 1) / parameters.rowCount + 1;
-            Vector2 planeSize = new Vector2(parameters.rowCount * parameters.elementSize.x + parameters.elementInterval.x * (parameters.rowCount - 1),
+            var interval = new Vector2(parameters.elementInterval.x + parameters.elementSize.x,
+                parameters.elementInterval.y + parameters.elementSize.y);
+            var temp = (inits.Count - 1) / parameters.rowCount + 1;
+            var planeSize = new Vector2(
+                parameters.rowCount * parameters.elementSize.x +
+                parameters.elementInterval.x * (parameters.rowCount - 1),
                 temp * parameters.elementSize.y + parameters.elementInterval.y * (temp - 1));
 
             if (scrollbar.x.gameObject.activeSelf)
@@ -115,7 +93,10 @@ namespace Thunder.UI
                 scrollbar.y.size = maskTrans.rect.width / planeSize.x;
             }
             else
-                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, planeSize.x + maskTrans.offsetMin.x - maskTrans.offsetMax.x);
+            {
+                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,
+                    planeSize.x + maskTrans.offsetMin.x - maskTrans.offsetMax.x);
+            }
 
             if (scrollbar.y.gameObject.activeSelf)
             {
@@ -126,15 +107,18 @@ namespace Thunder.UI
                 scrollbar.y.size = maskTrans.rect.height / planeSize.y;
             }
             else
-                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, planeSize.y + maskTrans.offsetMin.y - maskTrans.offsetMax.y);
-
-            float tempx = parameters.elementSize.x / 2;
-            float tempy = parameters.elementSize.y / 2;
-            for (int i = 0; i < inits.Count; i++)
             {
-                int x = i % parameters.rowCount;
-                int y = i / parameters.rowCount;
-                Vector2 position = new Vector2(x * interval.x + tempx, -y * interval.y - tempy);
+                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
+                    planeSize.y + maskTrans.offsetMin.y - maskTrans.offsetMax.y);
+            }
+
+            var tempx = parameters.elementSize.x / 2;
+            var tempy = parameters.elementSize.y / 2;
+            for (var i = 0; i < inits.Count; i++)
+            {
+                var x = i % parameters.rowCount;
+                var y = i / parameters.rowCount;
+                var position = new Vector2(x * interval.x + tempx, -y * interval.y - tempy);
 
                 RectTransform elementContainer;
                 if (elementContainers.Count != 0)
@@ -143,7 +127,9 @@ namespace Thunder.UI
                     elementContainer.gameObject.SetActive(true);
                 }
                 else
+                {
                     elementContainer = new GameObject(ELEMENT).AddComponent<RectTransform>();
+                }
 
                 elementContainer.anchorMax = Vector2.zero;
                 elementContainer.anchorMin = Vector2.zero;
@@ -152,7 +138,9 @@ namespace Thunder.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                RectTransform rectTransform = ObjectPool.Ins.Alloc(null, UISys.DefaultUiBundle, parameters.elementName, inits[i], elementContainer).GetComponent<RectTransform>();
+                var rectTransform = ObjectPool.Ins
+                    .Alloc(null, UISys.DefaultUiBundle, parameters.elementName, inits[i], elementContainer)
+                    .GetComponent<RectTransform>();
 
                 elements.Add(rectTransform.GetComponent<BaseUI>());
             }
@@ -162,12 +150,44 @@ namespace Thunder.UI
 
         public void ScrollBarChangedY()
         {
-            elementsTrans.anchoredPosition = new Vector2(elementsTrans.anchoredPosition.x, scrollbar.y.value * scrollRange.y);
+            elementsTrans.anchoredPosition =
+                new Vector2(elementsTrans.anchoredPosition.x, scrollbar.y.value * scrollRange.y);
         }
 
         public void ScrollBarChangedX()
         {
-            elementsTrans.anchoredPosition = new Vector2(scrollbar.x.value * scrollRange.x, elementsTrans.anchoredPosition.y);
+            elementsTrans.anchoredPosition =
+                new Vector2(scrollbar.x.value * scrollRange.x, elementsTrans.anchoredPosition.y);
+        }
+
+        [GenerateWrap]
+        public struct Parameters
+        {
+            public int rowCount;
+            public Vector2 elementSize;
+            public Vector2 elementInterval;
+            public string elementName;
+            public Vector2 planeSize;
+
+            public Parameters(int rowCount, string elementName, Vector2 elementSize, Vector2 elementInterval,
+                Vector2 planeSize)
+            {
+                this.rowCount = rowCount;
+                this.elementSize = elementSize;
+                this.elementInterval = elementInterval;
+                this.elementName = elementName;
+                this.planeSize = planeSize;
+            }
+
+            public Parameters(int rowCount, string elementName, (float x, float y) elementSize,
+                (float x, float y) elementInterval, (float x, float y) planeSize)
+            {
+                this.rowCount = rowCount;
+                this.elementSize = new Vector2(elementSize.x, elementSize.y);
+                this.elementInterval = new Vector2(elementInterval.x, elementInterval.y);
+                this.elementName = elementName;
+                this.planeSize = new Vector2(planeSize.x, planeSize.y);
+            }
         }
     }
 }

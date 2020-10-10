@@ -8,8 +8,192 @@ using UnityEngine.SceneManagement;
 
 namespace Thunder.Tool.ObjectPool
 {
-    public class ObjectPool : MonoBehaviour,IBaseSys
+    public class ObjectPool : MonoBehaviour, IBaseSys
     {
+        private static readonly string DefaultBundle = Paths.PrefabBundleD + Paths.Normal;
+
+        private readonly Dictionary<AssetId, Pool> _Pools = new Dictionary<AssetId, Pool>();
+        private float _ClearTimeStart;
+
+        public float ClearTime = 5;
+
+        public static ObjectPool Ins { get; private set; }
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+        }
+
+        public void OnApplicationExit()
+        {
+        }
+
+        private void CreatePools(string bundleGroup, string bundle)
+        {
+            var id = new AssetId(bundleGroup, bundle, null, DefaultBundle);
+            foreach (var prefab in BundleSys.Ins.GetAllAsset<GameObject>(bundleGroup, bundle))
+            {
+                id.Name = prefab.name;
+                if (_Pools.ContainsKey(id)) continue;
+                _Pools.Add(id, new Pool(prefab, prefab.GetComponent<IObjectPool>() != null));
+            }
+
+            BundleSys.Ins.ReleaseBundle(bundleGroup, bundle);
+        }
+
+        public T Alloc<T>(string prefabPath, Action<T> init = null, Transform container = null) where T : MonoBehaviour
+        {
+            var split = prefabPath?.Split('!');
+            // ReSharper disable once PossibleNullReferenceException
+            Assert.IsFalse(split == null && split.Length < 1 && split.Length > 3,
+                $"prefab路径不正确：{prefabPath}");
+            switch (split.Length)
+            {
+                case 1:
+                    return Alloc(null, null, split[0], init, container);
+                case 2:
+                    return Alloc(null, split[0], split[1], init, container);
+                case 3:
+                    return Alloc(split[0], split[1], split[2], init, container);
+                default:
+                    return null;
+            }
+        }
+
+        public T Alloc<T>(string bundleGroup, string bundle, string name, Action<T> init = null,
+            Transform container = null) where T : MonoBehaviour
+        {
+            var pool = GetPool(bundleGroup, bundle, name, out var assetId);
+            Assert.IsTrue(pool.Allocable,
+                $"{assetId.BundleGroup}!{assetId.Bundle}!{assetId.Name} 没有挂载实现IObjectPool的脚本，不可alloc");
+
+            IObjectPool aop;
+            // ReSharper disable once PossibleNullReferenceException
+            if (pool.QueueIsEmpty())
+            {
+                var go = Instantiate(pool.Prefab);
+                go.transform.SetParent(container ?? Stable.Container);
+                aop = go.GetComponent<IObjectPool>();
+                aop.AssetId = assetId;
+            }
+            else
+            {
+                aop = pool.Dequeue();
+                (aop as MonoBehaviour)?.transform.SetParent(container);
+            }
+
+            (aop as MonoBehaviour)?.gameObject.SetActive(true);
+            aop.OpReset();
+
+            var result = aop as T;
+            init?.Invoke(result);
+
+            return result;
+        }
+
+        private Pool GetPool(string bundleGroup, string bundle, string name, out AssetId id)
+        {
+            id = CreateId(bundleGroup, bundle, name);
+
+            if (_Pools.TryGetValue(id, out var pool)) return pool;
+            CreatePools(id.BundleGroup, id.Bundle);
+            Assert.IsTrue(_Pools.TryGetValue(id, out pool), $"未找到prefab {bundleGroup}!{bundle}!{name}");
+
+            return pool;
+        }
+
+        private void Awake()
+        {
+            Ins = this;
+            SceneManager.sceneUnloaded += x => _Pools.Clear();
+        }
+
+        protected void Update()
+        {
+            if (!(Time.time - _ClearTimeStart >= ClearTime)) return;
+            foreach (var item in _Pools.Values)
+                item.DestroyOne();
+            _ClearTimeStart = Time.time;
+        }
+
+        public void Recycle(IObjectPool obj)
+        {
+            obj.OpRecycle();
+            var mono = (obj as MonoBehaviour)?.gameObject;
+            mono?.SetActive(false);
+            mono?.transform.SetParent(Stable.Container);
+            _Pools[obj.AssetId].Enqueue(obj);
+        }
+
+        public GameObject GetPrefab(string prefabPath)
+        {
+            var split = prefabPath?.Split('!');
+            // ReSharper disable once PossibleNullReferenceException
+            Assert.IsFalse(split == null && split.Length < 1 && split.Length > 3,
+                $"prefab路径不正确：{prefabPath}");
+            switch (split.Length)
+            {
+                case 1:
+                    return GetPrefab(null, null, split[0]);
+                case 2:
+                    return GetPrefab(null, split[0], split[1]);
+                case 3:
+                    return GetPrefab(split[0], split[1], split[2]);
+                default:
+                    return null;
+            }
+        }
+
+        public GameObject GetPrefab(string bundleGroup, string bundle, string name)
+        {
+            return GetPool(bundleGroup, bundle, name, out _).Prefab;
+        }
+
+        private static AssetId CreateId(string bundleGroup, string bundle, string name)
+        {
+            bundle = bundle ?? DefaultBundle;
+            return new AssetId(bundleGroup, bundle, name, DefaultBundle);
+        }
+
+        private class Pool
+        {
+            private readonly Queue<IObjectPool> _ObjectQueue;
+            public readonly bool Allocable;
+            public readonly GameObject Prefab;
+
+            public Pool(GameObject prefab, bool allocable)
+            {
+                _ObjectQueue = new Queue<IObjectPool>();
+                Prefab = prefab;
+                Allocable = allocable;
+            }
+
+            public void DestroyOne()
+            {
+                if (_ObjectQueue.Count == 0) return;
+                var aop = _ObjectQueue.Dequeue();
+                aop.OpDestroy();
+            }
+
+            public bool QueueIsEmpty()
+            {
+                return _ObjectQueue.Count == 0;
+            }
+
+            public void Enqueue(IObjectPool obj)
+            {
+                _ObjectQueue.Enqueue(obj);
+            }
+
+            public IObjectPool Dequeue()
+            {
+                return _ObjectQueue.Dequeue();
+            }
+        }
+
         #region OldCode
 
         //private class Pool
@@ -207,188 +391,8 @@ namespace Thunder.Tool.ObjectPool
         //    pathConverter.Append(prefabName);
         //    return pathConverter.ToString();
         //}
+
         #endregion
-
-        private class Pool
-        {
-            private readonly Queue<IObjectPool> _ObjectQueue;
-            public readonly GameObject Prefab;
-            public readonly bool Allocable;
-
-            public Pool(GameObject prefab, bool allocable)
-            {
-                _ObjectQueue = new Queue<IObjectPool>();
-                Prefab = prefab;
-                Allocable = allocable;
-            }
-
-            public void DestroyOne()
-            {
-                if (_ObjectQueue.Count == 0) return;
-                IObjectPool aop = _ObjectQueue.Dequeue();
-                aop.OpDestroy();
-            }
-
-            public bool QueueIsEmpty()
-            {
-                return _ObjectQueue.Count == 0;
-            }
-
-            public void Enqueue(IObjectPool obj)
-            {
-                _ObjectQueue.Enqueue(obj);
-            }
-
-            public IObjectPool Dequeue()
-            {
-                return _ObjectQueue.Dequeue();
-            }
-        }
-
-        public static ObjectPool Ins { get; private set; }
-
-        public float ClearTime = 5;
-        private float _ClearTimeStart;
-
-        private readonly Dictionary<AssetId, Pool> _Pools = new Dictionary<AssetId, Pool>();
-
-        private void CreatePools(string bundleGroup, string bundle)
-        {
-            AssetId id = new AssetId(bundleGroup, bundle, null, DefaultBundle);
-            foreach (var prefab in Sys.BundleSys.Ins.GetAllAsset<GameObject>(bundleGroup, bundle))
-            {
-                id.Name = prefab.name;
-                if (_Pools.ContainsKey(id)) continue;
-                _Pools.Add(id, new Pool(prefab, prefab.GetComponent<IObjectPool>() != null));
-            }
-            Sys.BundleSys.Ins.ReleaseBundle(bundleGroup, bundle);
-        }
-
-        public T Alloc<T>(string prefabPath, Action<T> init = null, Transform container = null) where T : MonoBehaviour
-        {
-            var split = prefabPath?.Split('!');
-            // ReSharper disable once PossibleNullReferenceException
-            Assert.IsFalse(split == null && split.Length < 1 && split.Length > 3,
-                $"prefab路径不正确：{prefabPath}");
-            switch (split.Length)
-            {
-                case 1:
-                    return Alloc(null, null, split[0], init, container);
-                case 2:
-                    return Alloc(null, split[0], split[1], init, container);
-                case 3:
-                    return Alloc(split[0], split[1], split[2], init, container);
-                default:
-                    return null;
-            }
-        }
-
-        public T Alloc<T>(string bundleGroup, string bundle, string name, Action<T> init = null, Transform container = null) where T : MonoBehaviour
-        {
-            Pool pool = GetPool(bundleGroup, bundle, name, out AssetId assetId);
-            Assert.IsTrue(pool.Allocable, $"{assetId.BundleGroup}!{assetId.Bundle}!{assetId.Name} 没有挂载实现IObjectPool的脚本，不可alloc");
-
-            IObjectPool aop;
-            // ReSharper disable once PossibleNullReferenceException
-            if (pool.QueueIsEmpty())
-            {
-                GameObject go = Instantiate(pool.Prefab);
-                go.transform.SetParent(container ?? Sys.Stable.Container);
-                aop = go.GetComponent<IObjectPool>();
-                aop.AssetId = assetId;
-            }
-            else
-            {
-                aop = pool.Dequeue();
-                (aop as MonoBehaviour)?.transform.SetParent(container);
-            }
-
-            (aop as MonoBehaviour)?.gameObject.SetActive(true);
-            aop.OpReset();
-
-            T result = aop as T;
-            init?.Invoke(result);
-
-            return result;
-        }
-
-        private Pool GetPool(string bundleGroup, string bundle, string name, out AssetId id)
-        {
-            id = CreateId(bundleGroup, bundle, name);
-
-            if (_Pools.TryGetValue(id, out Pool pool)) return pool;
-            CreatePools(id.BundleGroup, id.Bundle);
-            Assert.IsTrue(_Pools.TryGetValue(id, out pool), $"未找到prefab {bundleGroup}!{bundle}!{name}");
-
-            return pool;
-        }
-
-        private void Awake()
-        {
-            Ins = this;
-            SceneManager.sceneUnloaded += x => _Pools.Clear();
-        }
-
-        protected void Update()
-        {
-            if (!(Time.time - _ClearTimeStart >= ClearTime)) return;
-            foreach (var item in _Pools.Values)
-                item.DestroyOne();
-            _ClearTimeStart = Time.time;
-        }
-
-        public void Recycle(IObjectPool obj)
-        {
-            obj.OpRecycle();
-            GameObject mono = (obj as MonoBehaviour)?.gameObject;
-            mono?.SetActive(false);
-            mono?.transform.SetParent(Sys.Stable.Container);
-            _Pools[obj.AssetId].Enqueue(obj);
-        }
-
-        public GameObject GetPrefab(string prefabPath)
-        {
-            var split = prefabPath?.Split('!');
-            // ReSharper disable once PossibleNullReferenceException
-            Assert.IsFalse(split == null && split.Length < 1 && split.Length > 3,
-                $"prefab路径不正确：{prefabPath}");
-            switch (split.Length)
-            {
-                case 1:
-                    return GetPrefab(null, null, split[0]);
-                case 2:
-                    return GetPrefab(null, split[0], split[1]);
-                case 3:
-                    return GetPrefab(split[0], split[1], split[2]);
-                default:
-                    return null;
-            }
-        }
-        public GameObject GetPrefab(string bundleGroup, string bundle, string name)
-        {
-            return GetPool(bundleGroup, bundle, name, out _).Prefab;
-        }
-
-        private static readonly string DefaultBundle = Paths.PrefabBundleD + Paths.Normal;
-        private static AssetId CreateId(string bundleGroup, string bundle, string name)
-        {
-            bundle = bundle ?? DefaultBundle;
-            return new AssetId(bundleGroup, bundle, name, DefaultBundle);
-        }
-
-        public void OnSceneEnter(string preScene, string curScene)
-        {
-            
-        }
-
-        public void OnSceneExit(string curScene)
-        {
-            
-        }
-
-        public void OnApplicationExit()
-        {
-        }
     }
 
     public interface IObjectPool

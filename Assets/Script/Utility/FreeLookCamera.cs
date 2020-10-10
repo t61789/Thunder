@@ -6,20 +6,21 @@ namespace Thunder.Utility
     [RequireComponent(typeof(Camera))]
     public class FreeLookCamera : BaseCamera
     {
-        public Transform Target;
-        public float Sensitive;
-        public float FollowRange;
-        public float MaxFollowRange;
-        public float LimitAngle;
-        public Vector3 TargetOffset;
-        [Range(0, 1)]
-        public float SmoothFactor;
-
-        private Vector3 _TargetRot;
+        private Vector3 _FixedPos;
+        private Quaternion _FixedRot;
         private Vector3 _PreTargetPos;
         private float _TargetFollowRange;
-        private Quaternion _FixedRot;
-        private Vector3 _FixedPos;
+
+        private Vector3 _TargetRot;
+        public float FollowRange;
+        public float LimitAngle;
+        public float MaxFollowRange;
+        public float Sensitive;
+
+        [Range(0, 1)] public float SmoothFactor;
+
+        public Transform Target;
+        public Vector3 TargetOffset;
 
         private void OnEnable()
         {
@@ -32,17 +33,17 @@ namespace Thunder.Utility
         private void FixedUpdate()
         {
             if (Target == null) return;
-            Vector3 deltaAxis = ControlSys.Ins.RequireKey("Axis2", 0).Axis * Sensitive;
+            var deltaAxis = ControlSys.Ins.RequireKey("Axis2", 0).Axis * Sensitive;
 
             _TargetRot.y += deltaAxis.x;
             _TargetRot.x -= deltaAxis.y;
 
-            float tempAngle = LimitAngle / 2;
+            var tempAngle = LimitAngle / 2;
             _TargetRot.x = Mathf.Clamp(_TargetRot.x, -tempAngle, tempAngle);
 
             _FixedRot = Quaternion.Lerp(_FixedRot, Quaternion.Euler(_TargetRot), SmoothFactor);
 
-            float scrollDelta = ControlSys.Ins.RequireKey("Axis3", 0).Axis.x * Sensitive;
+            var scrollDelta = ControlSys.Ins.RequireKey("Axis3", 0).Axis.x * Sensitive;
             _TargetFollowRange = Mathf.Clamp(_TargetFollowRange - scrollDelta, 0, MaxFollowRange);
             FollowRange = Mathf.Lerp(FollowRange, _TargetFollowRange, SmoothFactor);
 

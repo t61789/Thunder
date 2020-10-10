@@ -8,8 +8,6 @@ namespace Thunder.Sys
 {
     public class CampSys : IBaseSys
     {
-        public static CampSys Ins { get; private set; }
-
         private readonly float[,] _FriendlinessMap = new float[GlobalSettings.CampMapSize, GlobalSettings.CampMapSize];
 
         private readonly Dictionary<string, int> _KeyMap = new Dictionary<string, int>();
@@ -22,27 +20,42 @@ namespace Thunder.Sys
 
             foreach (var row in DataBaseSys.Ins["camp"])
             {
-                var campName = (string)row["camp_name"];
+                var campName = (string) row["camp_name"];
                 if (!_KeyMap.ContainsKey(campName))
                     AddCamp(campName);
-                var targetName = (string)row["camp_target"];
+                var targetName = (string) row["camp_target"];
                 if (string.IsNullOrEmpty(targetName)) continue;
                 if (!_KeyMap.ContainsKey(targetName))
                     AddCamp(targetName);
-                SetFriendliness(campName, targetName, (float)row["friendliness"]);
+                SetFriendliness(campName, targetName, row["friendliness"]);
             }
 
             DataBaseSys.Ins.DeleteTable("camp");
         }
 
+        public static CampSys Ins { get; private set; }
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+        }
+
+        public void OnApplicationExit()
+        {
+        }
+
         public void AddCamp(string campName)
         {
-            int finding = 0;
+            var finding = 0;
             while (_FriendlinessMap[_InsertIndex, _InsertIndex] == GlobalSettings.CampMaxFriendliness)
             {
                 _InsertIndex = (_InsertIndex + 1) % GlobalSettings.CampMapSize;
                 Assert.IsTrue(++finding <= GlobalSettings.CampMapSize, "阵营表已满，不可添加阵营");
             }
+
             _KeyMap.Add(campName, _InsertIndex);
 
             _FriendlinessMap[_InsertIndex, _InsertIndex] = GlobalSettings.CampMaxFriendliness;
@@ -50,10 +63,10 @@ namespace Thunder.Sys
 
         public void RemoveCamp(string campName)
         {
-            int index = 0;
+            var index = 0;
             Assert.IsTrue(_KeyMap.TryGetValue(campName, out index), $"不存在名为 {campName} 的阵营");
 
-            for (int i = 0; i < GlobalSettings.CampMapSize; i++)
+            for (var i = 0; i < GlobalSettings.CampMapSize; i++)
             {
                 _FriendlinessMap[i, index] = 0;
                 _FriendlinessMap[index, i] = 0;
@@ -101,15 +114,6 @@ namespace Thunder.Sys
             Assert.IsTrue(_KeyMap.TryGetValue(c1, out i1), $"未找到名为 {c1} 的Camp");
             Assert.IsTrue(_KeyMap.TryGetValue(c2, out i2), $"未找到名为 {c2} 的Camp");
             _FriendlinessMap[i1, i2] = friendliness;
-        }
-        
-        public void OnSceneEnter(string preScene, string curScene){}
-
-        public void OnSceneExit(string curScene){}
-        
-        public void OnApplicationExit()
-        {
-            
         }
     }
 }

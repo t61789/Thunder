@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using Thunder.Sys;
 using Thunder.Utility;
 
 namespace Thunder.UI
 {
     public class LevelPlane : ListPlane
     {
-        public BaseUI menuPanel;
         private readonly Dictionary<BaseButton, int> pairs = new Dictionary<BaseButton, int>();
+        public BaseUI menuPanel;
         private string unsavedJson;
 
         protected override void Awake()
@@ -19,13 +19,13 @@ namespace Thunder.UI
 
         private void Load()
         {
-            List<Action<BaseButton>> inits = new List<Action<BaseButton>>();
+            var inits = new List<Action<BaseButton>>();
             int[] completed = null; //Sys.Stable.Save.levelComplete.ToArray();
 
             //int count = 0;
             //int index = 0;
 
-            int completeCount = 0;
+            var completeCount = 0;
             //for (int i = 0; i < Sys.Stable.Level.levels.Length; i++)
             //{
             //    var _item = Sys.Stable.Level.levels[i];
@@ -70,8 +70,8 @@ namespace Thunder.UI
             //    });
             //    count++;
             //}
-            BaseButton[] b = Init(new Parameters(10, "normalButton", (0, 0), (5, 5), (0, 200)), inits);
-            for (int i = 0; i < b.Length; i++)
+            var b = Init(new Parameters(10, "normalButton", (0, 0), (5, 5), (0, 200)), inits);
+            for (var i = 0; i < b.Length; i++)
                 pairs.Add(b[i], i);
 
             InitRect(UiInitType.CenterParent);
@@ -85,28 +85,28 @@ namespace Thunder.UI
 
         public void OpenMenu()
         {
-            Sys.UISys.Ins.OpenUI<BaseUI>("MenuPanel", UIName, true, UiInitType.CenterParent, null);
+            UISys.Ins.OpenUI<BaseUI>("MenuPanel", UIName, true, UiInitType.CenterParent);
         }
 
         public void Exit(bool force)
         {
             if (!force)
-            {
                 //unsavedJson = Sys.Stable.Save.Check();
                 if (unsavedJson != null)
                 {
-                    ConfirmDialog confirmDialog = Sys.UISys.Ins.OpenUI<ConfirmDialog>("confirmDialog", menuPanel.UIName, true, UiInitType.CenterParent, x => x.Init("You have unsaved data, do you want to save them right now?"));
+                    var confirmDialog = UISys.Ins.OpenUI<ConfirmDialog>("confirmDialog", menuPanel.UIName, true,
+                        UiInitType.CenterParent,
+                        x => x.Init("You have unsaved data, do you want to save them right now?"));
                     confirmDialog.OnBeforeClose += DialogConfirmed;
                     return;
                 }
-            }
 
             Sys.Stable.Ins.LoadSceneAsync("StartScene");
         }
 
         private void DialogConfirmed(BaseUI confirmDialog)
         {
-            ConfirmDialog confirmDialogg = confirmDialog as ConfirmDialog;
+            var confirmDialogg = confirmDialog as ConfirmDialog;
             if (confirmDialogg.dialogResult == DialogResult.Ok)
                 Save(unsavedJson);
 

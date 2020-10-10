@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thunder.Entity.Weapon;
+﻿using Thunder.Entity.Weapon;
 using Thunder.Tool;
 using Thunder.Utility;
 using UnityEngine;
@@ -12,12 +7,12 @@ namespace Thunder.Entity
 {
     public class MuzzleFire : MonoBehaviour
     {
-        public float LifeTime;
-        public Sprite[] Sprites = new Sprite[0];
+        private Light _FireLight;
 
         private AutoCounter _LifeTimeCounter;
         private SpriteRenderer _SpriteRenderer;
-        private Light _FireLight;
+        public float LifeTime;
+        public Sprite[] Sprites = new Sprite[0];
 
         private void Start()
         {
@@ -44,7 +39,7 @@ namespace Thunder.Entity
         {
             if (Sprites.Length == 0) return;
             _SpriteRenderer.sprite = Sprites.RandomTake();
-            if(_LifeTimeCounter.Completed)
+            if (_LifeTimeCounter.Completed)
                 _LifeTimeCounter.Recount();
             _FireLight.enabled = true;
         }

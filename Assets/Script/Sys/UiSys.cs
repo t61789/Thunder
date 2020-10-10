@@ -10,42 +10,36 @@ using UnityEngine.SceneManagement;
 
 namespace Thunder.Sys
 {
-    public class UISys:IBaseSys
+    public class UISys : IBaseSys
     {
-        public static UISys Ins { get; private set; }
+        public static string DefaultUiBundle = Paths.PrefabBundleD + Paths.UIBundle;
 
-        private readonly struct OpenParam<T> where T : BaseUI
-        {
-            public readonly string UiName;
-            public readonly BaseUI Dialog;
-            public readonly UiInitType InitType;
-            public readonly Action<T> InitAction;
-            public readonly int SiblingIndex;
-
-            public OpenParam(string uiName, int siblingIndex, BaseUI dialog, UiInitType initType, Action<T> initAction)
-            {
-                Assert.IsNotNull(uiName, "UI名不能为null");
-                UiName = uiName;
-                Dialog = dialog;
-                InitType = initType;
-                InitAction = initAction;
-                SiblingIndex = siblingIndex;
-            }
-        }
+        private readonly List<BaseUI> _ActiveUi = new List<BaseUI>();
+        private readonly Stack<BaseUI> _CloseStack = new Stack<BaseUI>();
+        private readonly List<BaseUI> _HideStableUi = new List<BaseUI>();
 
         private Transform _UiContainer;
         private Transform _UiRecycleContainer;
 
-        private readonly List<BaseUI> _ActiveUi = new List<BaseUI>();
-        private readonly List<BaseUI> _HideStableUi = new List<BaseUI>();
-        private readonly Stack<BaseUI> _CloseStack = new Stack<BaseUI>();
-
-        public static string DefaultUiBundle = Paths.PrefabBundleD + Paths.UIBundle;
-
         public UISys()
         {
             Ins = this;
-            SceneManager.sceneLoaded += (x,y) => Init();
+            SceneManager.sceneLoaded += (x, y) => Init();
+        }
+
+        public static UISys Ins { get; private set; }
+
+        public void OnSceneEnter(string preScene, string curScene)
+        {
+            Init();
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+        }
+
+        public void OnApplicationExit()
+        {
         }
 
         public UISys Init()
@@ -63,13 +57,16 @@ namespace Thunder.Sys
             {
                 var newui = item.GetComponent<BaseUI>();
                 if (item.gameObject.activeSelf)
+                {
                     _ActiveUi.Add(newui);
+                }
                 else
                 {
                     _HideStableUi.Add(newui);
                     move.Add(item);
                 }
             }
+
             foreach (var item in move)
                 item.SetParent(_UiRecycleContainer);
             return this;
@@ -80,7 +77,8 @@ namespace Thunder.Sys
             return OpenUI<BaseUI>(uiName, act, init);
         }
 
-        public BaseUI OpenUI(string uiName, string after, bool dialog = true, UiInitType act = 0, Action<BaseUI> init = null)
+        public BaseUI OpenUI(string uiName, string after, bool dialog = true, UiInitType act = 0,
+            Action<BaseUI> init = null)
         {
             return OpenUI<BaseUI>(uiName, after, dialog, act, init);
         }
@@ -95,14 +93,16 @@ namespace Thunder.Sys
             return OpenUI(new OpenParam<T>(uiName, _UiContainer.childCount, null, act, init));
         }
 
-        public T OpenUI<T>(string uiName, string after, bool dialog = true, UiInitType act = 0, Action<T> init = null) where T : BaseUI
+        public T OpenUI<T>(string uiName, string after, bool dialog = true, UiInitType act = 0, Action<T> init = null)
+            where T : BaseUI
         {
-            int i = 0;
+            var i = 0;
             for (; i < _ActiveUi.Count; i++)
                 if (_ActiveUi[i].UIName == after)
                     break;
 
-            if (i != _ActiveUi.Count) return OpenUI(new OpenParam<T>(uiName, i + 1, dialog ? _ActiveUi[i] : null, act, init));
+            if (i != _ActiveUi.Count)
+                return OpenUI(new OpenParam<T>(uiName, i + 1, dialog ? _ActiveUi[i] : null, act, init));
             Debug.LogWarning($"未找到after名为 {after} 的UI");
             return null;
         }
@@ -114,7 +114,7 @@ namespace Thunder.Sys
 
         private T OpenUI<T>(OpenParam<T> param) where T : BaseUI
         {
-            BaseUI plane = _HideStableUi.FirstOrDefault(x => x.UIName == param.UiName);
+            var plane = _HideStableUi.FirstOrDefault(x => x.UIName == param.UiName);
             if (plane != null)
                 _HideStableUi.Remove(plane);
 
@@ -139,7 +139,7 @@ namespace Thunder.Sys
 
         public void CloseUI(string uiName, bool force = false)
         {
-            BaseUI baseUi = _ActiveUi.FirstOrDefault(x => x.UIName == uiName);
+            var baseUi = _ActiveUi.FirstOrDefault(x => x.UIName == uiName);
             Assert.IsNotNull(baseUi, $"没有名为 {uiName} 的UI");
             CloseUI(baseUi, force);
         }
@@ -151,11 +151,11 @@ namespace Thunder.Sys
             _CloseStack.Clear();
             _CloseStack.Push(baseUi);
 
-            bool back = false;
+            var back = false;
 
             while (_CloseStack.Count != 0)
             {
-                BaseUI curUi = _CloseStack.Peek();
+                var curUi = _CloseStack.Peek();
 
                 if (back)
                 {
@@ -171,7 +171,9 @@ namespace Thunder.Sys
                         curUi.gameObject.SetActive(false);
                     }
                     else
+                    {
                         ObjectPool.Ins.Recycle(curUi);
+                    }
 
                     continue;
                 }
@@ -211,17 +213,23 @@ namespace Thunder.Sys
             return _ActiveUi.FirstOrDefault(x => x.UIName == uiName);
         }
 
-        public void OnSceneEnter(string preScene, string curScene)
+        private readonly struct OpenParam<T> where T : BaseUI
         {
-            Init();
-        }
+            public readonly string UiName;
+            public readonly BaseUI Dialog;
+            public readonly UiInitType InitType;
+            public readonly Action<T> InitAction;
+            public readonly int SiblingIndex;
 
-        public void OnSceneExit(string curScene)
-        {
-        }
-
-        public void OnApplicationExit()
-        {
+            public OpenParam(string uiName, int siblingIndex, BaseUI dialog, UiInitType initType, Action<T> initAction)
+            {
+                Assert.IsNotNull(uiName, "UI名不能为null");
+                UiName = uiName;
+                Dialog = dialog;
+                InitType = initType;
+                InitAction = initAction;
+                SiblingIndex = siblingIndex;
+            }
         }
     }
 }

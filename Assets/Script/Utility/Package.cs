@@ -8,17 +8,21 @@ namespace Thunder.Utility
 {
     public class Package
     {
-        public static Package Ins { private set; get; }
+        private readonly Dictionary<int, ItemInfo> _ItemInfos = new Dictionary<int, ItemInfo>();
 
         private readonly PackageCell[] _Items;
-        private readonly SortedDictionary<int, PackageItemInfo> _PackageItemInfos = new SortedDictionary<int, PackageItemInfo>();
-        private readonly Dictionary<int, ItemInfo> _ItemInfos = new Dictionary<int, ItemInfo>();
-        private readonly CircleQueue<PackageItemInfo> _PackageItemInfoQueue = new CircleQueue<PackageItemInfo>(GlobalSettings.PackageItemInfoBuffer);
+
+        private readonly CircleQueue<PackageItemInfo> _PackageItemInfoQueue =
+            new CircleQueue<PackageItemInfo>(GlobalSettings.PackageItemInfoBuffer);
+
+        private readonly SortedDictionary<int, PackageItemInfo> _PackageItemInfos =
+            new SortedDictionary<int, PackageItemInfo>();
+
         private readonly List<int> _UpdateList = new List<int>();
 
         public Package(int packageSize)
         {
-            Assert.IsTrue(packageSize>0,"背包容量需要大于0");
+            Assert.IsTrue(packageSize > 0, "背包容量需要大于0");
             Ins = this;
             _Items = new PackageCell[packageSize];
             foreach (var row in DataBaseSys.Ins["item_info"])
@@ -28,8 +32,10 @@ namespace Thunder.Utility
             }
         }
 
+        public static Package Ins { private set; get; }
+
         /// <summary>
-        /// 向背包中添加一定数量物品
+        ///     向背包中添加一定数量物品
         /// </summary>
         /// <param name="itemId"></param>
         /// <param name="count"></param>
@@ -40,24 +46,25 @@ namespace Thunder.Utility
             _UpdateList.Clear();
             if (!_PackageItemInfos.TryGetValue(itemId, out var packageItemInfo))
             {
-                packageItemInfo = _PackageItemInfoQueue.Count != 0 ?
-                    _PackageItemInfoQueue.Dequeue() :
-                    new PackageItemInfo();
-                _PackageItemInfos.Add(itemId,packageItemInfo);
+                packageItemInfo = _PackageItemInfoQueue.Count != 0
+                    ? _PackageItemInfoQueue.Dequeue()
+                    : new PackageItemInfo();
+                _PackageItemInfos.Add(itemId, packageItemInfo);
             }
 
-            int maxStack = _ItemInfos[itemId].MaxStackNum;
-            int curCell = packageItemInfo.FirstCell;
+            var maxStack = _ItemInfos[itemId].MaxStackNum;
+            var curCell = packageItemInfo.FirstCell;
             do
             {
                 if (_Items[curCell].Id == 0 || _Items[curCell].Id == itemId)
                 {
-                    int take = Mathf.Min(count, maxStack - _Items[curCell].Count);
+                    var take = Mathf.Min(count, maxStack - _Items[curCell].Count);
                     count -= take;
                     packageItemInfo.Count += take;
                     _Items[curCell].Count += take;
-                    if(take>0)_UpdateList.Add(take);
+                    if (take > 0) _UpdateList.Add(take);
                 }
+
                 curCell++;
                 curCell %= _Items.Length;
             } while (curCell != packageItemInfo.FirstCell && count > 0);
@@ -67,35 +74,37 @@ namespace Thunder.Utility
         }
 
         /// <summary>
-        /// 消耗一定数量的物品
+        ///     消耗一定数量的物品
         /// </summary>
         /// <param name="itemId"></param>
         /// <param name="count"></param>
         /// <param name="update">更新的单元格下标</param>
         /// <returns>未完成消耗的数量</returns>
-        public int CostItem(int itemId, int count,out int[] update)
+        public int CostItem(int itemId, int count, out int[] update)
         {
             if (!_PackageItemInfos.TryGetValue(itemId, out var packageItemInfo))
             {
                 update = new int[0];
                 return count;
             }
+
             _UpdateList.Clear();
             packageItemInfo.Count -= count;
-            int curCell = packageItemInfo.FirstCell;
+            var curCell = packageItemInfo.FirstCell;
             do
             {
                 if (_Items[curCell].Id == itemId)
                 {
-                    int cost = Mathf.Min(_Items[curCell].Count,count);
+                    var cost = Mathf.Min(_Items[curCell].Count, count);
                     _Items[curCell].Count -= cost;
                     count -= cost;
                     packageItemInfo.Count -= cost;
-                    if (cost!=0)
+                    if (cost != 0)
                         _UpdateList.Add(curCell);
                     if (_Items[curCell].Count == 0)
                         _Items[curCell].Id = 0;
                 }
+
                 curCell++;
                 curCell %= _Items.Length;
             } while (curCell != packageItemInfo.FirstCell && count > 0);
@@ -112,7 +121,7 @@ namespace Thunder.Utility
         }
 
         /// <summary>
-        /// 获取单元格内的物品信息
+        ///     获取单元格内的物品信息
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
@@ -122,18 +131,17 @@ namespace Thunder.Utility
         }
 
         /// <summary>
-        /// 获取背包中物品的总数
+        ///     获取背包中物品的总数
         /// </summary>
         /// <param name="itemId"></param>
         /// <returns></returns>
         public int GetItemNum(int itemId)
         {
-            return _PackageItemInfos.TryGetValue(itemId, out var result) ? 
-                result.Count : 0;
+            return _PackageItemInfos.TryGetValue(itemId, out var result) ? result.Count : 0;
         }
 
         /// <summary>
-        /// 设置指定单元格内的物品
+        ///     设置指定单元格内的物品
         /// </summary>
         /// <param name="index"></param>
         /// <param name="itemId"></param>
@@ -155,14 +163,14 @@ namespace Thunder.Utility
             }
 
             _Items[index].Id = itemId;
-            int take = Mathf.Min(_ItemInfos[itemId].MaxStackNum, count);
+            var take = Mathf.Min(_ItemInfos[itemId].MaxStackNum, count);
             count -= take;
             _Items[index].Count += take;
             if (!_PackageItemInfos.TryGetValue(itemId, out var packageItemInfo))
             {
-                packageItemInfo = _PackageItemInfoQueue.Count != 0 ?
-                    _PackageItemInfoQueue.Dequeue() :
-                    new PackageItemInfo();
+                packageItemInfo = _PackageItemInfoQueue.Count != 0
+                    ? _PackageItemInfoQueue.Dequeue()
+                    : new PackageItemInfo();
                 _PackageItemInfos.Add(itemId, packageItemInfo);
             }
 
@@ -171,19 +179,19 @@ namespace Thunder.Utility
         }
 
         /// <summary>
-        /// 整理物品
+        ///     整理物品
         /// </summary>
         public void SortItem()
         {
-            int curCell = 0;
+            var curCell = 0;
             foreach (var info in _PackageItemInfos)
             {
-                int maxStack = _ItemInfos[info.Key].MaxStackNum;
+                var maxStack = _ItemInfos[info.Key].MaxStackNum;
                 info.Value.FirstCell = curCell;
-                int count = info.Value.Count;
+                var count = info.Value.Count;
                 while (count > 0)
                 {
-                    int take = Mathf.Min(maxStack,count);
+                    var take = Mathf.Min(maxStack, count);
                     count -= take;
                     _Items[curCell].Id = info.Key;
                     _Items[curCell].Count += take;

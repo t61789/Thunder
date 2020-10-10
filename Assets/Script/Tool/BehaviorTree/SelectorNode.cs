@@ -2,19 +2,17 @@
 {
     public class SelectorNode : Node
     {
-        public int curIndex = 0;
+        public int curIndex;
 
         public SelectorNode(int id) : base(id)
         {
-
         }
 
         public override Node Action()
         {
             if (curIndex < child.Count)
                 return child[curIndex];
-            else
-                return null;
+            return null;
         }
 
         public override bool ReturnResult()

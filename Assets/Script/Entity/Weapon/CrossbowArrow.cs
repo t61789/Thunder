@@ -5,21 +5,38 @@ using UnityEngine;
 
 namespace Thunder.Entity.Weapon
 {
-    public class CrossbowArrow:BaseEntity,IObjectPool
+    public class CrossbowArrow : BaseEntity, IObjectPool
     {
-        public float LifeTime;
-        public float Damage;
+        private float _CarryDamage;
+        private bool _HitSomeone;
 
         private AutoCounter _LifeTimeCounter;
         private Rigidbody _Rb;
-        private bool _HitSomeone;
-        private float _CarryDamage;
+        public float Damage;
+        public float LifeTime;
+
+        public AssetId AssetId { get; set; }
+
+        public void OpReset()
+        {
+            _HitSomeone = false;
+            _LifeTimeCounter.Complete(false);
+            _Rb.useGravity = false;
+        }
+
+        public void OpRecycle()
+        {
+        }
+
+        public void OpDestroy()
+        {
+        }
 
         protected override void Awake()
         {
             base.Awake();
-            _LifeTimeCounter = new AutoCounter(this,LifeTime).
-                OnComplete(()=>ObjectPool.Ins.Recycle(this)).Complete(false);
+            _LifeTimeCounter = new AutoCounter(this, LifeTime).OnComplete(() => ObjectPool.Ins.Recycle(this))
+                .Complete(false);
             _Rb = GetComponent<Rigidbody>();
         }
 
@@ -30,7 +47,7 @@ namespace Thunder.Entity.Weapon
             _Trans.rotation = parent.rotation;
         }
 
-        public void Launch(Vector3 impulseForce,float carryDamage)
+        public void Launch(Vector3 impulseForce, float carryDamage)
         {
             _CarryDamage = carryDamage;
             _Trans.SetParent(Stable.Container);
@@ -43,8 +60,8 @@ namespace Thunder.Entity.Weapon
         {
             if (_HitSomeone) return;
 
-            collider.GetComponent<IShootable>()?.
-                GetShoot(_Trans.position, _Rb.velocity.normalized, Damage + _CarryDamage);
+            collider.GetComponent<IShootable>()
+                ?.GetShoot(_Trans.position, _Rb.velocity.normalized, Damage + _CarryDamage);
 
             _Rb.velocity = Vector3.zero;
             _Rb.useGravity = false;
@@ -56,24 +73,6 @@ namespace Thunder.Entity.Weapon
         {
             if (_Rb.useGravity)
                 _Trans.rotation = Quaternion.LookRotation(_Rb.velocity);
-        }
-
-        public AssetId AssetId { get; set; }
-
-        public void OpReset()
-        {
-            _HitSomeone = false;
-            _LifeTimeCounter.Complete(false);
-            _Rb.useGravity = false; 
-        }
-
-        public void OpRecycle()
-        {
-            
-        }
-
-        public void OpDestroy()
-        {
         }
     }
 }

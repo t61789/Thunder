@@ -12,7 +12,7 @@ namespace Thunder.Utility.PostProcessing
         {
             base.Init();
             _Mat.SetTexture("_AimScope", AimScopeTex);
-            _Mat.SetFloat("_UVXScale", Screen.width / (float)Screen.height);
+            _Mat.SetFloat("_UVXScale", Screen.width / (float) Screen.height);
         }
 
         public override void Process(RenderTexture source, RenderTexture dest)

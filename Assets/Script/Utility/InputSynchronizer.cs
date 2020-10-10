@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thunder.Sys;
+﻿using Thunder.Sys;
 using UnityEngine;
 
 namespace Thunder.Utility
 {
     /// <summary>
-    /// 用于在Update中读取数据后传递到FixedUpdate中
+    ///     用于在Update中读取数据后传递到FixedUpdate中
     /// </summary>
     public struct InputSynchronizer
     {

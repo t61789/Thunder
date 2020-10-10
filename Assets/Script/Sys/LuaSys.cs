@@ -1,6 +1,6 @@
-﻿using LuaInterface;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using LuaInterface;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -8,19 +8,33 @@ using UnityEngine.Events;
 
 namespace Thunder.Sys
 {
-    public class LuaSys:IBaseSys
+    public class LuaSys : IBaseSys
     {
-        public static LuaSys Ins { get; private set; }
-
-        private static readonly string DefaultBundle = Paths.LuaBundleD + Paths.Normal;
-
         private const string UtilityFunc =
-@"Utility={}
+            @"Utility={}
 Utility.GetEmptyTable = function()
     return {}
 end";
 
+        private static readonly string DefaultBundle = Paths.LuaBundleD + Paths.Normal;
+
         private static LuaTable _UtilityScope;
+
+        private readonly HashSet<AssetId> _Executed = new HashSet<AssetId>();
+        private readonly Dictionary<AssetId, string> _LoadedFile = new Dictionary<AssetId, string>();
+
+        private LuaState _LuaState;
+
+        public UnityEvent StateDisposedEvent = new UnityEvent();
+
+        public LuaSys()
+        {
+            Ins = this;
+            StartLua();
+            Application.quitting += Dispose;
+        }
+
+        public static LuaSys Ins { get; private set; }
 
         public LuaState LuaState
         {
@@ -31,20 +45,18 @@ end";
             }
         }
 
-        private LuaState _LuaState;
-
         public static bool Started { get; private set; }
 
-        private readonly HashSet<AssetId> _Executed = new HashSet<AssetId>();
-        private readonly Dictionary<AssetId, string> _LoadedFile = new Dictionary<AssetId, string>();
-
-        public UnityEvent StateDisposedEvent = new UnityEvent();
-
-        public LuaSys()
+        public void OnSceneEnter(string preScene, string curScene)
         {
-            Ins = this;
-            StartLua();
-            Application.quitting += Dispose;
+        }
+
+        public void OnSceneExit(string curScene)
+        {
+        }
+
+        public void OnApplicationExit()
+        {
         }
 
         public void StartLua()
@@ -79,10 +91,10 @@ end";
         {
             Assert.IsTrue(Started, "LuaState未启动");
 
-            for (int i = 0; i < 2; i++)
+            for (var i = 0; i < 2; i++)
             {
-                AssetId id = new AssetId(bundleGroup, bundle, null, DefaultBundle);
-                bool have = false;
+                var id = new AssetId(bundleGroup, bundle, null, DefaultBundle);
+                var have = false;
                 foreach (var keyValuePair in _LoadedFile.Where(x => AssetId.BundleEquals(x.Key, id)))
                 {
                     have = true;
@@ -96,6 +108,7 @@ end";
 
             _LuaState.CheckTop();
         }
+
         public void ExecuteFile(string path, bool require = true)
         {
             ExecuteFile(AssetId.Create(path, DefaultBundle), require);
@@ -110,9 +123,9 @@ end";
         {
             Assert.IsTrue(Started, "LuaState未启动");
 
-            for (int i = 0; i < 2; i++)
+            for (var i = 0; i < 2; i++)
             {
-                if (_LoadedFile.TryGetValue(id, out string value))
+                if (_LoadedFile.TryGetValue(id, out var value))
                 {
                     if (require && _Executed.Contains(id)) return;
                     _LuaState.DoString(value);
@@ -139,7 +152,7 @@ end";
 
         private bool LoadFromBundle(AssetId id)
         {
-            bool have = false;
+            var have = false;
             foreach (var textAsset in BundleSys.Ins.GetAllAsset<TextAsset>(id.BundleGroup, id.Bundle))
             {
                 id.Name = textAsset.name;
@@ -147,6 +160,7 @@ end";
                 _LoadedFile.Add(id, textAsset.text);
                 have = true;
             }
+
             BundleSys.Ins.ReleaseBundle(id.BundleGroup, id.Bundle);
             return have;
         }
@@ -155,19 +169,6 @@ end";
         {
             Assert.IsTrue(Started, "LuaState未启动");
             return _UtilityScope.Invoke<LuaTable>("GetEmptyTable");
-        }
-
-        public void OnSceneEnter(string preScene, string curScene)
-        {
-            
-        }
-
-        public void OnSceneExit(string curScene)
-        {
-        }
-
-        public void OnApplicationExit()
-        {
         }
     }
 }

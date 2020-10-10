@@ -2,8 +2,7 @@
 {
     public class People : Controller
     {
-        public float RotateFactor;
-
         public float MoveDamp;
+        public float RotateFactor;
     }
 }

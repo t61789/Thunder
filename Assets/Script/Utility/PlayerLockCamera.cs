@@ -7,22 +7,23 @@ namespace Thunder.Utility
     [RequireComponent(typeof(Camera))]
     public class PlayerLockCamera : BaseCamera
     {
-        public float ScrollSensitive;
-        public float MaxShoulderScale;
-        public Transform Player;
-        public Transform Target;
-        public Vector3 ShoulderOffset;
-        public Vector3 TargetOffset;
-        public Vector3 PlayerOffset;
-        [Range(0, 1)]
-        public float StaringFactor;
-        [Range(0, 1)]
-        public float SmoothFactor;
-        public float ShoulderScale;
+        private Vector3 _TargetPos;
 
         private Quaternion _TargetRot;
-        private Vector3 _TargetPos;
         private float _TargetShoulderScale;
+        public float MaxShoulderScale;
+        public Transform Player;
+        public Vector3 PlayerOffset;
+        public float ScrollSensitive;
+        public Vector3 ShoulderOffset;
+        public float ShoulderScale;
+
+        [Range(0, 1)] public float SmoothFactor;
+
+        [Range(0, 1)] public float StaringFactor;
+
+        public Transform Target;
+        public Vector3 TargetOffset;
 
         private void OnEnable()
         {
@@ -42,22 +43,22 @@ namespace Thunder.Utility
         {
             if (Target == null || Player == null) return;
 
-            Vector3 playerPos = Player.position + PlayerOffset;
-            Vector3 targetPos = Target.position + TargetOffset;
+            var playerPos = Player.position + PlayerOffset;
+            var targetPos = Target.position + TargetOffset;
 
-            Vector3 p2TDir = targetPos - playerPos;
-            Vector3 p2TDirFlat = new Vector3(p2TDir.x, 0, p2TDir.z).normalized;
-            Vector3 p2CDir = Trans.position - playerPos;
-            Vector3 p2CDirFlat = new Vector3(p2CDir.x, 0, p2CDir.z).normalized;
-            float right = Mathf.Sign(Vector3.Cross(p2CDirFlat, p2TDirFlat).y);
-            Vector3 xAxis = Vector3.Cross(p2TDirFlat, Vector3.up * right).normalized;
+            var p2TDir = targetPos - playerPos;
+            var p2TDirFlat = new Vector3(p2TDir.x, 0, p2TDir.z).normalized;
+            var p2CDir = Trans.position - playerPos;
+            var p2CDirFlat = new Vector3(p2CDir.x, 0, p2CDir.z).normalized;
+            var right = Mathf.Sign(Vector3.Cross(p2CDirFlat, p2TDirFlat).y);
+            var xAxis = Vector3.Cross(p2TDirFlat, Vector3.up * right).normalized;
             p2TDirFlat = -p2TDirFlat;
-            Matrix4x4 c2W = new Matrix4x4(
+            var c2W = new Matrix4x4(
                 new Vector4(xAxis.x, 0, xAxis.z, 0),
                 new Vector4(0, 1, 0, 0),
                 new Vector4(p2TDirFlat.x, 0, p2TDirFlat.z, 0),
                 new Vector4(playerPos.x, playerPos.y, playerPos.z, 1));
-            float scrollDelta = ControlSys.Ins.RequireKey("Axis3", 0).Axis.x * ScrollSensitive;
+            var scrollDelta = ControlSys.Ins.RequireKey("Axis3", 0).Axis.x * ScrollSensitive;
             _TargetShoulderScale = Mathf.Clamp(_TargetShoulderScale - scrollDelta, 0, MaxShoulderScale);
             ShoulderScale = Mathf.Lerp(ShoulderScale, _TargetShoulderScale, SmoothFactor);
 

@@ -1,25 +1,24 @@
-﻿using BehaviorDesigner.Runtime;
+﻿using System;
+using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-using System;
 using UnityEngine;
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 namespace Thunder.Behavior
 {
-    public class DelegateInvoke : BehaviorDesigner.Runtime.Tasks.Action
+    public class DelegateInvoke : Action
     {
-        public SharedObject sharedObject;
+        private NoArgMethod method;
 
         public string methodName;
-
-        private delegate TaskStatus NoArgMethod();
-        private NoArgMethod method;
+        public SharedObject sharedObject;
 
         public override TaskStatus OnUpdate()
         {
             try
             {
                 if (method == null)
-                    method = (NoArgMethod)Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, methodName);
+                    method = (NoArgMethod) Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, methodName);
 
                 return method();
             }
@@ -29,5 +28,7 @@ namespace Thunder.Behavior
                 return TaskStatus.Failure;
             }
         }
+
+        private delegate TaskStatus NoArgMethod();
     }
 }

@@ -7,8 +7,7 @@ namespace Thunder.Tool.SerializableStruct
     public struct SerializableVector3
     {
         public float[] pos;
-        [JsonIgnore]
-        public Vector3 inner;
+        [JsonIgnore] public Vector3 inner;
 
         public SerializableVector3(float x, float y, float z)
         {

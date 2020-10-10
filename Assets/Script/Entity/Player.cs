@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using BehaviorDesigner.Runtime.Tasks.Unity.UnityCharacterController;
 using Thnder.Utility;
 using Thunder.Sys;
 using Thunder.Tool;
@@ -17,73 +15,76 @@ namespace Thunder.Entity
     public class Player : BaseEntity
     {
         public static Player Ins;
+        private Vector2 _AdditionTargetRot;
+        private CapsuleCollider _CapsuleCol;
+        private Vector2 _CtrlDir;
+        private bool _FixedReaded;
+        private RaycastHit _GroundHit;
+        private Vector3 _GroundRayStartOffset;
+        private bool _Hanging;
+        private InputSynchronizer _InteractiveSynchronizer = new InputSynchronizer();
+        private Vector3 _PivotOffset;
+
+        private Transform _PivotTrans;
+        private Rigidbody _Rb;
+
+        [SerializeField] private Vector2 _Sensitive;
+
+        private bool _Squating;
+        private Vector2 _TargetRot;
+        private Vector3 _Velocity;
+        private float _WalkShakeDir = 1;
+        private float _WalkShakeOffsetT;
+        private float _WalkSpeedFactor = 1;
+        private Transform _WeaponAttachPoint;
+        public float DropItemForce = 2;
+        public float GroundRayLength = 0.1f;
+        public float GroundRayStartOffset = 0.05f;
+        public float InteractiveRange = 2;
+        public float JumpForce = 5;
+        public float JumpWeaponOffsetAngle = 7;
+        public bool Movable = true;
+
+        [Range(0, 1)] public float MoveDampFactor = 0.2f;
+
+        /// <summary>
+        ///     squating hanging
+        /// </summary>
+        [HideInInspector] public UnityEvent<bool, bool> OnHanging = new UnityEvent<bool, bool>();
+
+        [HideInInspector] public UnityEvent<bool> OnMove = new UnityEvent<bool>();
+
+        /// <summary>
+        ///     squating hanging
+        /// </summary>
+        [HideInInspector] public UnityEvent<bool, bool> OnSquat = new UnityEvent<bool, bool>();
+
+        [HideInInspector] public BuffData SensitiveScale = 1;
+
+        [Range(0, 1)] public float SmoothFactor = 0.2f;
+
+        public float SquatOffset = 0.5f;
+        public float SquatWalkSpeedScale = 0.5f;
+
+        [Range(0, 1)] public float ViewDampFactor = 0.7f;
+
+        [Range(0, 1)] public float WalkShakeDampFactor = 0.5f;
+
+        [HideInInspector] public Vector3 WalkShakeOffset;
+
+        public Vector2 WalkShakeRange;
+        public float WalkShakeSpeed = 0.1f;
+        public float WalkSpeed = 0.1f;
+        public Vector2 WeaponWalkShakeRange;
 
         public Vector2 Sensitive
         {
             get => _Sensitive * SensitiveScale.CurData;
             set => _Sensitive = value;
         }
-        [SerializeField]
-        private Vector2 _Sensitive;
-        [HideInInspector]
-        public BuffData SensitiveScale = 1;
-        public bool Movable = true;
-        [Range(0, 1)]
-        public float ViewDampFactor = 0.7f;
-        [Range(0, 1)]
-        public float SmoothFactor = 0.2f;
-        public float GroundRayStartOffset = 0.05f;
-        public float GroundRayLength = 0.1f;
-        public float WalkSpeed = 0.1f;
-        [Range(0, 1)]
-        public float MoveDampFactor = 0.2f;
-        public float WalkShakeSpeed = 0.1f;
-        public Vector2 WalkShakeRange;
-        [Range(0, 1)]
-        public float WalkShakeDampFactor = 0.5f;
-        public Vector2 WeaponWalkShakeRange;
-        [HideInInspector]
-        public Vector3 WalkShakeOffset;
-        /// <summary>
-        /// squating hanging
-        /// </summary>
-        [HideInInspector]
-        public UnityEvent<bool, bool> OnSquat = new UnityEvent<bool, bool>();
-        /// <summary>
-        /// squating hanging
-        /// </summary>
-        [HideInInspector]
-        public UnityEvent<bool, bool> OnHanging = new UnityEvent<bool, bool>();
-        [HideInInspector]
-        public UnityEvent<bool> OnMove = new UnityEvent<bool>();
-        public float JumpForce = 5;
-        public float SquatOffset = 0.5f;
-        public float JumpWeaponOffsetAngle = 7;
-        public float SquatWalkSpeedScale = 0.5f;
-        public float DropItemForce = 2;
-        public float InteractiveRange = 2;
 
         public Dropper Dropper { private set; get; }
         public WeaponBelt WeaponBelt { private set; get; }
-
-        private Transform _PivotTrans;
-        private Transform _WeaponAttachPoint;
-        private Rigidbody _Rb;
-        private CapsuleCollider _CapsuleCol;
-        private Vector3 _GroundRayStartOffset;
-        private RaycastHit _GroundHit;
-        private Vector3 _Velocity;
-        private Vector2 _TargetRot;
-        private float _WalkShakeDir = 1;
-        private float _WalkShakeOffsetT;
-        private Vector2 _AdditionTargetRot;
-        private bool _Squating;
-        private bool _Hanging;
-        private float _WalkSpeedFactor = 1;
-        private Vector2 _CtrlDir;
-        private bool _FixedReaded;
-        private Vector3 _PivotOffset;
-        private InputSynchronizer _InteractiveSynchronizer = new InputSynchronizer();
 
         protected override void Awake()
         {
@@ -105,15 +106,19 @@ namespace Thunder.Entity
 
             PublicEvents.DropItem.AddListener(Drop);
 
-            PickupItemAction a = PickupItemAction.All;
-            bool c = a is Enum;
+            var a = PickupItemAction.All;
+            var c = a is Enum;
         }
 
         private void Update()
         {
             // 视角
-            _Trans.localEulerAngles = new Vector3(0, Tools.LerpAngle(_Trans.localEulerAngles.y, _TargetRot.y + _AdditionTargetRot.y, SmoothFactor), 0);
-            _PivotTrans.localEulerAngles = new Vector3(Tools.LerpAngle(_PivotTrans.localEulerAngles.x, _TargetRot.x + _AdditionTargetRot.x, SmoothFactor), 0, 0);
+            _Trans.localEulerAngles = new Vector3(0,
+                Tools.LerpAngle(_Trans.localEulerAngles.y, _TargetRot.y + _AdditionTargetRot.y, SmoothFactor), 0);
+            _PivotTrans.localEulerAngles =
+                new Vector3(
+                    Tools.LerpAngle(_PivotTrans.localEulerAngles.x, _TargetRot.x + _AdditionTargetRot.x, SmoothFactor),
+                    0, 0);
 
 
             // 移动
@@ -126,19 +131,22 @@ namespace Thunder.Entity
             }
 
             // 视角晃动
-            Vector3 shakeTarget = Vector3.down * (_Squating ? SquatOffset : 0) + WalkShakeOffset.Mul(WalkShakeRange) + _PivotOffset;
+            var shakeTarget = Vector3.down * (_Squating ? SquatOffset : 0) + WalkShakeOffset.Mul(WalkShakeRange) +
+                              _PivotOffset;
             _PivotTrans.localPosition = Vector3.Lerp(_PivotTrans.localPosition, shakeTarget, WalkShakeDampFactor);
-            _WeaponAttachPoint.localPosition = Vector3.Lerp(_WeaponAttachPoint.localPosition, WalkShakeOffset.Mul(WeaponWalkShakeRange), WalkShakeDampFactor);
+            _WeaponAttachPoint.localPosition = Vector3.Lerp(_WeaponAttachPoint.localPosition,
+                WalkShakeOffset.Mul(WeaponWalkShakeRange), WalkShakeDampFactor);
 
             // 根据垂直速度上下摆动
-            float tempX = 1 - 1 / (Mathf.Abs(_Rb.velocity.y) + 1);
+            var tempX = 1 - 1 / (Mathf.Abs(_Rb.velocity.y) + 1);
             tempX *= _Rb.velocity.y < 0 ? -1 : 1;
             tempX *= JumpWeaponOffsetAngle;
-            _WeaponAttachPoint.localEulerAngles = new Vector3(Mathf.LerpAngle(_WeaponAttachPoint.localEulerAngles.x, tempX, WalkShakeDampFactor), 0);
+            _WeaponAttachPoint.localEulerAngles =
+                new Vector3(Mathf.LerpAngle(_WeaponAttachPoint.localEulerAngles.x, tempX, WalkShakeDampFactor), 0);
 
             if (ControlSys.Ins.RequireKey("LockCursor", 0).Down)
                 SwitchLockCursor();
-            ControlInfo c = ControlSys.Ins.RequireKey("Squat", 0);
+            var c = ControlSys.Ins.RequireKey("Squat", 0);
             if (c.Down && Movable)
                 Squat(true);
             else if (c.Up)
@@ -156,7 +164,7 @@ namespace Thunder.Entity
             // 视角
             Vector2 ctrlDir = ControlSys.Ins.RequireKey("Axis2", 0).Axis;
 
-            Vector2 ctrlEuler = MoveToEuler(ctrlDir);
+            var ctrlEuler = MoveToEuler(ctrlDir);
             if (ctrlDir != Vector2.zero)
                 _TargetRot = EulerAdd(_TargetRot, ctrlEuler);
 
@@ -164,12 +172,12 @@ namespace Thunder.Entity
             // 移动
             _Velocity = Vector3.Lerp(_Velocity, _CtrlDir, MoveDampFactor);
 
-            Vector3 tempVelocity = _Velocity;
+            var tempVelocity = _Velocity;
             tempVelocity.z = tempVelocity.y;
             tempVelocity.y = 0;
             Vector3 moveDir = _PivotTrans.localToWorldMatrix * tempVelocity;
             moveDir = moveDir.ProjectToxz();
-            Vector3 planeNormal = _GroundHit.normal == Vector3.zero ? Vector3.up : _GroundHit.normal;
+            var planeNormal = _GroundHit.normal == Vector3.zero ? Vector3.up : _GroundHit.normal;
             moveDir = Vector3.ProjectOnPlane(moveDir, planeNormal).normalized;
 
             _Rb.MovePosition(_Trans.position + moveDir * WalkSpeed);
@@ -212,7 +220,7 @@ namespace Thunder.Entity
 
             InteractiveDetect(
                 _PivotTrans.position,
-                _PivotTrans.rotation*Vector3.forward,
+                _PivotTrans.rotation * Vector3.forward,
                 InteractiveRange,
                 _InteractiveSynchronizer.Get());
         }
@@ -242,7 +250,7 @@ namespace Thunder.Entity
                 _Trans.position += Vector3.down * SquatOffset / 2;
                 _Squating = true;
 
-                float factor = SquatWalkSpeedScale / _WalkSpeedFactor;
+                var factor = SquatWalkSpeedScale / _WalkSpeedFactor;
                 WalkSpeed *= factor;
                 _WalkSpeedFactor = SquatWalkSpeedScale;
 
@@ -254,7 +262,7 @@ namespace Thunder.Entity
                 _Trans.position += Vector3.up * SquatOffset / 2;
                 _Squating = false;
 
-                float factor = 1 / _WalkSpeedFactor;
+                var factor = 1 / _WalkSpeedFactor;
                 WalkSpeed *= factor;
                 _WalkSpeedFactor = 1;
 
@@ -271,7 +279,7 @@ namespace Thunder.Entity
 
         private float GetCapusleHeight(float rawHeight)
         {
-            float radius2 = _CapsuleCol.radius * 2;
+            var radius2 = _CapsuleCol.radius * 2;
             return rawHeight > radius2 ? rawHeight : radius2;
         }
 
@@ -280,7 +288,7 @@ namespace Thunder.Entity
             return new Vector2(-move.y, move.x) * Sensitive;
         }
 
-        private static void InteractiveDetect(Vector3 startPos, Vector3 dir, float range,ControlInfo info)
+        private static void InteractiveDetect(Vector3 startPos, Vector3 dir, float range, ControlInfo info)
         {
             var hits = Physics.RaycastAll(startPos, dir, range);
             if (hits.Length == 0) return;
@@ -303,16 +311,17 @@ namespace Thunder.Entity
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position + _GroundRayStartOffset, transform.position + _GroundRayStartOffset + Vector3.down * GroundRayLength);
+            Gizmos.DrawLine(transform.position + _GroundRayStartOffset,
+                transform.position + _GroundRayStartOffset + Vector3.down * GroundRayLength);
         }
     }
 
     public class Dropper
     {
+        private readonly Dictionary<int, string> _DropableItemDic;
         private readonly float _LaunchForce;
         private readonly Func<Vector3> _Pos;
         private readonly Func<Quaternion> _Rot;
-        private readonly Dictionary<int, string> _DropableItemDic;
 
         public Dropper(float launchForce, Func<Vector3> posGetter, Func<Quaternion> rotGetter)
         {
@@ -322,10 +331,10 @@ namespace Thunder.Entity
 
             const string path = "pick_prefab_path";
             _DropableItemDic = (
-                from row in DataBaseSys.Ins[GlobalSettings.ItemInfoTableName]
-                where !string.IsNullOrEmpty(row[path])
-                select new { id = (int)row["id"], prefabPath = (string)row[path] }).
-                ToDictionary(x => x.id, x => x.prefabPath);
+                    from row in DataBaseSys.Ins[GlobalSettings.ItemInfoTableName]
+                    where !string.IsNullOrEmpty(row[path])
+                    select new {id = (int) row["id"], prefabPath = (string) row[path]})
+                .ToDictionary(x => x.id, x => x.prefabPath);
         }
 
         public void Drop(int id)

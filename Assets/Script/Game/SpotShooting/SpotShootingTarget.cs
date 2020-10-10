@@ -1,35 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thunder.Entity;
+﻿using Thunder.Entity;
 using Thunder.Tool;
 using Thunder.Utility;
 using UnityEngine;
 
 namespace Thunder.Game.SpotShooting
 {
-    public class SpotShootingTarget:BaseEntity,IShootable
+    public class SpotShootingTarget : BaseEntity, IShootable
     {
-        public bool Rised = false;
-        public float RiseTime = 0.7f;
-        public float RiseAngle = 0;
-        public float UnRiseAngle = -90;
-        public float LifeTime = 2;
+        private Collider _Collider;
+        private AutoCounter _LifeCounter;
+        private AutoCounter _RiseCounter;
 
         private bool _RotateToRise;
-        private Collider _Collider;
-        private AutoCounter _RiseCounter;
-        private AutoCounter _LifeCounter;
+        public float LifeTime = 2;
+        public float RiseAngle = 0;
+        public bool Rised;
+        public float RiseTime = 0.7f;
+        public float UnRiseAngle = -90;
+
+        public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
+        {
+            PublicEvents.SpotShootingTargetHit?.Invoke(this);
+        }
 
         protected override void Awake()
         {
             base.Awake();
             _Collider = GetComponent<Collider>();
             _Collider.enabled = false;
-            _RiseCounter = new AutoCounter(this,RiseTime);
-            _LifeCounter = new AutoCounter(this,LifeTime,false).OnComplete(UnRise);
+            _RiseCounter = new AutoCounter(this, RiseTime);
+            _LifeCounter = new AutoCounter(this, LifeTime, false).OnComplete(UnRise);
         }
 
         private void FixedUpdate()
@@ -67,12 +67,6 @@ namespace Thunder.Game.SpotShooting
         {
             Rised = false;
             _LifeCounter.Pause().Recount();
-        }
-
-        public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
-        {
-            PublicEvents.SpotShootingTargetHit?.Invoke(this);
-            
         }
     }
 }
