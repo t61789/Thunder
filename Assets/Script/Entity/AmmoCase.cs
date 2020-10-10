@@ -1,22 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thunder.Entity.Weapon;
+﻿using Thunder.Sys;
 using Thunder.Utility;
-using UnityEngine;
 
 namespace Thunder.Entity
 {
-    public class AmmoCase:AreaTrigger
+    public class AmmoCase:BaseEntity,IInteractive
     {
-        protected override void Enter(Collider collider)
+        public float TakeAmmoTime = 1;
+
+        private SimpleCounter _TakeAmmoCounter;
+        private bool _Used;
+
+        protected override void Awake()
         {
-            Player player = collider.GetComponent<Player>();
-            if (player == null || BaseWeapon.Ins==null)
-                return;
-            BaseWeapon.Ins.FillAmmo();
+            base.Awake();
+            _TakeAmmoCounter = new SimpleCounter(TakeAmmoTime);
+        }
+
+        public void Interactive(ControlInfo info)
+        {
+            if (!info.Stay)
+            {
+                _TakeAmmoCounter.Recount();
+                _Used = false;
+            }
+
+            if (!_TakeAmmoCounter.Completed || _Used) return;
+            Player.Ins.WeaponBelt.CurrentWeapon.FillAmmo();
+            _Used = true;
         }
     }
 }

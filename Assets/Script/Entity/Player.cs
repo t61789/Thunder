@@ -16,7 +16,7 @@ namespace Thunder.Entity
 {
     public class Player : BaseEntity
     {
-        public static Player Instance;
+        public static Player Ins;
 
         public Vector2 Sensitive
         {
@@ -61,10 +61,11 @@ namespace Thunder.Entity
         public float JumpWeaponOffsetAngle = 7;
         public float SquatWalkSpeedScale = 0.5f;
         public float DropItemForce = 2;
+        public float InteractiveRange = 2;
 
-        public Dropper Dropper {private set; get; }
+        public Dropper Dropper { private set; get; }
         public WeaponBelt WeaponBelt { private set; get; }
-        
+
         private Transform _PivotTrans;
         private Transform _WeaponAttachPoint;
         private Rigidbody _Rb;
@@ -82,12 +83,13 @@ namespace Thunder.Entity
         private Vector2 _CtrlDir;
         private bool _FixedReaded;
         private Vector3 _PivotOffset;
+        private InputSynchronizer _InteractiveSynchronizer = new InputSynchronizer();
 
         protected override void Awake()
         {
             base.Awake();
 
-            Instance = this;
+            Ins = this;
 
             _PivotTrans = _Trans.Find("Pivot");
             _PivotOffset = _PivotTrans.localPosition;
@@ -99,9 +101,12 @@ namespace Thunder.Entity
             _TargetRot.x = _PivotTrans.localEulerAngles.x;
 
             WeaponBelt = new WeaponBelt(GlobalSettings.WeaponBeltCellTypes, _WeaponAttachPoint);
-            Dropper = new Dropper(DropItemForce,()=>_Trans.position,()=> _PivotTrans.rotation);
+            Dropper = new Dropper(DropItemForce, () => _PivotTrans.position, () => _PivotTrans.rotation);
 
             PublicEvents.DropItem.AddListener(Drop);
+
+            PickupItemAction a = PickupItemAction.All;
+            bool c = a is Enum;
         }
 
         private void Update()
@@ -142,8 +147,10 @@ namespace Thunder.Entity
                 Jump();
 
             WeaponBelt.InputCheck();
+
+            _InteractiveSynchronizer.Set(ControlSys.Ins.RequireKey(GlobalSettings.InteractiveKeyName, 0));
         }
-        
+
         private void FixedUpdate()
         {
             // 视角
@@ -202,6 +209,12 @@ namespace Thunder.Entity
                 _Hanging = false;
                 OnHanging?.Invoke(_Squating, false);
             }
+
+            InteractiveDetect(
+                _PivotTrans.position,
+                _PivotTrans.rotation*Vector3.forward,
+                InteractiveRange,
+                _InteractiveSynchronizer.Get());
         }
 
         public void ViewRotAddition(Vector2 rot)
@@ -267,6 +280,13 @@ namespace Thunder.Entity
             return new Vector2(-move.y, move.x) * Sensitive;
         }
 
+        private static void InteractiveDetect(Vector3 startPos, Vector3 dir, float range,ControlInfo info)
+        {
+            var hits = Physics.RaycastAll(startPos, dir, range);
+            if (hits.Length == 0) return;
+            hits[0].transform.GetComponent<IInteractive>().Interactive(info);
+        }
+
         private static Vector2 EulerAdd(Vector2 e1, Vector2 e2)
         {
             e1.y += e2.y;
@@ -294,7 +314,7 @@ namespace Thunder.Entity
         private readonly Func<Quaternion> _Rot;
         private readonly Dictionary<int, string> _DropableItemDic;
 
-        public Dropper(float launchForce,Func<Vector3> posGetter,Func<Quaternion> rotGetter)
+        public Dropper(float launchForce, Func<Vector3> posGetter, Func<Quaternion> rotGetter)
         {
             _LaunchForce = launchForce;
             _Pos = posGetter;
@@ -304,8 +324,8 @@ namespace Thunder.Entity
             _DropableItemDic = (
                 from row in DataBaseSys.Ins[GlobalSettings.ItemInfoTableName]
                 where !string.IsNullOrEmpty(row[path])
-                select new {id = (int) row["id"], prefabPath = (string) row[path] }).
-                ToDictionary(x=>x.id,x=>x.prefabPath);
+                select new { id = (int)row["id"], prefabPath = (string)row[path] }).
+                ToDictionary(x => x.id, x => x.prefabPath);
         }
 
         public void Drop(int id)
@@ -313,7 +333,7 @@ namespace Thunder.Entity
             var item = ObjectPool.Ins.Alloc<PickupableItem>(_DropableItemDic[id]);
             var rot = _Rot();
             var force = rot * Vector3.forward * _LaunchForce;
-            item.Launch(_Pos(),rot,force);
+            item.Launch(_Pos(), rot, force);
         }
     }
 }

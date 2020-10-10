@@ -23,6 +23,8 @@ namespace Thnder.Utility
             }
         }
 
+        public BaseWeapon CurrentWeapon => _CurWeapon == -1 ? _Unarmed : _Belt[_CurWeapon].Weapon;
+
         // todo 亟待测试，bug可能很多
         private readonly Transform _WeaponContainer;
         private readonly WeaponBeltCell[] _Belt;
@@ -36,9 +38,11 @@ namespace Thnder.Utility
         public WeaponBelt(string[] cellTypes, Transform weaponContainer)
         {
             var builder = new StringBuilder();
-            const string switc = "switch";
+            const string switc = "Switch";
             _Keys = new Dictionary<string, int>();
             _Belt = new WeaponBeltCell[cellTypes.Length];
+            var preStr = "";
+            var repeatCount = 1;
             for (int i = 0; i < cellTypes.Length; i++)
             {
                 _Belt[i].Type = cellTypes[i];
@@ -46,6 +50,15 @@ namespace Thnder.Utility
                 builder.Clear();
                 builder.Append(switc);
                 var str = cellTypes[i];
+
+                if (str == preStr)
+                    repeatCount++;
+                else
+                {
+                    repeatCount = 1;
+                    preStr = str;
+                }
+
                 if (str.Length > 0 && str[0] >= 'a' && str[0] <= 'z')
                 {
                     builder.Append(str[0] - ('a' - 'A'));
@@ -54,6 +67,7 @@ namespace Thnder.Utility
                 }
                 else
                     builder.Append(str);
+                builder.Append(repeatCount);
                 _Keys.Add(builder.ToString(),i);
             }
 

@@ -25,7 +25,7 @@ namespace Thunder.Utility
             ThrowingWeaponType,
         };
 
-        // 切换按键命名规则：switch+首字母大写的weapontype，在尾部添加初始为0的数字
+        // 切换按键命名规则：Switch+首字母大写的weapontype，在尾部添加初始为0的数字
         // 重复则+1
         public static string[] WeaponBeltCellTypes =
         {
@@ -35,12 +35,13 @@ namespace Thunder.Utility
             MeleeWeaponType,
             ThrowingWeaponType
         };
-        public const string PreWeaponKeyName = "switchPreWeapon";
-        public const string DropWeaponKeyName = "dropWeapon";
+        public const string PreWeaponKeyName = "SwitchPreWeapon";
+        public const string DropWeaponKeyName = "DropWeapon";
 
         public const string FireKeyName = "Fire1";
         public const string AimScopeKeyName = "AimScope";
         public const string SwitchFireModeKeyName = "SwitchFireMode";
+        public const string InteractiveKeyName = "Interactive";
 
         public const string CrossbowArrowAssetPath = "crossbowArrow";
         public const string UnarmedAssetPath = "unarmed";
