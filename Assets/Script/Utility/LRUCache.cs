@@ -31,8 +31,7 @@ namespace Thunder.Utility
 
         public V Get(K key)
         {
-            int result;
-            if (!_Dic.TryGetValue(key, out result)) return default; // 缓存中没有key，返回空
+            if (!_Dic.TryGetValue(key, out var result)) return default; // 缓存中没有key，返回空
 
             if (_Nodes[result].Pre == -1) return _Nodes[result].Val; // 节点是头部，直接返回值
 
@@ -40,10 +39,28 @@ namespace Thunder.Utility
             return _Nodes[_First].Val;
         }
 
+        public bool TryGet(K key, out V value)
+        {
+            if (!_Dic.TryGetValue(key, out var result))
+            {
+                value = default;
+                return false;
+            }
+
+            if (_Nodes[result].Pre == -1)
+            {
+                value = _Nodes[result].Val;
+                return true; // 节点是头部，直接返回值
+            }
+
+            MoveToFirst(result); // 将节点移动到头部并返回值
+            value = _Nodes[_First].Val;
+            return true;
+        }
+
         public void Put(K key, V value)
         {
-            int node;
-            if (_Dic.TryGetValue(key, out node)) // 如果已存在key，则将节点值重新设置并放置在头部
+            if (_Dic.TryGetValue(key, out var node)) // 如果已存在key，则将节点值重新设置并放置在头部
             {
                 _Nodes[node].Val = value;
                 MoveToFirst(node);

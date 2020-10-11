@@ -67,6 +67,7 @@ namespace Thunder.Entity
         public Dropper Dropper { private set; get; }
         public WeaponBelt WeaponBelt { private set; get; }
         public Package Package { private set; get; }
+        public ItemCombiner ItemCombiner { private set; get; }
         public Vector2 Sensitive
         {
             get => _Sensitive * SensitiveScale.CurData;
@@ -91,6 +92,7 @@ namespace Thunder.Entity
             WeaponBelt = new WeaponBelt(GlobalSettings.WeaponBeltCellTypes, _WeaponAttachPoint);
             Dropper = new Dropper(DropItemForce, () => _PivotTrans.position, () => _PivotTrans.rotation);
             Package = new Package(PackageSize);
+            ItemCombiner = new ItemCombiner(Package,DataBaseSys.Ins["combine_expressions"]);
 
             PublicEvents.DropItem.AddListener(Drop);
         }
@@ -220,9 +222,9 @@ namespace Thunder.Entity
             _TargetRot = EulerAdd(_TargetRot, MoveToEuler(rot));
         }
 
-        public void Drop(ItemId id,int count)
+        public void Drop(ItemGroup group)
         {
-            Dropper.Drop(id,count);
+            Dropper.Drop(group);
         }
 
         private void Squat(bool down)
@@ -314,13 +316,13 @@ namespace Thunder.Entity
             _Rot = rotGetter;
         }
 
-        public void Drop(ItemId id,int count)
+        public void Drop(ItemGroup group)
         {
-            var item = ObjectPool.Ins.Alloc<PickupableItem>(ItemSys.Ins[id].PickPrefabPath);
-            item.ItemId = id;
+            var item = ObjectPool.Ins.Alloc<PickupableItem>(ItemSys.Ins[group.Id].PickPrefabPath);
+            item.ItemId = group.Id;
             var rot = _Rot();
             var force = rot * Vector3.forward * _LaunchForce;
-            item.Launch(_Pos(), rot, force,count);
+            item.Launch(_Pos(), rot, force,group.Count);
         }
     }
 
@@ -337,19 +339,16 @@ namespace Thunder.Entity
             PublicEvents.PickupItem.AddListener(Pickup);
         }
 
-        public void Pickup(ItemId id,int count)
+        public void Pickup(ItemGroup group)
         {
-            if (_WeaponBelt.IsWeapon(id))
+            if (_WeaponBelt.IsWeapon(group.Id))
             {
-                _WeaponBelt.AddWeapon(id);
+                _WeaponBelt.AddWeapon(group.Id);
                 return;
             }
 
-            if (_Package.CanPackage(id))
-            {
-                _Package.AddItem(id, count, out _);
-                return;
-            }
+            if (!_Package.CanPackage(group.Id)) return;
+            _Package.AddItem(group, out _);
         }
     }
 }

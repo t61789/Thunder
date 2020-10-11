@@ -53,14 +53,17 @@ namespace Thunder.Utility
 
         /// <summary>
         ///     有物品被玩家丢弃<br/>
-        /// 物品id，数量
         /// </summary>
-        public static UnityEvent<ItemId,int> DropItem = new UnityEvent<ItemId,int>();
+        public static UnityEvent<ItemGroup> DropItem = new UnityEvent<ItemGroup>();
 
         /// <summary>
         ///     拾取物品
-        ///     <br />物品id，数量
         /// </summary>
-        public static UnityEvent<ItemId, int> PickupItem = new UnityEvent<ItemId, int>();
+        public static UnityEvent<ItemGroup> PickupItem = new UnityEvent<ItemGroup>();
+
+        /// <summary>
+        /// 背包物品改变
+        /// </summary>
+        public static UnityEvent<Package,int[]> PackageItemChanged = new UnityEvent<Package, int[]>();
     }
 }

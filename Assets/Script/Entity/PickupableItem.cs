@@ -63,7 +63,7 @@ namespace Thunder.Entity
 
         protected virtual void Pickup()
         {
-            PublicEvents.PickupItem?.Invoke(ItemId,Count);
+            PublicEvents.PickupItem?.Invoke((ItemId, Count));
             _CanPickup = false;
             ObjectPool.Ins.Recycle(this);
         }

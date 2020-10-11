@@ -31,26 +31,32 @@ namespace Thunder.Utility
         /// <summary>
         ///     向背包中添加一定数量物品
         /// </summary>
-        /// <param name="itemId"></param>
-        /// <param name="count"></param>
+        /// <param name="itemGroup"></param>
         /// <param name="update">更新的单元格下标</param>
         /// <returns>未成功添加的物品数量</returns>
-        public int AddItem(ItemId itemId, int count, out int[] update)
+        public int AddItem(ItemGroup itemGroup, out int[] update)
         {
+            if (!CanPackage(itemGroup.Id))
+            {
+                update = new int[0];
+                return itemGroup.Count;
+            }
+
             _UpdateList.Clear();
-            if (!_PackageItemInfos.TryGetValue(itemId, out var packageItemInfo))
+            if (!_PackageItemInfos.TryGetValue(itemGroup.Id, out var packageItemInfo))
             {
                 packageItemInfo = _PackageItemInfoQueue.Count != 0
                     ? _PackageItemInfoQueue.Dequeue()
                     : new PackageItemInfo();
-                _PackageItemInfos.Add(itemId, packageItemInfo);
+                _PackageItemInfos.Add(itemGroup.Id, packageItemInfo);
             }
 
-            var maxStack = ItemSys.Ins[itemId].MaxStackNum;
+            var maxStack = ItemSys.Ins[itemGroup.Id].MaxStackNum;
             var curCell = packageItemInfo.FirstCell;
+            var count = itemGroup.Count;
             do
             {
-                if (_Items[curCell].Id == 0 || _Items[curCell].Id == itemId)
+                if (_Items[curCell].Id == 0 || _Items[curCell].Id == itemGroup.Id)
                 {
                     var take = Mathf.Min(count, maxStack - _Items[curCell].Count);
                     count -= take;
@@ -75,18 +81,19 @@ namespace Thunder.Utility
         /// <returns></returns>
         public int AddOneGroupItem(ItemId itemId, out int[] update)
         {
-            return AddItem(itemId, ItemSys.Ins[itemId].MaxStackNum, out update);
+            return AddItem((itemId, ItemSys.Ins[itemId].MaxStackNum), out update);
         }
 
         /// <summary>
         ///     消耗一定数量的物品
         /// </summary>
-        /// <param name="itemId"></param>
-        /// <param name="count"></param>
+        /// <param name="itemGroup"></param>
         /// <param name="update">更新的单元格下标</param>
         /// <returns>未完成消耗的数量</returns>
-        public int CostItem(ItemId itemId, int count, out int[] update)
+        public int CostItem(ItemGroup itemGroup, out int[] update)
         {
+            var itemId = itemGroup.Id;
+            var count = itemGroup.Count;
             if (!_PackageItemInfos.TryGetValue(itemId, out var packageItemInfo))
             {
                 update = new int[0];

@@ -628,21 +628,20 @@ namespace Thunder.Sys
 
     public class Table : IEnumerable<Row>
     {
-        private readonly string[] _Fields;
         private readonly Dictionary<string, int> _FieldsDic;
         private readonly Row[] _Rows;
 
         public Table(JsonTableReciever json)
         {
-            _Fields = json.Fields ?? new string[0];
+            Fields = json.Fields ?? new string[0];
             _FieldsDic = new Dictionary<string, int>();
-            for (var i = 0; i < _Fields.Length; i++)
-                _FieldsDic.Add(_Fields[i], i);
+            for (var i = 0; i < Fields.Length; i++)
+                _FieldsDic.Add(Fields[i], i);
 
             _Rows = new Row[json.Rows.Length];
             for (var i = 0; i < json.Rows.Length; i++)
             {
-                for (var j = 0; j < _Fields.Length; j++)
+                for (var j = 0; j < Fields.Length; j++)
                     switch (json.Rows[i][j])
                     {
                         case long _:
@@ -659,6 +658,8 @@ namespace Thunder.Sys
 
         public Row this[int index] => _Rows[index];
 
+        public string[] Fields { get; }
+
         public IEnumerator<Row> GetEnumerator()
         {
             return ((IEnumerable<Row>) _Rows).GetEnumerator();
@@ -671,7 +672,7 @@ namespace Thunder.Sys
 
         public string GetField(int index)
         {
-            return _Fields[index];
+            return Fields[index];
         }
 
         public int GetField(string field)

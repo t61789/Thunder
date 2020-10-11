@@ -85,7 +85,7 @@ namespace Thunder.Entity.Weapon
         {
             var ammoDiff = Mathf.Min(MagzineMax - Magzine, BackupAmmo);
             Magzine += ammoDiff;
-            _Package.CostItem(AmmoId, ammoDiff,out _);
+            _Package.CostItem((AmmoId, ammoDiff),out _);
         }
 
         /// <summary>

@@ -27,14 +27,13 @@ namespace Thunder.Sys
         private CampSys _CampSys;
         private ControlSys _ControlSys;
         private DataBaseSys _DataBaseSys;
-
         private LuaSys _LuaSys;
-
         //private SaveSys _SaveSys;
         private UISys _UISys;
         private ValueSys _ValueSys;
         private ObjectPool _ObjectPool;
         private TextSys _TextSys;
+        private ItemSys _ItemSys;
 
         private bool _Loading;
         private AsyncOperation _LoadingAo;
@@ -65,6 +64,9 @@ namespace Thunder.Sys
             _ValueSys = new ValueSys();
             _ObjectPool = gameObject.AddComponent<ObjectPool>();
             _TextSys = new TextSys(_DataBaseSys);
+            _ItemSys = new ItemSys(
+                _DataBaseSys[GlobalSettings.ItemInfoTableName],
+                DataBaseSys.AvaliableDataType);
 
             _Sys = (from field
                     in GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic)

@@ -178,7 +178,7 @@ namespace Thunder.Utility
             _PreWeapon = -1;
             TakeOutWeapon(index);
 
-            PublicEvents.DropItem?.Invoke(saveId,1);
+            PublicEvents.DropItem?.Invoke(saveId);
 
             _CurWeapon = index;
         }

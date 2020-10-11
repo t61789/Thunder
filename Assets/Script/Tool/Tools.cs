@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using DG.Tweening;
+using Newtonsoft.Json;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
@@ -23,6 +25,9 @@ namespace Thunder.Tool
         public static Vector2 FarPosition = new Vector2(int.MaxValue, int.MaxValue);
 
         private static readonly Random _Random;
+
+        private static readonly LRUCache<string,object> _JsonCache 
+            = new LRUCache<string, object>(20);
 
         static Tools()
         {
@@ -1498,7 +1503,7 @@ namespace Thunder.Tool
         }
 
         /// <summary>
-        /// 检查object是否为目标类或其派生类，并输出转型好的对象
+        /// 检查object是否为目标类或其派生类，若非则尝试使用json解析，并输出转型好的对象
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
@@ -1508,6 +1513,18 @@ namespace Thunder.Tool
         {
             if (!(obj is T))
             {
+                if (obj is string str)
+                {
+                    if (_JsonCache.TryGet(str,out obj))
+                    {
+                        cast = (T) obj;
+                        return true;
+                    }
+                    cast = JsonConvert.DeserializeObject<T>(str);
+                    _JsonCache.Put(str,cast);
+                    return true;
+                }
+
                 cast = default;
                 return false;
             }

@@ -46,29 +46,29 @@ public static class CustomSettings
         _DT(typeof(System.Func<int, int>)),
     };
 
-    public static BindType[] customTypeList
-    {
-        get
-        {
-            List<BindType> li = new List<BindType>();
-            foreach (var type in typeof(DontGenerateWrapAttribute).Assembly.GetTypes().Where(x =>
-                x.Namespace != null &&
-                x.Namespace.StartsWith("Thunder") &&
-                (!x.IsNested || x.HaveAttribute<GenerateWrapAttribute>()) &&
-                !x.IsGenericType &&
-                !x.IsInterface &&
-                !x.IsSubclassOf(typeof(Attribute)) &&
-                !x.HaveAttribute<DontGenerateWrapAttribute>()))
-                li.Add(_GT(type));
-            BindType[] result = new BindType[_customTypeList.Length + li.Count];
-            Array.Copy(_customTypeList, result, _customTypeList.Length);
-            li.CopyTo(result, _customTypeList.Length);
-            return result;
-        }
-    }
+    //public static BindType[] customTypeList
+    //{
+    //    get
+    //    {
+    //        List<BindType> li = new List<BindType>();
+    //        foreach (var type in typeof(DontGenerateWrapAttribute).Assembly.GetTypes().Where(x =>
+    //            x.Namespace != null &&
+    //            x.Namespace.StartsWith("Thunder") &&
+    //            (!x.IsNested || x.HaveAttribute<GenerateWrapAttribute>()) &&
+    //            !x.IsGenericType &&
+    //            !x.IsInterface &&
+    //            !x.IsSubclassOf(typeof(Attribute)) &&
+    //            !x.HaveAttribute<DontGenerateWrapAttribute>()))
+    //            li.Add(_GT(type));
+    //        BindType[] result = new BindType[_customTypeList.Length + li.Count];
+    //        Array.Copy(_customTypeList, result, _customTypeList.Length);
+    //        li.CopyTo(result, _customTypeList.Length);
+    //        return result;
+    //    }
+    //}
 
     //在这里添加你要导出注册到lua的类型列表
-    private static BindType[] _customTypeList =
+    public static BindType[] customTypeList =
     {                
         //------------------------为例子导出--------------------------------
         //_GT(typeof(TestEventListener)),

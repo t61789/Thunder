@@ -8,7 +8,7 @@ using Thunder.Utility;
 
 namespace Thunder.Sys
 {
-    public class ItemSys : IBaseSys,IEnumerable<KeyValuePair<int,ItemInfo>>
+    public class ItemSys : IBaseSys, IEnumerable<KeyValuePair<int, ItemInfo>>
     {
         public static ItemSys Ins;
 
@@ -20,28 +20,28 @@ namespace Thunder.Sys
 
         public IEnumerable<ItemInfo> ItemInfos => _ItemDic.Values;
 
-        public ItemSys(DataBaseSys dataBase)
+        public ItemSys(Table itemInfoTable, ICollection<string> baseTypeName)
         {
             var pros = typeof(ItemInfo)
                 .GetFields()
-                .Where(x => DataBaseSys.AvaliableDataType.Contains(x.FieldType.Name))
+                .Where(x => baseTypeName.Contains(x.FieldType.Name))
                 .ToArray();
 
             _ItemDic = new Dictionary<int, ItemInfo>();
 
             var flagType = typeof(ItemFlag);
-            foreach (var row in DataBaseSys.Ins[GlobalSettings.ItemInfoTableName])
+            foreach (var row in itemInfoTable)
             {
                 var info = new ItemInfo();
                 foreach (var field in pros)
-                    field.SetValue(info,row[field.Name].Data);
+                    field.SetValue(info, row[field.Name].Data);
 
                 //HandleSpecialData
 
                 info.Id = (int)row["Id"];
-                info.Flag = (ItemFlag) Enum.Parse(flagType, row["Flag"]);
+                info.Flag = (ItemFlag)Enum.Parse(flagType, row["Flag"]);
 
-                _ItemDic.Add(info.Id,info);
+                _ItemDic.Add(info.Id, info);
             }
         }
 
@@ -68,12 +68,12 @@ namespace Thunder.Sys
         }
     }
 
-    public struct ItemId
+    public struct ItemId : IComparable<ItemId>
     {
         public int Id;
         public object Add;
 
-        public ItemId(int id, object add=null)
+        public ItemId(int id, object add = null)
         {
             Id = id;
             Add = add;
@@ -89,14 +89,67 @@ namespace Thunder.Sys
             return new ItemId(id);
         }
 
-        public static implicit operator (int, object)(ItemId id)
+        public static implicit operator (int id, object add)(ItemId id)
         {
-            return (id.Id,id.Add);
+            return (id.Id, id.Add);
         }
 
-        public static implicit operator ItemId((int, object) id)
+        public static implicit operator ItemId((int id, object add) id)
         {
-            return new ItemId(id.Item1,id.Item2);
+            return new ItemId(id.Item1, id.Item2);
+        }
+
+        public int CompareTo(ItemId other)
+        {
+            if (other.Id > Id)
+                return -1;
+            return other.Id < Id ? 1 : 0;
+        }
+    }
+
+    public struct ItemGroup : IComparable<ItemGroup>
+    {
+        public ItemId Id;
+        public int Count;
+
+        public ItemGroup(ItemId id, int count)
+        {
+            Id = id;
+            Count = count;
+        }
+
+        public static implicit operator ItemGroup(ItemId id)
+        {
+            return new ItemGroup(id, 1);
+        }
+
+        public static implicit operator (ItemId id, int count)(ItemGroup itemGroup)
+        {
+            return (itemGroup.Id, itemGroup.Count);
+        }
+
+        public static implicit operator ItemGroup((ItemId id, int count) pair)
+        {
+            return new ItemGroup(pair.id, pair.count);
+        }
+
+        public static ItemGroup operator +(ItemGroup group, int count)
+        {
+            group.Count += count;
+            return group;
+        }
+
+        public static ItemGroup operator +(int count, ItemGroup group)
+        {
+            group.Count += count;
+            return group;
+        }
+
+        public int CompareTo(ItemGroup other)
+        {
+            var idComparison = Id.CompareTo(other.Id);
+            if (idComparison != 0) return idComparison;
+            return Count.CompareTo(other.Count);
         }
     }
 
