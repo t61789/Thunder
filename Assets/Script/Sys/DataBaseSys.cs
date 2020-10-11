@@ -513,6 +513,13 @@ namespace Thunder.Sys
 
         public static DataBaseSys Ins;
 
+        public static readonly HashSet<string> AvaliableDataType = new HashSet<string>()
+        {
+            "int",
+            "string",
+            "bool",
+            "float"
+        };
         private static readonly string _DefaultBundle = Paths.DatabaseBundleD + Paths.Normal;
         private readonly Dictionary<AssetId, TableUnit> _Tables = new Dictionary<AssetId, TableUnit>();
 
@@ -722,14 +729,14 @@ namespace Thunder.Sys
     public readonly struct Cell
     {
         public Table Table { get; }
+        public object Data { get; }
         private readonly int _Index;
-        private readonly object _Data;
 
         public Cell(Table table, int index, object data)
         {
             Table = table;
             _Index = index;
-            _Data = data;
+            Data = data;
         }
 
         public string GetField()
@@ -739,22 +746,22 @@ namespace Thunder.Sys
 
         public static implicit operator int(Cell c)
         {
-            return (int) c._Data;
+            return (int) c.Data;
         }
 
         public static implicit operator float(Cell c)
         {
-            return (float) c._Data;
+            return (float) c.Data;
         }
 
         public static implicit operator string(Cell c)
         {
-            return (string) c._Data;
+            return (string) c.Data;
         }
 
         public static implicit operator bool(Cell c)
         {
-            return (bool) c._Data;
+            return (bool) c.Data;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Thunder.Sys;
+using Thunder.Tool;
 using Thunder.Tool.ObjectPool;
 using Thunder.Utility;
 using UnityEngine;
@@ -78,11 +79,6 @@ namespace Thunder.Entity.Weapon
             AmmoGroup.InvokeOnAmmoChanged();
         }
 
-        public override void FillAmmo()
-        {
-            AmmoGroup.FillUp(false);
-        }
-
         public override void TakeOut()
         {
         }
@@ -91,8 +87,19 @@ namespace Thunder.Entity.Weapon
         {
         }
 
-        public override void Drop()
+        public override object Drop()
         {
+            return AmmoGroup.Magzine;
+        }
+
+        public override void ReadAdditionalData(object add)
+        {
+            if (!add.TypeCheck(out int data)) return;
+            if (data != 1 || AmmoGroup.Magzine != 0) return;
+            _Arrow = ObjectPool.Ins.Alloc<CrossbowArrow>(GlobalSettings.CrossbowArrowAssetPath);
+            _Arrow.Install(_Trans, ArrowPos);
+            AmmoGroup.Magzine = 1;
+            AmmoGroup.InvokeOnAmmoChanged();
         }
     }
 }

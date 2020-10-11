@@ -4,10 +4,9 @@ using System.Text;
 using Thunder.Entity.Weapon;
 using Thunder.Sys;
 using Thunder.Tool;
-using Thunder.Utility;
 using UnityEngine;
 
-namespace Thnder.Utility
+namespace Thunder.Utility
 {
     public class WeaponBelt
     {
@@ -63,7 +62,7 @@ namespace Thnder.Utility
                 _Keys.Add(builder.ToString(), i);
             }
 
-            _Unarmed = CreateWeapon(_WeaponInfoDic[GlobalSettings.UnarmedId].PrefabPath);
+            _Unarmed = CreateWeapon(GlobalSettings.UnarmedId);
 
             _WeaponContainer = weaponContainer;
             _WeaponInfoDic = QueryDic();
@@ -98,7 +97,7 @@ namespace Thnder.Utility
         /// </summary>
         /// <param name="id"></param>
         /// <returns>是否成功放入</returns>
-        public bool AddWeapon(int id)
+        public bool AddWeapon(ItemId id)
         {
             var info = _WeaponInfoDic[id];
             var type = info.Type;
@@ -112,7 +111,7 @@ namespace Thnder.Utility
 
             if (index == -1) return false;
 
-            var newWeapon = CreateWeapon(info.PrefabPath);
+            var newWeapon = CreateWeapon(id);
             newWeapon.Trans.SetParent(_WeaponContainer);
             _Belt[index].Weapon = newWeapon;
             if (_CurWeapon == -1)
@@ -126,7 +125,7 @@ namespace Thnder.Utility
         /// <param name="id"></param>
         /// <param name="offset">若有多个相同类型的槽位，offset指示第几个槽位，从0开始</param>
         /// <returns>被覆盖的武器id，-1为空或是未找到可用槽位</returns>
-        public int SetWeapon(int id, int offset = 0)
+        public int SetWeapon(ItemId id, int offset = 0)
         {
             var info = _WeaponInfoDic[id];
             var index = 0;
@@ -146,7 +145,7 @@ namespace Thnder.Utility
             else
                 result = _Belt[index].Weapon.ItemId;
             if (index == _CurWeapon) DestroyWeapon(index);
-            _Belt[index].Weapon = CreateWeapon(info.PrefabPath);
+            _Belt[index].Weapon = CreateWeapon(id);
             return result;
         }
 
@@ -160,6 +159,7 @@ namespace Thnder.Utility
 
             var index = _CurWeapon;
             var saveId = _Belt[_CurWeapon].Weapon.ItemId;
+            saveId.Add = _Belt[_CurWeapon].Weapon.Drop();
             DestroyWeapon(_CurWeapon);
             if (_PreWeapon != -1)
             {
@@ -178,7 +178,7 @@ namespace Thnder.Utility
             _PreWeapon = -1;
             TakeOutWeapon(index);
 
-            PublicEvents.DropItem?.Invoke(saveId);
+            PublicEvents.DropItem?.Invoke(saveId,1);
 
             _CurWeapon = index;
         }
@@ -201,6 +201,16 @@ namespace Thnder.Utility
 
             if (ControlSys.Ins.RequireKey(GlobalSettings.DropWeaponKeyName, SHIELD_VALUE).Down)
                 DropCurrentWeapon();
+        }
+
+        /// <summary>
+        /// 判断指定id的物品是不是武器
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool IsWeapon(ItemId id)
+        {
+            return _WeaponInfoDic.TryGetValue(id, out _);
         }
 
         private void TakeOutWeapon(int index)
@@ -232,22 +242,27 @@ namespace Thnder.Utility
             _Belt[index].Weapon = null;
         }
 
-        private static BaseWeapon CreateWeapon(string prefabPath)
+        private BaseWeapon CreateWeapon(ItemId id)
         {
-            return BundleSys.Ins.GetAsset<GameObject>(prefabPath).GetInstantiate().GetComponent<BaseWeapon>();
+            var weapon =  BundleSys.Ins.GetAsset<GameObject>(_WeaponInfoDic[id].PrefabPath)
+                .GetInstantiate()
+                .GetComponent<BaseWeapon>();
+            weapon.ReadAdditionalData(id.Add);
+            weapon.ItemId = id;
+            return weapon;
         }
 
         private static Dictionary<int, WeaponInfo> QueryDic()
         {
             var selected1 =
-                from row in DataBaseSys.Ins["item_info"]
-                where row["type"] == "weapon"
-                select new {id = (int) row["id"], prefabPath = (string) row["prefab_path"]};
+                from info in ItemSys.Ins.ItemInfos
+                where (info.Flag & ItemFlag.Weapon) != 0
+                select info;
             var selected2 =
                 from row in DataBaseSys.Ins["weapon_info"]
-                join row1 in selected1 on row["id"] equals row1.id
-                select new {row1.id, info = new WeaponInfo(row["type"], row1.prefabPath)};
-            return selected2.ToDictionary(x => x.id, x => x.info);
+                join info in selected1 on row["id"] equals info.Id.Id
+                select new { Id = (int)info.Id, weaponInfo = new WeaponInfo(row["type"], info.WeaponPrefabPath)};
+            return selected2.ToDictionary(x => x.Id, x => x.weaponInfo);
         }
 
         private readonly struct WeaponInfo

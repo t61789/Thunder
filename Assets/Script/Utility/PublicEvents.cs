@@ -1,4 +1,5 @@
 ﻿using Thunder.Game.SpotShooting;
+using Thunder.Sys;
 using UnityEngine.Events;
 
 namespace Thunder.Utility
@@ -9,12 +10,6 @@ namespace Thunder.Utility
         ///     显示一条信息
         /// </summary>
         public static UnityEvent<string> LogMessage = new UnityEvent<string>();
-
-        /// <summary>
-        ///     拾取物品
-        ///     <br />物品id
-        /// </summary>
-        public static UnityEvent<int> PickupItem = new UnityEvent<int>();
 
         /// <summary>
         ///     请求进行游戏<br />请求true，取消请求false
@@ -36,12 +31,10 @@ namespace Thunder.Utility
         /// </summary>
         public static UnityEvent<GameType, bool> GameEnd = new UnityEvent<GameType, bool>();
 
-
         /// <summary>
         ///     击中飞盘
         /// </summary>
         public static UnityEvent FlyingSaucerHit = new UnityEvent();
-
 
         /// <summary>
         ///     枪械开火
@@ -53,15 +46,21 @@ namespace Thunder.Utility
         /// </summary>
         public static UnityEvent<int> GunFireModeChange = new UnityEvent<int>();
 
-
         /// <summary>
         ///     被击中的靶子
         /// </summary>
         public static UnityEvent<SpotShootingTarget> SpotShootingTargetHit = new UnityEvent<SpotShootingTarget>();
 
         /// <summary>
-        ///     有物品被玩家丢弃
+        ///     有物品被玩家丢弃<br/>
+        /// 物品id，数量
         /// </summary>
-        public static UnityEvent<int> DropItem = new UnityEvent<int>();
+        public static UnityEvent<ItemId,int> DropItem = new UnityEvent<ItemId,int>();
+
+        /// <summary>
+        ///     拾取物品
+        ///     <br />物品id，数量
+        /// </summary>
+        public static UnityEvent<ItemId, int> PickupItem = new UnityEvent<ItemId, int>();
     }
 }

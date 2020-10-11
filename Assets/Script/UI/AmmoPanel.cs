@@ -15,7 +15,7 @@ namespace Thunder.UI
             _Text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
             BaseWeapon.Ins.AmmoGroup.OnAmmoChanged += ammoGroup =>
             {
-                _AmmoStr = $"{ammoGroup.Magzine}/{ammoGroup.MagzineMax}  {ammoGroup.Backup}";
+                _AmmoStr = $"{ammoGroup.Magzine}/{ammoGroup.MagzineMax}  {ammoGroup.BackupAmmo}";
                 SetText();
             };
             PublicEvents.GunFireModeChange.AddListener(x =>

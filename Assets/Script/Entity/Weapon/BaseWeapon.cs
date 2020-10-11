@@ -1,4 +1,5 @@
 ﻿using System;
+using Thunder.Sys;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -9,11 +10,10 @@ namespace Thunder.Entity.Weapon
     {
         public static BaseWeapon Ins;
 
-        [SerializeField] private int _ItemId;
-
         protected Player _Player;
         public AmmoGroup AmmoGroup;
-        public int ItemId => _ItemId;
+
+        public ItemId ItemId { get; set; }
 
         protected override void Awake()
         {
@@ -40,32 +40,34 @@ namespace Thunder.Entity.Weapon
 
         public abstract void Reload();
 
-        public abstract void FillAmmo();
-
         public abstract void TakeOut();
 
         public abstract void PutBack();
 
-        public abstract void Drop();
+        public abstract object Drop();
+
+        public abstract void ReadAdditionalData(object add);
     }
 
     [Serializable]
     public class AmmoGroup
     {
-        public int Backup;
-        public int BackupMax;
+        public int BackupAmmo => _Package.GetItemNum(AmmoId);
+        public int AmmoId { get; }
+
         public int Magzine;
         public int MagzineMax;
-
-        public AmmoGroup(int magzineMax, int magzine, int backupMax, int backup)
-        {
-            MagzineMax = magzineMax;
-            Magzine = magzine;
-            BackupMax = backupMax;
-            Backup = backup;
-        }
+        private readonly Package _Package;
 
         public event Action<AmmoGroup> OnAmmoChanged;
+
+        public AmmoGroup(int magzineMax, int ammoId,Package package)
+        {
+            MagzineMax = magzineMax;
+            Magzine = magzineMax;
+            _Package = package;
+            AmmoId = ammoId;
+        }
 
         /// <summary>
         ///     判断是否可以装弹
@@ -73,28 +75,17 @@ namespace Thunder.Entity.Weapon
         /// <returns></returns>
         public bool ReloadConfirm()
         {
-            return Magzine != MagzineMax && Backup != 0;
+            return Magzine != MagzineMax && BackupAmmo != 0;
         }
 
         /// <summary>
-        ///     从后被弹药中取出子弹装入弹匣
+        ///     从背包中取出子弹装入弹匣
         /// </summary>
         public void Reload()
         {
-            var ammoDiff = Mathf.Min(MagzineMax - Magzine, Backup);
+            var ammoDiff = Mathf.Min(MagzineMax - Magzine, BackupAmmo);
             Magzine += ammoDiff;
-            Backup -= ammoDiff;
-        }
-
-        /// <summary>
-        ///     从弹药箱中填充所有子弹
-        /// </summary>
-        /// <param name="backupOnly">是否只填满备用弹药</param>
-        public void FillUp(bool backupOnly)
-        {
-            Backup = BackupMax;
-            if (!backupOnly)
-                Magzine = MagzineMax;
+            _Package.CostItem(AmmoId, ammoDiff,out _);
         }
 
         /// <summary>

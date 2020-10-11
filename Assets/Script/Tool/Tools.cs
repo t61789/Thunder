@@ -16,12 +16,11 @@ namespace Thunder.Tool
 {
     public static class Tools
     {
-        public const long BigNumber = 9223372036854775;
         public static Text LogContainer;
 
         public static Vector3 ScreenMiddle = new Vector3(Screen.width / 2f, Screen.height / 2f);
 
-        public static Vector2 FarPosition = new Vector2(BigNumber, BigNumber);
+        public static Vector2 FarPosition = new Vector2(int.MaxValue, int.MaxValue);
 
         private static readonly Random _Random;
 
@@ -201,7 +200,7 @@ namespace Thunder.Tool
         /// <summary>
         ///     获取所有组件
         /// </summary>
-        public static T[] GetAllComponents<T>(Transform[] target)
+        public static T[] GetAllComponents<T>(Transform[] target) where T:Component
         {
             var spriteT = new List<T>();
 
@@ -252,20 +251,11 @@ namespace Thunder.Tool
         /// <summary>
         ///     检测游戏物体上是否有某组件，若无则报错
         /// </summary>
-        public static void DetectCompement<T>(GameObject go)
+        public static void DetectCompement<T>(GameObject go) where T : Component
         {
             var compement = go.GetComponent<T>();
             if (compement == null)
                 Debug.LogError(compement.GetType() + " isn't attach in " + go.name);
-        }
-
-        /// <summary>
-        ///     vector2转vector3
-        /// </summary>
-        // ReSharper disable once InconsistentNaming
-        public static Vector3 V2TV3(Vector2 v2)
-        {
-            return new Vector3(v2.x, v2.y, 0);
         }
 
         /// <summary>
@@ -282,18 +272,6 @@ namespace Thunder.Tool
         public static float GetFps()
         {
             return 1 / Time.deltaTime;
-        }
-
-        /// <summary>
-        ///     获取输入数的正负号
-        /// </summary>
-        /// <param name="number"></param>
-        /// <returns>正为1，负为-1，零为0</returns>
-        public static int GetSign(float number)
-        {
-            if (Mathf.Approximately(number, 0)) return 0;
-
-            return (int) (Mathf.Abs(number) / number);
         }
 
         /// <summary>
@@ -1137,9 +1115,7 @@ namespace Thunder.Tool
         /// <returns>新左手坐标系的变换矩阵</returns>
         public static Matrix4x4 GramSchimidt(Vector3 z, Vector3 auxiliary, Vector3 o = default)
         {
-            Vector3 x;
-            Vector3 y;
-            GramSchimidt(z, auxiliary, out x, out y);
+            GramSchimidt(z, auxiliary, out Vector3 x, out Vector3 y);
             return BuildTransferMatrix(x, y, z, o);
         }
 
@@ -1519,6 +1495,25 @@ namespace Thunder.Tool
         public static float Repeat(this float val, float length)
         {
             return Mathf.Repeat(val, length);
+        }
+
+        /// <summary>
+        /// 检查object是否为目标类或其派生类，并输出转型好的对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="cast">转型后的对象</param>
+        /// <returns></returns>
+        public static bool TypeCheck<T>(this object obj,out T cast)
+        {
+            if (!(obj is T))
+            {
+                cast = default;
+                return false;
+            }
+
+            cast = (T) obj;
+            return true;
         }
     }
 }

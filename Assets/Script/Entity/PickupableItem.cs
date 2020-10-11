@@ -5,24 +5,22 @@ using UnityEngine;
 
 namespace Thunder.Entity
 {
-    public class PickupableItem : BaseEntity, IItem, IObjectPool, IInteractive
+    public class PickupableItem : BaseEntity, IObjectPool, IInteractive,IItem
     {
-        protected bool _CanPickup;
-        private AutoCounter _DropCounter;
-
-        [SerializeField] private int _ItemId;
-
-        private Rigidbody _Rb;
         public PickupItemAction Action = PickupItemAction.All;
         public float DropProtectedTime = 2;
+        public int Count=1;
+
+        protected bool _CanPickup;
+        private Rigidbody _Rb;
+        private AutoCounter _DropCounter;
 
         public void Interactive(ControlInfo info)
         {
             if (!info.Down || (Action & PickupItemAction.Directed) == 0) return;
-            Pickup();
+                Pickup();
         }
 
-        public int ItemId => _ItemId;
         public AssetId AssetId { get; set; }
 
         public virtual void OpReset()
@@ -36,6 +34,8 @@ namespace Thunder.Entity
         public virtual void OpDestroy()
         {
         }
+
+        public ItemId ItemId { get; set; }
 
         protected override void Awake()
         {
@@ -51,20 +51,22 @@ namespace Thunder.Entity
             Pickup();
         }
 
-        public void Launch(Vector3 pos, Quaternion rot, Vector3 force)
+        public void Launch(Vector3 pos, Quaternion rot, Vector3 force,int count)
         {
             _DropCounter.Recount();
             _CanPickup = false;
             _Trans.position = pos;
             _Trans.rotation = rot;
             _Rb.AddForce(force, ForceMode.Impulse);
+            Count = count;
         }
 
         protected virtual void Pickup()
         {
-            PublicEvents.PickupItem?.Invoke(ItemId);
+            PublicEvents.PickupItem?.Invoke(ItemId,Count);
             _CanPickup = false;
             ObjectPool.Ins.Recycle(this);
         }
+
     }
 }

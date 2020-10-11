@@ -126,11 +126,14 @@ public static class LuaBinder
 		Thunder_Utility_CounterWrap.Register(L);
 		Thunder_Utility_DialogResultWrap.Register(L);
 		Thunder_Utility_UiInitTypeWrap.Register(L);
+		Thunder_Utility_PickupItemActionWrap.Register(L);
+		Thunder_Utility_ItemFlagWrap.Register(L);
+		Thunder_Utility_GameTypeWrap.Register(L);
 		Thunder_Utility_FreeLookCameraWrap.Register(L);
 		Thunder_Utility_GlobalBufferWrap.Register(L);
 		Thunder_Utility_GlobalSettingsWrap.Register(L);
+		Thunder_Utility_InputSynchronizerWrap.Register(L);
 		Thunder_Utility_PackageWrap.Register(L);
-		Thunder_Utility_ItemInfoWrap.Register(L);
 		Thunder_Utility_PackageItemInfoWrap.Register(L);
 		Thunder_Utility_PackageCellWrap.Register(L);
 		Thunder_Utility_PathsWrap.Register(L);
@@ -140,6 +143,8 @@ public static class LuaBinder
 		Thunder_Utility_SelfDestroyParticalWrap.Register(L);
 		Thunder_Utility_SimpleCounterWrap.Register(L);
 		Thunder_Utility_StickyInputDicWrap.Register(L);
+		Thunder_Utility_WeaponBeltWrap.Register(L);
+		Thunder_Utility_WeaponBeltCellWrap.Register(L);
 		Thunder_Utility_BaseCameraWrap.Register(L);
 		L.BeginModule("PostProcessing");
 		Thunder_Utility_PostProcessing_AimScopeWrap.Register(L);
@@ -232,9 +237,13 @@ public static class LuaBinder
 		Thunder_Sys_CellWrap.Register(L);
 		Thunder_Sys_EventBroadcasterWrap.Register(L);
 		Thunder_Sys_BaseEventWrap.Register(L);
+		Thunder_Sys_ItemSysWrap.Register(L);
+		Thunder_Sys_ItemIdWrap.Register(L);
+		Thunder_Sys_ItemInfoWrap.Register(L);
 		Thunder_Sys_LuaSysWrap.Register(L);
 		Thunder_Sys_SaveSysWrap.Register(L);
 		Thunder_Sys_StableWrap.Register(L);
+		Thunder_Sys_TextSysWrap.Register(L);
 		Thunder_Sys_UISysWrap.Register(L);
 		Thunder_Sys_ValueSysWrap.Register(L);
 		L.EndModule();
@@ -242,7 +251,6 @@ public static class LuaBinder
 		Thunder_Skill_SkillWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Game");
-		Thunder_Game_GameTypeWrap.Register(L);
 		Thunder_Game_GameRequesterWrap.Register(L);
 		Thunder_Game_GameStartStandPointWrap.Register(L);
 		L.BeginModule("SpotShooting");
@@ -270,6 +278,7 @@ public static class LuaBinder
 		Thunder_Entity_PickupableItemWrap.Register(L);
 		Thunder_Entity_PlayerWrap.Register(L);
 		Thunder_Entity_DropperWrap.Register(L);
+		Thunder_Entity_PickerWrap.Register(L);
 		L.BeginModule("Weapon");
 		Thunder_Entity_Weapon_BaseWeaponWrap.Register(L);
 		Thunder_Entity_Weapon_AmmoGroupWrap.Register(L);

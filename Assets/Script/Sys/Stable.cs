@@ -11,8 +11,9 @@ namespace Thunder.Sys
 {
     public class Stable : MonoBehaviour
     {
-        public static bool SaveLog
-#if UNITY_EDITOR;
+        public static bool SaveLog =
+#if UNITY_EDITOR
+            false;
 #elif UNITY_STANDALONE_WIN
             true;
 #else

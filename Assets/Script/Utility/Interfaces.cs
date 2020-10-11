@@ -5,7 +5,7 @@ namespace Thunder.Utility
 {
     public interface IItem
     {
-        int ItemId { get; }
+        ItemId ItemId { get; set; }
     }
 
     public interface IShootable

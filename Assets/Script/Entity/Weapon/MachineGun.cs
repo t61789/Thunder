@@ -107,12 +107,6 @@ namespace Thunder.Entity.Weapon
             Safety = value != 0;
         }
 
-        public override void FillAmmo()
-        {
-            AmmoGroup.FillUp(false);
-            AmmoGroup.InvokeOnAmmoChanged();
-        }
-
         public override void TakeOut()
         {
             _Animator.Play(DrawAnimationName);
@@ -128,8 +122,15 @@ namespace Thunder.Entity.Weapon
             _AimScopeBeforeReload = _Reloading = false;
         }
 
-        public override void Drop()
+        public override object Drop()
         {
+            return AmmoGroup.Magzine;
+        }
+
+        public override void ReadAdditionalData(object add)
+        {
+            if (!add.TypeCheck(out int data)) return;
+            AmmoGroup.Magzine = data;
         }
 
         public override void Fire()
@@ -137,8 +138,7 @@ namespace Thunder.Entity.Weapon
             var dir = _BulletSpread.GetNextBulletDir(FireInterval);
             dir = Camera.main.transform.localToWorldMatrix * dir;
 
-            RaycastHit hit;
-            if (Physics.Raycast(_Trans.position, dir, out hit))
+            if (Physics.Raycast(_Trans.position, dir, out var hit))
             {
                 _Spreads.Add(hit.point);
                 if (_Spreads.Count > 50)
@@ -147,8 +147,7 @@ namespace Thunder.Entity.Weapon
                 hit.transform.GetComponent<IShootable>()?.GetShoot(hit.point, dir, Damage);
             }
 
-            Vector2 stay;
-            _Recoli.TriggerRecoli(_BulletSpread.GetNextCameraShake(out stay), stay);
+            _Recoli.TriggerRecoli(_BulletSpread.GetNextCameraShake(out var stay), stay);
 
             AmmoGroup.Magzine--;
             AmmoGroup.InvokeOnAmmoChanged();
@@ -164,8 +163,7 @@ namespace Thunder.Entity.Weapon
             _BulletSpread.ColdDown(FireInterval);
 
             // 设置后坐力
-            Vector2 addition, stay;
-            _Recoli.GetRecoli(out addition, out stay);
+            _Recoli.GetRecoli(out var addition, out var stay);
             _Player.ViewRotAddition(addition);
             if (stay != Vector2.zero) _Player.ViewRotTargetAddition(stay);
 

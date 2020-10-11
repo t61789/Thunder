@@ -43,7 +43,7 @@ namespace Thunder.Game
 
             PublicEvents.GameStartDelay?.Invoke(GameType);
 
-            Player.Instance.Movable = false;
+            Player.Ins.Movable = false;
         }
 
         private void GameEnd(GameType type, bool completely)
@@ -54,7 +54,7 @@ namespace Thunder.Game
             _Requested = false;
             _Started = false;
 
-            Player.Instance.Movable = true;
+            Player.Ins.Movable = true;
         }
 
         public void GameStartDelay(GameType type)

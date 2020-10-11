@@ -18,10 +18,6 @@
         {
         }
 
-        public override void FillAmmo()
-        {
-        }
-
         public override void TakeOut()
         {
         }
@@ -30,8 +26,14 @@
         {
         }
 
-        public override void Drop()
+        public override object Drop()
         {
+            return null;
+        }
+
+        public override void ReadAdditionalData(object add)
+        {
+            
         }
     }
 }

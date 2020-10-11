@@ -61,6 +61,14 @@ namespace Thunder.Utility
         All = Directed | UnDirected
     }
 
+    [Flags]
+    public enum ItemFlag
+    {
+        Weapon = 0x1,
+        Packageable = 0x2,
+        Stackable = 0x4,
+    }
+
     public enum GameType
     {
         FlyingSaucer,
