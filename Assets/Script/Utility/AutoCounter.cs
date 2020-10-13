@@ -9,18 +9,15 @@ namespace Thunder.Utility
         private float _CountPauseSave;
         private bool _HasExcutedCompleteCallBack;
         private Action _OnCompleteCallBack;
-        private bool _Running;
+        private bool _Running=true;
 
         /// <summary>
         /// </summary>
         /// <param name="parent">协程附着对象</param>
         /// <param name="timeLimit"></param>
-        /// <param name="countAtStart"></param>
-        public AutoCounter(MonoBehaviour parent, float timeLimit, bool countAtStart = true) : base(timeLimit,
-            countAtStart)
+        public AutoCounter(MonoBehaviour parent, float timeLimit) : base(timeLimit)
         {
             _TimeCountStart = Time.time;
-            _Running = countAtStart;
             parent.StartCoroutine(Count());
         }
 
@@ -36,7 +33,12 @@ namespace Thunder.Utility
 
         public override bool Completed => _HasExcutedCompleteCallBack;
 
-        public override Counter Recount(float timeLimit = -1)
+        /// <summary>
+        ///     重新计时
+        /// </summary>
+        /// <param name="timeLimit">新的计时时限，为-1则不做改变</param>
+        /// <returns></returns>
+        public AutoCounter Recount(float timeLimit = -1)
         {
             _TimeLimit = timeLimit == -1 ? _TimeLimit : timeLimit;
             _TimeCountStart = Time.time;
@@ -45,12 +47,7 @@ namespace Thunder.Utility
             return this;
         }
 
-        public override Counter Complete()
-        {
-            return Complete(true);
-        }
-
-        public AutoCounter Complete(bool callback)
+        public AutoCounter Complete(bool callback=true)
         {
             _TimeCountStart = Time.time - _TimeLimit;
             if (callback)

@@ -7,41 +7,41 @@ namespace Thunder.UI
 {
     public class ConfirmDialog : BaseUI
     {
-        public DialogResult dialogResult;
+        public DialogResult DialogResult;
 
-        private string tempText;
-        public TextMeshProUGUI textMesh;
+        private string _TempText;
+        public TextMeshProUGUI TextMesh;
 
         protected override void Awake()
         {
             base.Awake();
-            textMesh = transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            tempText = textMesh.text;
+            TextMesh = transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            _TempText = TextMesh.text;
         }
 
         public void Init(string text)
         {
-            textMesh.SetText(text);
+            TextMesh.SetText(text);
         }
 
         public void OK()
         {
-            dialogResult = DialogResult.Ok;
-            UISys.Ins.CloseUI(UIName);
+            DialogResult = DialogResult.Ok;
+            UISys.Ins.CloseUI(EntityName);
         }
 
         public void Cancel()
         {
-            dialogResult = DialogResult.Cancel;
-            UISys.Ins.CloseUI(UIName);
+            DialogResult = DialogResult.Cancel;
+            UISys.Ins.CloseUI(EntityName);
         }
 
         public void Update()
         {
-            if (textMesh.text != tempText)
+            if (TextMesh.text != _TempText)
             {
-                tempText = textMesh.text;
-                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, textMesh.rectTransform.rect.width);
+                _TempText = TextMesh.text;
+                RectTrans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, TextMesh.rectTransform.rect.width);
             }
         }
     }

@@ -1532,5 +1532,18 @@ namespace Thunder.Tool
             cast = (T) obj;
             return true;
         }
+
+        /// <summary>
+        /// 判断两个矩形是否相交
+        /// </summary>
+        /// <param name="r1"></param>
+        /// <param name="r2"></param>
+        /// <returns></returns>
+        public static bool RectCross(this Rect r1, Rect r2)
+        {
+            Vector2 differ = r1.center - r2.center;
+            return r1.width + r2.width <= Mathf.Abs(differ.x) && 
+                   r1.height + r2.height <= Mathf.Abs(differ.y);
+        }
     }
 }

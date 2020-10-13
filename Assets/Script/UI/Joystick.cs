@@ -5,73 +5,72 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class Joystick : BaseUI
+    public class Joystick : PanelUI
     {
-        private static Value[] values = new Value[0];
-        private float alphaCount;
-
-        private BaseUI cap;
-        public float CapRadius = 59.21f;
-        private float curAlpha;
-        private bool dragging;
-        private float fadeCount;
-        public float HideTime = 1f;
-        private Material imageMaterial;
+        public bool StablePanel;
         public int Index;
-        private BaseUI panel;
-        private Image panelImage;
+        public float StayTime = 0.7f;
+        public float HideTime = 1f;
+        public float CapRadius = 59.21f;
         public float Radius = 203.6f;
         public float ShowTime = 0.1f;
 
-        public bool StablePanel;
-        public float StayTime = 0.7f;
+        private static Value[] _Values = new Value[0];
+        private float _AlphaCount;
+        private EventUI _Cap;
+        private float _CurAlpha;
+        private bool _Dragging;
+        private float _FadeCount;
+        private Material _ImageMaterial;
+        private BaseUI _Panel;
+        private Image _PanelImage;
 
         protected void Start()
         {
-            var valueList = new List<Value>(values);
+            var valueList = new List<Value>(_Values);
             for (var i = valueList.Count; i <= Index; i++)
                 valueList.Add(new Value());
-            values = valueList.ToArray();
+            _Values = valueList.ToArray();
 
-            cap = transform.Find("Cap").GetComponent<BaseUI>();
-            panel = transform.Find("Panel").GetComponent<BaseUI>();
-            panelImage = panel.GetComponent<Image>();
+            _Cap = transform.Find("Cap").GetComponent<EventUI>();
+            _Panel = transform.Find("Panel").GetComponent<BaseUI>();
+            _PanelImage = _Panel.GetComponent<Image>();
 
-            cap.DragStart += CapDragStart;
-            cap.DragEnd += CapDragEnd;
-            cap.Dragging += CapDragging;
-            cap.PointerClick += CapClick;
-            cap.PointerDown += CapDown;
-            cap.PointerUp += CapUp;
+            _Cap.DragE.AddListener(OnCapDrag);
+            _Cap.EndDragE.AddListener(OnCapEndDrag);
+            _Cap.BeginDragE.AddListener(OnCapBeginDrag);
+            _Cap.PointerClickE.AddListener(OnCapPointerClick);
+            _Cap.PointerDownE.AddListener(OnCapPointerDown);
+            _Cap.PointerUpE.AddListener(OnCapPointerUp);
 
-            imageMaterial = new Material(panelImage.material);
-            panelImage.material = imageMaterial;
+            _ImageMaterial = new Material(_PanelImage.material);
+            _PanelImage.material = _ImageMaterial;
         }
 
         private void Update()
         {
             if (!StablePanel)
             {
-                if (!dragging && curAlpha > 0 && Time.time - fadeCount >= StayTime)
+                if (!_Dragging && _CurAlpha > 0 && Time.time - _FadeCount >= StayTime)
                 {
-                    curAlpha = alphaCount - (Time.time - fadeCount - StayTime) / HideTime;
+                    _CurAlpha = _AlphaCount - (Time.time - _FadeCount - StayTime) / HideTime;
 
-                    if (curAlpha <= 0)
-                        values[Index].val = Vector3.zero;
-                    imageMaterial.SetFloat("_GlobalAlpha", curAlpha);
+                    if (_CurAlpha <= 0)
+                        _Values[Index].Val = Vector3.zero;
+                    _ImageMaterial.SetFloat("_GlobalAlpha", _CurAlpha);
                 }
-                else if (dragging && curAlpha < 1)
+                else if (_Dragging && _CurAlpha < 1)
                 {
-                    curAlpha = alphaCount + (Time.time - fadeCount) / ShowTime;
-                    imageMaterial.SetFloat("_GlobalAlpha", curAlpha);
+                    _CurAlpha = _AlphaCount + (Time.time - _FadeCount) / ShowTime;
+                    _ImageMaterial.SetFloat("_GlobalAlpha", _CurAlpha);
                 }
             }
         }
 
         private void LateUpdate()
         {
-            values[Index].click = false;
-            values[Index].doubleClick = false;
+            _Values[Index].Click = false;
+            _Values[Index].DoubleClick = false;
         }
 
         private void OnDrawGizmosSelected()
@@ -82,100 +81,100 @@ namespace Thunder.UI
             Gizmos.DrawWireSphere(transform.position, Radius);
         }
 
-        private void CapDragStart(BaseUI baseUI, PointerEventData eventData)
+        public void OnCapBeginDrag(EventUI ui, PointerEventData eventData)
         {
             var pos = eventData.position;
-            if ((pos - (Vector2) cap.RectTrans.position).magnitude < CapRadius)
+            if ((pos - (Vector2) _Cap.RectTrans.position).magnitude < CapRadius)
             {
-                dragging = true;
+                _Dragging = true;
                 if (!StablePanel)
                 {
-                    fadeCount = Time.time;
-                    alphaCount = curAlpha;
+                    _FadeCount = Time.time;
+                    _AlphaCount = _CurAlpha;
 
-                    if (curAlpha <= 0)
-                        panel.RectTrans.position = cap.RectTrans.position;
+                    if (_CurAlpha <= 0)
+                        _Panel.RectTrans.position = _Cap.RectTrans.position;
                 }
             }
         }
 
-        private void CapDragEnd(BaseUI baseUI, PointerEventData eventData)
+        public void OnCapEndDrag(EventUI ui, PointerEventData eventData)
         {
-            if (dragging)
+            if (_Dragging)
             {
-                dragging = false;
-                values[Index].val = Vector3.zero;
+                _Dragging = false;
+                _Values[Index].Val = Vector3.zero;
 
                 if (StablePanel)
                 {
-                    cap.RectTrans.position = panel.RectTrans.position;
+                    _Cap.RectTrans.position = _Panel.RectTrans.position;
                 }
                 else
                 {
-                    fadeCount = Time.time;
-                    alphaCount = curAlpha;
+                    _FadeCount = Time.time;
+                    _AlphaCount = _CurAlpha;
                 }
             }
         }
 
-        private void CapDragging(BaseUI baseUI, PointerEventData eventData)
+        public void OnCapDrag( EventUI ui, PointerEventData eventData)
         {
-            if (dragging)
+            if (_Dragging)
             {
-                var temp = (Vector3) eventData.position - panel.RectTrans.position;
+                var temp = (Vector3) eventData.position - _Panel.RectTrans.position;
                 if (StablePanel)
                 {
                     if (temp.magnitude > Radius)
                         temp = temp.normalized * Radius;
-                    cap.RectTrans.position = panel.RectTrans.position + temp;
+                    _Cap.RectTrans.position = _Panel.RectTrans.position + temp;
                 }
                 else
                 {
-                    cap.RectTrans.position = eventData.position;
+                    _Cap.RectTrans.position = eventData.position;
                     if (temp.magnitude > Radius)
                     {
                         temp = temp.normalized * Radius;
-                        panel.RectTrans.position = -temp.normalized * Radius + cap.RectTrans.position;
+                        _Panel.RectTrans.position = -temp.normalized * Radius + _Cap.RectTrans.position;
                     }
                 }
 
-                values[Index].val = temp.normalized * (temp.magnitude / Radius);
+                _Values[Index].Val = temp.normalized * (temp.magnitude / Radius);
             }
         }
 
-        private void CapClick(BaseUI baseUI, PointerEventData eventData)
+        public void OnCapPointerClick(EventUI ui, PointerEventData eventData)
         {
-            if (dragging) return;
+            if (_Dragging) return;
 
             if (eventData.clickCount == 1)
-                values[Index].click = true;
+                _Values[Index].Click = true;
             else
-                values[Index].doubleClick = true;
+                _Values[Index].DoubleClick = true;
         }
 
-        private void CapDown(BaseUI baseUI, PointerEventData eventData)
+        public void OnCapPointerDown(EventUI ui, PointerEventData eventData)
         {
-            values[Index].holding = true;
+            _Values[Index].Holding = true;
         }
 
-        private void CapUp(BaseUI baseUI, PointerEventData eventData)
+        public void OnCapPointerUp(EventUI ui, PointerEventData eventData)
         {
-            values[Index].holding = false;
+            _Values[Index].Holding = false;
         }
 
         public static Value GetValue(int index)
         {
-            if (index < 0 || index >= values.Length)
+            if (index < 0 || index >= _Values.Length)
                 return new Value();
-            return values[index];
+            return _Values[index];
         }
 
         public struct Value
         {
-            public Vector3 val;
-            public bool click;
-            public bool doubleClick;
-            public bool holding;
+            public Vector3 Val;
+            public bool Click;
+            public bool DoubleClick;
+            public bool Holding;
         }
     }
 }

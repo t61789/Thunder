@@ -9,7 +9,7 @@ namespace Thunder.Utility
 {
     public class Package
     {
-        private readonly PackageCell[] _Items;
+        private readonly ItemGroup[] _Items;
 
         private readonly CircleQueue<PackageItemInfo> _PackageItemInfoQueue =
             new CircleQueue<PackageItemInfo>(GlobalSettings.PackageItemInfoBuffer);
@@ -23,7 +23,7 @@ namespace Thunder.Utility
         {
             Assert.IsTrue(packageSize > 0, "背包容量需要大于0");
             Ins = this;
-            _Items = new PackageCell[packageSize];
+            _Items = new ItemGroup[packageSize];
         }
 
         public static Package Ins { private set; get; }
@@ -137,7 +137,7 @@ namespace Thunder.Utility
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public PackageCell GetCell(int index)
+        public ItemGroup GetCell(int index)
         {
             return _Items[index];
         }
@@ -158,7 +158,7 @@ namespace Thunder.Utility
         /// <param name="index"></param>
         /// <param name="itemId"></param>
         /// <param name="count"></param>
-        /// <returns></returns>
+        /// <returns>未成功放入的物品数量</returns>
         public int SetCell(int index, ItemId itemId, int count)
         {
             if (count == 0 && itemId != 0)
@@ -232,17 +232,5 @@ namespace Thunder.Utility
     {
         public int Count;
         public int FirstCell;
-    }
-
-    public struct PackageCell
-    {
-        public ItemId Id;
-        public int Count;
-
-        public PackageCell(ItemId id, int count)
-        {
-            Id = id;
-            Count = count;
-        }
     }
 }

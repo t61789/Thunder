@@ -1,36 +1,19 @@
-using DG.Tweening;
-using Thunder.Tool;
-using Thunder.UI;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Test : BaseUI
+public class Test : MonoBehaviour
 {
-    private bool _Set;
-
-    private float nope;
-    private Sequence se;
-
+    private VerticalLayoutGroup _LayoutGroup;
     private void Start()
     {
-        Sequence se = DOTween.Sequence();
-        se.SetAutoKill(false);
-        Tweener t = RectTrans.DOFixedSize(new Vector2(500, 200), 1);
-        se.Append(t);
-        t = RectTrans.DOFixedSize(new Vector2(0, 0), 5);
-        se.Append(t);
-
-        se.Pause();
+        _LayoutGroup = GetComponent<VerticalLayoutGroup>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        if (!_Set && Time.time > 3)
-        {
-            //se.();
-            //se.Rewind();
-            //se.Play();
-            _Set = true;
-        }
+        Debug.Log(_LayoutGroup.preferredWidth);
+        Debug.Log(_LayoutGroup.flexibleWidth);
     }
 }

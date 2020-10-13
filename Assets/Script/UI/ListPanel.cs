@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class ListPlane : BaseUI
+    public class ListPanel : BaseUI
     {
         protected const string ELEMENT = "element";
         protected Queue<RectTransform> elementContainers = new Queue<RectTransform>();
@@ -58,6 +58,13 @@ namespace Thunder.UI
             }
         }
 
+        /// <summary>
+        /// 排列地创建物体\.llllll
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameters"></param>
+        /// <param name="inits"></param>
+        /// <returns></returns>
         protected T[] CreateElements<T>(Parameters parameters, List<Action<T>> inits) where T : BaseUI
         {
             if (parameters.elementSize.x == 0)
@@ -160,7 +167,6 @@ namespace Thunder.UI
                 new Vector2(scrollbar.x.value * scrollRange.x, elementsTrans.anchoredPosition.y);
         }
 
-        [GenerateWrap]
         public struct Parameters
         {
             public int rowCount;

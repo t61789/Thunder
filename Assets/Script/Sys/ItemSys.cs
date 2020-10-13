@@ -161,5 +161,6 @@ namespace Thunder.Sys
         public string PickPrefabPath;
         public string WeaponPrefabPath;
         public int MaxStackNum;
+        public string PackageCellTexturePath;
     }
 }

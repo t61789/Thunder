@@ -6,8 +6,10 @@ namespace Thunder.Utility
     [Serializable]
     public class SimpleCounter : Counter
     {
-        public SimpleCounter(float timeLimit, bool countAtStart = true) : base(timeLimit, countAtStart)
+        public SimpleCounter(float timeLimit, bool countAtStart = true) : base(timeLimit)
         {
+            if (countAtStart) return;
+            _TimeCountStart -= _TimeLimit;
         }
 
         public override float TimeCount =>
@@ -20,7 +22,7 @@ namespace Thunder.Utility
         /// </summary>
         /// <param name="timeLimit">新的计时时限，为-1则不做改变</param>
         /// <returns></returns>
-        public override Counter Recount(float timeLimit = -1)
+        public SimpleCounter Recount(float timeLimit = -1)
         {
             _TimeLimit = timeLimit == -1 ? _TimeLimit : timeLimit;
             _TimeCountStart = Time.time;
@@ -31,7 +33,7 @@ namespace Thunder.Utility
         ///     立即完成计时
         /// </summary>
         /// <returns></returns>
-        public override Counter Complete()
+        public SimpleCounter Complete()
         {
             _TimeCountStart = Time.time - _TimeLimit;
             return this;

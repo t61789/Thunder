@@ -9,12 +9,10 @@ namespace Thunder.Utility
 
         protected float _TimeLimit;
 
-        protected Counter(float timeLimit, bool countAtStart = true)
+        protected Counter(float timeLimit)
         {
             _TimeLimit = timeLimit;
             _TimeCountStart = Time.time;
-            if (countAtStart) return;
-            _TimeCountStart -= _TimeLimit;
         }
 
         /// <summary>
@@ -43,18 +41,5 @@ namespace Thunder.Utility
         ///     计时上限
         /// </summary>
         public float TimeLimit => _TimeLimit;
-
-        /// <summary>
-        ///     重新计时
-        /// </summary>
-        /// <param name="timeLimit">新的计时时限，为-1则不做改变</param>
-        /// <returns></returns>
-        public abstract Counter Recount(float timeLimit = -1);
-
-        /// <summary>
-        ///     立即完成计时
-        /// </summary>
-        /// <returns></returns>
-        public abstract Counter Complete();
     }
 }

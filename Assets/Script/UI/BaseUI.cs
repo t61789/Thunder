@@ -1,142 +1,45 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using Thunder.Entity;
 using Thunder.Sys;
+using Thunder.Tool;
 using Thunder.Tool.ObjectPool;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace Thunder.UI
 {
-    [RequireComponent(typeof(RectTransform))]
-    public class BaseUI : MonoBehaviour, IObjectPool, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler,
-        IPointerExitHandler, IPointerUpHandler, ICanvasRaycastFilter, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public class BaseUI : BaseEntity, IObjectPool
     {
-        public delegate void AfterOpenDel(BaseUI baseUi);
+        public RectTransform RectTrans { get; private set; }
 
-        public delegate void BeforeCloseDel(BaseUI baseUi);
+        public AssetId AssetId { get; set; }
 
-        public delegate void CloseCheck(BaseUI baseUi, ref bool result);
-
-        public delegate void PointerDel(BaseUI baseUi, PointerEventData eventData);
-
-        [SerializeField] private string _UIName;
-
-        [HideInInspector] public BaseUI Dialog;
-
-        [HideInInspector] public RectTransform RectTrans;
-
-        public bool Stable = false;
-
-        public string UIName
+        protected override void Awake()
         {
-            set => _UIName = value;
-
-            get => string.IsNullOrEmpty(_UIName) ? name : _UIName;
+            base.Awake();
+            RectTrans = transform as RectTransform;
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
+        public virtual void OpRecycle()
         {
-            DragStart?.Invoke(this, eventData);
         }
 
-        public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
+        public virtual void OpReset()
         {
-            if (Dialog == null) return true;
-            return !Dialog.gameObject.activeSelf;
         }
 
-        public void OnDrag(PointerEventData eventData)
-        {
-            Dragging?.Invoke(this, eventData);
-        }
-
-        public void OnEndDrag(PointerEventData eventData)
-        {
-            DragEnd?.Invoke(this, eventData);
-        }
-
-        public void OpDestroy()
+        public virtual void OpDestroy()
         {
             Destroy(gameObject);
         }
 
-        public AssetId AssetId { get; set; }
-
-        public void OpRecycle()
+        public void SetAnchoredPosition(Vector2 pos)
         {
-        }
-
-        public void OpReset()
-        {
-        }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            PointerClick?.Invoke(this, eventData);
-        }
-
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            PointerDown?.Invoke(this, eventData);
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            PointerEnter?.Invoke(this, eventData);
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            PointerExit?.Invoke(this, eventData);
-        }
-
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            PointerUp?.Invoke(this, eventData);
-        }
-
-        public event PointerDel PointerDown;
-        public event PointerDel PointerEnter;
-        public event PointerDel PointerClick;
-        public event PointerDel PointerExit;
-        public event PointerDel PointerUp;
-        public event PointerDel DragStart;
-        public event PointerDel DragEnd;
-        public event PointerDel Dragging;
-        public event AfterOpenDel OnAfterOpen;
-        public event BeforeCloseDel OnBeforeClose;
-        public event CloseCheck OnCloseCheck;
-
-        protected virtual void Awake()
-        {
-            UIName = UIName ?? name;
-            RectTrans = transform as RectTransform;
-        }
-
-        public virtual void AfterOpen()
-        {
-            OnAfterOpen?.Invoke(this);
-        }
-
-        public virtual bool BeforeClose()
-        {
-            var result = true;
-            OnCloseCheck?.Invoke(this, ref result);
-            if (!result)
-                return false;
-
-            OnBeforeClose?.Invoke(this);
-            return true;
-        }
-
-        public GameObject GetGameObject()
-        {
-            return gameObject;
-        }
-
-        public virtual void ObjectPoolReset(Hashtable arg)
-        {
+            RectTrans.position = pos;
         }
 
         public void SetAnchor(Vector2 anchorMax, Vector2 anchorMin)
@@ -151,46 +54,19 @@ namespace Thunder.UI
             RectTrans.offsetMin = offsetMin;
         }
 
-        public void SetAnchoredPosition(Vector2 pos)
-        {
-            RectTrans.position = pos;
-        }
-
-        public void Close()
-        {
-            UISys.Ins.CloseUI(UIName);
-        }
-
         public void InitRect(UiInitType action)
         {
-            if ((action & UiInitType.MiddleAnchor) != 0) RectTrans.anchorMin = RectTrans.anchorMax = Vector2.one / 2;
+            if (action.HasFlag(UiInitType.MiddleAnchor)) RectTrans.anchorMin = RectTrans.anchorMax = Vector2.one / 2;
 
-            if ((action & UiInitType.FillAnchor) != 0)
+            if (action.HasFlag(UiInitType.FillAnchor))
             {
                 RectTrans.anchorMax = Vector2.one;
                 RectTrans.anchorMin = Vector2.zero;
             }
 
-            if ((action & UiInitType.FillSize) != 0) RectTrans.offsetMin = RectTrans.offsetMax = Vector2.zero;
+            if (action.HasFlag(UiInitType.FillSize)) RectTrans.offsetMin = RectTrans.offsetMax = Vector2.zero;
 
-            if ((action & UiInitType.PositionMiddleOfAnchor) != 0) RectTrans.anchoredPosition = Vector2.zero;
-        }
-
-        // [Assetid]:[FunctionName]
-        public void CallLuaFunction(string func)
-        {
-            Assert.IsFalse(string.IsNullOrEmpty(func), $"命令不正确：{func}");
-            // ReSharper disable once PossibleNullReferenceException
-            var s = func.Split(':');
-            Assert.IsTrue(s.Length == 2, $"命令不正确：{func}");
-            LuaSys.Ins.ExecuteFile(s[0]);
-            LuaSys.Ins.ExecuteCommand(s[1]);
-        }
-
-        public void ExecuteLuaCmd(string cmd)
-        {
-            Assert.IsFalse(string.IsNullOrEmpty(cmd), $"命令不正确：{cmd}");
-            LuaSys.Ins.ExecuteCommand(cmd);
+            if (action.HasFlag(UiInitType.PositionMiddleOfAnchor)) RectTrans.anchoredPosition = Vector2.zero;
         }
     }
 }
