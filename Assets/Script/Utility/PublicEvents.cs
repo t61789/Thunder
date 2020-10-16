@@ -1,5 +1,7 @@
-﻿using Thunder.Game.SpotShooting;
+﻿using System;
+using Thunder.Game.SpotShooting;
 using Thunder.Sys;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Thunder.Utility
@@ -65,5 +67,40 @@ namespace Thunder.Utility
         /// 背包物品改变
         /// </summary>
         public static UnityEvent<Package,int[]> PackageItemChanged = new UnityEvent<Package, int[]>();
+
+        /// <summary>
+        /// 玩家蹲伏
+        /// </summary>
+        public static UnityEvent<bool> PlayerSquat = new UnityEvent<bool>();
+
+        /// <summary>
+        /// 玩家移动
+        /// </summary>
+        public static UnityEvent<bool> PlayerMove = new UnityEvent<bool>();
+
+        /// <summary>
+        /// 玩家处于悬空状态
+        /// </summary>
+        public static UnityEvent<bool> PlayerDangling = new UnityEvent<bool>();
+
+        /// <summary>
+        /// 开启和关闭了瞄准镜
+        /// </summary>
+        public static UnityEvent<bool> AimScopeSwitched = new UnityEvent<bool>();
+
+        /// <summary>
+        /// 玩家跳跃
+        /// </summary>
+        public static UnityEvent PlayerJump = new UnityEvent();
+
+        /// <summary>
+        /// 产生浮动后坐力
+        /// </summary>
+        public static UnityEvent<Vector2> RecoliFloat = new UnityEvent<Vector2>();
+
+        /// <summary>
+        /// 产生固定后坐力
+        /// </summary>
+        public static UnityEvent<Vector2> RecoliFixed = new UnityEvent<Vector2>();
     }
 }

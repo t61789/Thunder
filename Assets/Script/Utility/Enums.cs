@@ -74,4 +74,10 @@ namespace Thunder.Utility
         FlyingSaucer,
         SpotShooting
     }
+
+    public enum CtrlMode
+    {
+        Stay,
+        Switch
+    }
 }

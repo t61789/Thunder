@@ -53,13 +53,14 @@ namespace Thunder.Entity.Weapon
             _Player = _Trans.parent.parent.parent.GetComponent<Player>();
             Assert.IsNotNull(_Player,
                 $"枪械 {name} 安装位置不正确");
-            _Player.OnSquat.AddListener(PlayerSquat);
 
-            _Player.OnHanging.AddListener(PlayerHanging);
+            PublicEvents.PlayerSquat.AddListener(PlayerSquat);
+            PublicEvents.PlayerDangling.AddListener(PlayerHanging);
+
             _StickyInputDic.AddBool(RELOAD, 0.7f);
             _Burst = new BurstController(BurstMode, FireInterval);
             _Recoli = new RecoliController(CameraRecoliDampTime);
-            _AimScope = new AimScopeController(_Player.SensitiveScale, AimScopeFov);
+            _AimScope = new AimScopeController(_Player.FpsCamera.SensitiveScale, AimScopeFov);
         }
 
         private void Update()
@@ -67,8 +68,7 @@ namespace Thunder.Entity.Weapon
             if (!Safety) return;
 
             var fire = ControlSys.Ins.RequireKey(GlobalSettings.FireKeyName, 0);
-            bool autoReload;
-            var param = _Burst.FireCheck(fire, !AmmoGroup.MagzineEmpty(), out autoReload);
+            var param = _Burst.FireCheck(fire, !AmmoGroup.MagzineEmpty(), out var autoReload);
             if (param) Fire();
 
             param = AmmoGroup.ReloadConfirm() &&
@@ -164,13 +164,13 @@ namespace Thunder.Entity.Weapon
 
             // 设置后坐力
             _Recoli.GetRecoli(out var addition, out var stay);
-            _Player.ViewRotAddition(addition);
-            if (stay != Vector2.zero) _Player.ViewRotTargetAddition(stay);
+            PublicEvents.RecoliFloat?.Invoke(addition);
+            if (stay != Vector2.zero) PublicEvents.RecoliFixed?.Invoke(stay);
 
             AimPoint.Ins.SetAimValue(OverHeatFactor.Average());
         }
 
-        protected override void PlayerSquat(bool squating, bool hanging)
+        protected override void PlayerSquat(bool squating)
         {
             if (squating)
             {
@@ -186,7 +186,7 @@ namespace Thunder.Entity.Weapon
             }
         }
 
-        protected override void PlayerHanging(bool squating, bool hanging)
+        protected override void PlayerHanging(bool hanging)
         {
             if (hanging)
             {

@@ -40,7 +40,8 @@ namespace Thunder.Game.FlyingSaucer
                 BroadCastData();
             });
 
-            TurnCounter = new AutoCounter(this, TurnTime, false).OnComplete(() => GameEnd(true));
+            TurnCounter = new AutoCounter(this, TurnTime)
+                .OnComplete(() => GameEnd(true)).Complete(false);
 
             Instance = this;
 

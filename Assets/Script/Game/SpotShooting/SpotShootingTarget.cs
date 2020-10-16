@@ -29,7 +29,7 @@ namespace Thunder.Game.SpotShooting
             _Collider = GetComponent<Collider>();
             _Collider.enabled = false;
             _RiseCounter = new AutoCounter(this, RiseTime);
-            _LifeCounter = new AutoCounter(this, LifeTime, false).OnComplete(UnRise);
+            _LifeCounter = new AutoCounter(this, LifeTime).OnComplete(UnRise).Complete(false);
         }
 
         private void FixedUpdate()

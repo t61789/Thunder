@@ -4,16 +4,19 @@ using UnityEngine.UI;
 
 public class Test : MonoBehaviour
 {
-    private VerticalLayoutGroup _LayoutGroup;
-    private void Start()
-    {
-        _LayoutGroup = GetComponent<VerticalLayoutGroup>();
-    }
+    public Test1 t;
 
-    // Update is called once per frame
-    private void FixedUpdate()
+
+}
+
+[Serializable]
+public class Test1
+{
+    public int A;
+
+    public Test1(int a)
     {
-        Debug.Log(_LayoutGroup.preferredWidth);
-        Debug.Log(_LayoutGroup.flexibleWidth);
+        Debug.Log(a);
+        A = a;
     }
 }

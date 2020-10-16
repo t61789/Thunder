@@ -32,9 +32,9 @@ namespace Thunder.Entity.Weapon
             TakeOut();
         }
 
-        protected abstract void PlayerSquat(bool squatting, bool hanging);
+        protected abstract void PlayerSquat(bool squatting);
 
-        protected abstract void PlayerHanging(bool squatting, bool hanging);
+        protected abstract void PlayerHanging(bool hanging);
 
         public abstract void Fire();
 

@@ -26,8 +26,8 @@ namespace Thunder.Game.SpotShooting
                 select t.GetComponent<SpotShootingTarget>()).ToArray();
             PublicEvents.SpotShootingTargetHit.AddListener(TargetHit);
             PublicEvents.GameStart.AddListener(GameStart);
-            _NextTargetCounter = new AutoCounter(this, RiseInterval, false).OnComplete(RiseNextTarget);
-            _TurnCounter = new AutoCounter(this, TurnTime, false).OnComplete(GameEnd);
+            _NextTargetCounter = new AutoCounter(this, RiseInterval).OnComplete(RiseNextTarget).Complete(false);
+            _TurnCounter = new AutoCounter(this, TurnTime).OnComplete(GameEnd).Complete(false);
         }
 
         private void TargetHit(SpotShootingTarget target)

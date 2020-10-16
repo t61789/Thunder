@@ -39,7 +39,9 @@ namespace Thunder.Sys
                 //HandleSpecialData
 
                 info.Id = (int)row["Id"];
-                info.Flag = (ItemFlag)Enum.Parse(flagType, row["Flag"]);
+                string flag = row["Flag"];
+                if(!string.IsNullOrEmpty(flag))
+                    info.Flag = (ItemFlag)Enum.Parse(flagType, flag);
 
                 _ItemDic.Add(info.Id, info);
             }
