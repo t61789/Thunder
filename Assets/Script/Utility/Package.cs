@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Thunder.Sys;
+using Thunder.Tool;
 using UnityEngine;
 using UnityEngine.Assertions;
 using ItemSys = Thunder.Sys.ItemSys;
@@ -9,6 +11,8 @@ namespace Thunder.Utility
 {
     public class Package
     {
+        public event Action<int[]> OnItemChanged; 
+
         private readonly ItemGroup[] _Items;
 
         private readonly CircleQueue<PackageItemInfo> _PackageItemInfoQueue =
@@ -27,6 +31,7 @@ namespace Thunder.Utility
         }
 
         public static Package Ins { private set; get; }
+        public int Size => _Items.Length;
 
         /// <summary>
         ///     向背包中添加一定数量物品
@@ -70,6 +75,7 @@ namespace Thunder.Utility
             } while (curCell != packageItemInfo.FirstCell && count > 0);
 
             update = _UpdateList.ToArray();
+            OnItemChanged?.Invoke(update);
             return count;
         }
 
@@ -128,7 +134,7 @@ namespace Thunder.Utility
             }
 
             update = _UpdateList.ToArray();
-
+            OnItemChanged?.Invoke(update);
             return count;
         }
 
@@ -187,6 +193,7 @@ namespace Thunder.Utility
             }
 
             packageItemInfo.Count += take;
+            OnItemChanged?.Invoke(new []{index});
             return count;
         }
 
@@ -217,6 +224,7 @@ namespace Thunder.Utility
                 _Items[curCell].Count = 0;
                 curCell++;
             }
+            OnItemChanged?.Invoke(Tools.GetIndexArr(0,_Items.Length));
         }
 
         /// <summary>

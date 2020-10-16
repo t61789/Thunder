@@ -72,7 +72,10 @@
     <Compile Include="Assets\Lib\ToLua\Examples\11_Delegate\TestEventListener.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\17_Inherit\TestInherit.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SphereCollider\SetCenter.cs" />
+    <Compile Include="Assets\Script\Entity\StorageBox.cs" />
     <Compile Include="Assets\Script\Entity\Weapon\Unarmed.cs" />
+    <Compile Include="Assets\Script\UI\PackageCellAdapter.cs" />
+    <Compile Include="Assets\Script\UI\StorageBoxPanel.cs" />
     <Compile Include="Assets\Script\Utility\BulletSpread.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\FloatClamp.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\LuaInterface_LuaInjectionStationWrap.cs" />

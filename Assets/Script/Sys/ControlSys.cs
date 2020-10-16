@@ -16,6 +16,8 @@ namespace Thunder.Sys
 
     public class ControlSys : MonoBehaviour, IBaseSys
     {
+        [HideInInspector] public ShieldValue ShieldValue = new ShieldValue();
+
         private readonly Dictionary<string, ControlInfo> _BufferKey =
             new Dictionary<string, ControlInfo>();
 
@@ -25,7 +27,6 @@ namespace Thunder.Sys
         private readonly HashSet<string> _InvalidInputManagerKey =
             new HashSet<string>();
 
-        public float ShieldValue = -1;
         public static ControlSys Ins { get; private set; }
 
         public void OnSceneEnter(string preScene, string curScene)
@@ -167,6 +168,29 @@ namespace Thunder.Sys
             Stay = stay;
             Down = down;
             Up = up;
+        }
+    }
+
+    public class ShieldValue
+    {
+        private float _Value;
+        private readonly HashSet<string> _Regist = new HashSet<string>();
+
+        public void Request(string key)
+        {
+            _Regist.Add(key);
+            _Value++;
+        }
+
+        public void Release(string key)
+        {
+            _Regist.Remove(key);
+            _Value--;
+        }
+
+        public static implicit operator float(ShieldValue s)
+        {
+            return s._Value;
         }
     }
 }

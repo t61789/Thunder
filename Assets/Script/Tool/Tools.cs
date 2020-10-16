@@ -1545,5 +1545,19 @@ namespace Thunder.Tool
             return r1.width + r2.width <= Mathf.Abs(differ.x) && 
                    r1.height + r2.height <= Mathf.Abs(differ.y);
         }
+
+        /// <summary>
+        /// 返回一个在指定区间内单调递增的数组
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static int[] GetIndexArr(int start, int length)
+        {
+            var result = new int[length];
+            for (int i = 0; i < length; i++)
+                result[i] = start + i;
+            return result;
+        }
     }
 }

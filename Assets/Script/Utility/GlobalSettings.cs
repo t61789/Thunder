@@ -24,6 +24,7 @@
         public const string CrossbowArrowAssetPath = "crossbowArrow";
         public const string UnarmedAssetPath = "unarmed";
         public const string MeleeAttackAreaAssetPath = "meleeAttackArea";
+        public const string PackageCellPrefabAssetPath = "packageCell";
 
         public const string ItemInfoTableName = "item_info";
 

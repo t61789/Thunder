@@ -31,6 +31,8 @@ namespace Thunder.Entity
         public FpsCamera FpsCamera { private set; get; }
         public FpsMover FpsMover { private set; get; }
 
+
+
         protected override void Awake()
         {
             base.Awake();
