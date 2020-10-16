@@ -80,4 +80,12 @@ namespace Thunder.Utility
         Stay,
         Switch
     }
+
+    public enum Operator
+    {
+        Add,
+        Sub,
+        Mul,
+        Div
+    }
 }

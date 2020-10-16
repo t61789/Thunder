@@ -41,5 +41,17 @@ namespace Thunder.Utility
         ///     计时上限
         /// </summary>
         public float TimeLimit => _TimeLimit;
+
+        /// <summary>
+        /// 重新计数
+        /// </summary>
+        /// <param name="timeLimit">新的计数时限，若为-1则不做改动</param>
+        public abstract void Recount(float timeLimit=-1);
+
+        /// <summary>
+        /// 根据指定的factor设置当前计数器的计时起点
+        /// </summary>
+        /// <param name="interpolant"></param>
+        public abstract void SetCountValue(float factor);
     }
 }

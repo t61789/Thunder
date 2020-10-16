@@ -2,13 +2,7 @@
 {
     public class Unarmed : BaseWeapon
     {
-        protected override void PlayerSquat(bool squatting, bool hanging)
-        {
-        }
-
-        protected override void PlayerHanging(bool squatting, bool hanging)
-        {
-        }
+        public override float OverHeatFactor => 0;
 
         public override void Fire()
         {

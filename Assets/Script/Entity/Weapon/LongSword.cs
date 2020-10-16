@@ -10,13 +10,7 @@ namespace Thunder.Entity.Weapon
         public Vector3 AttackRange;
         public float Damage = 20;
 
-        protected override void PlayerSquat(bool squatting, bool hanging)
-        {
-        }
-
-        protected override void PlayerHanging(bool squatting, bool hanging)
-        {
-        }
+        public override float OverHeatFactor => 0;
 
         public override void Fire()
         {

@@ -33,18 +33,23 @@ namespace Thunder.Utility
 
         public override bool Completed => _HasExcutedCompleteCallBack;
 
-        /// <summary>
-        ///     重新计时
-        /// </summary>
-        /// <param name="timeLimit">新的计时时限，为-1则不做改变</param>
-        /// <returns></returns>
-        public AutoCounter Recount(float timeLimit = -1)
+        public override void Recount(float timeLimit = -1)
         {
             _TimeLimit = timeLimit == -1 ? _TimeLimit : timeLimit;
             _TimeCountStart = Time.time;
             _HasExcutedCompleteCallBack = false;
             _CountPauseSave = 0;
-            return this;
+        }
+
+        public override void SetCountValue(float factor)
+        {
+            if (_Running)
+                _TimeCountStart = Time.time - factor * TimeLimit;
+            else
+                _CountPauseSave = TimeLimit * factor;
+
+            if (factor <= 0)
+                _HasExcutedCompleteCallBack = false;
         }
 
         public AutoCounter Complete(bool callback=true)

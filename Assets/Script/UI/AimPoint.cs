@@ -1,6 +1,8 @@
 ﻿using DG.Tweening;
+using Thunder.Entity;
 using Thunder.Tool;
 using Thunder.Tool.BuffData;
+using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,87 +10,58 @@ namespace Thunder.UI
 {
     public class AimPoint : BaseUI
     {
-        private const string ProperyName = "_TransparentMag";
         public static AimPoint Ins;
+
+        public float HitFadeTime = 1;
+        public float HitStayTime = 0.8f;
+        public Sprite AimTex;
+        public Sprite HitTex;
+        public Shader HitShader;
+        public float BaseHitSize;
+        public RectTransform HitTrans;
+        public RectTransform AimTrans;
 
         private readonly GameObject[] _Images = new GameObject[8];
         private Material _AimMat;
-
-        [SerializeField] private Vector2 _AimSize;
-
-        private float _AimValue;
-
         private Material _HitMat;
-        private float _HitStayTimeCount;
-        private bool _Hitting;
+        private SimpleCounterQueue _HitCounterQueue;
 
-        [HideInInspector] public BuffData AimSizeScale = 1;
-
-        public Sprite AimTex;
-        public float AimTime = 0.02f;
-        public RectTransform AimTrans;
-        public float HitFadeTime = 1;
-        public Shader HitShader;
-        public Vector2 HitSize;
-        public float HitStayTime = 0.8f;
-        public Sprite HitTex;
-        public float HitTime = 0.3f;
-        public RectTransform HitTrans;
-
-        public float AimValue
-        {
-            get => _AimValue;
-            set => SetAimValue(value);
-        }
-
-        public Vector2 AimSize => _AimSize * AimSizeScale.CurData;
+        private const string PROPERY_NAME = "_TransparentMag";
 
         protected override void Awake()
         {
             base.Awake();
-
+            Ins = this;
+            
             _HitMat = new Material(HitShader);
             _AimMat = new Material(_HitMat);
 
-            _HitMat.SetFloat(ProperyName, 0);
+            _HitMat.SetFloat(PROPERY_NAME, 0);
 
             ResetAll();
 
-            Ins = this;
-        }
-
-        public void Hit()
-        {
-            _HitStayTimeCount = HitStayTime;
-
-            if (!_Hitting)
-            {
-                _Hitting = true;
-                HitTrans.DOKill();
-                HitTrans.DOSizeDelta(new Vector2(HitSize.x, HitSize.x), HitTime);
-            }
-
-            _HitMat.SetFloat(ProperyName, 0);
-
-            _HitMat.DOKill();
-            _HitMat.DOFloat(1, ProperyName, HitTime);
-        }
-
-        public void SetAimValue(float value)
-        {
-            _AimValue = value;
-            var size = Mathf.Lerp(AimSize.x, AimSize.y, value);
-            AimTrans.sizeDelta = new Vector2(size, size);
+            _HitCounterQueue = new SimpleCounterQueue(this,new SimpleCounter(0),
+                new []{HitStayTime,HitFadeTime});
         }
 
         private void FixedUpdate()
         {
-            if (_HitStayTimeCount <= 0) return;
-            _HitStayTimeCount -= Time.fixedDeltaTime;
-            if (_HitStayTimeCount > 0) return;
-            _Hitting = false;
-            HitTrans.DOSizeDelta(new Vector2(HitSize.y, HitSize.y), HitFadeTime);
-            _HitMat.DOFloat(0, ProperyName, HitFadeTime);
+            if (_HitCounterQueue.CurStage == 1)
+                _HitMat.SetFloat(PROPERY_NAME, 1 - _HitCounterQueue.Counter.Interpolant);
+
+            SetAimValue(Player.Ins.WeaponBelt.CurrentWeapon.OverHeatFactor);
+        }
+
+        public void Hit()
+        {
+            _HitMat.SetFloat(PROPERY_NAME, 1);
+            _HitCounterQueue.Play();
+        }
+
+        private void SetAimValue(float value)
+        {
+            var size = BaseHitSize * value;
+            AimTrans.sizeDelta = new Vector2(size, size);
         }
 
         private void ResetAll()
@@ -123,18 +96,12 @@ namespace Thunder.UI
                     anchor = rot * anchor;
                 }
             }
-
-            AimValue = 0;
         }
 
         private void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(Tools.ScreenMiddle, new Vector3(AimSize.x, AimSize.x, 0));
-            Gizmos.DrawWireCube(Tools.ScreenMiddle, new Vector3(AimSize.y, AimSize.y, 0));
             Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(Tools.ScreenMiddle, new Vector3(HitSize.x, HitSize.x, 0));
-            Gizmos.DrawWireCube(Tools.ScreenMiddle, new Vector3(HitSize.y, HitSize.y, 0));
+            Gizmos.DrawWireCube(Tools.ScreenMiddle, new Vector3(BaseHitSize, BaseHitSize, 0));
         }
     }
 }

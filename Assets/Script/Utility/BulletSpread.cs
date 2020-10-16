@@ -1,72 +1,74 @@
 ﻿using System;
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityAudioSource;
 using Thunder.Tool.BuffData;
+using Thunder.Utility.PostProcessing;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Thunder.Utility
 {
     [Serializable]
-    public class BulletSpread
+    public class BulletSpread:IHostDestroyed
     {
-        [SerializeField] private float _CameraRecoil;
-
-        [SerializeField] [Range(0, 1)] private float _CameraRecoilStay;
-
-        private float _ColdDownCount;
-
-        [SerializeField] private Vector2 _SpreadC;
-
-        private float _SpreadCValue;
-
-        [SerializeField] private Vector2 _SpreadX;
-
-        private float _SpreadXValue;
-
-        [SerializeField] private Vector2 _SpreadY;
-
-        private float _SpreadYValue;
-
-        public float CameraRecoilSmoothFactor;
-        public Vector2 COverHeatTime;
-        public float FarSpreadFactor;
-        public BuffData HangingSpreadScale;
-
-        [HideInInspector] public Vector3 OverHeatFactor; // X Y Center
-
-        [HideInInspector] public BuffData SpreadScale = 1;
-
+        public float SquattingSpreadScale;
+        public float DanglingSpreadScale;
         public float SpreadSmoothFactor;
-        public BuffData SquatSpreadScale;
-
         public Vector2 XOverHeatTime;
         public Vector2 YOverHeatTime;
+        public Vector2 COverHeatTime;
+        public float CameraRecoilSmoothFactor;
+        public float FarSpreadFactor;
+        [SerializeField] [Range(0, 1)] private float _CameraRecoilStay;
+        [SerializeField] private float _CameraRecoil;
+        [SerializeField] private Vector2 _SpreadC;
+        [SerializeField] private Vector2 _SpreadX;
+        [SerializeField] private Vector2 _SpreadY;
+
+        private BuffData _DanglingSpreadScale;
+        private BuffData _SquattingSpreadScale;
+        private float _ColdDownCount;
+        private float _SpreadXValue;
+        private float _SpreadYValue;
+        private float _SpreadCValue;
+        [HideInInspector] public Vector3 OverHeatFactor; // X Y Center
+        [HideInInspector] public BuffData SpreadScale = new BuffData(1);
+
+        public void Init()
+        {
+            _DanglingSpreadScale = new BuffData(DanglingSpreadScale);
+            _SquattingSpreadScale = new BuffData(SquattingSpreadScale);
+
+            PublicEvents.PlayerSquat.AddListener(Squat);
+            PublicEvents.PlayerDangling.AddListener(Dangling);
+        }
 
         public Vector2 SpreadX
         {
-            get => _SpreadX * SpreadScale.CurData;
+            get => _SpreadX * SpreadScale;
             set => _SpreadX = value;
         }
 
         public Vector2 SpreadY
         {
-            get => _SpreadY * SpreadScale.CurData;
+            get => _SpreadY * SpreadScale;
             set => _SpreadY = value;
         }
 
         public Vector2 SpreadC
         {
-            get => _SpreadC * SpreadScale.CurData;
+            get => _SpreadC * SpreadScale;
             set => _SpreadC = value;
         }
 
         public float CameraRecoil
         {
-            get => _CameraRecoil * SpreadScale.CurData;
+            get => _CameraRecoil * SpreadScale;
             set => _CameraRecoil = value;
         }
 
         public float CameraRecoilStay
         {
-            get => _CameraRecoilStay * SpreadScale.CurData;
+            get => _CameraRecoilStay * SpreadScale;
             set => _CameraRecoilStay = value;
         }
 
@@ -132,6 +134,31 @@ namespace Thunder.Utility
         public void Reset()
         {
             OverHeatFactor = Vector3.zero;
+            SetSpreadScale();
+        }
+
+        public void HostDestroyed(object host)
+        {
+            SpreadScale.Destroy();
+            _DanglingSpreadScale.Destroy();
+            _SquattingSpreadScale.Destroy();
+        }
+
+        public void Squat(bool down)
+        {
+            if (down)
+                SpreadScale.AddBuff(_SquattingSpreadScale, Operator.Mul);
+            else
+                SpreadScale.RemoveBuff(_SquattingSpreadScale);
+            SetSpreadScale();
+        }
+
+        public void Dangling(bool enter)
+        {
+            if (enter)
+                SpreadScale.AddBuff(_DanglingSpreadScale, Operator.Mul);
+            else
+                SpreadScale.RemoveBuff(_DanglingSpreadScale);
             SetSpreadScale();
         }
 

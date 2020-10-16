@@ -9,11 +9,13 @@ namespace Thunder.Entity.Weapon
     public abstract class BaseWeapon : BaseEntity, IItem
     {
         public static BaseWeapon Ins;
-
-        protected Player _Player;
         public AmmoGroup AmmoGroup;
 
+        protected Player _Player;
+
         public ItemId ItemId { get; set; }
+
+        public abstract float OverHeatFactor { get; }
 
         protected override void Awake()
         {
@@ -23,18 +25,7 @@ namespace Thunder.Entity.Weapon
             _Player = _Trans.parent.parent.parent.GetComponent<Player>();
             Assert.IsNotNull(_Player,
                 $"武器 {name} 安装位置不正确");
-            _Player.OnSquat.AddListener(PlayerSquat);
-            _Player.OnHanging.AddListener(PlayerHanging);
         }
-
-        protected virtual void OnEnable()
-        {
-            TakeOut();
-        }
-
-        protected abstract void PlayerSquat(bool squatting);
-
-        protected abstract void PlayerHanging(bool hanging);
 
         public abstract void Fire();
 
@@ -44,6 +35,10 @@ namespace Thunder.Entity.Weapon
 
         public abstract void PutBack();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>物品的附加参数</returns>
         public abstract object Drop();
 
         public abstract void ReadAdditionalData(object add);

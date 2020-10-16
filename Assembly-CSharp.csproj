@@ -80,7 +80,9 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\BoxCollider\SetCenter.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\GetAxis.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Decorators\Interrupt.cs" />
+    <Compile Include="Assets\Script\Utility\SimpleCounterQueue.cs" />
     <Compile Include="Assets\Script\Utility\FpsMover.cs" />
+    <Compile Include="Assets\Script\Utility\InnerClassManager.cs" />
     <Compile Include="Assets\Script\Utility\LRUCache.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetSqrMagnitude.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_KeyCodeWrap.cs" />

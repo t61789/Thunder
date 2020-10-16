@@ -6,34 +6,13 @@ using Thunder.UI;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 
 namespace Thunder.Entity.Weapon
 {
     public class MachineGun : BaseWeapon
     {
-        private const string SQUAT = "squat";
-        private const string HANG = "hang";
-        private const string RELOAD = "Reload";
-
-        private readonly List<Vector3> _Spreads = new List<Vector3>();
-        private readonly StickyInputDic _StickyInputDic = new StickyInputDic();
-        private AimScopeController _AimScope;
-        private bool _AimScopeBeforeReload;
-        private Animator _Animator;
-
-        [SerializeField] private BulletSpread _BulletSpread;
-
-        private BurstController _Burst;
-
-        private RecoliController _Recoli;
-        private bool _Reloading;
         public float AimScopeFov = 20;
-
-        /// <summary>
-        ///     0为无限连发模式，其余正整数为连射次数
-        /// </summary>
-        public int BurstMode = 0;
-
         public float CameraRecoliDampTime = 0.1f;
         public float Damage = 20;
         public string DrawAnimationName;
@@ -42,7 +21,26 @@ namespace Thunder.Entity.Weapon
         public Sprite[] MuzzleFireSprites;
         public bool Safety;
         public bool ScopeAllowed = false;
-        public Vector3 OverHeatFactor => _BulletSpread.OverHeatFactor;
+        /// <summary>
+        ///     0为无限连发模式，其余正整数为连射次数
+        /// </summary>
+        public int BurstMode = 0;
+        [SerializeField] private BulletSpread _BulletSpread;
+
+        private readonly List<Vector3> _Spreads = new List<Vector3>();
+        private readonly StickyInputDic _StickyInputDic = new StickyInputDic();
+        private AimScopeController _AimScope;
+        private bool _AimScopeBeforeReload;
+        private Animator _Animator;
+        private bool _Reloading;
+        private BurstController _Burst;
+        private RecoliController _Recoli;
+        private InnerClassManager _InnerClassManager;
+
+        private const string RELOAD = "Reload";
+
+        public override float OverHeatFactor => _BulletSpread.OverHeatFactor.Average();
+        public float BulletSpreadScale => _BulletSpread.SpreadScale;
 
         protected override void Awake()
         {
@@ -54,13 +52,12 @@ namespace Thunder.Entity.Weapon
             Assert.IsNotNull(_Player,
                 $"枪械 {name} 安装位置不正确");
 
-            PublicEvents.PlayerSquat.AddListener(PlayerSquat);
-            PublicEvents.PlayerDangling.AddListener(PlayerHanging);
-
             _StickyInputDic.AddBool(RELOAD, 0.7f);
             _Burst = new BurstController(BurstMode, FireInterval);
             _Recoli = new RecoliController(CameraRecoliDampTime);
             _AimScope = new AimScopeController(_Player.FpsCamera.SensitiveScale, AimScopeFov);
+
+            _InnerClassManager = new InnerClassManager(this);
         }
 
         private void Update()
@@ -166,40 +163,11 @@ namespace Thunder.Entity.Weapon
             _Recoli.GetRecoli(out var addition, out var stay);
             PublicEvents.RecoliFloat?.Invoke(addition);
             if (stay != Vector2.zero) PublicEvents.RecoliFixed?.Invoke(stay);
-
-            AimPoint.Ins.SetAimValue(OverHeatFactor.Average());
         }
 
-        protected override void PlayerSquat(bool squating)
+        private void OnDestroy()
         {
-            if (squating)
-            {
-                AimPoint.Ins.AimSizeScale.AddBuff(_BulletSpread.SquatSpreadScale, SQUAT, BuffData.Operator.Mul, 0);
-                _BulletSpread.SpreadScale.AddBuff(_BulletSpread.SquatSpreadScale, SQUAT, BuffData.Operator.Mul, 0);
-                _BulletSpread.SetSpreadScale();
-            }
-            else
-            {
-                AimPoint.Ins.AimSizeScale.RemoveBuff(SQUAT);
-                _BulletSpread.SpreadScale.RemoveBuff(SQUAT);
-                _BulletSpread.SetSpreadScale();
-            }
-        }
-
-        protected override void PlayerHanging(bool hanging)
-        {
-            if (hanging)
-            {
-                AimPoint.Ins.AimSizeScale.AddBuff(_BulletSpread.HangingSpreadScale, HANG, BuffData.Operator.Mul, 0);
-                _BulletSpread.SpreadScale.AddBuff(_BulletSpread.HangingSpreadScale, HANG, BuffData.Operator.Mul, 0);
-                _BulletSpread.SetSpreadScale();
-            }
-            else
-            {
-                AimPoint.Ins.AimSizeScale.RemoveBuff(HANG);
-                _BulletSpread.SpreadScale.RemoveBuff(HANG);
-                _BulletSpread.SetSpreadScale();
-            }
+            _InnerClassManager.InvokeDestroyed();
         }
 
         private void OnDrawGizmos()
@@ -220,7 +188,7 @@ namespace Thunder.Entity.Weapon
         public BurstController(int burstMode, float fireInterval)
         {
             BurstMode = burstMode;
-            _FireCounter = (SimpleCounter) new SimpleCounter(fireInterval).Complete();
+            _FireCounter = new SimpleCounter(fireInterval).Complete();
         }
 
         public float FireInterval
@@ -328,10 +296,9 @@ namespace Thunder.Entity.Weapon
         }
     }
 
-    public class AimScopeController
+    public class AimScopeController:IHostDestroyed
     {
         private const string AIM_POINT_UI_NAME = "aimPoint";
-        private const string BUFF_NAME = "aimScope";
         private readonly BuffData _AimScopeSensitiveScale;
         private readonly float _BaseFOV;
 
@@ -346,7 +313,7 @@ namespace Thunder.Entity.Weapon
             _MainCamera = Camera.main;
             _BaseFOV = _MainCamera.fieldOfView;
             _EnableFOV = fov;
-            _AimScopeSensitiveScale = _EnableFOV / _BaseFOV;
+            _AimScopeSensitiveScale = new BuffData(_EnableFOV / _BaseFOV);
         }
 
         public bool Enable { private set; get; }
@@ -366,7 +333,7 @@ namespace Thunder.Entity.Weapon
                 _MainCamera.fieldOfView = _EnableFOV;
                 PostProcessingController.Instance.AimScope.Enable = true;
                 UISys.Ins.CloseUI(AIM_POINT_UI_NAME);
-                _PlayerSensitive.AddBuff(_AimScopeSensitiveScale, BUFF_NAME, BuffData.Operator.Mul, 0);
+                _PlayerSensitive.AddBuff(_AimScopeSensitiveScale, Operator.Mul, 0);
                 PostProcessingController.Instance.DepthOfField.Enable = true;
             }
             else
@@ -374,11 +341,16 @@ namespace Thunder.Entity.Weapon
                 _MainCamera.fieldOfView = _BaseFOV;
                 PostProcessingController.Instance.AimScope.Enable = false;
                 UISys.Ins.OpenUI(AIM_POINT_UI_NAME);
-                _PlayerSensitive.RemoveBuff(BUFF_NAME);
+                _PlayerSensitive.RemoveBuff(_AimScopeSensitiveScale);
                 PostProcessingController.Instance.DepthOfField.Enable = false;
             }
 
             Enable = !Enable;
+        }
+
+        public void HostDestroyed(object host)
+        {
+            _AimScopeSensitiveScale.Destroy();
         }
     }
 }

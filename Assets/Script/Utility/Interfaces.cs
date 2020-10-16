@@ -17,4 +17,14 @@ namespace Thunder.Utility
     {
         void Interactive(ControlInfo info);
     }
+
+    public interface IHostDestroyed
+    {
+        void HostDestroyed(object host);
+    }
+
+    public interface IHostAwaked
+    {
+        void HostAwaked(object host);
+    }
 }

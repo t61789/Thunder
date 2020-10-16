@@ -19,6 +19,8 @@ namespace Thunder.Entity.Weapon
         public float Damage;
         public Vector3 LaunchForce;
 
+        public override float OverHeatFactor => 0;
+
         protected override void Awake()
         {
             base.Awake();
@@ -39,14 +41,6 @@ namespace Thunder.Entity.Weapon
         {
             _StickyInputDic.FixedUpdate();
             _Animator.SetBool(RELOAD, _StickyInputDic.GetBool(RELOAD));
-        }
-
-        protected override void PlayerSquat(bool squatting, bool hanging)
-        {
-        }
-
-        protected override void PlayerHanging(bool squatting, bool hanging)
-        {
         }
 
         public override void Fire()
