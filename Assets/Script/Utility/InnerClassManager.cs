@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Thunder.Tool;
-using UnityEditor.Profiling;
 
 namespace Thunder.Utility
 {

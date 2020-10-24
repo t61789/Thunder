@@ -7,6 +7,7 @@ namespace Thunder.Utility
 {
     public class FpsMover : MonoBehaviour
     {
+        public bool Moveable = true;
         public float GroundRayStartOffset;
         public float JumpForce;
         public float MoveDampFactor;
@@ -54,6 +55,7 @@ namespace Thunder.Utility
 
         private void Move(ControlInfo rawctrl, Vector3 groundNormal)
         {
+            if (!Moveable) return;
             _Moving.Check(rawctrl.Axis==Vector3.zero);
             _Velocity = Vector3.Lerp(_Velocity, rawctrl.Axis, MoveDampFactor);
 

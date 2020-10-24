@@ -119,15 +119,14 @@ namespace Thunder.Entity.Weapon
             _AimScopeBeforeReload = _Reloading = false;
         }
 
-        public override object Drop()
+        public override ItemAddData Drop()
         {
-            return AmmoGroup.Magzine;
+            return new ItemAddData(AmmoGroup.Magzine);
         }
 
-        public override void ReadAdditionalData(object add)
+        public override void ReadAdditionalData(ItemAddData add)
         {
-            if (!add.TypeCheck(out int data)) return;
-            AmmoGroup.Magzine = data;
+            add.TryGet(out AmmoGroup.Magzine);
         }
 
         public override void Fire()

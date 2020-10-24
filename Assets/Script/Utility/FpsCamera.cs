@@ -41,7 +41,7 @@ namespace Thunder.Utility
         private bool _Moving;
         private bool _Dangling;
         private bool _Squatting;
-        [HideInInspector] public BuffData SensitiveScale = 1;
+        [HideInInspector] public BuffData SensitiveScale = new BuffData(1);
 
         private const float PI_3D2 = 3 * Mathf.PI / 2;
         private const float PI_7D2 = 7 * Mathf.PI / 2;
@@ -49,7 +49,7 @@ namespace Thunder.Utility
 
         public Vector2 Sensitive
         {
-            get => _Sensitive * SensitiveScale.CurData;
+            get => _Sensitive * SensitiveScale;
             set => _Sensitive = value;
         }
 

@@ -73,6 +73,8 @@ namespace Thunder.Sys
                 where field.FieldType.GetInterface("IBaseSys") != null
                 select (IBaseSys) field.GetValue(this)).ToArray();
 
+            RandomRewardGenerator.ConstractDic(_DataBaseSys["reward"]);
+
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnEnterScene;
             SceneManager.sceneUnloaded += OnExitScene;

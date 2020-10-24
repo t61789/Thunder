@@ -1,4 +1,5 @@
-﻿using Thunder.Tool.ObjectPool;
+﻿using Thunder.Sys;
+using Thunder.Tool.ObjectPool;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -40,12 +41,12 @@ namespace Thunder.Entity.Weapon
         {
         }
 
-        public override object Drop()
+        public override ItemAddData Drop()
         {
-            return null;
+            return default;
         }
 
-        public override void ReadAdditionalData(object add)
+        public override void ReadAdditionalData(ItemAddData add)
         {
         }
     }

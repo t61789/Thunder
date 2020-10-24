@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
+using Newtonsoft.Json;
 using Thunder.Utility;
+using Enum = System.Enum;
 
 namespace Thunder.Sys
 {
@@ -40,7 +43,7 @@ namespace Thunder.Sys
 
                 info.Id = (int)row["Id"];
                 string flag = row["Flag"];
-                if(!string.IsNullOrEmpty(flag))
+                if (!string.IsNullOrEmpty(flag))
                     info.Flag = (ItemFlag)Enum.Parse(flagType, flag);
 
                 _ItemDic.Add(info.Id, info);
@@ -73,12 +76,12 @@ namespace Thunder.Sys
     public struct ItemId : IComparable<ItemId>
     {
         public int Id;
-        public object Add;
+        public ItemAddData Add;//todo 附加数据
 
         public ItemId(int id, object add = null)
         {
             Id = id;
-            Add = add;
+            Add = new ItemAddData(add);
         }
 
         public static implicit operator int(ItemId id)
@@ -109,10 +112,56 @@ namespace Thunder.Sys
         }
     }
 
+    public readonly struct ItemAddData
+    {
+        private readonly object _Add;
+        private static readonly LRUCache<string, object> _JsonCache =
+            new LRUCache<string, object>(40);
+
+        public ItemAddData(object additionData)
+        {
+            _Add = additionData;
+        }
+
+        /// <summary>
+        /// 获取附加值，并转换为目标对象。若转换失败则尝试将其转为字符串并使用Json进行反序列化<br/><br/>
+        /// note: 反序列化时，对于引用类型的附加值，每次都会进行反序列化获得新的对象。
+        /// 而值类型的附加值则可以使用cache来提高速度，所以请尽量使用值类型来定义附加值。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cast"></param>
+        /// <returns></returns>
+        public bool TryGet<T>(out T cast)
+        {
+            cast = default;
+            if (_Add == null) return false;
+
+            if (!(_Add is T))
+            {
+                if (!(_Add is string str)) return false;
+                var valueType = cast is ValueType;
+                if (valueType && _JsonCache.TryGet(str, out var obj))
+                {
+                    cast = (T)obj;
+                    return true;
+                }
+                cast = JsonConvert.DeserializeObject<T>(str);
+                if (valueType) _JsonCache.Put(str, cast);
+                return true;
+            }
+
+            cast = (T)_Add;
+            return true;
+        }
+    }
+
     public struct ItemGroup : IComparable<ItemGroup>
     {
         public ItemId Id;
         public int Count;
+
+        private static readonly LRUCache<string, ItemGroup> _ItemGroupCache =
+            new LRUCache<string, ItemGroup>(20);
 
         public ItemGroup(ItemId id, int count)
         {
@@ -150,8 +199,36 @@ namespace Thunder.Sys
         public int CompareTo(ItemGroup other)
         {
             var idComparison = Id.CompareTo(other.Id);
-            if (idComparison != 0) return idComparison;
-            return Count.CompareTo(other.Count);
+            return idComparison != 0 ? idComparison : Count.CompareTo(other.Count);
+        }
+
+        /// <summary>
+        /// 格式：[(int) ItemId | (int) ItemNum | (string) AdditionDataByJson]
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="itemGroup"></param>
+        /// <returns></returns>
+        public static bool TryParse(string str, out ItemGroup itemGroup)
+        {
+            if (_ItemGroupCache.TryGet(str, out itemGroup)) return true;
+
+            var strs = str.Split('|');
+            if (strs.Length != 3) return false;
+
+            if (!int.TryParse(strs[0], out int id)) return false;
+
+            string add = strs[2];
+            if (string.IsNullOrEmpty(add)) add = null;
+
+            var itemId = new ItemId(id, add);
+            if (!int.TryParse(strs[1], out int count)) return false;
+
+            itemGroup.Id = itemId;
+            itemGroup.Count = count;
+
+            _ItemGroupCache.Put(str,itemGroup);
+
+            return true;
         }
     }
 

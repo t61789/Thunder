@@ -1511,17 +1511,19 @@ namespace Thunder.Tool
         /// <returns></returns>
         public static bool TypeCheck<T>(this object obj,out T cast)
         {
+            cast = default;
             if (!(obj is T))
             {
                 if (obj is string str)
                 {
-                    if (_JsonCache.TryGet(str,out obj))
+                    if (cast is ValueType && _JsonCache.TryGet(str,out obj))
                     {
                         cast = (T) obj;
                         return true;
                     }
                     cast = JsonConvert.DeserializeObject<T>(str);
-                    _JsonCache.Put(str,cast);
+                    if(cast is ValueType)
+                        _JsonCache.Put(str,cast);
                     return true;
                 }
 

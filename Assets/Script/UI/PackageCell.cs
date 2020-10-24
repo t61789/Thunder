@@ -1,5 +1,6 @@
 ﻿using Thunder.Sys;
 using Thunder.UI;
+using Thunder.Utility;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,10 +9,12 @@ using UnityEngine.UI;
 namespace Thunder.Entity
 {
     public class PackageCell:BaseUI,IBeginDragHandler,IPointerClickHandler,IPointerUpHandler,ICanvasRaycastFilter
-    {
+    {// todo 点击菜单栏
         public bool ShowCount=true;
 
+        private Package _Package;
         private RawImage _RawImage;
+        private int _PackageIndex;
         private TextMeshProUGUI _CountText;
         private RectTransform _FloatContainer;
         private bool _Floatting;
@@ -32,11 +35,14 @@ namespace Thunder.Entity
             RectTrans.position = Input.mousePosition + _FollowOffset;
         }
 
-        public virtual void Init(int packageIndex,ItemGroup itemGroup,RectTransform floatUiContainer)
+        public virtual void Init(Package package,int packageIndex,RectTransform floatUiContainer)
         {
             _FloatContainer = floatUiContainer;
-            _RawImage.texture = BundleSys.Ins.GetAsset<Texture>(ItemSys.Ins[itemGroup.Id].PackageCellTexturePath);
-            _CountText.text = ShowCount ? itemGroup.Count.ToString():string.Empty;
+            var group = package.GetCell(packageIndex);
+            _PackageIndex = packageIndex;
+            _Package = package;
+            _RawImage.texture = BundleSys.Ins.GetAsset<Texture>(ItemSys.Ins[group.Id].PackageCellTexturePath);
+            _CountText.text = ShowCount ? group.Count.ToString():string.Empty;
             PackageIndex = packageIndex;
             PackageIndex = -1;
             _FloatContainer = null;

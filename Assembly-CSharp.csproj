@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{73E538E0-7869-3587-4F76-9F420634E53E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -62,6 +61,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\Instantiate.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CircleCollider2D\GetRadius.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_UI_MaskableGraphicWrap.cs" />
+    <Compile Include="Assets\Test\Test1.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\GetMute.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\System_StringWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Composites\Sequence.cs" />
@@ -72,10 +72,7 @@
     <Compile Include="Assets\Lib\ToLua\Examples\11_Delegate\TestEventListener.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\17_Inherit\TestInherit.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SphereCollider\SetCenter.cs" />
-    <Compile Include="Assets\Script\Entity\StorageBox.cs" />
     <Compile Include="Assets\Script\Entity\Weapon\Unarmed.cs" />
-    <Compile Include="Assets\Script\UI\PackageCellAdapter.cs" />
-    <Compile Include="Assets\Script\UI\StorageBoxPanel.cs" />
     <Compile Include="Assets\Script\Utility\BulletSpread.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\FloatClamp.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\LuaInterface_LuaInjectionStationWrap.cs" />
@@ -83,13 +80,11 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\BoxCollider\SetCenter.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\GetAxis.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Decorators\Interrupt.cs" />
-    <Compile Include="Assets\Script\Utility\SimpleCounterQueue.cs" />
-    <Compile Include="Assets\Script\Utility\FpsMover.cs" />
-    <Compile Include="Assets\Script\Utility\InnerClassManager.cs" />
     <Compile Include="Assets\Script\Utility\LRUCache.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetSqrMagnitude.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_KeyCodeWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Core\LuaUnityLibs.cs" />
+    <Compile Include="Assets\Script\Utility\SimpleCounterQueue.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\IsParameterControlledByCurve.cs" />
     <Compile Include="Assets\Lib\ToLua\Core\LuaDLL.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Decorators\TaskGuard.cs" />
@@ -261,6 +256,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CircleCollider2D\SetCenter.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\SimpleChannel.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\Lerp.cs" />
+    <Compile Include="Assets\Script\UI\StorageBoxPanel.cs" />
     <Compile Include="Assets\Script\Utility\ControllerInput.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\RotateAround.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\FastBitConverter.cs" />
@@ -434,7 +430,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedObjectList.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\GetKey.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Timeline\IsPlaying.cs" />
-    <Compile Include="Assets\Script\Utility\SwitchTrigger.cs" />
     <Compile Include="Assets\Test\GenerateAlpha.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\GetFloatParameter.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\NetSocket.cs" />
@@ -452,6 +447,7 @@
     <Compile Include="Assets\Script\Entity\Weapon\LongSword.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\SetPlaybackSpeed.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_CapsuleColliderWrap.cs" />
+    <Compile Include="Assets\Script\Utility\RandomReward.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\ActiveSelf.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Actions\Reflection\GetPropertyValue.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Timeline\IsPaused.cs" />
@@ -461,7 +457,7 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_RenderTextureWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\GetAcceleration.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_AsyncOperationWrap.cs" />
-    <Compile Include="Assets\Test.cs" />
+    <Compile Include="Assets\Test\Test.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedMaterial.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\GetMass.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\14_Out\TestOutArg.cs" />
@@ -490,6 +486,7 @@
     <Compile Include="Assets\Lib\ToLua\Examples\09_Dictionary\System_Collections_Generic_KeyValuePair_int_TestAccountWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\SetCullingMask.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\GetDestination.cs" />
+    <Compile Include="Assets\Script\Utility\FpsMover.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\SetTime.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Debug\LogFormat.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetIgnoreListenerPause.cs" />
@@ -535,7 +532,7 @@
     <Compile Include="Assets\Script\Entity\Controller.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\SetSpotAngle.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\GetButton.cs" />
-    <Compile Include="Assets\Script\Tool\CompareVec.cs" />
+    <Compile Include="Assets\Script\Tool\VectorComparer.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetPan.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\Lerp.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasEnteredTrigger.cs" />
@@ -545,6 +542,7 @@
     <Compile Include="Assets\Script\Entity\BaseEntity.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_TransformWrap.cs" />
     <Compile Include="Assets\Script\Utility\SelfDestroyPartical.cs" />
+    <Compile Include="Assets\Script\Entity\StorageBox.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\GetEulerAngles.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\SetConstraints.cs" />
     <Compile Include="Assets\Lib\ToLua\Examples\TestInjection\ToLuaInjectionTest.cs" />
@@ -596,17 +594,19 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedObjectList.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Composites\Parallel.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Quaternion\Slerp.cs" />
+    <Compile Include="Assets\Script\UI\PackageCellAdapter.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\GetSpeed.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\RandomInt.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_RenderSettingsWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CharacterController\GetRadius.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\SetUpVector.cs" />
+    <Compile Include="Assets\Script\Utility\FpsCamera.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector2\GetUpVector.cs" />
     <Compile Include="Assets\Script\Utility\PostProcessing\PostProcessingController.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\SetStartLifetime.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\String\Format.cs" />
-    <Compile Include="Assets\Script\Sys\CampSys.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\SetIsStopped.cs" />
+    <Compile Include="Assets\Script\Sys\CampSys.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_AnimatorStateInfoWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\IsKinematic.cs" />
     <Compile Include="Assets\Script\Sys\ControlSys.cs" />
@@ -769,6 +769,7 @@
     <Compile Include="Assets\Lib\ToLua\Core\LuaException.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_ComponentWrap.cs" />
     <Compile Include="Assets\Script\Utility\PostProcessing\MotionBlur.cs" />
+    <Compile Include="Assets\Script\Utility\SwitchTrigger.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\LerpAngle.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CharacterController\SetSlopeLimit.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\IsMouseDown.cs" />
@@ -888,9 +889,10 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\Find.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\SetBool.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedVector2Int.cs" />
+    <Compile Include="Assets\Script\Utility\InnerClassManager.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CharacterController\GetCenter.cs" />
-    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\MoveTowards.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Renderer\SetMaterial.cs" />
+    <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\MoveTowards.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\BoxCollider\GetSize.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasExitedTrigger2D.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_ParticleSystemWrap.cs" />
@@ -926,59 +928,57 @@
     <Compile Include="Assets\Script\UI\PanelUI.cs" />
     <Compile Include="Assets\Lib\ToLua\Reflection\LuaField.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\System_NullObjectWrap.cs" />
-    <Compile Include="Assets\Script\Utility\FpsCamera.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
-    <None Include="Assets\Bundle\Shader\MotionBlurShader.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
-    <None Include="Assets\Bundle\Shader\LDepthOfFieldShader.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
-    <None Include="Assets\Lib\DOTween\DOTween.dll" />
-    <None Include="Assets\Lib\ToLua\Injection\InjectionBlackList.txt" />
-    <None Include="Assets\Bundle\Shader\SsaoShader.shader" />
-    <None Include="Assets\Bundle\Shader\BloomShader.shader" />
-    <None Include="Assets\Bundle\Shader\RebuildWorldPosShader.shader" />
-    <None Include="Assets\Bundle\Shader\PanelShader.shader" />
-    <None Include="Assets\Bundle\Shader\SMotionBlurShader.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
-    <None Include="Assets\Bundle\Shader\AimScopeShader.shader" />
-    <None Include="Assets\Lib\DOTween\readme.txt" />
-    <None Include="Assets\Lib\Behavior Designer\Runtime\BehaviorDesigner.Runtime.dll" />
-    <None Include="Assets\Bundle\Shader\RingShader.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
-    <None Include="Assets\Bundle\Shader\HideShader.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
-    <None Include="Assets\link.xml" />
-    <None Include="Assets\Lib\ToLua\readme.txt" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
-    <None Include="Assets\Bundle\Shader\SpriteShader.shader" />
-    <None Include="Assets\Bundle\Shader\DynamicUI.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
-    <None Include="Assets\Bundle\Shader\DepthOfFieldShader.shader" />
-    <None Include="Assets\TestLib.dll" />
-    <None Include="Assets\Lib\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
-    <None Include="Assets\Bundle\Shader\DepthTextureShader.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
-    <None Include="Assets\Bundle\Shader\AnimeShader.shader" />
-    <None Include="Assets\Lib\ToLua\Injection\LuaInjectionSkipPaths.txt" />
-    <None Include="Assets\Bundle\Lua\Normal\PickupableWeapon.txt" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
-    <None Include="Assets\Bundle\Shader\GaussBlurShader.shader" />
-    <None Include="Assets\Bundle\Shader\AimPointShader.shader" />
-    <None Include="Assets\Lib\DynamicBone\ReadMe.txt" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
-    <None Include="Assets\Bundle\Shader\EdgeDetectShader.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
-    <None Include="Assets\Bundle\Shader\BSCShader.shader" />
-    <None Include="Assets\Lib\DOTween\DOTween.XML" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
-    <None Include="Assets\Bundle\Shader\HDepthOfFieldShader.shader" />
-    <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
+     <None Include="Assets\Bundle\Shader\MotionBlurShader.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
+     <None Include="Assets\Bundle\Shader\LDepthOfFieldShader.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
+     <None Include="Assets\Lib\DOTween\DOTween.dll" />
+     <None Include="Assets\Lib\ToLua\Injection\InjectionBlackList.txt" />
+     <None Include="Assets\Bundle\Shader\SsaoShader.shader" />
+     <None Include="Assets\Bundle\Shader\BloomShader.shader" />
+     <None Include="Assets\Bundle\Shader\RebuildWorldPosShader.shader" />
+     <None Include="Assets\Bundle\Shader\PanelShader.shader" />
+     <None Include="Assets\Bundle\Shader\SMotionBlurShader.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
+     <None Include="Assets\Bundle\Shader\AimScopeShader.shader" />
+     <None Include="Assets\Lib\DOTween\readme.txt" />
+     <None Include="Assets\Lib\Behavior Designer\Runtime\BehaviorDesigner.Runtime.dll" />
+     <None Include="Assets\Bundle\Shader\RingShader.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+     <None Include="Assets\Bundle\Shader\HideShader.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
+     <None Include="Assets\link.xml" />
+     <None Include="Assets\Lib\ToLua\readme.txt" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
+     <None Include="Assets\Bundle\Shader\SpriteShader.shader" />
+     <None Include="Assets\Bundle\Shader\DynamicUI.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+     <None Include="Assets\Bundle\Shader\DepthOfFieldShader.shader" />
+     <None Include="Assets\Lib\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
+     <None Include="Assets\Bundle\Shader\DepthTextureShader.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+     <None Include="Assets\Bundle\Shader\AnimeShader.shader" />
+     <None Include="Assets\Lib\ToLua\Injection\LuaInjectionSkipPaths.txt" />
+     <None Include="Assets\Bundle\Lua\Normal\PickupableWeapon.txt" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
+     <None Include="Assets\Bundle\Shader\GaussBlurShader.shader" />
+     <None Include="Assets\Bundle\Shader\AimPointShader.shader" />
+     <None Include="Assets\Lib\DynamicBone\ReadMe.txt" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
+     <None Include="Assets\Bundle\Shader\EdgeDetectShader.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+     <None Include="Assets\Bundle\Shader\BSCShader.shader" />
+     <None Include="Assets\Lib\DOTween\DOTween.XML" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
+     <None Include="Assets\Bundle\Shader\HDepthOfFieldShader.shader" />
+     <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
     <Reference Include="UnityEngine">
       <HintPath>E:\Programs\Unity\2020.2.0a16\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
@@ -1194,9 +1194,6 @@
     </Reference>
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>E:\Programs\Unity\2020.2.0a16\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
-    </Reference>
-    <Reference Include="TestLib">
-      <HintPath>Assets\TestLib.dll</HintPath>
     </Reference>
     <Reference Include="BehaviorDesigner.Runtime">
       <HintPath>Assets\Lib\Behavior Designer\Runtime\BehaviorDesigner.Runtime.dll</HintPath>

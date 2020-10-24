@@ -39,9 +39,9 @@ namespace Thunder.Entity.Weapon
         /// 
         /// </summary>
         /// <returns>物品的附加参数</returns>
-        public abstract object Drop();
+        public abstract ItemAddData Drop();
 
-        public abstract void ReadAdditionalData(object add);
+        public abstract void ReadAdditionalData(ItemAddData add);
     }
 
     [Serializable]

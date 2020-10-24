@@ -81,14 +81,14 @@ namespace Thunder.Entity.Weapon
         {
         }
 
-        public override object Drop()
+        public override ItemAddData Drop()
         {
-            return AmmoGroup.Magzine;
+            return new ItemAddData(AmmoGroup.Magzine);
         }
 
-        public override void ReadAdditionalData(object add)
+        public override void ReadAdditionalData(ItemAddData add)
         {
-            if (!add.TypeCheck(out int data)) return;
+            if (!add.TryGet(out int data)) return;
             if (data != 1 || AmmoGroup.Magzine != 0) return;
             _Arrow = ObjectPool.Ins.Alloc<CrossbowArrow>(GlobalSettings.CrossbowArrowAssetPath);
             _Arrow.Install(_Trans, ArrowPos);

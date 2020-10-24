@@ -52,7 +52,7 @@ namespace Thunder.UI
                 }
                 if (item.Id == 0) continue;
                 var cell = ObjectPool.Ins.Alloc<PackageCell>(GlobalSettings.PackageCellPrefabAssetPath);
-                cell.Init(index, item, _FloatContainer);//todo float ui container
+                cell.Init(_Package,index, _FloatContainer);
                 cell.RectTrans.SetParent(_CellContainers[index]);
                 _PackageCells[index] = cell;
             }

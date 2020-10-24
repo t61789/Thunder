@@ -1,4 +1,6 @@
-﻿namespace Thunder.Entity.Weapon
+﻿using Thunder.Sys;
+
+namespace Thunder.Entity.Weapon
 {
     public class Unarmed : BaseWeapon
     {
@@ -20,12 +22,12 @@
         {
         }
 
-        public override object Drop()
+        public override ItemAddData Drop()
         {
-            return null;
+            return new ItemAddData(AmmoGroup.Magzine);
         }
 
-        public override void ReadAdditionalData(object add)
+        public override void ReadAdditionalData(ItemAddData add)
         {
             
         }
