@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Thunder.Tool.ObjectPool;
+using Thunder.Tool;
 using Thunder.UI;
 using Thunder.Utility;
 using UnityEngine;
@@ -102,7 +102,7 @@ namespace Thunder.Sys
             if (panel != null)
                 _HideStableUI.Remove(panel);
 
-            panel = panel ?? ObjectPool.Ins.Alloc<PanelUI>(null, DefaultUIBundle, param.UiName);
+            panel = panel ?? ObjectPool.Ins.Alloc<PanelUI>(new AssetId(DefaultUIBundle,param.UiName));
 
             panel.transform.SetParent(_UIContainer);
             panel.transform.SetSiblingIndex(param.SiblingIndex);

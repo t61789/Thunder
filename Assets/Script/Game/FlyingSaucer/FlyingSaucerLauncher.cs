@@ -1,7 +1,7 @@
 ﻿using System;
 using Thunder.Entity;
 using Thunder.Tool;
-using Thunder.Tool.ObjectPool;
+
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Events;
@@ -92,11 +92,9 @@ namespace Thunder.Game.FlyingSaucer
             _Launcher.position = _Trans.position + force.normalized;
             _Launcher.rotation = Quaternion.LookRotation(force);
 
-            ObjectPool.Ins.Alloc<FlyingSaucer>(null, null, "flyingSaucer", x =>
-            {
-                x.transform.position = _Launcher.position;
-                x.Launch(force);
-            });
+            var saucer = ObjectPool.Ins.Alloc<FlyingSaucer>("flyingSaucer");
+            saucer.transform.position = _Launcher.position;
+            saucer.Launch(force);
         }
 
         private void CircleLaunch()
@@ -110,11 +108,9 @@ namespace Thunder.Game.FlyingSaucer
             _LaunchCounter.Recount();
             Vector3 force = _Trans.localToWorldMatrix * dir.normalized * LaunchSpeed;
 
-            ObjectPool.Ins.Alloc<FlyingSaucer>(null, null, "flyingSaucer", x =>
-            {
-                x.transform.position = _Launcher.position;
-                x.Launch(force);
-            });
+            var saucer = ObjectPool.Ins.Alloc<FlyingSaucer>("flyingSaucer");
+            saucer.transform.position = _Launcher.position;
+            saucer.Launch(force);
         }
     }
 }

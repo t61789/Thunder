@@ -4,6 +4,7 @@ using System.Text;
 using Thunder.Entity.Weapon;
 using Thunder.Sys;
 using Thunder.Tool;
+
 using UnityEngine;
 
 namespace Thunder.Utility
@@ -244,7 +245,7 @@ namespace Thunder.Utility
 
         private BaseWeapon CreateWeapon(ItemId id)
         {
-            var weapon =  BundleSys.Ins.GetAsset<GameObject>(_WeaponInfoDic[id].PrefabPath)
+            var weapon =  ObjectPool.Ins.GetPrefab(_WeaponInfoDic[id].PrefabPath)
                 .GetInstantiate()
                 .GetComponent<BaseWeapon>();
             weapon.ReadAdditionalData(id.Add);

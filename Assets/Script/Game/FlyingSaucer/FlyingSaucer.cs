@@ -1,6 +1,6 @@
 ﻿using Thunder.Entity;
 using Thunder.Sys;
-using Thunder.Tool.ObjectPool;
+using Thunder.Tool;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -32,8 +32,8 @@ namespace Thunder.Game.FlyingSaucer
         public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
         {
             _Rb.AddForceAtPosition(hitDir.normalized * damage * ForceScale, hitPos, ForceMode.Impulse);
-            ObjectPool.Ins.Alloc<SelfDestroyPartical>(null, null, "hitParticle",
-                x => x.transform.position = _Trans.position);
+            ObjectPool.Ins.Alloc<SelfDestroyPartical>("hitParticle")
+                .transform.position = _Trans.position;
             ObjectPool.Ins.Recycle(this);
             PublicEvents.FlyingSaucerHit?.Invoke();
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Thunder.Sys;
-using Thunder.Tool.ObjectPool;
+using Thunder.Tool;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.UI;
@@ -145,9 +145,10 @@ namespace Thunder.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                var rectTransform = ObjectPool.Ins
-                    .Alloc(null, UISys.DefaultUIBundle, parameters.elementName, inits[i], elementContainer)
-                    .GetComponent<RectTransform>();
+                var item = ObjectPool.Ins.Alloc<T>(new AssetId(UISys.DefaultUIBundle, parameters.elementName));
+                inits[i]?.Invoke(item);
+                var rectTransform = item.GetComponent<RectTransform>();
+                rectTransform.SetParent(elementContainer);
 
                 elements.Add(rectTransform.GetComponent<BaseUI>());
             }

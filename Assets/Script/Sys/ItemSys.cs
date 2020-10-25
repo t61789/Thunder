@@ -76,7 +76,7 @@ namespace Thunder.Sys
     public struct ItemId : IComparable<ItemId>
     {
         public int Id;
-        public ItemAddData Add;//todo 附加数据
+        public ItemAddData Add;
 
         public ItemId(int id, object add = null)
         {
@@ -146,7 +146,7 @@ namespace Thunder.Sys
                     return true;
                 }
                 cast = JsonConvert.DeserializeObject<T>(str);
-                if (valueType) _JsonCache.Put(str, cast);
+                if (valueType) _JsonCache.Add(str, cast);
                 return true;
             }
 
@@ -226,7 +226,7 @@ namespace Thunder.Sys
             itemGroup.Id = itemId;
             itemGroup.Count = count;
 
-            _ItemGroupCache.Put(str,itemGroup);
+            _ItemGroupCache.Add(str,itemGroup);
 
             return true;
         }

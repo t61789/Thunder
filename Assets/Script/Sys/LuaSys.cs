@@ -93,9 +93,9 @@ end";
 
             for (var i = 0; i < 2; i++)
             {
-                var id = new AssetId(bundleGroup, bundle, null, DefaultBundle);
+                var id = new AssetId(bundle, null);
                 var have = false;
-                foreach (var keyValuePair in _LoadedFile.Where(x => AssetId.BundleEquals(x.Key, id)))
+                foreach (var keyValuePair in _LoadedFile.Where(x => x.Key.Bundle== id.Bundle))
                 {
                     have = true;
                     _LuaState.DoString(keyValuePair.Value);
@@ -103,7 +103,7 @@ end";
 
                 if (have) return;
 
-                Assert.IsTrue(LoadFromBundle(id), $"{id.BundleGroup}!{id.Bundle} 中没有文件");
+                Assert.IsTrue(LoadFromBundle(id), $"{id.Bundle} 中没有文件");
             }
 
             _LuaState.CheckTop();
@@ -111,12 +111,12 @@ end";
 
         public void ExecuteFile(string path, bool require = true)
         {
-            ExecuteFile(AssetId.Create(path, DefaultBundle), require);
+            ExecuteFile(AssetId.Parse(path, DefaultBundle), require);
         }
 
-        public void ExecuteFile(string bundleGroup, string bundle, string name, bool require = true)
+        public void ExecuteFile(string bundle, string name, bool require = true)
         {
-            ExecuteFile(new AssetId(bundleGroup, bundle, name, DefaultBundle), require);
+            ExecuteFile(new AssetId(bundle?? DefaultBundle, name), require);
         }
 
         public void ExecuteFile(AssetId id, bool require = true)
@@ -135,7 +135,7 @@ end";
 
                 LoadFromBundle(id);
 
-                Assert.IsTrue(_LoadedFile.ContainsKey(id), $"{id.BundleGroup}!{id.Bundle} 中不存在名为 {id.Name} 的lua文件");
+                Assert.IsTrue(_LoadedFile.ContainsKey(id), $"{id.Bundle} 中不存在名为 {id.Name} 的lua文件");
             }
 
             _LuaState.CheckTop();
@@ -153,7 +153,7 @@ end";
         private bool LoadFromBundle(AssetId id)
         {
             var have = false;
-            foreach (var textAsset in BundleSys.Ins.GetAllAsset<TextAsset>(id.BundleGroup, id.Bundle))
+            foreach (var textAsset in BundleSys.Ins.GetAllAsset<TextAsset>(id.Bundle))
             {
                 id.Name = textAsset.name;
                 if (_LoadedFile.ContainsKey(id)) continue;
@@ -161,7 +161,7 @@ end";
                 have = true;
             }
 
-            BundleSys.Ins.ReleaseBundle(id.BundleGroup, id.Bundle);
+            BundleSys.Ins.ReleaseBundle( id.Bundle);
             return have;
         }
 

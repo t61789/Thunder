@@ -1523,7 +1523,7 @@ namespace Thunder.Tool
                     }
                     cast = JsonConvert.DeserializeObject<T>(str);
                     if(cast is ValueType)
-                        _JsonCache.Put(str,cast);
+                        _JsonCache.Add(str,cast);
                     return true;
                 }
 

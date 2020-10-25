@@ -547,7 +547,7 @@ namespace Thunder.Sys
         /// </summary>
         public bool DeleteTable(string tablePath)
         {
-            return _Tables.Remove(AssetId.Create(tablePath, _DefaultBundle));
+            return _Tables.Remove(AssetId.Parse(tablePath, _DefaultBundle));
         }
 
         /// <summary>
@@ -556,8 +556,8 @@ namespace Thunder.Sys
         /// <param name="bundlePath"></param>
         public void DeleteAllTable(string bundlePath)
         {
-            var id = AssetId.Create(bundlePath, _DefaultBundle);
-            var keys = _Tables.Keys.Where(x => x.Bundle == id.Bundle && x.BundleGroup == id.BundleGroup).ToArray();
+            var id = AssetId.Parse(bundlePath, _DefaultBundle);
+            var keys = _Tables.Keys.Where(x => x.Bundle == id.Bundle).ToArray();
 
             foreach (var tableId in keys)
                 _Tables.Remove(tableId);
@@ -565,7 +565,7 @@ namespace Thunder.Sys
 
         public Table GetTable(string tablePath)
         {
-            var id = AssetId.Create(tablePath, _DefaultBundle);
+            var id = AssetId.Parse(tablePath, _DefaultBundle);
             for (var i = 0; i < 2; i++)
             {
                 if (_Tables.TryGetValue(id, out var value) && value.UnDeserialized == null) return value.Deserialized;
@@ -582,7 +582,7 @@ namespace Thunder.Sys
                 LoadBundle(id);
 
                 Assert.IsTrue(_Tables.TryGetValue(id, out _),
-                    $"未在 {id.BundleGroup}!{id.Bundle} 内找到名为 {id.Name} 的table");
+                    $"未在 {id.Bundle} 内找到名为 {id.Name} 的table");
             }
 
             return default;
@@ -590,12 +590,12 @@ namespace Thunder.Sys
 
         public void LoadBundle(string bundlePath)
         {
-            LoadBundle(AssetId.Create(bundlePath, _DefaultBundle));
+            LoadBundle(AssetId.Parse(bundlePath, _DefaultBundle));
         }
 
         private void LoadBundle(AssetId id)
         {
-            var assets = BundleSys.Ins.GetAllAsset<TextAsset>(id.BundleGroup, id.Bundle);
+            var assets = BundleSys.Ins.GetAllAsset<TextAsset>(id.Bundle);
 
             foreach (var item in assets)
             {
@@ -604,7 +604,7 @@ namespace Thunder.Sys
                 _Tables.Add(id, new TableUnit(default, item.text));
             }
 
-            BundleSys.Ins.ReleaseBundle(id.BundleGroup, id.Bundle);
+            BundleSys.Ins.ReleaseBundle( id.Bundle);
         }
 
         private struct TableUnit

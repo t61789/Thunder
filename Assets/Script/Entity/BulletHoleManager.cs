@@ -1,5 +1,4 @@
 ﻿using Thunder.Tool;
-using Thunder.Tool.ObjectPool;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -25,8 +24,8 @@ namespace Thunder.Entity
 
         public static void Create(Vector3 pos, Vector3 normal)
         {
-            var hole = ObjectPool.Ins.Alloc<BulletHole>("bulletHole",
-                x => x.Init(pos, normal, Instance.Sprites.RandomTake()));
+            var hole = ObjectPool.Ins.Alloc<BulletHole>("bulletHole");
+            hole.Init(pos, normal, Instance.Sprites.RandomTake());
             hole = Instance._BulletHoles.Enqueue(hole);
             if (hole != null)
                 ObjectPool.Ins.Recycle(hole);

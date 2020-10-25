@@ -59,7 +59,7 @@ namespace Thunder.Utility
                 result[count] = innerType.GetMethod(methodName);
                 count++;
             }
-            _AvaliableMethodsCache.Put(innerType, result);
+            _AvaliableMethodsCache.Add(innerType, result);
             return result;
         }
 

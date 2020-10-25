@@ -32,12 +32,12 @@ namespace Thunder.Sys
 
         public T GetValue<T>(string valuePath)
         {
-            return GetValue<T>(AssetId.Create(valuePath, DefaultBundle));
+            return GetValue<T>(AssetId.Parse(valuePath, DefaultBundle));
         }
 
-        public T GetValue<T>(string bundleGroup, string bundle, string name)
+        public T GetValue<T>(string bundle, string name)
         {
-            return GetValue<T>(new AssetId(bundleGroup, bundle, name, DefaultBundle));
+            return GetValue<T>(new AssetId(bundle??DefaultBundle, name));
         }
 
         private T GetValue<T>(AssetId id)
@@ -58,7 +58,7 @@ namespace Thunder.Sys
                 LoadBundle(id);
 
                 Assert.IsTrue(_Values.TryGetValue(id, out _),
-                    $"未在 {id.BundleGroup}!{id.Bundle} 内找到名为 {id.Name} 的table");
+                    $"未在 {id.Bundle} 内找到名为 {id.Name} 的table");
             }
 
             return default;
@@ -66,7 +66,7 @@ namespace Thunder.Sys
 
         private void LoadBundle(AssetId id)
         {
-            foreach (var asset in BundleSys.Ins.GetAllAsset<TextAsset>(id.BundleGroup, id.Bundle))
+            foreach (var asset in BundleSys.Ins.GetAllAsset<TextAsset>( id.Bundle))
             {
                 id.Name = asset.name;
                 if (_Values.ContainsKey(id)) continue;
