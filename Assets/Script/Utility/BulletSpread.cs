@@ -1,9 +1,6 @@
 ﻿using System;
-using BehaviorDesigner.Runtime.Tasks.Unity.UnityAudioSource;
-using Thunder.Tool.BuffData;
-using Thunder.Utility.PostProcessing;
+using Tool;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Thunder.Utility
 {

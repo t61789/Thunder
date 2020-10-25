@@ -1,7 +1,6 @@
 ﻿using System.Linq;
-using Thunder.Tool;
-using Thunder.Utility;
 using TMPro;
+using Tool;
 using UnityEngine;
 
 namespace Thunder.UI

@@ -1,6 +1,6 @@
-﻿using Thunder.Sys;
+﻿using Tool;
 
-using Thunder.Tool;
+
 using Thunder.Utility;
 using UnityEngine;
 
@@ -51,7 +51,7 @@ namespace Thunder.Entity.Weapon
         public void Launch(Vector3 impulseForce, float carryDamage)
         {
             _CarryDamage = carryDamage;
-            _Trans.SetParent(Stable.Container);
+            _Trans.SetParent(GameCore.Container);
             _Rb.useGravity = true;
             _Rb.AddForce(impulseForce, ForceMode.Impulse);
             _LifeTimeCounter.Recount();

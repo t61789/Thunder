@@ -1,4 +1,4 @@
-﻿using Thunder.Sys;
+﻿using Tool;
 using Thunder.UI;
 using Thunder.Utility;
 

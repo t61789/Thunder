@@ -14,7 +14,7 @@ using UnityEngine.UI;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
-namespace Thunder.Tool
+namespace Tool
 {
     public static class Tools
     {

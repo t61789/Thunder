@@ -1,4 +1,4 @@
-﻿using Thunder.Sys;
+﻿using Tool;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -47,7 +47,7 @@ namespace Thunder.UI
 
         public void GoBack()
         {
-            Stable.Ins.LoadSceneAsync("StartScene");
+            GameCore.Ins.LoadSceneAsync("StartScene");
         }
     }
 }

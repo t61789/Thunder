@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Thunder.Sys;
 using Thunder.Utility;
+using Tool;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Thunder.Tool
+namespace Tool
 {
     public class ObjectPool : MonoBehaviour, IBaseSys
     {
@@ -42,14 +42,14 @@ namespace Thunder.Tool
             if (pool.QueueIsEmpty())
             {
                 var go = Instantiate(pool.Prefab);
-                go.transform.SetParent(Stable.Container);
+                go.transform.SetParent(GameCore.Container);
                 aop = go.GetComponent<IObjectPool>();
                 aop.AssetId = assetId;
             }
             else
             {
                 aop = pool.Dequeue();
-                (aop as MonoBehaviour).transform.SetParent(Stable.Container);
+                (aop as MonoBehaviour).transform.SetParent(GameCore.Container);
             }
 
             (aop as MonoBehaviour).gameObject.SetActive(true);
@@ -63,7 +63,7 @@ namespace Thunder.Tool
             obj.OpRecycle();
             var gameObj = (obj as MonoBehaviour).gameObject;
             gameObj.SetActive(false);
-            gameObj.transform.SetParent(Stable.Container);
+            gameObj.transform.SetParent(GameCore.Container);
             _Pools[obj.AssetId].Enqueue(obj);
         }
 

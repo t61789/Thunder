@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using Thunder.Entity;
-using Thunder.Sys;
-using Thunder.Tool;
+using Tool;
+
 
 using Thunder.Utility;
 using UnityEngine;

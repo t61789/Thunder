@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Thunder.Sys;
-using Thunder.Tool;
+using Tool;
+
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.UI;

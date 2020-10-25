@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using Thunder.Sys;
+using Tool;
 using Thunder.Utility;
 using UnityEngine.UI;
 

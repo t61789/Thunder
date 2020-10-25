@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using Thunder.Entity.Weapon;
-using Thunder.Sys;
-using Thunder.Tool;
+using Tool;
+
 
 using UnityEngine;
 

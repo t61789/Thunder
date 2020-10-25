@@ -1,8 +1,5 @@
-﻿using DG.Tweening;
-using Thunder.Entity;
-using Thunder.Tool;
-using Thunder.Tool.BuffData;
-using Thunder.Utility;
+﻿using Thunder.Entity;
+using Tool;
 using UnityEngine;
 using UnityEngine.UI;
 

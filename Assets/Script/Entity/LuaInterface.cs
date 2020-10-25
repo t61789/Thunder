@@ -5,8 +5,8 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Reflection;
 using LuaInterface;
-using Thunder.Sys;
-using Thunder.Tool;
+using Tool;
+
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Thunder.Sys;
+using Tool;
 using Thunder.Utility;
 
 namespace Thunder.UI

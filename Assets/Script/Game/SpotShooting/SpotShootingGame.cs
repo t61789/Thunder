@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using Thunder.Tool;
 using Thunder.Utility;
+using Tool;
 using UnityEngine;
 
 namespace Thunder.Game.SpotShooting

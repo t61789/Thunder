@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
-using Thunder.Sys;
-using Thunder.Tool;
-using Thunder.Tool.BuffData;
-using Thunder.UI;
+using Tool;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Events;
 
 namespace Thunder.Entity.Weapon
 {

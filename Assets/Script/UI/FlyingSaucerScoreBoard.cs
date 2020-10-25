@@ -1,8 +1,9 @@
 ﻿using DG.Tweening;
 using Thunder.Game.FlyingSaucer;
-using Thunder.Tool;
+
 using Thunder.Utility;
 using TMPro;
+using Tool;
 using UnityEngine;
 
 namespace Thunder.UI

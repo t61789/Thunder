@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Thunder.Sys;
-using Thunder.Tool;
+using Tool;
 using UnityEngine;
 using UnityEngine.Assertions;
-using ItemSys = Thunder.Sys.ItemSys;
 
 namespace Thunder.Utility
 {

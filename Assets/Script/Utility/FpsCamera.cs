@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thunder.Entity;
-using Thunder.Sys;
-using Thunder.Tool;
-using Thunder.Tool.BuffData;
+﻿using Tool;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Thunder.Utility
 {

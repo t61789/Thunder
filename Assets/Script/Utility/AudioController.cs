@@ -1,4 +1,5 @@
-﻿using Thunder.Tool;
+﻿
+using Tool;
 using UnityEngine;
 
 namespace Thunder.Utility

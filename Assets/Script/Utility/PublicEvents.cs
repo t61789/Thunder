@@ -1,6 +1,6 @@
 ﻿using System;
 using Thunder.Game.SpotShooting;
-using Thunder.Sys;
+using Tool;
 using UnityEngine;
 using UnityEngine.Events;
 
