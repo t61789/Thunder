@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     public class DontGenerateWrapAttribute : Attribute
     {

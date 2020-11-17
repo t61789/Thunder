@@ -1,6 +1,4 @@
 ﻿using Framework;
-using Thunder.Entity.Weapon;
-using Thunder.Utility;
 using TMPro;
 
 namespace Thunder.UI

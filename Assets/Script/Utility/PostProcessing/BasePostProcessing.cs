@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Thunder.Utility.PostProcessing
+namespace Thunder
 {
     public abstract class BasePostProcessing
     {

@@ -1,5 +1,5 @@
 ﻿using Framework;
-using Thunder.Utility;
+
 using UnityEngine;
 
 namespace Thunder.Game.FlyingSaucer

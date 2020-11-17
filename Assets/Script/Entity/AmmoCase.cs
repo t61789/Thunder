@@ -1,7 +1,7 @@
 ﻿using Framework;
-using Thunder.Utility;
 
-namespace Thunder.Entity
+
+namespace Thunder
 {
     public class AmmoCase : BaseEntity, IInteractive
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Thunder.Utility.PostProcessing
+namespace Thunder
 {
     [Serializable]
     public class Ssao : BasePostProcessing

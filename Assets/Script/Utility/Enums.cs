@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     [Flags]
     public enum PickupItemAction

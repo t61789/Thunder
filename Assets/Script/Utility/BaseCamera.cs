@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     [DontGenerateWrap]
     public abstract class BaseCamera : MonoBehaviour

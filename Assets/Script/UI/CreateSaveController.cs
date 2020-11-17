@@ -1,6 +1,6 @@
 ﻿
 using Framework;
-using Thunder.Utility;
+
 using UnityEngine;
 
 namespace Thunder.UI

@@ -2,7 +2,7 @@
 using Framework;
 using UnityEngine;
 
-namespace Thunder.Entity
+namespace Thunder
 {
     public class BulletHoleManager : MonoBehaviour
     {

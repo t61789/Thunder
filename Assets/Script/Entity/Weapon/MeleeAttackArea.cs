@@ -1,9 +1,9 @@
 ﻿using System;
 using Framework;
-using Thunder.Utility;
+
 using UnityEngine;
 
-namespace Thunder.Entity.Weapon
+namespace Thunder
 {
     public class MeleeAttackArea : BaseEntity, IObjectPool
     {

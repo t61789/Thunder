@@ -2,7 +2,7 @@
 using Framework;
 using UnityEngine;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     /// <summary>
     /// 期望结构：

@@ -1,4 +1,4 @@
-﻿namespace Thunder.Utility
+﻿namespace Thunder
 {
     public class GlobalSettings
     {

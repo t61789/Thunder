@@ -1,4 +1,4 @@
-﻿namespace Thunder.Entity
+﻿namespace Thunder
 {
     public class People : Controller
     {

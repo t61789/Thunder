@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Framework;
 using Thunder.UI;
-using Thunder.Utility;
+
 using UnityEngine;
 
 namespace Thunder.Game.FlyingSaucer

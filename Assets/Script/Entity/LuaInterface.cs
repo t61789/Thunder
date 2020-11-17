@@ -6,12 +6,12 @@ using System.Reflection;
 using Framework;
 using LuaInterface;
 
-using Thunder.Utility;
+
 using Tool;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace Thunder.Entity
+namespace Thunder
 {
     /// <summary>
     ///     Lua脚本路径格式 LuaScriptPath : LuaTable<br />

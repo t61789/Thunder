@@ -1,8 +1,5 @@
 ﻿using System;
 using Framework;
-using Thunder.Entity;
-using Thunder.Utility;
-
 using UnityEngine;
 using UnityEngine.Events;
 

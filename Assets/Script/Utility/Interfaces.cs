@@ -1,7 +1,7 @@
 ﻿using Framework;
 using UnityEngine;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     public interface IItem
     {

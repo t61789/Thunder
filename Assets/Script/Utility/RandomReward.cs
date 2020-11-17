@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Framework;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     public class RandomRewardGenerator
     {

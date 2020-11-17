@@ -3,7 +3,7 @@
 using Framework;
 using UnityEngine;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     public class AimingCamera : BaseCamera
     {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     public class AreaTrigger : MonoBehaviour
     {

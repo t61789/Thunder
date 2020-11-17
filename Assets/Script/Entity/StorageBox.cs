@@ -1,8 +1,8 @@
 ﻿using Framework;
 using Thunder.UI;
-using Thunder.Utility;
 
-namespace Thunder.Entity
+
+namespace Thunder
 {
     public class StorageBox:BaseEntity,IInteractive
     {

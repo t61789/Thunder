@@ -70,8 +70,6 @@
     <Compile Include="Assets\Script\Framework\Sys\ControlSys.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetCenterOfMass.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_GameObjectWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\11_Delegate\TestEventListener.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\17_Inherit\TestInherit.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SphereCollider\SetCenter.cs" />
     <Compile Include="Assets\Script\Entity\Weapon\Unarmed.cs" />
     <Compile Include="Assets\Script\Utility\BulletSpread.cs" />
@@ -100,7 +98,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\IsChildOf.cs" />
     <Compile Include="Assets\Script\Behavior\GetDistance.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedFloat.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\11_Delegate\TestEventListenerWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Timeline\Resume.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\SetAcceleration.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Composites\RandomSelector.cs" />
@@ -129,15 +126,12 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_UI_SelectableWrap.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\NtpSyncModule.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Actions\Reflection\GetFieldValue.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\12_GameObject\TestGameObject.cs" />
     <Compile Include="Assets\Script\Utility\PostProcessing\Bsc.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animation\Rewind.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\TestErrorStack\TestInstantiate.cs" />
     <Compile Include="Assets\Lib\ToLua\Misc\LuaLooper.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetUpVector.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Actions\Reflection\InvokeMethod.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\GetCookieSize.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\01_HelloWorld\HelloWorld.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\PlayDelayed.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\GetLoop.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_AudioBehaviourWrap.cs" />
@@ -196,7 +190,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\SetVelocity.cs" />
     <Compile Include="Assets\Script\Framework\Component\BaseEntity.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animation\Play.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\16_Int64\TestInt64.cs" />
     <Compile Include="Assets\Script\Framework\Package.cs" />
     <Compile Include="Assets\Script\UI\AmmoPanel.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\LuaConst.cs" />
@@ -264,7 +257,6 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_RendererWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\System_TypeWrap.cs" />
     <Compile Include="Assets\Script\Game\GameStartStandPoint.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\20_utf8\TestUTF8.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasExitedCollision.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\GetIntegerParameter.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Actions\PerformInterruption.cs" />
@@ -314,7 +306,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\GetLoop.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetRolloffMode.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\Angle.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\09_Dictionary\System_Collections_Generic_Dictionary_int_TestAccount_ValueCollectionWrap.cs" />
     <Compile Include="Assets\Script\Framework\Sys\TextSys.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Time\GetTime.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\Play.cs" />
@@ -326,7 +317,6 @@
     <Compile Include="Assets\Script\Utility\Interfaces.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_MonoBehaviourWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\GetSpotAngle.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\15_ProtoBuffer\TestProtol.cs" />
     <Compile Include="Assets\Script\Game\FlyingSaucer\FlyingSaucer.cs" />
     <Compile Include="Assets\Lib\ToLua\Reflection\LuaProperty.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\SetLayerWeight.cs" />
@@ -345,16 +335,12 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Quaternion\LookRotation.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_QueueModeWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\SetGravityScale.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\09_Dictionary\UseDictionary.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\13_CustomLoader\TestCustomLoader.cs" />
     <Compile Include="Assets\Script\Utility\PlayerLockCamera.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\LayerMask\GetLayer.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Quaternion\RotateTowards.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\ResetPath.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetFreezeRotation.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\07_LuaThread\TestLuaThread.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Timeline\Stop.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\TestOverload\TestOverload.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Conditionals\Physics\HasEnteredTrigger2D.cs" />
     <Compile Include="Assets\Lib\ConsolePro\ConsoleProDebug.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\SetCookie.cs" />
@@ -369,10 +355,7 @@
     <Compile Include="Assets\Script\Entity\Weapon\Crossbow.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\SetApplyRootMotion.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_ColliderWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\02_ScriptsFromFile\ScriptsFromFile.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\15_ProtoBuffer\TestProtolWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\SetShadowSoftness.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\18_Bundle\TestABLoader.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\AddRelativeForce.cs" />
     <Compile Include="Assets\Script\Framework\Custom\TextReference.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\SetMaxParticles.cs" />
@@ -387,7 +370,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetXYZ.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\GetLocalRotation.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\NetDataWriter.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\TestErrorStack\TestLuaStack.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animation\Sample.cs" />
     <Compile Include="Assets\Script\Framework\UI\PanelUI.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SharedTransformToGameObject.cs" />
@@ -397,7 +379,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\FloatAbs.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_TimeWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\SetTag.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\TestInjection\TestInjection.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_RigidbodyWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Quaternion\Identity.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\SetMass.cs" />
@@ -452,7 +433,6 @@
     <Compile Include="Assets\Test\Test.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedMaterial.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\GetMass.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\14_Out\TestOutArg.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetUseGravity.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\BoxCollider2D\GetSize.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\GetPitch.cs" />
@@ -463,7 +443,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\SetEnableEmission.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\GetRemainingDistance.cs" />
     <Compile Include="Assets\Lib\DynamicBone\Scripts\DynamicBone.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\TestOverload\TestExport_SpaceWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\SetRotation.cs" />
     <Compile Include="Assets\Lib\ToLua\Core\LuaAttributes.cs" />
     <Compile Include="Assets\Script\Utility\CampSys.cs" />
@@ -476,7 +455,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\Stop.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\SetLocalRotation.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CharacterController\GetVelocity.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\09_Dictionary\System_Collections_Generic_KeyValuePair_int_TestAccountWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\SetCullingMask.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\GetDestination.cs" />
     <Compile Include="Assets\Script\Utility\FpsMover.cs" />
@@ -487,7 +465,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Debug\DrawRay.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\BoxCollider2D\SetSize.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\Warp.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\10_Enum\AccessingEnum.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetLoop.cs" />
     <Compile Include="Assets\Lib\ToLua\Reflection\LuaMethod.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\IsKeyDown.cs" />
@@ -504,7 +481,6 @@
     <Compile Include="Assets\Script\Framework\UI\Joystick.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector2\SetXY.cs" />
     <Compile Include="Assets\Script\UI\ListPlane.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\24_Struct\PassStruct.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedVector4.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\NetPeerCollection.cs" />
     <Compile Include="Assets\Script\Utility\PostProcessing\EdgeDetect.cs" />
@@ -520,7 +496,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\IsSleeping.cs" />
     <Compile Include="Assets\Script\Utility\UiMethods.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\IsInTransition.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\04_AccessingLuaVariables\AccessingLuaVariables.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Composites\UtilitySelector.cs" />
     <Compile Include="Assets\Lib\ToLua\Core\LuaState.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CharacterController\GetStepOffset.cs" />
@@ -536,15 +511,12 @@
     <Compile Include="Assets\Script\Framework\Custom\ItemReference.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\SetLocalScale.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\CompareSharedBool.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\TestErrorStack\TestInstantiate2.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_TransformWrap.cs" />
     <Compile Include="Assets\Script\Entity\StorageBox.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\GetEulerAngles.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\SetConstraints.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\TestInjection\ToLuaInjectionTest.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_MeshColliderWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_TrailRendererWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\15_ProtoBuffer\TestProtoBuffer.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CharacterController\SetStepOffset.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\NetPacket.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CharacterController\SimpleMove.cs" />
@@ -578,7 +550,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedTransformList.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedQuaternion.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\RotateTowards.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\08_AccessingArray\AccessingArray.cs" />
     <Compile Include="Assets\Script\Behavior\IsNotNull.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\GetChildCount.cs" />
     <Compile Include="Assets\Script\UI\BaseButton.cs" />
@@ -606,7 +577,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\IsKinematic.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\IsButtonDown.cs" />
     <Compile Include="Assets\Script\Utility\Starvation.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\19_cjson\TestCJson.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedVector2.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\String\Replace.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_LightWrap.cs" />
@@ -622,7 +592,6 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\System_IO_PathWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SharedGameObjectsToGameObjectList.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animation\IsPlaying.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\TestInjection\ToLuaInjectionTestWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_Texture2DWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\GetRange.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetAudioClip.cs" />
@@ -630,7 +599,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Decorators\Repeater.cs" />
     <Compile Include="Assets\Script\Utility\WeaponBelt.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\SetXYZ.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\23_List\UseList.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\String\GetRandomString.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\GetMouseButton.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedAnimationCurve.cs" />
@@ -699,7 +667,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\GetDeltaRotation.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\System_Collections_Generic_Dictionary_KeyCollectionWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\SetIsKinematic.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\09_Dictionary\System_Collections_Generic_Dictionary_int_TestAccountWrap.cs" />
     <Compile Include="Assets\Lib\DynamicBone\Scripts\DynamicBoneColliderBase.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedGameObject.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_WrapModeWrap.cs" />
@@ -708,7 +675,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\AddExplosionForce.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetVelocity.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedTransformList.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\09_Dictionary\System_Collections_Generic_Dictionary_int_TestAccount_KeyCollectionWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\SetVolume.cs" />
     <Compile Include="Assets\Script\Framework\Custom\SaveData.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\GetIsKinematic.cs" />
@@ -718,7 +684,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\SetForwardVector.cs" />
     <Compile Include="Assets\Script\Behavior\DelegateFixedInvoke.cs" />
     <Compile Include="Assets\Script\UI\MessageDialog.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\05_LuaCoroutine\TestCoroutine.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\StartRecording.cs" />
     <Compile Include="Assets\Script\Entity\MuzzleFire.cs" />
     <Compile Include="Assets\Script\Framework\Custom\Config.cs" />
@@ -777,7 +742,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\GetRightVector.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\ParticleSystem\GetMaxParticles.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody\GetRotation.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\Performance\TestPerformance.cs" />
     <Compile Include="Assets\Script\Behavior\IDelegateFixedInvoke.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CharacterController\GetHeight.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\GetApplyRootMotion.cs" />
@@ -795,7 +759,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\CircleCollider2D\GetCenter.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\MatchTarget.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\NetPacketPool.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\TestOverload\TestExportWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Timeline\Play.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_AnimatorWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animation\SetAnimatePhysics.cs" />
@@ -827,7 +790,6 @@
     <Compile Include="Assets\Script\Framework\Sys\SaveSys.cs" />
     <Compile Include="Assets\Script\UI\PackageCell.cs" />
     <Compile Include="Assets\Script\UI\LoadOrCreateSaveUi.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\22_Reflection\TestReflection.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\Normalize.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SphereCollider\SetRadius.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\Play.cs" />
@@ -848,7 +810,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Conditionals\Reflection\ComparePropertyValue.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\AudioSource\GetMaxDistance.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\GetLocalEulerAngles.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\06_LuaCoroutine2\TestCoroutine2.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedFloat.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\GetIntensity.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector3\Multiply.cs" />
@@ -871,7 +832,6 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Actions\SendEvent.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\SetAngularDrag.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Input\GetAxisRaw.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\03_CallLuaFunction\CallLuaFunction.cs" />
     <Compile Include="Assets\Lib\ToLua\Core\LuaFunction.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Decorators\ReturnSuccess.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\Find.cs" />
@@ -887,12 +847,10 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_ParticleSystemWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\String\CompareTo.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_CameraClearFlagsWrap.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\TestInjection\BaseTestWrap.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_CharacterControllerWrap.cs" />
     <Compile Include="Assets\Script\Utility\PublicEvents.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\FindGameObjectsWithTag.cs" />
     <Compile Include="Assets\Script\Utility\PostProcessing\AimScope.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\11_Delegate\TestDelegate.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\GameObject\CompareTag.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\SetEulerAngles.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\LuaInterface_LuaConstructorWrap.cs" />
@@ -900,11 +858,9 @@
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_BoxColliderWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Variables\SharedVector3Int.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\Resume.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\09_Dictionary\TestAccountWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\LookAt.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\SetShadows.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector2\ClampMagnitude.cs" />
-    <Compile Include="Assets\Lib\ToLua\Examples\21_String\TestString.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector2\GetSqrMagnitude.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedString.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\SharedVariables\SetSharedRect.cs" />

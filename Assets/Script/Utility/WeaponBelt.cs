@@ -2,13 +2,9 @@
 using System.Linq;
 using System.Text;
 using Framework;
-using Thunder.Entity.Weapon;
-
-
-
 using UnityEngine;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     public class WeaponBelt
     {

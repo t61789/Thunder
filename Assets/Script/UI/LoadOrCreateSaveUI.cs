@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Framework;
-using Thunder.Utility;
+
 using UnityEngine.UI;
 
 namespace Thunder.UI

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Framework;
 
-namespace Thunder.Utility.PostProcessing
+namespace Thunder
 {
     [Serializable]
     public class DepthOfField : BasePostProcessing

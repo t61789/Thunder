@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using Framework;
-using Thunder.Utility;
+
 using UnityEngine.UI;
 
 namespace Thunder.UI

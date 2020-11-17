@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Framework;
-using Thunder.Entity;
+
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     public class CampSys : IBaseSys
     {

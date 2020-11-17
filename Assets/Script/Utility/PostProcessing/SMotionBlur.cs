@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Thunder.Utility.PostProcessing
+namespace Thunder
 {
     [Serializable]
     public class SMotionBlur : BasePostProcessing

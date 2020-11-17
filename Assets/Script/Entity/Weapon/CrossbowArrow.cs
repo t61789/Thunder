@@ -1,8 +1,8 @@
 ﻿using Framework;
-using Thunder.Utility;
+
 using UnityEngine;
 
-namespace Thunder.Entity.Weapon
+namespace Thunder
 {
     public class CrossbowArrow : BaseEntity, IObjectPool
     {

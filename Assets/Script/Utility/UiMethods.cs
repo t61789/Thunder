@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     /// <summary>
     /// 定义的函数必须为public，参数为object

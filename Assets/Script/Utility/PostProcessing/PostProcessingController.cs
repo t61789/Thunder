@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Thunder.Utility.PostProcessing;
 using UnityEngine;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     [RequireComponent(typeof(Camera))]
     public class PostProcessingController : MonoBehaviour

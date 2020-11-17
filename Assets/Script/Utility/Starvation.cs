@@ -3,7 +3,7 @@ using Framework;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     public class Starvation : MonoBehaviour
     {

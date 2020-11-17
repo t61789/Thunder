@@ -2,7 +2,7 @@
 
 using Framework;
 
-namespace Thunder.Entity.Weapon
+namespace Thunder
 {
     public class Unarmed : BaseWeapon
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Framework;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     public class InnerClassManager
     {

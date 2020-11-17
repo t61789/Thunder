@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Thunder.Utility
+namespace Thunder
 {
     public class PackageUiMethods:MonoBehaviour
     {

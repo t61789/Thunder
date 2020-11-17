@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Thunder.Entity
+namespace Thunder
 {
     public class PackageCell:BaseUI,IBeginDragHandler,IPointerClickHandler,IPointerUpHandler,ICanvasRaycastFilter
     {// todo 点击菜单栏

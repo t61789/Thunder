@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace Thunder.Entity
+namespace Thunder
 {
     public class BulletHole : BaseEntity, IObjectPool
     {

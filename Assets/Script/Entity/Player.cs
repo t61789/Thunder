@@ -1,10 +1,10 @@
 ﻿using System;
 using Framework;
-using Thunder.Utility;
+
 using UnityEngine;
 using Package = Framework.Package;
 
-namespace Thunder.Entity
+namespace Thunder
 {
     [RequireComponent(typeof(FpsCamera))]
     [RequireComponent(typeof(FpsMover))]

@@ -1,8 +1,8 @@
 ﻿using Framework;
-using Thunder.Utility;
+
 using UnityEngine;
 
-namespace Thunder.Entity
+namespace Thunder
 {
     public class PickupableItem : BaseEntity, IObjectPool, IInteractive,IItem
     {

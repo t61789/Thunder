@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Framework;
-using Thunder.Utility;
+
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace Thunder.Entity.Weapon
+namespace Thunder
 {
     public class MachineGun : BaseWeapon
     {
