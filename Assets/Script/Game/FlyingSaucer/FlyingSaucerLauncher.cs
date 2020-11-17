@@ -1,7 +1,8 @@
 ﻿using System;
+using Framework;
 using Thunder.Entity;
 using Thunder.Utility;
-using Tool;
+
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -37,7 +38,7 @@ namespace Thunder.Game.FlyingSaucer
         protected override void Awake()
         {
             base.Awake();
-            _Launcher = _Trans.Find("Launcher");
+            _Launcher = Trans.Find("Launcher");
             _LaunchDirNoise = new PerlinNoise(LaunchDirRandomSmooth);
             _LaunchForceNoise = new PerlinNoise(LaunchForceRandomSmooth);
 
@@ -88,10 +89,10 @@ namespace Thunder.Game.FlyingSaucer
             _LaunchCounter.Recount();
 
             var force = GetNextForceDir(PlayerTrans.rotation * Vector3.forward);
-            _Launcher.position = _Trans.position + force.normalized;
+            _Launcher.position = Trans.position + force.normalized;
             _Launcher.rotation = Quaternion.LookRotation(force);
 
-            var saucer = ObjectPool.Ins.Alloc<FlyingSaucer>("flyingSaucer");
+            var saucer = ObjectPool.Get<FlyingSaucer>("flyingSaucer");
             saucer.transform.position = _Launcher.position;
             saucer.Launch(force);
         }
@@ -105,9 +106,9 @@ namespace Thunder.Game.FlyingSaucer
 
             if (!_LaunchCounter.Completed) return;
             _LaunchCounter.Recount();
-            Vector3 force = _Trans.localToWorldMatrix * dir.normalized * LaunchSpeed;
+            Vector3 force = Trans.localToWorldMatrix * dir.normalized * LaunchSpeed;
 
-            var saucer = ObjectPool.Ins.Alloc<FlyingSaucer>("flyingSaucer");
+            var saucer = ObjectPool.Get<FlyingSaucer>("flyingSaucer");
             saucer.transform.position = _Launcher.position;
             saucer.Launch(force);
         }

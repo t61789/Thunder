@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
+using Framework;
 using Thunder.Entity;
-
-
 using Thunder.Utility;
-using Tool;
 using UnityEngine;
 
 namespace Thunder.UI
@@ -29,7 +27,7 @@ namespace Thunder.UI
             for (int i = 0; i < _PackageCells.Length; i++)
             {
                 if(_PackageCells[i]==null)continue;
-                ObjectPool.Ins.Recycle(_PackageCells[i]);
+                ObjectPool.Put(_PackageCells[i]);
                 _PackageCells[i] = null;
             }
             RefreshCell(Tools.GetIndexArr(0, _Package.Size));
@@ -43,11 +41,11 @@ namespace Thunder.UI
                 var item = _Package.GetCell(index);
                 if (_PackageCells[index] != null)
                 {
-                    ObjectPool.Ins.Recycle(_PackageCells[index]);
+                    ObjectPool.Put(_PackageCells[index]);
                     _PackageCells = null;
                 }
                 if (item.Id == 0) continue;
-                var cell = ObjectPool.Ins.Alloc<PackageCell>(GlobalSettings.PackageCellPrefabAssetPath);
+                var cell = ObjectPool.Get<PackageCell>(GlobalSettings.PackageCellPrefabAssetPath);
                 cell.Init(_Package,index, _FloatContainer);
                 cell.RectTrans.SetParent(_CellContainers[index]);
                 _PackageCells[index] = cell;

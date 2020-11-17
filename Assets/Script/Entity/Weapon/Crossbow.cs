@@ -1,5 +1,4 @@
-﻿using Tool;
-
+﻿using Framework;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -31,9 +30,9 @@ namespace Thunder.Entity.Weapon
 
         private void Update()
         {
-            if (ControlSys.Ins.RequireKey(FIRE, 0).Down) Fire();
+            if (ControlSys.RequireKey(FIRE, 0).Down) Fire();
             if (_StickyInputDic.GetBool(AUTO_RELOAD) ||
-                ControlSys.Ins.RequireKey(RELOAD, 0).Down) Reload();
+                ControlSys.RequireKey(RELOAD, 0).Down) Reload();
         }
 
         private void FixedUpdate()
@@ -66,8 +65,8 @@ namespace Thunder.Entity.Weapon
 
         public void ReloadCompleted()
         {
-            _Arrow = ObjectPool.Ins.Alloc<CrossbowArrow>(GlobalSettings.CrossbowArrowAssetPath);
-            _Arrow.Install(_Trans, ArrowPos);
+            _Arrow = ObjectPool.Get<CrossbowArrow>(GlobalSettings.CrossbowArrowAssetPath);
+            _Arrow.Install(Trans, ArrowPos);
             AmmoGroup.Reload();
             AmmoGroup.InvokeOnAmmoChanged();
         }
@@ -89,8 +88,8 @@ namespace Thunder.Entity.Weapon
         {
             if (!add.TryGet(out int data)) return;
             if (data != 1 || AmmoGroup.Magzine != 0) return;
-            _Arrow = ObjectPool.Ins.Alloc<CrossbowArrow>(GlobalSettings.CrossbowArrowAssetPath);
-            _Arrow.Install(_Trans, ArrowPos);
+            _Arrow = ObjectPool.Get<CrossbowArrow>(GlobalSettings.CrossbowArrowAssetPath);
+            _Arrow.Install(Trans, ArrowPos);
             AmmoGroup.Magzine = 1;
             AmmoGroup.InvokeOnAmmoChanged();
         }

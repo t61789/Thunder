@@ -1,5 +1,6 @@
-﻿using Tool;
+﻿
 
+using Framework;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace Thunder.Entity.Weapon
         public override void Fire()
         {
             var rot = Camera.main.transform.rotation;
-            var area = ObjectPool.Ins.Alloc<MeleeAttackArea>(GlobalSettings.MeleeAttackAreaAssetPath);
+            var area = ObjectPool.Get<MeleeAttackArea>(GlobalSettings.MeleeAttackAreaAssetPath);
             area.Init(_Player.Trans.position, rot, AttackRange, AttackAreaFadeTime);
             area.HitEnter += HitTarget;
         }

@@ -1,4 +1,6 @@
-﻿namespace Thunder.UI
+﻿using Framework;
+
+namespace Thunder.UI
 {
     public class CheckoutPanel : BaseUI
     {

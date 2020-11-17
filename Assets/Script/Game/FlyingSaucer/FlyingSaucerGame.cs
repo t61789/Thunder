@@ -1,6 +1,5 @@
 ﻿using System.Linq;
-using Tool;
-
+using Framework;
 using Thunder.UI;
 using Thunder.Utility;
 using UnityEngine;
@@ -52,8 +51,7 @@ namespace Thunder.Game.FlyingSaucer
         private void Start()
         {
             string message = (
-                from row
-                    in DataBaseSys.Ins["message"]
+                from row in DataBaseSys.GetTable("message")
                 where row["Key"] == "flyingSaucerWelcome"
                 select row["value"]).FirstOrDefault();
             LogPanel.Ins.LogSystem(message);
@@ -82,13 +80,13 @@ namespace Thunder.Game.FlyingSaucer
 
         public void LeaveGameArea(Collider c)
         {
-            UISys.Ins.CloseUI(ScoreBoard.EntityName);
+            UISys.CloseUI(ScoreBoard.EntityName);
         }
 
         private void GameStartDelay(GameType type)
         {
             if (type != GameType.FlyingSaucer) return;
-            UISys.Ins.OpenUI(ScoreBoard.EntityName);
+            UISys.OpenUI(ScoreBoard.EntityName);
         }
 
         private void GameStart(GameType type)
@@ -105,7 +103,7 @@ namespace Thunder.Game.FlyingSaucer
             PublicEvents.GameEnd?.Invoke(GameType.FlyingSaucer, true);
             var endMsg = $"Game over, you have got {_CurScore} score";
             LogPanel.Ins.LogSystem(endMsg);
-            UISys.Ins.CloseUI(ScoreBoard.EntityName);
+            UISys.CloseUI(ScoreBoard.EntityName);
             TurnCounter.Pause().Recount();
         }
     }

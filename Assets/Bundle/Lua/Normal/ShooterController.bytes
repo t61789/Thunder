@@ -1,0 +1,59 @@
+ShooterController = {}
+
+ShooterController.Init = function(data,ctr)
+	data.ctr = ctr
+	data.trans = ctr.transform
+	data.cameraTrans = UnityEngine.Camera.main.transform
+	data.animator = ctr.gameObject:GetComponent(typeof(UnityEngine.Animator))
+	data.velocity = UnityEngine.Vector3()
+	data.preHasMoveInput = false
+	data.turnFactor = 5
+end
+
+ShooterController.Update = function(data)
+	if(Thunder.Sys.Stable.Control:RequireKey("Aim",0.0).Down) then
+		data.animator:SetTrigger("Aim")
+	end
+end
+
+ShooterController.FixedUpdate = function(data)
+	local ctrlDir = Thunder.Sys.Stable.Control:RequireKey("Axis1",0.0).Axis
+	ctrlDir.z = ctrlDir.y
+	ctrlDir.y = 0
+	ctrlDir = ctrlDir.normalized -- 转至xz平面
+	
+	local worldCtrlDir = data.cameraTrans.localToWorldMatrix:MultiplyVector(ctrlDir)
+	worldCtrlDir.y = 0
+	local hasInput = worldCtrlDir.x ~= 0 or worldCtrlDir.z ~= 0
+	
+	ctrlDir = data.trans.worldToLocalMatrix:MultiplyVector(worldCtrlDir) -- 坐标系更改为人物坐标系
+	ctrlDir = ctrlDir.normalized
+	
+	data.velocity = UnityEngine.Vector3.Lerp(data.velocity,ctrlDir,data.MoveDamp)
+	
+	Thunder.Tool.Tools.DrawLine(data.trans.position,data.trans.position+data.trans.localToWorldMatrix:MultiplyVector(ctrlDir)*2)
+	
+	local velocityMag = data.velocity.magnitude
+
+	if(ctrlDir.x==0)then ctrlDir.x = 0.001 end
+	data.animator:SetFloat("DRight",ctrlDir.x)
+	data.animator:SetFloat("DFront",ctrlDir.z)
+	data.animator:SetBool("HasMoveInput",hasInput)
+	data.animator:SetFloat("Right",data.velocity.x)
+	data.animator:SetFloat("Front",data.velocity.z)
+	--data.animator:SetFloat("Velocity",velocityMag)
+	
+	if(data.preHasMoveInput and (not hasInput)) then
+		data.animator:SetFloat("LastRight",data.velocity.x)
+		data.animator:SetFloat("LastFront",data.velocity.z)
+	end
+	data.preHasMoveInput = hasInput
+	
+	local curStateInfo = data.animator:GetCurrentAnimatorStateInfo(0)
+
+	local curEulerAngle = data.trans.localEulerAngles
+	local cameraForward = data.cameraTrans.localToWorldMatrix:MultiplyVector(UnityEngine.Vector3.forward)
+	cameraForward.y = 0
+	curEulerAngle.y = Thunder.Tool.Tools.TurnToVectorXz(curEulerAngle.y,cameraForward,data.turnFactor)
+	data.trans.localEulerAngles = curEulerAngle
+end

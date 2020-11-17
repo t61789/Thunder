@@ -1,5 +1,4 @@
-﻿using Tool;
-using Thunder.Utility;
+﻿using Framework;
 using TMPro;
 using UnityEngine;
 
@@ -27,13 +26,13 @@ namespace Thunder.UI
         public void OK()
         {
             DialogResult = DialogResult.Ok;
-            UISys.Ins.CloseUI(EntityName);
+            UISys.CloseUI(EntityName);
         }
 
         public void Cancel()
         {
             DialogResult = DialogResult.Cancel;
-            UISys.Ins.CloseUI(EntityName);
+            UISys.CloseUI(EntityName);
         }
 
         public void Update()

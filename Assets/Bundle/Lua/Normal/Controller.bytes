@@ -1,0 +1,71 @@
+Controller = {}
+Controller.Init = function(data,ctr)
+	data.trans = ctr.transform
+	data.cameraTrans = UnityEngine.Camera.main.transform
+	data.animator = ctr.gameObject:GetComponent(typeof(UnityEngine.Animator))
+	data.animator:SetTrigger("SwitchToStaringMode")
+	data.staringTarget = UnityEngine.GameObject.Find("Cube (1)").gameObject.transform
+	data.velocity = UnityEngine.Vector3()
+	data.controlSaveTime = 0.5
+	data.controlSaveTimeCount = 0
+end
+Controller.FixedUpdate = function(data)
+	local ctrlDir = Thunder.Sys.Stable.Control:RequireKey("Axis1",0.0).Axis
+	ctrlDir.z = ctrlDir.y
+	ctrlDir.y = 0
+	
+	if(data.staringTarget==nil) then
+		--if(data.staringTarget~=nil) then
+		--local toTarget = data.staringTarget.position - data.trans.position
+		--toTarget.y = 0
+		--ctrlDir = UnityEngine.Quaternion.FromToRotation(UnityEngine.Vector3.forward,toTarget) * ctrlDir
+		--end
+		
+		--if(data.staringTarget==nil) then
+			ctrlDir = data.cameraTrans.localToWorldMatrix:MultiplyVector(ctrlDir)
+		--end
+		
+		ctrlDir.y = 0
+		ctrlDir = ctrlDir.normalized
+		
+		ctrlDir = data.trans.worldToLocalMatrix:MultiplyVector(ctrlDir)
+	end
+
+	data.velocity = UnityEngine.Vector3.Lerp(data.velocity,ctrlDir,data.MoveDamp)
+	
+	if(data.staringTarget==nil and ctrlDir.z>-0.6 and (data.velocity.x > 0.05 or data.velocity.x<-0.05)) then
+		data.trans:Rotate(0,data.RotateFactor * data.velocity.x,0)
+	end
+	
+	data.animator:SetFloat("DRight",ctrlDir.x)
+	data.animator:SetFloat("DFront",ctrlDir.z)
+	data.animator:SetFloat("DVelocity",ctrlDir.z + ctrlDir.x)
+	data.animator:SetFloat("Right",data.velocity.x)
+	data.animator:SetFloat("Front",data.velocity.z)
+	data.animator:SetFloat("Velocity",data.velocity.magnitude)
+	
+	if(data.staringTarget~=nil) then
+		local temp = (data.staringTarget.position - data.trans.position).normalized
+		temp.y = 0
+		local temp1 = (data.trans.rotation * UnityEngine.Vector3.forward).normalized
+		temp1.y = 0
+		temp = UnityEngine.Vector3.Cross(temp,temp1).y
+		
+		data.trans:Rotate(0,-data.RotateFactor * temp,0)
+		data.animator:SetFloat("StaringOffset",temp)
+		data.animator:SetFloat("StaringOffsetSign",-UnityEngine.Mathf.Sign(temp))
+	end
+	
+	local temp = Thunder.Sys.Stable.Control:RequireKey(UnityEngine.KeyCode.Mouse0,0.0).Stay
+	if(temp==true) then 
+		data.animator:SetBool("Attack",true)
+		data.controlSaveTimeCount = UnityEngine.Time.time
+	elseif(UnityEngine.Time.time - data.controlSaveTimeCount > data.controlSaveTime) then
+		data.animator:SetBool("Attack",false)
+	else
+		data.animator:SetBool("Attack",true)
+	end
+end
+Controller.StareTarget = function(data,target)
+	
+end

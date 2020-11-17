@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Thunder.Tool;
-using Thunder.UI;
-using Thunder.Utility;
+using Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;

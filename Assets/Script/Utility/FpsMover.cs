@@ -1,6 +1,5 @@
 ﻿using System;
-using Tool;
-
+using Framework;
 using UnityEngine;
 
 namespace Thunder.Utility
@@ -40,9 +39,9 @@ namespace Thunder.Utility
 
         private void Update()
         {
-            _MoveSyner.Set(ControlSys.Ins.RequireKey("Axis1", 0));
-            _JumpSyner.Set(ControlSys.Ins.RequireKey("Jump", 0));
-            _SquatSyner.Set(ControlSys.Ins.RequireKey("Squat", 0));
+            _MoveSyner.Set(ControlSys.RequireKey("Axis1", 0));
+            _JumpSyner.Set(ControlSys.RequireKey("Jump", 0));
+            _SquatSyner.Set(ControlSys.RequireKey("Squat", 0));
         }
 
         private void FixedUpdate()

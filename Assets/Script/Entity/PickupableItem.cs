@@ -1,5 +1,4 @@
-﻿using Tool;
-
+﻿using Framework;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace Thunder.Entity
         public float DropProtectedTime = 2;
         public int Count=1;
 
-        protected bool _CanPickup;
+        protected bool CanPickup;
         private Rigidbody _Rb;
         private AutoCounter _DropCounter;
 
@@ -27,7 +26,7 @@ namespace Thunder.Entity
         {
         }
 
-        public virtual void OpRecycle()
+        public virtual void OpPut()
         {
         }
 
@@ -40,23 +39,23 @@ namespace Thunder.Entity
         protected override void Awake()
         {
             base.Awake();
-            _DropCounter = new AutoCounter(this, DropProtectedTime).OnComplete(() => _CanPickup = true).Complete(false);
+            _DropCounter = new AutoCounter(this, DropProtectedTime).OnComplete(() => CanPickup = true).Complete(false);
             _Rb = GetComponent<Rigidbody>();
         }
 
         private void OnTriggerEnter(Collider collider)
         {
             var player = collider.GetComponent<Player>();
-            if (player == null || !_CanPickup || (Action & PickupItemAction.UnDirected) == 0) return;
+            if (player == null || !CanPickup || (Action & PickupItemAction.UnDirected) == 0) return;
             Pickup();
         }
 
         public void Launch(Vector3 pos, Quaternion rot, Vector3 force,int count)
         {
             _DropCounter.Recount();
-            _CanPickup = false;
-            _Trans.position = pos;
-            _Trans.rotation = rot;
+            CanPickup = false;
+            Trans.position = pos;
+            Trans.rotation = rot;
             _Rb.AddForce(force, ForceMode.Impulse);
             Count = count;
         }
@@ -64,8 +63,8 @@ namespace Thunder.Entity
         protected virtual void Pickup()
         {
             PublicEvents.PickupItem?.Invoke((ItemId, Count));
-            _CanPickup = false;
-            ObjectPool.Ins.Recycle(this);
+            CanPickup = false;
+            ObjectPool.Put(this);
         }
 
     }

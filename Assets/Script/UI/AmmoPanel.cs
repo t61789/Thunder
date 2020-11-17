@@ -1,4 +1,5 @@
-﻿using Thunder.Entity.Weapon;
+﻿using Framework;
+using Thunder.Entity.Weapon;
 using Thunder.Utility;
 using TMPro;
 

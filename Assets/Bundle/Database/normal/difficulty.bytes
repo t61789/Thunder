@@ -1,0 +1,1 @@
+{"Fields":["diff_id","aircraft_id","max","baseline_min","baseline_max","interval"],"Rows":[["easy_noli","protoEnemy",7,-1.0,-1.0,2.0],["easy_noli","protoEnemyShooter",5,3.0,-1.0,5.0],["easy_li","protoEnemy",7,-1.0,-1.0,2.0],["easy_li","protoEnemyShooter",5,3.0,-1.0,5.0]]}

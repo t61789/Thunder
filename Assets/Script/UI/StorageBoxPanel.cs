@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Framework;
 using Thunder.Entity;
-using Tool;
-
-
-using Thunder.Utility;
 
 namespace Thunder.UI
 {
@@ -21,10 +13,10 @@ namespace Thunder.UI
             // todo PackageCellAdapter = new PackageCellAdapter();
         }
 
-        protected override void BeforeClose()
+        public override void BeforeClose()
         {
             base.BeforeClose();
-            ControlSys.Ins.ShieldValue.Release(StorageBox.OperationPanel);
+            ControlSys.ShieldValue.Release(StorageBox.OperationPanel);
         }
     }
 }

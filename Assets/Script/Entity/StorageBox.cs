@@ -1,4 +1,4 @@
-﻿using Tool;
+﻿using Framework;
 using Thunder.UI;
 using Thunder.Utility;
 
@@ -20,8 +20,8 @@ namespace Thunder.Entity
         public void Interactive(ControlInfo info)
         {
             if (!info.Down) return;
-            ControlSys.Ins.ShieldValue.Request(OperationPanel);
-            var panel = UISys.Ins.OpenUI<StorageBoxPanel>(OperationPanel);
+            ControlSys.ShieldValue.Request(OperationPanel);
+            var panel = UISys.OpenUI<StorageBoxPanel>(OperationPanel);
             panel.PackageCellAdapter.SetPackage(_Package);
         }
     }

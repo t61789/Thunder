@@ -1,0 +1,129 @@
+PlayerController = {}
+PlayerController.Init = function(data,ctr)
+	data.trans = ctr.transform
+	data.cameraTrans = UnityEngine.Camera.main.transform
+	data.animator = ctr.gameObject:GetComponent(typeof(UnityEngine.Animator))
+	data.staringTarget = nil
+	data.velocity = UnityEngine.Vector3()
+	data.controlSaveTime = 0.5
+	data.controlSaveTimeCount = 0
+	data.lockSearchRange = 10
+	data.fastRunRotFactor = 6
+	data.runDirRotFactor = 0.7
+end
+PlayerController.Update = function(data)
+	if(Thunder.Sys.Stable.Control:RequireKey("LockEnemy",0.0).Down) then
+		PlayerController.LockTarget(data)
+	end
+	local temp = Thunder.Sys.Stable.Control:RequireKey("Attack",0.0).Stay
+	if(temp==true) then 
+		data.animator:SetBool("Attack",true)	-- 锁定模式下才能攻击
+		data.controlSaveTimeCount = UnityEngine.Time.time
+	elseif(UnityEngine.Time.time - data.controlSaveTimeCount > data.controlSaveTime) then
+		data.animator:SetBool("Attack",false)
+	else
+		data.animator:SetBool("Attack",true)
+	end
+end
+
+PlayerController.FixedUpdate = function(data)
+	local ctrlDir = Thunder.Sys.Stable.Control:RequireKey("Axis1",0.0).Axis
+	ctrlDir.z = ctrlDir.y
+	ctrlDir.y = 0
+	ctrlDir = ctrlDir.normalized -- 转至xz平面
+	
+	local worldCtrlDir = data.cameraTrans.localToWorldMatrix:MultiplyVector(ctrlDir)
+	worldCtrlDir.y = 0
+	local hasInput = worldCtrlDir.x ~= 0 or worldCtrlDir.z ~= 0
+	
+	--if(data.staringTarget~=nil) then
+		--local toTarget = data.staringTarget.position - data.trans.position
+		--toTarget.y = 0
+		--local cameraForward = data.cameraTrans.rotation * UnityEngine.Vector3.forward
+		--worldCtrlDir = UnityEngine.Quaternion.FromToRotation(cameraForward,toTarget) * worldCtrlDir
+	--end	-- 轴转至瞄准方向
+	
+	
+	ctrlDir = data.trans.worldToLocalMatrix:MultiplyVector(worldCtrlDir) -- 坐标系更改为人物坐标系
+	ctrlDir = ctrlDir.normalized
+	
+	local curStateInfo = data.animator:GetCurrentAnimatorStateInfo(0)
+	if(data.staringTarget==nil and hasInput and curStateInfo:IsName("MoveForward")) then
+		local curEulerAngle = data.trans.localEulerAngles
+		curEulerAngle.y = Thunder.Tool.Tools.TurnToVectorXz(curEulerAngle.y,worldCtrlDir,data.fastRunRotFactor * UnityEngine.Mathf.Abs(ctrlDir.x) * data.runDirRotFactor)
+		data.trans.localEulerAngles = curEulerAngle
+	end
+
+	data.velocity = UnityEngine.Vector3.Lerp(data.velocity,ctrlDir,data.MoveDamp)
+	
+	
+	Thunder.Tool.Tools.DrawLine(data.trans.position,data.trans.position+data.trans.localToWorldMatrix:MultiplyVector(ctrlDir)*2)
+	
+	local velocityMag = data.velocity.magnitude
+
+	if(ctrlDir.x==0)then ctrlDir.x = 0.001 end
+	data.animator:SetFloat("DRight",ctrlDir.x)
+	data.animator:SetFloat("DFront",ctrlDir.z)
+	data.animator:SetBool("HasInput",hasInput)
+	data.animator:SetFloat("Right",data.velocity.x)
+	data.animator:SetFloat("Front",data.velocity.z)
+	data.animator:SetFloat("Velocity",velocityMag)
+	
+	if(curStateInfo:IsName("TurnBack") ~= true) then
+		local turnBack = 0
+		if(ctrlDir.x>=0)then turnBack = 1 else turnBack = -1 end
+		data.animator:SetFloat("TurnBackDir",turnBack)
+	end
+	
+	if(data.staringTarget~=nil) then -- 锁定模式下的转向增强，使人物紧盯着目标
+		local temp = (data.staringTarget.position - data.trans.position).normalized
+		temp.y = 0
+
+		local curEulerAngle = data.trans.localEulerAngles
+		curEulerAngle.y = Thunder.Tool.Tools.TurnToVectorXz(curEulerAngle.y,temp,data.fastRunRotFactor)
+		data.trans.localEulerAngles = curEulerAngle
+	end
+end
+
+PlayerController.LockTarget = function(data)
+	if(data.staringTarget~=nil) then
+		data.animator:SetTrigger("SwitchToFreeMode")
+		data.staringTarget = nil
+		Thunder.Sys.Stable.MainCamera.PlayerLockParam.Target = nil
+		Thunder.Sys.Stable.MainCamera:SwitchCameraMode(Thunder.CameraMode.FreeLook)
+		return
+	end
+
+	local allCast = UnityEngine.Physics.SphereCastAll(UnityEngine.Vector3.zero, data.lockSearchRange, UnityEngine.Vector3.one)
+	local minDistance = 65535
+	local minTarget = nil
+	
+	for i=0,allCast.Length-1 do
+		local controller = allCast[i].transform:GetComponent(typeof(Thunder.Entity.Controller))
+		
+		if(controller~=nil 
+		and Thunder.Sys.Stable.Camp:IsHostile(data.CSharp,controller)
+		and Thunder.Tool.Tools.InCameraView(controller.transform.position,nil)) then
+			local curDistance = (controller.transform.position - data.trans.position).sqrMagnitude
+			if(curDistance<minDistance) then
+				minDistance = curDistance
+				minTarget = controller
+			end
+		end
+	end
+	
+	if(minTarget~=nil) then
+		data.staringTarget = minTarget.transform
+		data.animator:SetTrigger("SwitchToStaringMode")
+		Thunder.Sys.Stable.MainCamera.PlayerLockParam.Target = minTarget.transform
+		Thunder.Sys.Stable.MainCamera:SwitchCameraMode(Thunder.CameraMode.PlayerLock)
+	end
+end
+
+PlayerController.AttackDecisionStart = function(data)
+	Thunder.Tool.Tools.RecursiveFind(data.trans,"AttackTrail"):GetComponent(typeof(UnityEngine.TrailRenderer)).emitting = true
+end
+
+PlayerController.AttackDecisionEnd = function(data)
+	Thunder.Tool.Tools.RecursiveFind(data.trans,"AttackTrail"):GetComponent(typeof(UnityEngine.TrailRenderer)).emitting = false
+end

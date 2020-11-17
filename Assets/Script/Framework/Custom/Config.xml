@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <!--这两个路径为强制路径，用于开发阶段调试，如果enable为true则会覆盖相对路径-->
+  <!--此外document路径没有强制路径，只能在相对路径中定义-->
+  <BundleBasePath enable="true" path="E:\AssetBundles\StandaloneWindows"/>
+  <LogPath enable="true" path="E:\ThunderLog.txt"/>
+
+  <!--相对路径，基路径由程序决定-->
+  <PlatformRelative>
+    <Android>
+      <Bundle path="AssetBundles"/>
+      <Document path="Doc"/>
+      <Log path="ThunderLog.log"/>
+    </Android>
+    <Standalone>
+      <Bundle path="AssetBundles"/>
+      <Document path="MyGame\Thunder"/>
+      <Log path="ThunderLog.log"/>
+    </Standalone>
+  </PlatformRelative>
+
+  <!--各系统所需数据的bundle文件夹名-->
+  <SysBundleName>
+    <DllBundle name="dll"/>
+    <PrefabBundle name="prefabs"/>
+    <UIBundle name="ui"/>
+    <ValuesBundle name="values"/>
+    <DatabaseBundle name="database"/>
+    <LuaBundle name="lua"/>
+  </SysBundleName>
+</root>

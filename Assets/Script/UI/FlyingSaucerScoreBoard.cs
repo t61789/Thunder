@@ -1,9 +1,8 @@
 ﻿using DG.Tweening;
+using Framework;
 using Thunder.Game.FlyingSaucer;
-
 using Thunder.Utility;
 using TMPro;
-using Tool;
 using UnityEngine;
 
 namespace Thunder.UI
@@ -33,8 +32,8 @@ namespace Thunder.UI
             _HitJumpBaseSize = _BatterTextRectTrans.rect.Size();
 
             _HitJumpTween = DOTween.Sequence();
-            _HitJumpTween.Append(_BatterTextRectTrans.DOFixedSize(_HitJumpBaseSize * HitJumpSizeScale, HitJumpTime.x));
-            _HitJumpTween.Append(_BatterTextRectTrans.DOFixedSize(_HitJumpBaseSize, HitJumpTime.y));
+            _HitJumpTween.Append(_BatterTextRectTrans.DOSizeDelta(_HitJumpBaseSize * HitJumpSizeScale, HitJumpTime.x));
+            _HitJumpTween.Append(_BatterTextRectTrans.DOSizeDelta(_HitJumpBaseSize, HitJumpTime.y));
             _HitJumpTween.SetAutoKill(false);
             _HitJumpTween.Pause();
 

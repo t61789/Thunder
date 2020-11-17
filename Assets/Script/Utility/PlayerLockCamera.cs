@@ -1,5 +1,6 @@
-﻿using Tool;
+﻿
 
+using Framework;
 using UnityEngine;
 
 namespace Thunder.Utility
@@ -58,7 +59,7 @@ namespace Thunder.Utility
                 new Vector4(0, 1, 0, 0),
                 new Vector4(p2TDirFlat.x, 0, p2TDirFlat.z, 0),
                 new Vector4(playerPos.x, playerPos.y, playerPos.z, 1));
-            var scrollDelta = ControlSys.Ins.RequireKey("Axis3", 0).Axis.x * ScrollSensitive;
+            var scrollDelta = ControlSys.RequireKey("Axis3", 0).Axis.x * ScrollSensitive;
             _TargetShoulderScale = Mathf.Clamp(_TargetShoulderScale - scrollDelta, 0, MaxShoulderScale);
             ShoulderScale = Mathf.Lerp(ShoulderScale, _TargetShoulderScale, SmoothFactor);
 
@@ -69,7 +70,7 @@ namespace Thunder.Utility
         private void LateUpdate()
         {
             //Vector3 temp = default;
-            //_Trans.position =Vector3.SmoothDamp(_Trans.position, _TargetPos, ref temp, SmoothFactor);
+            //Trans.position =Vector3.SmoothDamp(Trans.position, _TargetPos, ref temp, SmoothFactor);
             Trans.position = Vector3.Lerp(Trans.position, _TargetPos, SmoothFactor);
             Trans.rotation = Quaternion.Lerp(Trans.rotation, _TargetRot, SmoothFactor);
         }

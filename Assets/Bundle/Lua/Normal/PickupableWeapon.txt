@@ -1,0 +1,4 @@
+PickupableWeapon = {}
+PickupableWeapon.Pickup = function(data,player)
+	
+end

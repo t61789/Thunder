@@ -1,6 +1,4 @@
-﻿using Thunder.Entity;
-using Tool;
-
+﻿using Framework;
 using Thunder.UI;
 using Thunder.Utility;
 using UnityEngine;

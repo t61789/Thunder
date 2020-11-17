@@ -1,4 +1,5 @@
-﻿using Tool;
+﻿
+using Framework;
 using UnityEngine;
 
 namespace Thunder.Utility
@@ -68,7 +69,7 @@ namespace Thunder.Utility
         private void FixedUpdate()
         {
             //视角，读取输入
-            Vector2 ctrlDir = ControlSys.Ins.RequireKey("Axis2", 0).Axis;
+            Vector2 ctrlDir = ControlSys.RequireKey("Axis2", 0).Axis;
 
             var ctrlEuler = MoveToEuler(ctrlDir);
             if (ctrlDir != Vector2.zero)
@@ -83,7 +84,7 @@ namespace Thunder.Utility
 
             _WeaponAttachPoint.localEulerAngles = new Vector3(GetWeaponVerticalPitch(),0);
 
-            if (ControlSys.Ins.RequireKey("LockCursor", 0).Down)
+            if (ControlSys.RequireKey("LockCursor", 0).Down)
                 SwitchLockCursor();
         }
 
@@ -160,7 +161,7 @@ namespace Thunder.Utility
 
         private static void SwitchLockCursor()
         {
-            ControlSys.Ins.LockCursor = !ControlSys.Ins.LockCursor;
+            ControlSys.LockCursor = !ControlSys.LockCursor;
         }
     }
 }

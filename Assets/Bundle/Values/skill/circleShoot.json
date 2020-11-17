@@ -1,0 +1,5 @@
+{
+	"skillCd":5,
+	"bulletNum":[2,4,8,16],
+	"fireInterval":0.5
+}

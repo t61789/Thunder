@@ -1,4 +1,4 @@
-﻿using Tool;
+﻿using Framework;
 
 using UnityEngine;
 
@@ -14,7 +14,7 @@ namespace Thunder.Entity
         {
         }
 
-        public void OpRecycle()
+        public void OpPut()
         {
         }
 
@@ -30,8 +30,8 @@ namespace Thunder.Entity
 
         public void Init(Vector3 pos, Vector3 normal, Sprite sprite)
         {
-            _Trans.position = pos;
-            _Trans.rotation = Quaternion.LookRotation(normal);
+            Trans.position = pos;
+            Trans.rotation = Quaternion.LookRotation(normal);
             _SpriteRenderer.sprite = sprite;
         }
     }

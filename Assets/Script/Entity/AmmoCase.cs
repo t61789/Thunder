@@ -1,4 +1,4 @@
-﻿using Tool;
+﻿using Framework;
 using Thunder.Utility;
 
 namespace Thunder.Entity

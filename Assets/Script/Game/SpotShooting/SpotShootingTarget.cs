@@ -1,6 +1,7 @@
-﻿using Thunder.Entity;
+﻿using Framework;
+using Thunder.Entity;
 using Thunder.Utility;
-using Tool;
+
 using UnityEngine;
 
 namespace Thunder.Game.SpotShooting
@@ -34,10 +35,10 @@ namespace Thunder.Game.SpotShooting
 
         private void FixedUpdate()
         {
-            var rot = _Trans.eulerAngles;
+            var rot = Trans.eulerAngles;
             rot.x = Tools.Lerp(_RotateToRise ? UnRiseAngle : RiseAngle,
                 _RotateToRise ? RiseAngle : UnRiseAngle, _RiseCounter.Interpolant);
-            _Trans.eulerAngles = rot;
+            Trans.eulerAngles = rot;
         }
 
         public void Rise()

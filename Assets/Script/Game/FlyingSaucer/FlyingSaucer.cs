@@ -1,6 +1,4 @@
-﻿using Thunder.Entity;
-using Tool;
-
+﻿using Framework;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -19,7 +17,7 @@ namespace Thunder.Game.FlyingSaucer
         {
         }
 
-        public void OpRecycle()
+        public void OpPut()
         {
         }
 
@@ -32,9 +30,9 @@ namespace Thunder.Game.FlyingSaucer
         public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
         {
             _Rb.AddForceAtPosition(hitDir.normalized * damage * ForceScale, hitPos, ForceMode.Impulse);
-            ObjectPool.Ins.Alloc<SelfDestroyPartical>("hitParticle")
-                .transform.position = _Trans.position;
-            ObjectPool.Ins.Recycle(this);
+            ObjectPool.Get<SelfDestroyPartical>("hitParticle")
+                .transform.position = Trans.position;
+            ObjectPool.Put(this);
             PublicEvents.FlyingSaucerHit?.Invoke();
         }
 
@@ -54,10 +52,10 @@ namespace Thunder.Game.FlyingSaucer
         {
             var flyingForceFactor = _Rb.velocity.sqrMagnitude * FlyingDirForceFactor;
 
-            _Trans.rotation =
-                Quaternion.Lerp(_Trans.rotation, Quaternion.LookRotation(_Rb.velocity), flyingForceFactor);
+            Trans.rotation =
+                Quaternion.Lerp(Trans.rotation, Quaternion.LookRotation(_Rb.velocity), flyingForceFactor);
             if (Time.time - _LifeTimeCount > LifeTime)
-                ObjectPool.Ins.Recycle(this);
+                ObjectPool.Put(this);
         }
 
         public void Launch(Vector3 force)

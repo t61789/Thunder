@@ -1,6 +1,5 @@
 ﻿using System;
-using Tool;
-
+using Framework;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -17,7 +16,7 @@ namespace Thunder.Entity.Weapon
         {
         }
 
-        public void OpRecycle()
+        public void OpPut()
         {
         }
 
@@ -33,7 +32,7 @@ namespace Thunder.Entity.Weapon
         {
             base.Awake();
 
-            _LifeTimeCounter = new AutoCounter(this, 0).OnComplete(() => { ObjectPool.Ins.Recycle(this); })
+            _LifeTimeCounter = new AutoCounter(this, 0).OnComplete(() => { ObjectPool.Put(this); })
                 .Complete(false);
             _Collider = GetComponent<BoxCollider>();
         }
@@ -42,8 +41,8 @@ namespace Thunder.Entity.Weapon
         {
             _Collider.size = areaSize;
             _Collider.center = Vector3.forward * areaSize.z / 2;
-            _Trans.position = startPos;
-            _Trans.rotation = rot;
+            Trans.position = startPos;
+            Trans.rotation = rot;
             _LifeTimeCounter.Recount(lifeTime);
         }
 

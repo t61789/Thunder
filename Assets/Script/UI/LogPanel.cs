@@ -1,6 +1,7 @@
 ﻿using System.Linq;
+using Framework;
 using TMPro;
-using Tool;
+
 using UnityEngine;
 
 namespace Thunder.UI
@@ -10,7 +11,7 @@ namespace Thunder.UI
         public static LogPanel Ins;
 
         private int _LogPointer;
-        private CircleQueue<string> _LogQueue;
+        private PipelineQueue<string> _LogQueue;
         private TextMeshProUGUI[] _TextQueue;
 
         public int MaxBufferSize;
@@ -19,7 +20,7 @@ namespace Thunder.UI
         {
             base.Awake();
             Ins = this;
-            _LogQueue = new CircleQueue<string>(MaxBufferSize);
+            _LogQueue = new PipelineQueue<string>(MaxBufferSize);
             var l =
                 (from Transform rectTran
                         in RectTrans
@@ -56,7 +57,7 @@ namespace Thunder.UI
         {
             var i = 0;
             for (; i < _TextQueue.Length && i + startPos < _LogQueue.Count; i++)
-                _TextQueue[i].text = _LogQueue[i + startPos, true];
+                _TextQueue[i].text = _LogQueue[i + startPos];
             for (; i < _TextQueue.Length; i++)
                 _TextQueue[i].text = null;
         }

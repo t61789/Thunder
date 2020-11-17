@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using Tool;
+using Framework;
 using Thunder.Utility;
 using UnityEngine.UI;
 
@@ -31,13 +31,13 @@ namespace Thunder.UI
         public void InputEndOK()
         {
             dialogResult = DialogResult.Ok;
-            UISys.Ins.CloseUI(EntityName);
+            UISys.CloseUI(EntityName);
         }
 
         public void InputEndCancel()
         {
             dialogResult = DialogResult.Cancel;
-            UISys.Ins.CloseUI(EntityName);
+            UISys.CloseUI(EntityName);
         }
 
         public override void OpReset()

@@ -1,0 +1,51 @@
+function StartButton()
+	Thunder.Sys.Stable.Ui:OpenUi("SaveUI")
+end
+
+function StartLoadOrSave(dialogof)
+	local Ui = Thunder.Sys.Stable.Ui
+
+	if (Ui:IsUiOpened("LoadSaveListPlane")) then 
+		Ui:CloseUi("LoadSaveListPlane")
+		return
+	end
+	
+	local list = System.Collections.Generic.List_System_Action_Thunder_UI_BaseUi()
+	local dirarray = System.IO.Directory.GetDirectories(Thunder.Utility.Paths.DocumentPath)
+	local dirarrayCount = dirarray.Length
+
+	for index = 0,dirarrayCount-1,1 do 
+		local temp = dirarray[index]
+		list:Add(function(x) Push(x,temp) end)
+	end
+	
+	local vector = UnityEngine.Vector2
+	local param = Thunder.UI.ListPlane.Parameters(1, "normalButton", vector(500, 150), vector(50, 50), vector(0, 0))
+	local func = function(x) x:Init(param,list) end
+	Thunder.Sys.Stable.Ui:OpenUi( "listPlane", dialogof, true, Thunder.Utility.UiInitType.CenterParent, func)
+end	
+
+function Test(fff)
+	print(fff)
+end
+
+function Push(x,var)
+	local b = x.gameObject:GetComponent(typeof(UnityEngine.UI.Button))
+	b.transform:Find("Text").gameObject:GetComponent(typeof(UnityEngine.UI.Text)).text = System.IO.Path.GetFileName(var)
+	-- b:transform:Find("Text"):GetComponent(UnityEngine.UI.Text):text = System.IO.Path.GetFileName(var)
+	b.onClick:AddListener(function() LoadSave(b) end)
+	x:InitRect(Thunder.Utility.UiInitType.FillParent)
+end
+
+function LoadSave(button)
+	local stable = Thunder.Sys.Stable
+    stable.Save = 
+	Thunder.Sys.SaveSys.LoadSave(button.transform:Find("Text"):GetComponent(typeof(UnityEngine.UI.Text)).text)
+	Thunder.Sys.Stable.Instance:LoadSceneAsync("LevelScene")
+end
+
+function Select(ikimono)
+	
+end
+        
+	

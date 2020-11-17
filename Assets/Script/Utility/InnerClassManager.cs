@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Tool;
+using Framework;
 
 namespace Thunder.Utility
 {

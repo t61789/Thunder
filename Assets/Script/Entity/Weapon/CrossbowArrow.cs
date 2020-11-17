@@ -1,6 +1,4 @@
-﻿using Tool;
-
-
+﻿using Framework;
 using Thunder.Utility;
 using UnityEngine;
 
@@ -25,7 +23,7 @@ namespace Thunder.Entity.Weapon
             _Rb.useGravity = false;
         }
 
-        public void OpRecycle()
+        public void OpPut()
         {
         }
 
@@ -36,22 +34,22 @@ namespace Thunder.Entity.Weapon
         protected override void Awake()
         {
             base.Awake();
-            _LifeTimeCounter = new AutoCounter(this, LifeTime).OnComplete(() => ObjectPool.Ins.Recycle(this))
+            _LifeTimeCounter = new AutoCounter(this, LifeTime).OnComplete(() => ObjectPool.Put(this))
                 .Complete(false);
             _Rb = GetComponent<Rigidbody>();
         }
 
         public void Install(Transform parent, Vector3 localPos)
         {
-            _Trans.SetParent(parent);
-            _Trans.localPosition = localPos;
-            _Trans.rotation = parent.rotation;
+            Trans.SetParent(parent);
+            Trans.localPosition = localPos;
+            Trans.rotation = parent.rotation;
         }
 
         public void Launch(Vector3 impulseForce, float carryDamage)
         {
             _CarryDamage = carryDamage;
-            _Trans.SetParent(GameCore.Container);
+            Trans.SetParent(GameCore.Container);
             _Rb.useGravity = true;
             _Rb.AddForce(impulseForce, ForceMode.Impulse);
             _LifeTimeCounter.Recount();
@@ -62,18 +60,18 @@ namespace Thunder.Entity.Weapon
             if (_HitSomeone) return;
 
             collider.GetComponent<IShootable>()
-                ?.GetShoot(_Trans.position, _Rb.velocity.normalized, Damage + _CarryDamage);
+                ?.GetShoot(Trans.position, _Rb.velocity.normalized, Damage + _CarryDamage);
 
             _Rb.velocity = Vector3.zero;
             _Rb.useGravity = false;
             _HitSomeone = true;
-            _Trans.SetParent(collider.transform);
+            Trans.SetParent(collider.transform);
         }
 
         private void FixedUpdate()
         {
             if (_Rb.useGravity)
-                _Trans.rotation = Quaternion.LookRotation(_Rb.velocity);
+                Trans.rotation = Quaternion.LookRotation(_Rb.velocity);
         }
     }
 }

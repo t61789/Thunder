@@ -1,13 +1,14 @@
 ﻿using System;
-using Tool;
-
+using Framework;
 using Thunder.Utility;
 using UnityEngine;
+using Package = Framework.Package;
 
 namespace Thunder.Entity
 {
     [RequireComponent(typeof(FpsCamera))]
     [RequireComponent(typeof(FpsMover))]
+    [RequireComponent(typeof(Starvation))]
     public class Player : BaseEntity
     {
         public static Player Ins;
@@ -27,7 +28,7 @@ namespace Thunder.Entity
         public ItemCombiner ItemCombiner { private set; get; }
         public FpsCamera FpsCamera { private set; get; }
         public FpsMover FpsMover { private set; get; }
-
+        public Starvation Starvation { private set; get; }
 
 
         protected override void Awake()
@@ -36,23 +37,24 @@ namespace Thunder.Entity
 
             Ins = this;
 
-            _PivotTrans = _Trans.Find("Pivot");
+            _PivotTrans = Trans.Find("Pivot");
             _WeaponAttachPoint = _PivotTrans.Find("Weapon");
 
             WeaponBelt = new WeaponBelt(GlobalSettings.WeaponBeltCellTypes, _WeaponAttachPoint);
             Dropper = new Dropper(DropItemForce, () => _PivotTrans.position, () => _PivotTrans.rotation);
             Package = new Package(PackageSize);
-            ItemCombiner = new ItemCombiner(Package, DataBaseSys.Ins["combine_expressions"]);
+            ItemCombiner = new ItemCombiner(Package, DataBaseSys.GetTable("combine_expressions"));
             FpsCamera = GetComponent<FpsCamera>();
             FpsMover = GetComponent<FpsMover>();
             FpsCamera.SquattingOffset = FpsMover.SquattingOffset = SquattingOffset;
+            Starvation = GetComponent<Starvation>();
 
             PublicEvents.DropItem.AddListener(Drop);
         }
 
         private void Update()
         {
-            _InteractiveSyn.Set(ControlSys.Ins.RequireKey(GlobalSettings.InteractiveKeyName, 0));
+            _InteractiveSyn.Set(ControlSys.RequireKey(GlobalSettings.InteractiveKeyName, 0));
         }
 
         private void FixedUpdate() 
@@ -92,7 +94,7 @@ namespace Thunder.Entity
 
         public void Drop(ItemGroup group)
         {
-            var item = ObjectPool.Ins.Alloc<PickupableItem>(ItemSys.Ins[group.Id].PickPrefabPath);
+            var item = ObjectPool.Get<PickupableItem>(ItemSys.Ins[group.Id].PickPrefabPath);
             item.ItemId = group.Id;
             var rot = _Rot();
             var force = rot * Vector3.forward * _LaunchForce;

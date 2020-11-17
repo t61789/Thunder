@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tool;
-
+using Framework;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.UI;
@@ -48,7 +47,7 @@ namespace Thunder.UI
             scrollbar.x.value = 0;
 
             foreach (var item in elements)
-                ObjectPool.Ins.Recycle(item);
+                ObjectPool.Put(item);
             elements.Clear();
 
             foreach (RectTransform item in elementsTrans)
@@ -145,7 +144,7 @@ namespace Thunder.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                var item = ObjectPool.Ins.Alloc<T>(new AssetId(UISys.DefaultUIBundle, parameters.elementName));
+                var item = ObjectPool.Get<T>(new AssetId(UISys.DefaultUIBundle, parameters.elementName));
                 inits[i]?.Invoke(item);
                 var rectTransform = item.GetComponent<RectTransform>();
                 rectTransform.SetParent(elementContainer);

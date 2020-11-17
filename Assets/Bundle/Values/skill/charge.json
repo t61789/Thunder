@@ -1,0 +1,8 @@
+{
+	"protonSwordPosition":{"pos":[0.668,0.033,0]},
+	"protonSwordPrefab":"protonSword",
+	"damageCoeffient":0.02,
+	"sharpness":2,
+	"buffOperator":2,
+	"buffPriority":10
+}

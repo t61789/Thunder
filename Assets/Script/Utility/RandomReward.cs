@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
-using Tool;
+using Framework;
 
 namespace Thunder.Utility
 {

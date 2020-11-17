@@ -1,6 +1,7 @@
-﻿using Thunder.Entity;
+﻿using Framework;
+using Thunder.Entity;
 using Thunder.Utility;
-using Tool;
+
 using UnityEngine;
 
 namespace Thunder.Game

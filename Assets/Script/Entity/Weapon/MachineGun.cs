@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Tool;
+using Framework;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -43,8 +43,7 @@ namespace Thunder.Entity.Weapon
             base.Awake();
 
             _Animator = GetComponent<Animator>();
-            _Trans = transform;
-            _Player = _Trans.parent.parent.parent.GetComponent<Player>();
+            _Player = Trans.parent.parent.parent.GetComponent<Player>();
             Assert.IsNotNull(_Player,
                 $"枪械 {name} 安装位置不正确");
 
@@ -60,13 +59,13 @@ namespace Thunder.Entity.Weapon
         {
             if (!Safety) return;
 
-            var fire = ControlSys.Ins.RequireKey(GlobalSettings.FireKeyName, 0);
+            var fire = ControlSys.RequireKey(GlobalSettings.FireKeyName, 0);
             var param = _Burst.FireCheck(fire, !AmmoGroup.MagzineEmpty(), out var autoReload);
             if (param) Fire();
 
             param = AmmoGroup.ReloadConfirm() &&
                     !_Reloading &&
-                    (ControlSys.Ins.RequireKey(RELOAD, 0).Down || autoReload);
+                    (ControlSys.RequireKey(RELOAD, 0).Down || autoReload);
             _StickyInputDic.SetBool(RELOAD, param);
             if (param && !_Reloading)
             {
@@ -78,9 +77,9 @@ namespace Thunder.Entity.Weapon
 
             _Animator.SetBool(RELOAD, _StickyInputDic.GetBool(RELOAD));
 
-            if (ControlSys.Ins.RequireKey(GlobalSettings.AimScopeKeyName, 0).Down)
+            if (ControlSys.RequireKey(GlobalSettings.AimScopeKeyName, 0).Down)
                 _AimScope.Switch();
-            if (ControlSys.Ins.RequireKey(GlobalSettings.SwitchFireModeKeyName, 0).Down)
+            if (ControlSys.RequireKey(GlobalSettings.SwitchFireModeKeyName, 0).Down)
                 _Burst.LoopMode();
         }
 
@@ -130,7 +129,7 @@ namespace Thunder.Entity.Weapon
             var dir = _BulletSpread.GetNextBulletDir(FireInterval);
             dir = Camera.main.transform.localToWorldMatrix * dir;
 
-            if (Physics.Raycast(_Trans.position, dir, out var hit))
+            if (Physics.Raycast(Trans.position, dir, out var hit))
             {
                 _Spreads.Add(hit.point);
                 if (_Spreads.Count > 50)
@@ -327,7 +326,7 @@ namespace Thunder.Entity.Weapon
             {
                 _MainCamera.fieldOfView = _EnableFOV;
                 PostProcessingController.Instance.AimScope.Enable = true;
-                UISys.Ins.CloseUI(AIM_POINT_UI_NAME);
+                UISys.CloseUI(AIM_POINT_UI_NAME);
                 _PlayerSensitive.AddBuff(_AimScopeSensitiveScale, Operator.Mul, 0);
                 PostProcessingController.Instance.DepthOfField.Enable = true;
             }
@@ -335,7 +334,7 @@ namespace Thunder.Entity.Weapon
             {
                 _MainCamera.fieldOfView = _BaseFOV;
                 PostProcessingController.Instance.AimScope.Enable = false;
-                UISys.Ins.OpenUI(AIM_POINT_UI_NAME);
+                UISys.OpenUI(AIM_POINT_UI_NAME);
                 _PlayerSensitive.RemoveBuff(_AimScopeSensitiveScale);
                 PostProcessingController.Instance.DepthOfField.Enable = false;
             }

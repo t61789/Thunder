@@ -1,6 +1,4 @@
-﻿using Tool;
-using Thunder.UI;
-using Thunder.Utility;
+﻿using Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -41,7 +39,7 @@ namespace Thunder.Entity
             var group = package.GetCell(packageIndex);
             _PackageIndex = packageIndex;
             _Package = package;
-            _RawImage.texture = BundleSys.Ins.GetAsset<Texture>(ItemSys.Ins[group.Id].PackageCellTexturePath);
+            _RawImage.texture = BundleSys.GetAsset<Texture>(ItemSys.Ins[group.Id].PackageCellTexturePath);
             _CountText.text = ShowCount ? group.Count.ToString():string.Empty;
             PackageIndex = packageIndex;
             PackageIndex = -1;

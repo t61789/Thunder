@@ -1,4 +1,5 @@
-﻿using Tool;
+﻿
+using Framework;
 using UnityEngine;
 
 namespace Thunder.Utility
@@ -33,7 +34,7 @@ namespace Thunder.Utility
         private void FixedUpdate()
         {
             if (Target == null) return;
-            var deltaAxis = ControlSys.Ins.RequireKey("Axis2", 0).Axis * Sensitive;
+            var deltaAxis = ControlSys.RequireKey("Axis2", 0).Axis * Sensitive;
 
             _TargetRot.y += deltaAxis.x;
             _TargetRot.x -= deltaAxis.y;
@@ -43,7 +44,7 @@ namespace Thunder.Utility
 
             _FixedRot = Quaternion.Lerp(_FixedRot, Quaternion.Euler(_TargetRot), SmoothFactor);
 
-            var scrollDelta = ControlSys.Ins.RequireKey("Axis3", 0).Axis.x * Sensitive;
+            var scrollDelta = ControlSys.RequireKey("Axis3", 0).Axis.x * Sensitive;
             _TargetFollowRange = Mathf.Clamp(_TargetFollowRange - scrollDelta, 0, MaxFollowRange);
             FollowRange = Mathf.Lerp(FollowRange, _TargetFollowRange, SmoothFactor);
 

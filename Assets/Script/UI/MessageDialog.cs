@@ -1,4 +1,5 @@
-﻿using UnityEngine.UI;
+﻿using Framework;
+using UnityEngine.UI;
 
 namespace Thunder.UI
 {

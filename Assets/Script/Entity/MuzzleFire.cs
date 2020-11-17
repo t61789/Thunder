@@ -1,7 +1,6 @@
-﻿using Thunder.Entity.Weapon;
-
+﻿using Framework;
+using Thunder.Entity.Weapon;
 using Thunder.Utility;
-using Tool;
 using UnityEngine;
 
 namespace Thunder.Entity

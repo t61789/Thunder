@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Framework;
 using Thunder.Entity.Weapon;
-using Tool;
+
 
 
 using UnityEngine;
@@ -189,18 +190,18 @@ namespace Thunder.Utility
         /// </summary>
         public void InputCheck()
         {
-            if (ControlSys.Ins.RequireKey(GlobalSettings.PreWeaponKeyName, SHIELD_VALUE).Down)
+            if (ControlSys.RequireKey(GlobalSettings.PreWeaponKeyName, SHIELD_VALUE).Down)
                 SwitchWeaponToPre();
             else
                 foreach (var pairs in
                     _Keys.Where(pairs =>
-                        ControlSys.Ins.RequireKey(pairs.Key, SHIELD_VALUE).Down))
+                        ControlSys.RequireKey(pairs.Key, SHIELD_VALUE).Down))
                 {
                     SwitchWeapon(pairs.Value);
                     break;
                 }
 
-            if (ControlSys.Ins.RequireKey(GlobalSettings.DropWeaponKeyName, SHIELD_VALUE).Down)
+            if (ControlSys.RequireKey(GlobalSettings.DropWeaponKeyName, SHIELD_VALUE).Down)
                 DropCurrentWeapon();
         }
 
@@ -245,7 +246,7 @@ namespace Thunder.Utility
 
         private BaseWeapon CreateWeapon(ItemId id)
         {
-            var weapon =  ObjectPool.Ins.GetPrefab(_WeaponInfoDic[id].PrefabPath)
+            var weapon =  ObjectPool.GetPrefab(_WeaponInfoDic[id].PrefabPath)
                 .GetInstantiate()
                 .GetComponent<BaseWeapon>();
             weapon.ReadAdditionalData(id.Add);
@@ -257,10 +258,10 @@ namespace Thunder.Utility
         {
             var selected1 =
                 from info in ItemSys.Ins.ItemInfos
-                where (info.Flag & ItemFlag.Weapon) != 0
+                where info.Flag.HasFlag(ItemFlag.Weapon)
                 select info;
             var selected2 =
-                from row in DataBaseSys.Ins["weapon_info"]
+                from row in DataBaseSys.GetTable("weapon_info")
                 join info in selected1 on row["id"] equals info.Id.Id
                 select new { Id = (int)info.Id, weaponInfo = new WeaponInfo(row["type"], info.WeaponPrefabPath)};
             return selected2.ToDictionary(x => x.Id, x => x.weaponInfo);

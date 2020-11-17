@@ -99,17 +99,17 @@ public static class LuaBinder
 		L.RegFunction("Action_string", System_Action_string);
 		L.RegFunction("Func_bool", System_Func_bool);
 		L.RegFunction("Action_UnityEngine_AsyncOperation", System_Action_UnityEngine_AsyncOperation);
-		L.RegFunction("Action_Thunder_UI_BaseUI", System_Action_Thunder_UI_BaseUI);
-		L.RegFunction("Predicate_System_Action_Thunder_UI_BaseUI", System_Predicate_System_Action_Thunder_UI_BaseUI);
-		L.RegFunction("Action_System_Action_Thunder_UI_BaseUI", System_Action_System_Action_Thunder_UI_BaseUI);
-		L.RegFunction("Comparison_System_Action_Thunder_UI_BaseUI", System_Comparison_System_Action_Thunder_UI_BaseUI);
+		L.RegFunction("Action_Framework_BaseUI", System_Action_Framework_BaseUI);
+		L.RegFunction("Predicate_System_Action_Framework_BaseUI", System_Predicate_System_Action_Framework_BaseUI);
+		L.RegFunction("Action_System_Action_Framework_BaseUI", System_Action_System_Action_Framework_BaseUI);
+		L.RegFunction("Comparison_System_Action_Framework_BaseUI", System_Comparison_System_Action_Framework_BaseUI);
 		L.BeginModule("IO");
 		System_IO_DirectoryWrap.Register(L);
 		System_IO_PathWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Collections");
 		L.BeginModule("Generic");
-		System_Collections_Generic_List_System_Action_Thunder_UI_BaseUIWrap.Register(L);
+		System_Collections_Generic_List_System_Action_Framework_BaseUIWrap.Register(L);
 		L.EndModule();
 		L.EndModule();
 		L.EndModule();
@@ -563,7 +563,7 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int System_Action_Thunder_UI_BaseUI(IntPtr L)
+	static int System_Action_Framework_BaseUI(IntPtr L)
 	{
 		try
 		{
@@ -572,13 +572,13 @@ public static class LuaBinder
 
 			if (count == 1)
 			{
-				Delegate arg1 = DelegateTraits<System.Action<Thunder.UI.BaseUI>>.Create(func);
+				Delegate arg1 = DelegateTraits<System.Action<Framework.BaseUI>>.Create(func);
 				ToLua.Push(L, arg1);
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<System.Action<Thunder.UI.BaseUI>>.Create(func, self);
+				Delegate arg1 = DelegateTraits<System.Action<Framework.BaseUI>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;
@@ -590,7 +590,7 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int System_Predicate_System_Action_Thunder_UI_BaseUI(IntPtr L)
+	static int System_Predicate_System_Action_Framework_BaseUI(IntPtr L)
 	{
 		try
 		{
@@ -599,13 +599,13 @@ public static class LuaBinder
 
 			if (count == 1)
 			{
-				Delegate arg1 = DelegateTraits<System.Predicate<System.Action<Thunder.UI.BaseUI>>>.Create(func);
+				Delegate arg1 = DelegateTraits<System.Predicate<System.Action<Framework.BaseUI>>>.Create(func);
 				ToLua.Push(L, arg1);
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<System.Predicate<System.Action<Thunder.UI.BaseUI>>>.Create(func, self);
+				Delegate arg1 = DelegateTraits<System.Predicate<System.Action<Framework.BaseUI>>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;
@@ -617,7 +617,7 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int System_Action_System_Action_Thunder_UI_BaseUI(IntPtr L)
+	static int System_Action_System_Action_Framework_BaseUI(IntPtr L)
 	{
 		try
 		{
@@ -626,13 +626,13 @@ public static class LuaBinder
 
 			if (count == 1)
 			{
-				Delegate arg1 = DelegateTraits<System.Action<System.Action<Thunder.UI.BaseUI>>>.Create(func);
+				Delegate arg1 = DelegateTraits<System.Action<System.Action<Framework.BaseUI>>>.Create(func);
 				ToLua.Push(L, arg1);
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<System.Action<System.Action<Thunder.UI.BaseUI>>>.Create(func, self);
+				Delegate arg1 = DelegateTraits<System.Action<System.Action<Framework.BaseUI>>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;
@@ -644,7 +644,7 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int System_Comparison_System_Action_Thunder_UI_BaseUI(IntPtr L)
+	static int System_Comparison_System_Action_Framework_BaseUI(IntPtr L)
 	{
 		try
 		{
@@ -653,13 +653,13 @@ public static class LuaBinder
 
 			if (count == 1)
 			{
-				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Thunder.UI.BaseUI>>>.Create(func);
+				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Framework.BaseUI>>>.Create(func);
 				ToLua.Push(L, arg1);
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Thunder.UI.BaseUI>>>.Create(func, self);
+				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Framework.BaseUI>>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

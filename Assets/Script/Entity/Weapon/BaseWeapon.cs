@@ -1,5 +1,5 @@
 ﻿using System;
-using Tool;
+using Framework;
 using Thunder.Utility;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -22,7 +22,7 @@ namespace Thunder.Entity.Weapon
             base.Awake();
 
             Ins = this;
-            _Player = _Trans.parent.parent.parent.GetComponent<Player>();
+            _Player = Trans.parent.parent.parent.GetComponent<Player>();
             Assert.IsNotNull(_Player,
                 $"武器 {name} 安装位置不正确");
         }

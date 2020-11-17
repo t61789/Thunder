@@ -1,4 +1,6 @@
-﻿using Tool;
+﻿
+
+using Framework;
 
 namespace Thunder.Entity.Weapon
 {

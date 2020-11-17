@@ -1,0 +1,27 @@
+{
+	 DefaultCamp : "Unknown",
+	 CampMapSize : 64,
+	 CampMaxFriendliness : 100,
+	 CampNeutralValue : 30,
+	 AssetIdCacheSize : 20,
+	 PackageItemInfoBuffer : 10,
+	
+	 WeaponBeltSize : 6,
+	 MainWeapon1KeyName : "switchMainWeapon1",
+	 MainWeapon2KeyName : "switchMainWeapon2",
+	 SecondaryKeyName : "switchSecondaryWeapon",
+	 MeleeWeaponKeyName : "switchMeleeWeapon",
+	 ThrowingWeaponKeyName : "switchThrowingWeapon",
+	 PreWeaponKeyName : "swichPreWeapon",
+	 DropWeaponKeyName : "dropWeapon",
+
+	 FireKeyName : "Fire1",
+	 AimScopeKeyName : "AimScope",
+	 SwitchFireModeKeyName : "SwitchFireMode",
+
+	 CrossbowArrowAssetPath : "crossbowArrow",
+	 UnarmedAssetPath : "unarmed",
+	 MeleeAttackAreaAssetPath : "meleeAttackArea"
+	 
+	 
+}
