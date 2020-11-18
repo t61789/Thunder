@@ -3,10 +3,10 @@
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityInput
 {
     [TaskCategory("Unity/Input")]
-    [TaskDescription("Returns success when the specified Key is released.")]
+    [TaskDescription("Returns success when the specified key is released.")]
     public class IsKeyUp : Conditional
     {
-        [Tooltip("The Key to test")]
+        [Tooltip("The key to test")]
         public KeyCode key;
 
         public override TaskStatus OnUpdate()

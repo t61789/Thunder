@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace BehaviorDesigner.Runtime.Tasks.Unity.SharedVariables
 {
     [TaskCategory("Unity/SharedVariable")]
@@ -12,8 +14,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.SharedVariables
 
         public override TaskStatus OnUpdate()
         {
-            if (sharedTransform.Value == null)
-            {
+            if (sharedTransform.Value == null) {
                 return TaskStatus.Failure;
             }
 

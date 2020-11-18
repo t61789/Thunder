@@ -17,8 +17,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityRigidbody2D
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 rigidbody2D = currentGameObject.GetComponent<Rigidbody2D>();
                 prevGameObject = currentGameObject;
             }
@@ -26,8 +25,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityRigidbody2D
 
         public override TaskStatus OnUpdate()
         {
-            if (rigidbody2D == null)
-            {
+            if (rigidbody2D == null) {
                 Debug.LogWarning("Rigidbody2D is null");
                 return TaskStatus.Failure;
             }

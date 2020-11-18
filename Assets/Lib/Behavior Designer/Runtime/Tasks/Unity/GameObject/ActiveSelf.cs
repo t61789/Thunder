@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject
 {
     [TaskCategory("Unity/GameObject")]

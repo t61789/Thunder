@@ -16,12 +16,10 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityVector2
         public override TaskStatus OnUpdate()
         {
             var vector2Value = vector2Variable.Value;
-            if (!xValue.IsNone)
-            {
+            if (!xValue.IsNone) {
                 vector2Value.x = xValue.Value;
             }
-            if (!yValue.IsNone)
-            {
+            if (!yValue.IsNone) {
                 vector2Value.y = yValue.Value;
             }
             vector2Variable.Value = vector2Value;

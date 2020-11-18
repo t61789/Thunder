@@ -55,14 +55,10 @@ namespace BehaviorDesigner.Runtime.Tasks
             // If a task failed then return failure. The Behavior Manager will stop all of the children tasks. If no child task is running or has failed then the parallel
             // task succeeded and it will return success.
             bool childrenComplete = true;
-            for (int i = 0; i < executionStatus.Length; ++i)
-            {
-                if (executionStatus[i] == TaskStatus.Running)
-                {
+            for (int i = 0; i < executionStatus.Length; ++i) {
+                if (executionStatus[i] == TaskStatus.Running) {
                     childrenComplete = false;
-                }
-                else if (executionStatus[i] == TaskStatus.Failure)
-                {
+                } else if (executionStatus[i] == TaskStatus.Failure) {
                     return TaskStatus.Failure;
                 }
             }
@@ -73,8 +69,7 @@ namespace BehaviorDesigner.Runtime.Tasks
         {
             // Start from the beginning on an abort
             currentChildIndex = 0;
-            for (int i = 0; i < executionStatus.Length; ++i)
-            {
+            for (int i = 0; i < executionStatus.Length; ++i) {
                 executionStatus[i] = TaskStatus.Inactive;
             }
         }
@@ -82,8 +77,7 @@ namespace BehaviorDesigner.Runtime.Tasks
         public override void OnEnd()
         {
             // Reset the execution status and the child index back to their starting values.
-            for (int i = 0; i < executionStatus.Length; ++i)
-            {
+            for (int i = 0; i < executionStatus.Length; ++i) {
                 executionStatus[i] = TaskStatus.Inactive;
             }
             currentChildIndex = 0;

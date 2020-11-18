@@ -29,7 +29,7 @@ namespace Thunder
             return _RewardDic[key];
         }
 
-        public static void ConstractDic(Table rewardTable)
+        public static void ResolveDic(Table rewardTable)
         {
             const string itemGroupStr = "item_group";
             const string keyStr = "key";

@@ -19,8 +19,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityInput
             var axisValue = Input.GetAxis(axisName.Value);
 
             // if variable set to none, assume multiplier of 1
-            if (!multiplier.IsNone)
-            {
+            if (!multiplier.IsNone) {
                 axisValue *= multiplier.Value;
             }
 

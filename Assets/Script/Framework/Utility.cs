@@ -65,7 +65,7 @@ namespace Framework
         private int _Head;
         private int _Tail;
         private int _Version;
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -769,7 +769,7 @@ namespace Framework
         ///     获取下一个采样点
         /// </summary>
         /// <returns>噪声值，介于[0,1]内</returns>
-        public float GetNext()
+        public float Next()
         {
             StartPos += Smooth * Dir;
             return Mathf.PerlinNoise(StartPos.x, StartPos.y);

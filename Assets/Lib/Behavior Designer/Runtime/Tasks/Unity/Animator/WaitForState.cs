@@ -25,13 +25,11 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 animator = currentGameObject.GetComponent<Animator>();
                 prevGameObject = currentGameObject;
 
-                if (!animator.HasState(layer.Value, stateHash))
-                {
+                if (!animator.HasState(layer.Value, stateHash)) {
                     Debug.LogError("Error: The Animator does not have the state " + stateName.Value + " on layer " + layer.Value);
                 }
             }
@@ -39,16 +37,13 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 
         public override TaskStatus OnUpdate()
         {
-            if (animator == null)
-            {
+            if (animator == null) {
                 Debug.LogWarning("Animator is null");
                 return TaskStatus.Failure;
             }
 
-
             var state = animator.GetCurrentAnimatorStateInfo(layer.Value);
-            if (state.fullPathHash == stateHash)
-            {
+            if (state.shortNameHash == stateHash) {
                 return TaskStatus.Success;
             }
 

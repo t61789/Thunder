@@ -3,10 +3,10 @@
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityInput
 {
     [TaskCategory("Unity/Input")]
-    [TaskDescription("Stores the pressed state of the specified Key.")]
+    [TaskDescription("Stores the pressed state of the specified key.")]
     public class GetKey : Action
     {
-        [Tooltip("The Key to test.")]
+        [Tooltip("The key to test.")]
         public KeyCode key;
         [RequiredField]
         [Tooltip("The stored result")]

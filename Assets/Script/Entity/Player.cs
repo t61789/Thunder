@@ -40,7 +40,7 @@ namespace Thunder
             _PivotTrans = Trans.Find("Pivot");
             _WeaponAttachPoint = _PivotTrans.Find("Weapon");
 
-            WeaponBelt = new WeaponBelt(GlobalSettings.WeaponBeltCellTypes, _WeaponAttachPoint);
+            WeaponBelt = new WeaponBelt(Config.WeaponBeltCellTypes, _WeaponAttachPoint);
             Dropper = new Dropper(DropItemForce, () => _PivotTrans.position, () => _PivotTrans.rotation);
             Package = new Package(PackageSize);
             ItemCombiner = new ItemCombiner(Package, DataBaseSys.GetTable("combine_expressions"));
@@ -54,7 +54,7 @@ namespace Thunder
 
         private void Update()
         {
-            _InteractiveSyn.Set(ControlSys.RequireKey(GlobalSettings.InteractiveKeyName, 0));
+            _InteractiveSyn.Set(ControlSys.RequireKey(Config.InteractiveKeyName, 0));
         }
 
         private void FixedUpdate() 

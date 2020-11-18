@@ -1,6 +1,6 @@
+using UnityEngine;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
@@ -29,15 +29,13 @@ namespace BehaviorDesigner.Runtime.Tasks
         public override TaskStatus OnUpdate()
         {
             var type = TaskUtility.GetTypeWithinAssembly(componentName.Value);
-            if (type == null)
-            {
+            if (type == null) {
                 Debug.LogWarning("Unable to invoke - type is null");
                 return TaskStatus.Failure;
             }
 
             var component = GetDefaultGameObject(targetGameObject.Value).GetComponent(type);
-            if (component == null)
-            {
+            if (component == null) {
                 Debug.LogWarning("Unable to invoke method with component " + componentName.Value);
                 return TaskStatus.Failure;
             }
@@ -45,16 +43,12 @@ namespace BehaviorDesigner.Runtime.Tasks
             var parameterList = new List<object>();
             var parameterTypeList = new List<Type>();
             SharedVariable sharedVariable = null;
-            for (int i = 0; i < 4; ++i)
-            {
+            for (int i = 0; i < 4; ++i) {
                 var parameterField = GetType().GetField("parameter" + (i + 1));
-                if ((sharedVariable = parameterField.GetValue(this) as SharedVariable) != null)
-                {
+                if ((sharedVariable = parameterField.GetValue(this) as SharedVariable) != null) {
                     parameterList.Add(sharedVariable.GetValue());
                     parameterTypeList.Add(sharedVariable.GetType().GetProperty("Value").PropertyType);
-                }
-                else
-                {
+                } else {
                     break;
                 }
             }
@@ -62,15 +56,13 @@ namespace BehaviorDesigner.Runtime.Tasks
             // https://www.opsive.com/support/documentation/behavior-designer/installation/
             var methodInfo = component.GetType().GetMethod(methodName.Value, parameterTypeList.ToArray());
 
-            if (methodInfo == null)
-            {
+            if (methodInfo == null) {
                 Debug.LogWarning("Unable to invoke method " + methodName.Value + " on component " + componentName.Value);
                 return TaskStatus.Failure;
             }
 
             var result = methodInfo.Invoke(component, parameterList.ToArray());
-            if (storeResult != null)
-            {
+            if (storeResult != null) {
                 storeResult.SetValue(result);
             }
 
@@ -81,7 +73,7 @@ namespace BehaviorDesigner.Runtime.Tasks
         {
             targetGameObject = null;
             componentName = null;
-            methodName = null;
+            methodName = null; 
             parameter1 = null;
             parameter2 = null;
             parameter3 = null;

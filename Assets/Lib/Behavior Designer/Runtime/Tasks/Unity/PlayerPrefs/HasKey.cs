@@ -3,10 +3,10 @@ using UnityEngine;
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityPlayerPrefs
 {
     [TaskCategory("Unity/PlayerPrefs")]
-    [TaskDescription("Retruns success if the specified Key exists.")]
+    [TaskDescription("Retruns success if the specified key exists.")]
     public class HasKey : Conditional
     {
-        [Tooltip("The Key to check")]
+        [Tooltip("The key to check")]
         public SharedString key;
 
         public override TaskStatus OnUpdate()

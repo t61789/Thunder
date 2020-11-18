@@ -29,8 +29,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.Math
 
         public override TaskStatus OnUpdate()
         {
-            switch (operation)
-            {
+            switch (operation) {
                 case Operation.Add:
                     storeResult.Value = integer1.Value + integer2.Value;
                     break;
@@ -59,9 +58,9 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.Math
         public override void OnReset()
         {
             operation = Operation.Add;
-            integer1.Value = 0;
-            integer2.Value = 0;
-            storeResult.Value = 0;
+            integer1 = 0;
+            integer2 = 0;
+            storeResult = 0;
         }
     }
 }

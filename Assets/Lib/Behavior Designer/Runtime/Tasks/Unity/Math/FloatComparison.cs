@@ -23,8 +23,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.Math
 
         public override TaskStatus OnUpdate()
         {
-            switch (operation)
-            {
+            switch (operation) {
                 case Operation.LessThan:
                     return float1.Value < float2.Value ? TaskStatus.Success : TaskStatus.Failure;
                 case Operation.LessThanOrEqualTo:

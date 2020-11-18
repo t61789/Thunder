@@ -11,8 +11,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityBehaviour
 
         public override TaskStatus OnUpdate()
         {
-            if (specifiedObject == null && !(specifiedObject.Value is UnityEngine.Behaviour))
-            {
+            if (specifiedObject == null && !(specifiedObject.Value is UnityEngine.Behaviour)) {
                 Debug.LogWarning("SpecifiedObject is null or not a subclass of UnityEngine.Behaviour");
                 return TaskStatus.Failure;
             }
@@ -22,8 +21,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityBehaviour
 
         public override void OnReset()
         {
-            if (specifiedObject != null)
-            {
+            if (specifiedObject != null) {
                 specifiedObject.Value = null;
             }
         }

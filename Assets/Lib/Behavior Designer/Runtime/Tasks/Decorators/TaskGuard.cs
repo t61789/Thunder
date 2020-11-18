@@ -34,8 +34,7 @@ namespace BehaviorDesigner.Runtime.Tasks
             // The child task has started to run. Increase the executing tasks counter and notify all of the other linked tasks.
             executingTasks++;
             executing = true;
-            for (int i = 0; i < linkedTaskGuards.Length; ++i)
-            {
+            for (int i = 0; i < linkedTaskGuards.Length; ++i) {
                 linkedTaskGuards[i].taskExecuting(true);
             }
         }
@@ -57,11 +56,9 @@ namespace BehaviorDesigner.Runtime.Tasks
         {
             // The child task has been executed or skipped over. Only decrement the executing tasks count if the child task was being executed. Following that
             // notify all of the linked tasks that we are done executing.
-            if (executing)
-            {
+            if (executing) {
                 executingTasks--;
-                for (int i = 0; i < linkedTaskGuards.Length; ++i)
-                {
+                for (int i = 0; i < linkedTaskGuards.Length; ++i) {
                     linkedTaskGuards[i].taskExecuting(false);
                 }
                 executing = false;

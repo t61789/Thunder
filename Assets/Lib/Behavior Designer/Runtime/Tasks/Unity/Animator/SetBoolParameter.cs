@@ -1,5 +1,5 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 {
@@ -23,8 +23,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 animator = currentGameObject.GetComponent<Animator>();
                 prevGameObject = currentGameObject;
             }
@@ -32,8 +31,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 
         public override TaskStatus OnUpdate()
         {
-            if (animator == null)
-            {
+            if (animator == null) {
                 Debug.LogWarning("Animator is null");
                 return TaskStatus.Failure;
             }
@@ -42,8 +40,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator
 
             bool prevValue = animator.GetBool(hashID);
             animator.SetBool(hashID, boolValue.Value);
-            if (setOnce)
-            {
+            if (setOnce) {
                 StartCoroutine(ResetValue(prevValue));
             }
             return TaskStatus.Success;

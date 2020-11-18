@@ -48,6 +48,16 @@ namespace Framework
             _AddedSet.Add(key);
         }
 
+        public static void ResumeAction(object key)
+        {
+            SetRunning(key, true);
+        }
+
+        public static void PauseAction(object key)
+        {
+            SetRunning(key,false);
+        }
+
         public static void RemoveAction(object key)
         {
             if(!_AddedSet.Contains(key))
@@ -83,10 +93,19 @@ namespace Framework
                 var unit = _UnitList[i];
                 if (unit.Counter.Completed)
                 {
-                    unit.Act();
+                    if(unit.Running)
+                        unit.Act();
                     unit.Counter.Recount();
                 }
             }
+        }
+
+        private static void SetRunning(object key, bool running)
+        {
+            if (!_AddedSet.Contains(key))
+                throw new KeyNotFoundException();
+
+            _UnitList.Find(x => x.Key == key).Running = false;
         }
 
         private class Unit
@@ -94,6 +113,7 @@ namespace Framework
             public object Key;
             public Action Act;
             public float Interval;
+            public bool Running = true;
             public SimpleCounter Counter;
         }
 

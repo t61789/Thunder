@@ -16,13 +16,10 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject
 
         public override TaskStatus OnUpdate()
         {
-            if (random.Value)
-            {
+            if (random.Value) {
                 var gameObjects = GameObject.FindGameObjectsWithTag(tag.Value);
                 storeValue.Value = gameObjects[Random.Range(0, gameObjects.Length - 1)];
-            }
-            else
-            {
+            } else {
                 storeValue.Value = GameObject.FindWithTag(tag.Value);
             }
 

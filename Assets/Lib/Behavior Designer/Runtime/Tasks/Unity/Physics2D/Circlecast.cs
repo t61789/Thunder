@@ -38,22 +38,17 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityPhysics2D
         {
             Vector2 position;
             Vector2 dir = direction.Value;
-            if (originGameObject.Value != null)
-            {
+            if (originGameObject.Value != null) {
                 position = originGameObject.Value.transform.position;
-                if (space == Space.Self)
-                {
+                if (space == Space.Self) {
                     dir = originGameObject.Value.transform.TransformDirection(direction.Value);
                 }
-            }
-            else
-            {
+            } else {
                 position = originPosition.Value;
             }
 
             var hit = Physics2D.CircleCast(position, radius.Value, dir, distance.Value == -1 ? Mathf.Infinity : distance.Value, layerMask);
-            if (hit.collider != null)
-            {
+            if (hit.collider != null) {
                 storeHitObject.Value = hit.collider.gameObject;
                 storeHitPoint.Value = hit.point;
                 storeHitNormal.Value = hit.normal;

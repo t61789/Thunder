@@ -50,10 +50,10 @@ namespace Thunder.Game.FlyingSaucer
         private Vector3 GetNextForceDir(Vector3 playerFaceDir)
         {
             var limit = LaunchRandAngle;
-            var perlin = _LaunchDirNoise.GetNext();
+            var perlin = _LaunchDirNoise.Next();
             limit = perlin * limit - limit / 2;
             var targetDir = Quaternion.AngleAxis(limit, Vector3.forward) * LaunchBaseDir;
-            perlin = _LaunchForceNoise.GetNext();
+            perlin = _LaunchForceNoise.Next();
             targetDir = targetDir.normalized * Mathf.Lerp(LaunchForce.x, LaunchForce.y, perlin);
             targetDir = Tools.BuildTransferMatrix(playerFaceDir.ProjectToxz()) * targetDir;
 

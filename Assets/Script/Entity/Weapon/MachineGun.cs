@@ -59,7 +59,7 @@ namespace Thunder
         {
             if (!Safety) return;
 
-            var fire = ControlSys.RequireKey(GlobalSettings.FireKeyName, 0);
+            var fire = ControlSys.RequireKey(Config.FireKeyName, 0);
             var param = _Burst.FireCheck(fire, !AmmoGroup.MagzineEmpty(), out var autoReload);
             if (param) Fire();
 
@@ -77,9 +77,9 @@ namespace Thunder
 
             _Animator.SetBool(RELOAD, _StickyInputDic.GetBool(RELOAD));
 
-            if (ControlSys.RequireKey(GlobalSettings.AimScopeKeyName, 0).Down)
+            if (ControlSys.RequireKey(Config.AimScopeKeyName, 0).Down)
                 _AimScope.Switch();
-            if (ControlSys.RequireKey(GlobalSettings.SwitchFireModeKeyName, 0).Down)
+            if (ControlSys.RequireKey(Config.SwitchFireModeKeyName, 0).Down)
                 _Burst.LoopMode();
         }
 

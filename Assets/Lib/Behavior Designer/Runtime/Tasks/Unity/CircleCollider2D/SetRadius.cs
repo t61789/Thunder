@@ -17,8 +17,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityCircleCollider2D
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 circleCollider2D = currentGameObject.GetComponent<CircleCollider2D>();
                 prevGameObject = currentGameObject;
             }
@@ -26,8 +25,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityCircleCollider2D
 
         public override TaskStatus OnUpdate()
         {
-            if (circleCollider2D == null)
-            {
+            if (circleCollider2D == null) {
                 Debug.LogWarning("CircleCollider2D is null");
                 return TaskStatus.Failure;
             }

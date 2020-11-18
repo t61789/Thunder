@@ -14,8 +14,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.SharedVariables
 
         public override TaskStatus OnUpdate()
         {
-            if (sharedGameObject.Value == null)
-            {
+            if (sharedGameObject.Value == null) {
                 return TaskStatus.Failure;
             }
 

@@ -17,12 +17,9 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.Math
 
         public override TaskStatus OnUpdate()
         {
-            if (inclusive)
-            {
+            if (inclusive) {
                 storeResult.Value = Random.Range(min.Value, max.Value + 1);
-            }
-            else
-            {
+            } else {
                 storeResult.Value = Random.Range(min.Value, max.Value);
             }
             return TaskStatus.Success;
@@ -33,7 +30,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.Math
             min.Value = 0;
             max.Value = 0;
             inclusive = false;
-            storeResult.Value = 0;
+            storeResult = 0;
         }
     }
 }

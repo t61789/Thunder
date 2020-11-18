@@ -12,8 +12,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityString
 
         public override TaskStatus OnUpdate()
         {
-            for (int i = 0; i < source.Length; ++i)
-            {
+            for (int i = 0; i < source.Length; ++i) {
                 storeResult.Value += source[i];
             }
 

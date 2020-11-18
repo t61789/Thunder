@@ -88,12 +88,12 @@
     <Compile Include="Assets\Lib\ToLua\Injection\Editor\ToLuaInjection.cs" />
   </ItemGroup>
   <ItemGroup>
-     <None Include="Assets\Lib\Behavior Designer\Editor\BehaviorDesigner.Editor.dll" />
      <None Include="Assets\Lib\ConsolePro\Editor\ConsolePro.Editor.dll" />
      <None Include="Assets\Lib\DOTween\Editor\DOTweenEditor.XML" />
      <None Include="Assets\Editor\Tool\Yeah.uss" />
      <None Include="Assets\Lib\DOTween\Editor\DOTweenEditor.dll" />
      <None Include="Assets\Editor\Tool\Yeah.uxml" />
+     <None Include="Assets\Lib\Behavior Designer\Editor\BehaviorDesigner.Editor.dll" />
      <None Include="Assets\Lib\Behavior Designer\Editor\GridShader.shader" />
     <Reference Include="UnityEngine">
       <HintPath>E:\Programs\Unity\2020.2.0a16\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>

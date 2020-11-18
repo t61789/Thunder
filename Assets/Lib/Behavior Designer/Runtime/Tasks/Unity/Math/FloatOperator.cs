@@ -28,8 +28,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.Math
 
         public override TaskStatus OnUpdate()
         {
-            switch (operation)
-            {
+            switch (operation) {
                 case Operation.Add:
                     storeResult.Value = float1.Value + float2.Value;
                     break;
@@ -58,9 +57,9 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.Math
         public override void OnReset()
         {
             operation = Operation.Add;
-            float1.Value = 0;
-            float2.Value = 0;
-            storeResult.Value = 0;
+            float1 = 0;
+            float2 = 0;
+            storeResult = 0;
         }
     }
 }

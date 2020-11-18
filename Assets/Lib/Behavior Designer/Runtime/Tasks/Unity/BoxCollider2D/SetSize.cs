@@ -17,8 +17,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityBoxCollider2D
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 boxCollider2D = currentGameObject.GetComponent<BoxCollider2D>();
                 prevGameObject = currentGameObject;
             }
@@ -26,8 +25,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityBoxCollider2D
 
         public override TaskStatus OnUpdate()
         {
-            if (boxCollider2D == null)
-            {
+            if (boxCollider2D == null) {
                 Debug.LogWarning("BoxCollider2D is null");
                 return TaskStatus.Failure;
             }

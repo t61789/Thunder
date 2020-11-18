@@ -65,7 +65,7 @@ namespace Thunder
 
         public void ReloadCompleted()
         {
-            _Arrow = ObjectPool.Get<CrossbowArrow>(GlobalSettings.CrossbowArrowAssetPath);
+            _Arrow = ObjectPool.Get<CrossbowArrow>(Config.CrossbowArrowAssetPath);
             _Arrow.Install(Trans, ArrowPos);
             AmmoGroup.Reload();
             AmmoGroup.InvokeOnAmmoChanged();
@@ -88,7 +88,7 @@ namespace Thunder
         {
             if (!add.TryGet(out int data)) return;
             if (data != 1 || AmmoGroup.Magzine != 0) return;
-            _Arrow = ObjectPool.Get<CrossbowArrow>(GlobalSettings.CrossbowArrowAssetPath);
+            _Arrow = ObjectPool.Get<CrossbowArrow>(Config.CrossbowArrowAssetPath);
             _Arrow.Install(Trans, ArrowPos);
             AmmoGroup.Magzine = 1;
             AmmoGroup.InvokeOnAmmoChanged();

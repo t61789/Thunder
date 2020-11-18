@@ -18,8 +18,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityLight
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 light = currentGameObject.GetComponent<Light>();
                 prevGameObject = currentGameObject;
             }
@@ -27,8 +26,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityLight
 
         public override TaskStatus OnUpdate()
         {
-            if (light == null)
-            {
+            if (light == null) {
                 Debug.LogWarning("Light is null");
                 return TaskStatus.Failure;
             }

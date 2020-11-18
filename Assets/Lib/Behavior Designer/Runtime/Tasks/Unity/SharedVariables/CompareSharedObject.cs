@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace BehaviorDesigner.Runtime.Tasks.Unity.SharedVariables
 {
     [TaskCategory("Unity/SharedVariable")]

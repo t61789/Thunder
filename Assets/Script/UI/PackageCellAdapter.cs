@@ -45,7 +45,7 @@ namespace Thunder.UI
                     _PackageCells = null;
                 }
                 if (item.Id == 0) continue;
-                var cell = ObjectPool.Get<PackageCell>(GlobalSettings.PackageCellPrefabAssetPath);
+                var cell = ObjectPool.Get<PackageCell>(Config.PackageCellPrefabAssetPath);
                 cell.Init(_Package,index, _FloatContainer);
                 cell.RectTrans.SetParent(_CellContainers[index]);
                 _PackageCells[index] = cell;

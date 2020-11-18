@@ -8,7 +8,7 @@ namespace Thunder
 {
     public class CampSys : IBaseSys
     {
-        private readonly float[,] _FriendlinessMap = new float[GlobalSettings.CampMapSize, GlobalSettings.CampMapSize];
+        private readonly float[,] _FriendlinessMap = new float[Config.CampMapSize, Config.CampMapSize];
 
         private readonly Dictionary<string, int> _KeyMap = new Dictionary<string, int>();
 
@@ -48,15 +48,15 @@ namespace Thunder
         public void AddCamp(string campName)
         {
             var finding = 0;
-            while (_FriendlinessMap[_InsertIndex, _InsertIndex] == GlobalSettings.CampMaxFriendliness)
+            while (_FriendlinessMap[_InsertIndex, _InsertIndex] == Config.CampMaxFriendliness)
             {
-                _InsertIndex = (_InsertIndex + 1) % GlobalSettings.CampMapSize;
-                Assert.IsTrue(++finding <= GlobalSettings.CampMapSize, "阵营表已满，不可添加阵营");
+                _InsertIndex = (_InsertIndex + 1) % Config.CampMapSize;
+                Assert.IsTrue(++finding <= Config.CampMapSize, "阵营表已满，不可添加阵营");
             }
 
             _KeyMap.Add(campName, _InsertIndex);
 
-            _FriendlinessMap[_InsertIndex, _InsertIndex] = GlobalSettings.CampMaxFriendliness;
+            _FriendlinessMap[_InsertIndex, _InsertIndex] = Config.CampMaxFriendliness;
         }
 
         public void RemoveCamp(string campName)
@@ -64,7 +64,7 @@ namespace Thunder
             var index = 0;
             Assert.IsTrue(_KeyMap.TryGetValue(campName, out index), $"不存在名为 {campName} 的阵营");
 
-            for (var i = 0; i < GlobalSettings.CampMapSize; i++)
+            for (var i = 0; i < Config.CampMapSize; i++)
             {
                 _FriendlinessMap[i, index] = 0;
                 _FriendlinessMap[index, i] = 0;
@@ -75,17 +75,17 @@ namespace Thunder
 
         public bool IsHostile(Controller c1, Controller c2)
         {
-            return GetFriendliness(c1, c2) < -GlobalSettings.CampNeutralValue;
+            return GetFriendliness(c1, c2) < -Config.CampNeutralValue;
         }
 
         public bool IsNeutral(Controller c1, Controller c2)
         {
-            return Mathf.Abs(GetFriendliness(c1, c2)) < GlobalSettings.CampNeutralValue;
+            return Mathf.Abs(GetFriendliness(c1, c2)) < Config.CampNeutralValue;
         }
 
         public bool IsAlly(Controller c1, Controller c2)
         {
-            return GetFriendliness(c1, c2) > GlobalSettings.CampNeutralValue;
+            return GetFriendliness(c1, c2) > Config.CampNeutralValue;
         }
 
         public float GetFriendliness(Controller c1, Controller c2)

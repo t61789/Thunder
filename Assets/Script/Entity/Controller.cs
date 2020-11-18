@@ -1,4 +1,4 @@
-﻿
+﻿using Framework;
 using UnityEngine;
 
 namespace Thunder
@@ -22,7 +22,7 @@ namespace Thunder
         {
             set => _Camp = value;
 
-            get => string.IsNullOrEmpty(_Camp) ? GlobalSettings.DefaultCamp : _Camp;
+            get => string.IsNullOrEmpty(_Camp) ? Config.DefaultCamp : _Camp;
         }
     }
 }

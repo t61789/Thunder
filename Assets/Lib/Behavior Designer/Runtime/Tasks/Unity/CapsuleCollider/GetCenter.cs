@@ -18,8 +18,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityCapsuleCollider
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 capsuleCollider = currentGameObject.GetComponent<CapsuleCollider>();
                 prevGameObject = currentGameObject;
             }
@@ -27,8 +26,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityCapsuleCollider
 
         public override TaskStatus OnUpdate()
         {
-            if (capsuleCollider == null)
-            {
+            if (capsuleCollider == null) {
                 Debug.LogWarning("CapsuleCollider is null");
                 return TaskStatus.Failure;
             }

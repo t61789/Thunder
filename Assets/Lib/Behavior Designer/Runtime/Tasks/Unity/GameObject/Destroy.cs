@@ -14,12 +14,9 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject
         public override TaskStatus OnUpdate()
         {
             var destroyGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (time == 0)
-            {
+            if (time == 0) {
                 GameObject.Destroy(destroyGameObject);
-            }
-            else
-            {
+            } else {
                 GameObject.Destroy(destroyGameObject, time);
             }
 

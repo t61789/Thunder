@@ -18,16 +18,13 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityVector3
         public override TaskStatus OnUpdate()
         {
             var vector3Value = vector3Variable.Value;
-            if (!xValue.IsNone)
-            {
+            if (!xValue.IsNone) {
                 vector3Value.x = xValue.Value;
             }
-            if (!yValue.IsNone)
-            {
+            if (!yValue.IsNone) {
                 vector3Value.y = yValue.Value;
             }
-            if (!zValue.IsNone)
-            {
+            if (!zValue.IsNone) {
                 vector3Value.z = zValue.Value;
             }
             vector3Variable.Value = vector3Value;

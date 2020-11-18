@@ -3,10 +3,10 @@ using UnityEngine;
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityPlayerPrefs
 {
     [TaskCategory("Unity/PlayerPrefs")]
-    [TaskDescription("Sets the value with the specified Key from the PlayerPrefs.")]
+    [TaskDescription("Sets the value with the specified key from the PlayerPrefs.")]
     public class SetFloat : Action
     {
-        [Tooltip("The Key to store")]
+        [Tooltip("The key to store")]
         public SharedString key;
         [Tooltip("The value to set")]
         public SharedFloat value;

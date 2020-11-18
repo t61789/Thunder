@@ -22,8 +22,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimation
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 animation = currentGameObject.GetComponent<Animation>();
                 prevGameObject = currentGameObject;
             }
@@ -31,8 +30,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimation
 
         public override TaskStatus OnUpdate()
         {
-            if (animation == null)
-            {
+            if (animation == null) {
                 Debug.LogWarning("Animation is null");
                 return TaskStatus.Failure;
             }

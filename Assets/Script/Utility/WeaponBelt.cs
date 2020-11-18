@@ -60,7 +60,7 @@ namespace Thunder
                 _Keys.Add(builder.ToString(), i);
             }
 
-            _Unarmed = CreateWeapon(GlobalSettings.UnarmedId);
+            _Unarmed = CreateWeapon(Config.UnarmedId);
 
             _WeaponContainer = weaponContainer;
             _WeaponInfoDic = QueryDic();
@@ -186,7 +186,7 @@ namespace Thunder
         /// </summary>
         public void InputCheck()
         {
-            if (ControlSys.RequireKey(GlobalSettings.PreWeaponKeyName, SHIELD_VALUE).Down)
+            if (ControlSys.RequireKey(Config.PreWeaponKeyName, SHIELD_VALUE).Down)
                 SwitchWeaponToPre();
             else
                 foreach (var pairs in
@@ -197,7 +197,7 @@ namespace Thunder
                     break;
                 }
 
-            if (ControlSys.RequireKey(GlobalSettings.DropWeaponKeyName, SHIELD_VALUE).Down)
+            if (ControlSys.RequireKey(Config.DropWeaponKeyName, SHIELD_VALUE).Down)
                 DropCurrentWeapon();
         }
 

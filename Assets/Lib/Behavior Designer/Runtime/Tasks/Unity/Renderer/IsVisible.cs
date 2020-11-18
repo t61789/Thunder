@@ -16,8 +16,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityRenderer
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 renderer = currentGameObject.GetComponent<Renderer>();
                 prevGameObject = currentGameObject;
             }
@@ -25,8 +24,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityRenderer
 
         public override TaskStatus OnUpdate()
         {
-            if (renderer == null)
-            {
+            if (renderer == null) {
                 Debug.LogWarning("Renderer is null");
                 return TaskStatus.Failure;
             }

@@ -27,8 +27,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityCharacterController
 
         public override void OnControllerColliderHit(ControllerColliderHit hit)
         {
-            if (string.IsNullOrEmpty(tag.Value) || tag.Value.Equals(hit.gameObject.tag))
-            {
+            if (string.IsNullOrEmpty(tag.Value) || tag.Value.Equals(hit.gameObject.tag)) {
                 collidedGameObject.Value = hit.gameObject;
                 enteredCollision = true;
             }

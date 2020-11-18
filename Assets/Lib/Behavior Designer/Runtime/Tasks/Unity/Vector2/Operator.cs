@@ -24,8 +24,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityVector2
 
         public override TaskStatus OnUpdate()
         {
-            switch (operation)
-            {
+            switch (operation) {
                 case Operation.Add:
                     storeResult.Value = firstVector2.Value + secondVector2.Value;
                     break;

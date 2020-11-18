@@ -17,7 +17,7 @@ namespace Thunder
         public override void Fire()
         {
             var rot = Camera.main.transform.rotation;
-            var area = ObjectPool.Get<MeleeAttackArea>(GlobalSettings.MeleeAttackAreaAssetPath);
+            var area = ObjectPool.Get<MeleeAttackArea>(Config.MeleeAttackAreaAssetPath);
             area.Init(_Player.Trans.position, rot, AttackRange, AttackAreaFadeTime);
             area.HitEnter += HitTarget;
         }

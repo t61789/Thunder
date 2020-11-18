@@ -18,8 +18,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAudioSource
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 audioSource = currentGameObject.GetComponent<AudioSource>();
                 prevGameObject = currentGameObject;
             }
@@ -27,8 +26,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAudioSource
 
         public override TaskStatus OnUpdate()
         {
-            if (audioSource == null)
-            {
+            if (audioSource == null) {
                 Debug.LogWarning("AudioSource is null");
                 return TaskStatus.Failure;
             }

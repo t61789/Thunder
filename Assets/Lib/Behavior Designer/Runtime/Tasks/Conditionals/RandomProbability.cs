@@ -15,8 +15,7 @@ namespace BehaviorDesigner.Runtime.Tasks
         public override void OnAwake()
         {
             // If specified, use the seed provided.
-            if (useSeed.Value)
-            {
+            if (useSeed.Value) {
                 Random.InitState(seed.Value);
             }
         }
@@ -25,8 +24,7 @@ namespace BehaviorDesigner.Runtime.Tasks
         {
             // Return success if random value is less than the success probability. Otherwise return failure.
             float randomValue = Random.value;
-            if (randomValue < successProbability.Value)
-            {
+            if (randomValue < successProbability.Value) {
                 return TaskStatus.Success;
             }
             return TaskStatus.Failure;

@@ -36,22 +36,17 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityPhysics
         {
             Vector3 position;
             Vector3 dir = direction.Value;
-            if (originGameObject.Value != null)
-            {
+            if (originGameObject.Value != null) {
                 position = originGameObject.Value.transform.position;
-                if (space == Space.Self)
-                {
+                if (space == Space.Self) {
                     dir = originGameObject.Value.transform.TransformDirection(direction.Value);
                 }
-            }
-            else
-            {
+            } else {
                 position = originPosition.Value;
             }
 
             RaycastHit hit;
-            if (Physics.Raycast(position, dir, out hit, distance.Value == -1 ? Mathf.Infinity : distance.Value, layerMask))
-            {
+            if (Physics.Raycast(position, dir, out hit, distance.Value == -1 ? Mathf.Infinity : distance.Value, layerMask)) {
                 storeHitObject.Value = hit.collider.gameObject;
                 storeHitPoint.Value = hit.point;
                 storeHitNormal.Value = hit.normal;

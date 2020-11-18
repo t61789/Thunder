@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace BehaviorDesigner.Runtime.Tasks.Unity.SharedVariables
 {
@@ -20,14 +20,12 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.SharedVariables
 
         public override TaskStatus OnUpdate()
         {
-            if (gameObjects == null || gameObjects.Length == 0)
-            {
+            if (gameObjects == null || gameObjects.Length == 0) {
                 return TaskStatus.Failure;
             }
 
             storedGameObjectList.Value.Clear();
-            for (int i = 0; i < gameObjects.Length; ++i)
-            {
+            for (int i = 0; i < gameObjects.Length; ++i) {
                 storedGameObjectList.Value.Add(gameObjects[i].Value);
             }
 

@@ -17,8 +17,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 navMeshAgent = currentGameObject.GetComponent<NavMeshAgent>();
                 prevGameObject = currentGameObject;
             }
@@ -26,8 +25,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
 
         public override TaskStatus OnUpdate()
         {
-            if (navMeshAgent == null)
-            {
+            if (navMeshAgent == null) {
                 Debug.LogWarning("NavMeshAgent is null");
                 return TaskStatus.Failure;
             }

@@ -10,8 +10,10 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimation
         public SharedGameObject targetGameObject;
         [Tooltip("The name of the animation")]
         public SharedString animationName;
+        [Tooltip("The speed of the animation. Use a negative value to play the animation backwards")]
+        public SharedFloat animationSpeed = 1f;
         [Tooltip("The amount of time it takes to blend")]
-        public float fadeLength = 0.3f;
+        public SharedFloat fadeLength = 0.3f;
         [Tooltip("The play mode of the animation")]
         public PlayMode playMode = PlayMode.StopSameLayer;
 
@@ -22,8 +24,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimation
         public override void OnStart()
         {
             var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            if (currentGameObject != prevGameObject)
-            {
+            if (currentGameObject != prevGameObject) {
                 animation = currentGameObject.GetComponent<Animation>();
                 prevGameObject = currentGameObject;
             }
@@ -31,13 +32,16 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimation
 
         public override TaskStatus OnUpdate()
         {
-            if (animation == null)
-            {
+            if (animation == null) {
                 Debug.LogWarning("Animation is null");
                 return TaskStatus.Failure;
             }
 
-            animation.CrossFade(animationName.Value, fadeLength, playMode);
+            animation[animationName.Value].speed = animationSpeed.Value;
+            if (animation[animationName.Value].speed < 0) {
+                animation[animationName.Value].time = animation[animationName.Value].length;
+            }
+            animation.CrossFade(animationName.Value, fadeLength.Value, playMode);
 
             return TaskStatus.Success;
         }
@@ -46,6 +50,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimation
         {
             targetGameObject = null;
             animationName.Value = "";
+            animationSpeed = 1;
             fadeLength = 0.3f;
             playMode = PlayMode.StopSameLayer;
         }
