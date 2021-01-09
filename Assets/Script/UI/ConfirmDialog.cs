@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Thunder.UI
 {
-    public class ConfirmDialog : BaseUI
+    public class ConfirmDialog : BaseUi
     {
         public DialogResult DialogResult;
 
@@ -26,13 +26,13 @@ namespace Thunder.UI
         public void OK()
         {
             DialogResult = DialogResult.Ok;
-            UISys.CloseUI(EntityName);
+            UiSys.CloseUi(EntityName);
         }
 
         public void Cancel()
         {
             DialogResult = DialogResult.Cancel;
-            UISys.CloseUI(EntityName);
+            UiSys.CloseUi(EntityName);
         }
 
         public void Update()

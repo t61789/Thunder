@@ -8,12 +8,12 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class ListPanel : BaseUI
+    public class ListPanel : BaseUi
     {
         protected const string ELEMENT = "element";
         protected Queue<RectTransform> elementContainers = new Queue<RectTransform>();
 
-        protected List<BaseUI> elements = new List<BaseUI>();
+        protected List<BaseUi> elements = new List<BaseUi>();
         protected RectTransform elementsTrans;
         protected RectTransform maskTrans;
         protected (Scrollbar x, Scrollbar y) scrollbar;
@@ -28,12 +28,12 @@ namespace Thunder.UI
             elementsTrans = maskTrans.Find("Elements").GetComponent<RectTransform>();
         }
 
-        public BaseUI[] Init(Parameters arg, List<Action<BaseUI>> inits)
+        public BaseUi[] Init(Parameters arg, List<Action<BaseUi>> inits)
         {
-            return Init<BaseUI>(arg, inits);
+            return Init<BaseUi>(arg, inits);
         }
 
-        public T[] Init<T>(Parameters arg, List<Action<T>> inits) where T : BaseUI
+        public T[] Init<T>(Parameters arg, List<Action<T>> inits) where T : BaseUi
         {
             Clear();
             return CreateElements(arg, inits);
@@ -64,7 +64,7 @@ namespace Thunder.UI
         /// <param name="parameters"></param>
         /// <param name="inits"></param>
         /// <returns></returns>
-        protected T[] CreateElements<T>(Parameters parameters, List<Action<T>> inits) where T : BaseUI
+        protected T[] CreateElements<T>(Parameters parameters, List<Action<T>> inits) where T : BaseUi
         {
             if (parameters.elementSize.x == 0)
             {
@@ -144,12 +144,12 @@ namespace Thunder.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                var item = ObjectPool.Get<T>(new AssetId(UISys.DefaultUIBundle, parameters.elementName));
+                var item = ObjectPool.Get<T>(new AssetId(UiSys.DefaultUIBundle, parameters.elementName));
                 inits[i]?.Invoke(item);
                 var rectTransform = item.GetComponent<RectTransform>();
                 rectTransform.SetParent(elementContainer);
 
-                elements.Add(rectTransform.GetComponent<BaseUI>());
+                elements.Add(rectTransform.GetComponent<BaseUi>());
             }
 
             return elements.Cast<T>().ToArray();

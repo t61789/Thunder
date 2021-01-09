@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 namespace Framework
 {
-    public class PointerEvent : UnityEvent<EventUI,PointerEventData>
+    public class PointerEvent : UnityEvent<EventUi,PointerEventData>
     {
 
     }

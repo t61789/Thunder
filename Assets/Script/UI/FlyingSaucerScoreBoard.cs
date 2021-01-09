@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Thunder.UI
 {
-    public class FlyingSaucerScoreBoard : BaseUI
+    public class FlyingSaucerScoreBoard : BaseUi
     {
         private TextMeshProUGUI _BatterText;
         private RectTransform _BatterTextRectTrans;

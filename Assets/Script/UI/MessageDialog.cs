@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class MessageDialog : BaseUI
+    public class MessageDialog : BaseUi
     {
         private Text text;
 

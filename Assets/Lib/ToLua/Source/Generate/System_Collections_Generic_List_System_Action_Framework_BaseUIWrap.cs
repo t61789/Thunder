@@ -6,7 +6,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>), typeof(System.Object), "List_System_Action_Framework_BaseUI");
+		L.BeginClass(typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>), typeof(System.Object), "List_System_Action_Framework_BaseUI");
 		L.RegFunction(".geti", get_Item);
 		L.RegFunction("get_Item", get_Item);
 		L.RegFunction(".seti", set_Item);
@@ -57,21 +57,21 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 
 			if (count == 0)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = new System.Collections.Generic.List<System.Action<Framework.BaseUI>>();
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = new System.Collections.Generic.List<System.Action<Framework.BaseUi>>();
 				ToLua.PushSealed(L, obj);
 				return 1;
 			}
 			else if (count == 1 && TypeChecker.CheckTypes<int>(L, 1))
 			{
 				int arg0 = (int)LuaDLL.lua_tonumber(L, 1);
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = new System.Collections.Generic.List<System.Action<Framework.BaseUI>>(arg0);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = new System.Collections.Generic.List<System.Action<Framework.BaseUi>>(arg0);
 				ToLua.PushSealed(L, obj);
 				return 1;
 			}
-			else if (count == 1 && TypeChecker.CheckTypes<System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUI>>>(L, 1))
+			else if (count == 1 && TypeChecker.CheckTypes<System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUi>>>(L, 1))
 			{
-				System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUI>> arg0 = (System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUI>>)ToLua.ToObject(L, 1);
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = new System.Collections.Generic.List<System.Action<Framework.BaseUI>>(arg0);
+				System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUi>> arg0 = (System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUi>>)ToLua.ToObject(L, 1);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = new System.Collections.Generic.List<System.Action<Framework.BaseUi>>(arg0);
 				ToLua.PushSealed(L, obj);
 				return 1;
 			}
@@ -92,9 +92,9 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			System.Action<Framework.BaseUI> o = obj[arg0];
+			System.Action<Framework.BaseUi> o = obj[arg0];
 			ToLua.Push(L, o);
 			return 1;
 
@@ -111,9 +111,9 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			System.Action<Framework.BaseUI> arg1 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 3);
+			System.Action<Framework.BaseUi> arg1 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 3);
 			obj[arg0] = arg1;
 			return 0;
 
@@ -145,9 +145,9 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			System.Action<Framework.BaseUI> o = obj[arg0];
+			System.Action<Framework.BaseUi> o = obj[arg0];
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -163,9 +163,9 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			System.Action<Framework.BaseUI> arg1 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 3);
+			System.Action<Framework.BaseUi> arg1 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 3);
 			obj[arg0] = arg1;
 			return 0;
 		}
@@ -181,8 +181,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
 			obj.Add(arg0);
 			return 0;
 		}
@@ -198,8 +198,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUI>> arg0 = (System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUI>>)ToLua.CheckObject<System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUI>>>(L, 2);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUi>> arg0 = (System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUi>>)ToLua.CheckObject<System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUi>>>(L, 2);
 			obj.AddRange(arg0);
 			return 0;
 		}
@@ -215,8 +215,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Collections.ObjectModel.ReadOnlyCollection<System.Action<Framework.BaseUI>> o = obj.AsReadOnly();
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Collections.ObjectModel.ReadOnlyCollection<System.Action<Framework.BaseUi>> o = obj.AsReadOnly();
 			ToLua.PushObject(L, o);
 			return 1;
 		}
@@ -235,28 +235,28 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 
 			if (count == 2)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
 				int o = obj.BinarySearch(arg0);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
 			}
 			else if (count == 3)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
-				System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>> arg1 = (System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>>)ToLua.CheckObject<System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>>>(L, 3);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
+				System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>> arg1 = (System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>>)ToLua.CheckObject<System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>>>(L, 3);
 				int o = obj.BinarySearch(arg0, arg1);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
 			}
 			else if (count == 5)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
-				System.Action<Framework.BaseUI> arg2 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 4);
-				System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>> arg3 = (System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>>)ToLua.CheckObject<System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>>>(L, 5);
+				System.Action<Framework.BaseUi> arg2 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 4);
+				System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>> arg3 = (System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>>)ToLua.CheckObject<System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>>>(L, 5);
 				int o = obj.BinarySearch(arg0, arg1, arg2, arg3);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
@@ -278,7 +278,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			obj.Clear();
 			return 0;
 		}
@@ -294,8 +294,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
 			bool o = obj.Contains(arg0);
 			LuaDLL.lua_pushboolean(L, o);
 			return 1;
@@ -315,24 +315,24 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 
 			if (count == 2)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Action<Framework.BaseUI>[] arg0 = ToLua.CheckObjectArray<System.Action<Framework.BaseUI>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Action<Framework.BaseUi>[] arg0 = ToLua.CheckObjectArray<System.Action<Framework.BaseUi>>(L, 2);
 				obj.CopyTo(arg0);
 				return 0;
 			}
 			else if (count == 3)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Action<Framework.BaseUI>[] arg0 = ToLua.CheckObjectArray<System.Action<Framework.BaseUI>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Action<Framework.BaseUi>[] arg0 = ToLua.CheckObjectArray<System.Action<Framework.BaseUi>>(L, 2);
 				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
 				obj.CopyTo(arg0, arg1);
 				return 0;
 			}
 			else if (count == 5)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-				System.Action<Framework.BaseUI>[] arg1 = ToLua.CheckObjectArray<System.Action<Framework.BaseUI>>(L, 3);
+				System.Action<Framework.BaseUi>[] arg1 = ToLua.CheckObjectArray<System.Action<Framework.BaseUi>>(L, 3);
 				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
 				int arg3 = (int)LuaDLL.luaL_checknumber(L, 5);
 				obj.CopyTo(arg0, arg1, arg2, arg3);
@@ -355,8 +355,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Predicate<System.Action<Framework.BaseUI>> arg0 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 2);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Predicate<System.Action<Framework.BaseUi>> arg0 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 2);
 			bool o = obj.Exists(arg0);
 			LuaDLL.lua_pushboolean(L, o);
 			return 1;
@@ -373,9 +373,9 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Predicate<System.Action<Framework.BaseUI>> arg0 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 2);
-			System.Action<Framework.BaseUI> o = obj.Find(arg0);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Predicate<System.Action<Framework.BaseUi>> arg0 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 2);
+			System.Action<Framework.BaseUi> o = obj.Find(arg0);
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -391,9 +391,9 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Predicate<System.Action<Framework.BaseUI>> arg0 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> o = obj.FindAll(arg0);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Predicate<System.Action<Framework.BaseUi>> arg0 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 2);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> o = obj.FindAll(arg0);
 			ToLua.PushSealed(L, o);
 			return 1;
 		}
@@ -412,27 +412,27 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 
 			if (count == 2)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Predicate<System.Action<Framework.BaseUI>> arg0 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Predicate<System.Action<Framework.BaseUi>> arg0 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 2);
 				int o = obj.FindIndex(arg0);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
 			}
 			else if (count == 3)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-				System.Predicate<System.Action<Framework.BaseUI>> arg1 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 3);
+				System.Predicate<System.Action<Framework.BaseUi>> arg1 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 3);
 				int o = obj.FindIndex(arg0, arg1);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
 			}
 			else if (count == 4)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
-				System.Predicate<System.Action<Framework.BaseUI>> arg2 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 4);
+				System.Predicate<System.Action<Framework.BaseUi>> arg2 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 4);
 				int o = obj.FindIndex(arg0, arg1, arg2);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
@@ -454,9 +454,9 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Predicate<System.Action<Framework.BaseUI>> arg0 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 2);
-			System.Action<Framework.BaseUI> o = obj.FindLast(arg0);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Predicate<System.Action<Framework.BaseUi>> arg0 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 2);
+			System.Action<Framework.BaseUi> o = obj.FindLast(arg0);
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -475,27 +475,27 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 
 			if (count == 2)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Predicate<System.Action<Framework.BaseUI>> arg0 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Predicate<System.Action<Framework.BaseUi>> arg0 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 2);
 				int o = obj.FindLastIndex(arg0);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
 			}
 			else if (count == 3)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-				System.Predicate<System.Action<Framework.BaseUI>> arg1 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 3);
+				System.Predicate<System.Action<Framework.BaseUi>> arg1 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 3);
 				int o = obj.FindLastIndex(arg0, arg1);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
 			}
 			else if (count == 4)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
-				System.Predicate<System.Action<Framework.BaseUI>> arg2 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 4);
+				System.Predicate<System.Action<Framework.BaseUi>> arg2 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 4);
 				int o = obj.FindLastIndex(arg0, arg1, arg2);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
@@ -517,8 +517,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Action<System.Action<Framework.BaseUI>> arg0 = (System.Action<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Action<System.Action<Framework.BaseUI>>>(L, 2);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Action<System.Action<Framework.BaseUi>> arg0 = (System.Action<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Action<System.Action<Framework.BaseUi>>>(L, 2);
 			obj.ForEach(arg0);
 			return 0;
 		}
@@ -534,7 +534,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			System.Collections.IEnumerator o = obj.GetEnumerator();
 			ToLua.Push(L, o);
 			return 1;
@@ -551,10 +551,10 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> o = obj.GetRange(arg0, arg1);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> o = obj.GetRange(arg0, arg1);
 			ToLua.PushSealed(L, o);
 			return 1;
 		}
@@ -573,16 +573,16 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 
 			if (count == 2)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
 				int o = obj.IndexOf(arg0);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
 			}
 			else if (count == 3)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
 				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
 				int o = obj.IndexOf(arg0, arg1);
 				LuaDLL.lua_pushinteger(L, o);
@@ -590,8 +590,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else if (count == 4)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
 				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
 				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
 				int o = obj.IndexOf(arg0, arg1, arg2);
@@ -615,9 +615,9 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			System.Action<Framework.BaseUI> arg1 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 3);
+			System.Action<Framework.BaseUi> arg1 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 3);
 			obj.Insert(arg0, arg1);
 			return 0;
 		}
@@ -633,9 +633,9 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
-			System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUI>> arg1 = (System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUI>>)ToLua.CheckObject<System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUI>>>(L, 3);
+			System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUi>> arg1 = (System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUi>>)ToLua.CheckObject<System.Collections.Generic.IEnumerable<System.Action<Framework.BaseUi>>>(L, 3);
 			obj.InsertRange(arg0, arg1);
 			return 0;
 		}
@@ -654,16 +654,16 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 
 			if (count == 2)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
 				int o = obj.LastIndexOf(arg0);
 				LuaDLL.lua_pushinteger(L, o);
 				return 1;
 			}
 			else if (count == 3)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
 				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
 				int o = obj.LastIndexOf(arg0, arg1);
 				LuaDLL.lua_pushinteger(L, o);
@@ -671,8 +671,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else if (count == 4)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
 				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
 				int arg2 = (int)LuaDLL.luaL_checknumber(L, 4);
 				int o = obj.LastIndexOf(arg0, arg1, arg2);
@@ -696,8 +696,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Action<Framework.BaseUI> arg0 = (System.Action<Framework.BaseUI>)ToLua.CheckDelegate<System.Action<Framework.BaseUI>>(L, 2);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Action<Framework.BaseUi> arg0 = (System.Action<Framework.BaseUi>)ToLua.CheckDelegate<System.Action<Framework.BaseUi>>(L, 2);
 			bool o = obj.Remove(arg0);
 			LuaDLL.lua_pushboolean(L, o);
 			return 1;
@@ -714,8 +714,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Predicate<System.Action<Framework.BaseUI>> arg0 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 2);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Predicate<System.Action<Framework.BaseUi>> arg0 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 2);
 			int o = obj.RemoveAll(arg0);
 			LuaDLL.lua_pushinteger(L, o);
 			return 1;
@@ -732,7 +732,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 			obj.RemoveAt(arg0);
 			return 0;
@@ -749,7 +749,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 3);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 			int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
 			obj.RemoveRange(arg0, arg1);
@@ -770,13 +770,13 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 
 			if (count == 1)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 				obj.Reverse();
 				return 0;
 			}
 			else if (count == 3)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
 				obj.Reverse(arg0, arg1);
@@ -802,30 +802,30 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 
 			if (count == 1)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 				obj.Sort();
 				return 0;
 			}
-			else if (count == 2 && TypeChecker.CheckTypes<System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>>>(L, 2))
+			else if (count == 2 && TypeChecker.CheckTypes<System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>>>(L, 2))
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>> arg0 = (System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>>)ToLua.ToObject(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>> arg0 = (System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>>)ToLua.ToObject(L, 2);
 				obj.Sort(arg0);
 				return 0;
 			}
-			else if (count == 2 && TypeChecker.CheckTypes<System.Comparison<System.Action<Framework.BaseUI>>>(L, 2))
+			else if (count == 2 && TypeChecker.CheckTypes<System.Comparison<System.Action<Framework.BaseUi>>>(L, 2))
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-				System.Comparison<System.Action<Framework.BaseUI>> arg0 = (System.Comparison<System.Action<Framework.BaseUI>>)ToLua.ToObject(L, 2);
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+				System.Comparison<System.Action<Framework.BaseUi>> arg0 = (System.Comparison<System.Action<Framework.BaseUi>>)ToLua.ToObject(L, 2);
 				obj.Sort(arg0);
 				return 0;
 			}
 			else if (count == 4)
 			{
-				System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+				System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 				int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 				int arg1 = (int)LuaDLL.luaL_checknumber(L, 3);
-				System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>> arg2 = (System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>>)ToLua.CheckObject<System.Collections.Generic.IComparer<System.Action<Framework.BaseUI>>>(L, 4);
+				System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>> arg2 = (System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>>)ToLua.CheckObject<System.Collections.Generic.IComparer<System.Action<Framework.BaseUi>>>(L, 4);
 				obj.Sort(arg0, arg1, arg2);
 				return 0;
 			}
@@ -846,8 +846,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Action<Framework.BaseUI>[] o = obj.ToArray();
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Action<Framework.BaseUi>[] o = obj.ToArray();
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -863,7 +863,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 1);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
 			obj.TrimExcess();
 			return 0;
 		}
@@ -879,8 +879,8 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUI>>));
-			System.Predicate<System.Action<Framework.BaseUI>> arg0 = (System.Predicate<System.Action<Framework.BaseUI>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUI>>>(L, 2);
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)ToLua.CheckObject(L, 1, typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>));
+			System.Predicate<System.Action<Framework.BaseUi>> arg0 = (System.Predicate<System.Action<Framework.BaseUi>>)ToLua.CheckDelegate<System.Predicate<System.Action<Framework.BaseUi>>>(L, 2);
 			bool o = obj.TrueForAll(arg0);
 			LuaDLL.lua_pushboolean(L, o);
 			return 1;
@@ -899,7 +899,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)o;
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)o;
 			int ret = obj.Capacity;
 			LuaDLL.lua_pushinteger(L, ret);
 			return 1;
@@ -918,7 +918,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)o;
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)o;
 			int ret = obj.Count;
 			LuaDLL.lua_pushinteger(L, ret);
 			return 1;
@@ -937,7 +937,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		try
 		{
 			o = ToLua.ToObject(L, 1);
-			System.Collections.Generic.List<System.Action<Framework.BaseUI>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUI>>)o;
+			System.Collections.Generic.List<System.Action<Framework.BaseUi>> obj = (System.Collections.Generic.List<System.Action<Framework.BaseUi>>)o;
 			int arg0 = (int)LuaDLL.luaL_checknumber(L, 2);
 			obj.Capacity = arg0;
 			return 0;

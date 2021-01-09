@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Configuration;
 using System.Text;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -22,7 +21,7 @@ namespace Framework
         public BundleSys()
         {
             // 读取Mainfest文件，用于获取依赖信息
-            _MainfestBundle = AssetBundle.LoadFromFile(Paths.BundleBasePath + Paths.Div + Path.GetFileName(Paths.BundleBasePath));
+            _MainfestBundle = AssetBundle.LoadFromFile(Paths.BundleBasePath.PCombine(Path.GetFileName(Paths.BundleBasePath)));
             _Mainfest = _MainfestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
 
             _Bundles = new Dictionary<string, BundleUnit>();

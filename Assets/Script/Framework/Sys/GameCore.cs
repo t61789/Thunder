@@ -46,7 +46,7 @@ namespace Framework
                 gameObject.AddComponent<ControlSys>(),
                 gameObject.AddComponent<ObjectPool>(),
                 gameObject.AddComponent<InstructionBalancing>(),
-                new UISys(),
+                new UiSys(),
                 new ValueSys(),
                 new TextSys(),
             };

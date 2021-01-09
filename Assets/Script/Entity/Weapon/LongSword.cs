@@ -18,7 +18,7 @@ namespace Thunder
         {
             var rot = Camera.main.transform.rotation;
             var area = ObjectPool.Get<MeleeAttackArea>(Config.MeleeAttackAreaAssetPath);
-            area.Init(_Player.Trans.position, rot, AttackRange, AttackAreaFadeTime);
+            area.Init(player.Trans.position, rot, AttackRange, AttackAreaFadeTime);
             area.HitEnter += HitTarget;
         }
 
@@ -26,7 +26,7 @@ namespace Thunder
         {
             var shoot = target.GetComponent<IShootable>();
             shoot?.GetShoot(target.transform.position,
-                target.transform.position - _Player.Trans.position,
+                target.transform.position - player.Trans.position,
                 Damage);
         }
 

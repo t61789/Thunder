@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Thunder
 {
-    [RequireComponent(typeof(ImmediateShooter))]
+    [RequireComponent(typeof(FastKineticEnergyLauncher))]
     public class ProtoEnemy : BaseEntity
     {
         public float AlertRange = 5;

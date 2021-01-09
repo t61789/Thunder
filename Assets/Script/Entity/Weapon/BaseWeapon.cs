@@ -11,7 +11,7 @@ namespace Thunder
         public static BaseWeapon Ins;
         public AmmoGroup AmmoGroup;
 
-        protected Player _Player;
+        protected Player player;
 
         public ItemId ItemId { get; set; }
 
@@ -22,8 +22,8 @@ namespace Thunder
             base.Awake();
 
             Ins = this;
-            _Player = Trans.parent.parent.parent.GetComponent<Player>();
-            Assert.IsNotNull(_Player,
+            player = Trans.parent.parent.parent.GetComponent<Player>();
+            Assert.IsNotNull(player,
                 $"武器 {name} 安装位置不正确");
         }
 
@@ -50,16 +50,16 @@ namespace Thunder
         public int BackupAmmo => _Package.GetItemNum(AmmoId);
         public int AmmoId { get; }
 
-        public int Magzine;
-        public int MagzineMax;
+        public int Magazine;
+        public int MagazineMax;
         private readonly Package _Package;
 
         public event Action<AmmoGroup> OnAmmoChanged;
 
-        public AmmoGroup(int magzineMax, int ammoId,Package package)
+        public AmmoGroup(int magazineMax, int ammoId,Package package)
         {
-            MagzineMax = magzineMax;
-            Magzine = magzineMax;
+            this.MagazineMax = magazineMax;
+            Magazine = magazineMax;
             _Package = package;
             AmmoId = ammoId;
         }
@@ -70,7 +70,7 @@ namespace Thunder
         /// <returns></returns>
         public bool ReloadConfirm()
         {
-            return Magzine != MagzineMax && BackupAmmo != 0;
+            return Magazine != MagazineMax && BackupAmmo != 0;
         }
 
         /// <summary>
@@ -78,8 +78,8 @@ namespace Thunder
         /// </summary>
         public void Reload()
         {
-            var ammoDiff = Mathf.Min(MagzineMax - Magzine, BackupAmmo);
-            Magzine += ammoDiff;
+            var ammoDiff = Mathf.Min(MagazineMax - Magazine, BackupAmmo);
+            Magazine += ammoDiff;
             _Package.CostItem((AmmoId, ammoDiff),out _);
         }
 
@@ -87,9 +87,9 @@ namespace Thunder
         ///     判断弹匣是否为空
         /// </summary>
         /// <returns></returns>
-        public bool MagzineEmpty()
+        public bool MagazineEmpty()
         {
-            return Magzine == 0;
+            return Magazine == 0;
         }
 
         public void InvokeOnAmmoChanged()

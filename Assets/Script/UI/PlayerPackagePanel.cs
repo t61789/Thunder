@@ -2,7 +2,7 @@
 
 namespace Thunder.UI
 {
-    public class PlayerPackagePanel:BaseUI
+    public class PlayerPackagePanel:BaseUi
     {
         private Package _Package;
     }

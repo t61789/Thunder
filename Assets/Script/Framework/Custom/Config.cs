@@ -6,7 +6,7 @@ namespace Framework
     public static class Config
     {
         public static string UiFramworkBaseObjName = "Canvas";
-        public static string ConfigXmlPath;
+        public static string ConfigXmlPath = "E:\\UnityProjects\\Thunder\\Assets\\Script\\Framework\\Custom\\Config.xml";
 
         public const string DefaultCamp = "Unknown";
         public const int CampMapSize = 64;

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Thunder
 {
-    public class PackageCell:BaseUI,IBeginDragHandler,IPointerClickHandler,IPointerUpHandler,ICanvasRaycastFilter
+    public class PackageCell:BaseUi,IBeginDragHandler,IPointerClickHandler,IPointerUpHandler,ICanvasRaycastFilter
     {// todo 点击菜单栏
         public bool ShowCount=true;
 

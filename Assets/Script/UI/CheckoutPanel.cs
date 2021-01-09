@@ -2,7 +2,7 @@
 
 namespace Thunder.UI
 {
-    public class CheckoutPanel : BaseUI
+    public class CheckoutPanel : BaseUi
     {
         //[SerializeField]
         //private BattleSceneController battleSceneController;

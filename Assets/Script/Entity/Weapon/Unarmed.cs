@@ -26,7 +26,7 @@ namespace Thunder
 
         public override ItemAddData Drop()
         {
-            return new ItemAddData(AmmoGroup.Magzine);
+            return new ItemAddData(AmmoGroup.Magazine);
         }
 
         public override void ReadAdditionalData(ItemAddData add)

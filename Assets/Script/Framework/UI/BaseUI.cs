@@ -2,7 +2,7 @@
 
 namespace Framework
 {
-    public class BaseUI : BaseEntity, IObjectPool
+    public class BaseUi : BaseEntity, IObjectPool
     {
         public RectTransform RectTrans { get; private set; }
 

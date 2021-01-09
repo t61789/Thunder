@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 namespace Framework
 {
-    public class EventUI:BaseUI, IPointerClickHandler, IPointerUpHandler,
+    public class EventUi:BaseUi, IPointerClickHandler, IPointerUpHandler,
         IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
     {
         public PointerEvent PointerClickE { get; } = new PointerEvent();

@@ -68,6 +68,15 @@ namespace Framework
         /// <summary>
         /// 获取指定key对应的输入
         /// </summary>
+        /// <returns></returns>
+        public static ControlInfo RequireKey(CtrKeyRequest ctrKeyRequest)
+        {
+            return RequireKey(ctrKeyRequest.KeyName, ctrKeyRequest.ShieldValue);
+        }
+
+        /// <summary>
+        /// 获取指定key对应的输入
+        /// </summary>
         /// <param name="key"></param>
         /// <param name="shieldValue">如果当前遮蔽值大于给定遮蔽值，则会返回空输入</param>
         /// <returns></returns>
@@ -175,7 +184,14 @@ namespace Framework
         public bool Click;
         public bool DoubleClick;
 
-        public static readonly ControlInfo Default = new ControlInfo(default, false, false, false);
+        public static readonly ControlInfo Default 
+            = new ControlInfo();
+        public static readonly ControlInfo Open 
+            = new ControlInfo(default,true,true,true)
+            {
+                Click = true,
+                DoubleClick = true
+            };
 
         public ControlInfo(Vector3 axis, bool stay, bool down, bool up)
         {
@@ -208,6 +224,19 @@ namespace Framework
         public static implicit operator float(ShieldValue s)
         {
             return s._Value;
+        }
+    }
+
+    [Serializable]
+    public struct CtrKeyRequest
+    {
+        public string KeyName;
+        public float ShieldValue;
+
+        public CtrKeyRequest(string keyName, float shieldValue)
+        {
+            KeyName = keyName;
+            ShieldValue = shieldValue;
         }
     }
 }

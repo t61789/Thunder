@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Thunder.UI
 {
-    public class LogPanel : BaseUI
+    public class LogPanel : BaseUi
     {
         public static LogPanel Ins;
 

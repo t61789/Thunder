@@ -80,13 +80,13 @@ namespace Thunder.Game.FlyingSaucer
 
         public void LeaveGameArea(Collider c)
         {
-            UISys.CloseUI(ScoreBoard.EntityName);
+            UiSys.CloseUi(ScoreBoard.EntityName);
         }
 
         private void GameStartDelay(GameType type)
         {
             if (type != GameType.FlyingSaucer) return;
-            UISys.OpenUI(ScoreBoard.EntityName);
+            UiSys.OpenUi(ScoreBoard.EntityName);
         }
 
         private void GameStart(GameType type)
@@ -103,7 +103,7 @@ namespace Thunder.Game.FlyingSaucer
             PublicEvents.GameEnd?.Invoke(GameType.FlyingSaucer, true);
             var endMsg = $"Game over, you have got {_CurScore} score";
             LogPanel.Ins.LogSystem(endMsg);
-            UISys.CloseUI(ScoreBoard.EntityName);
+            UiSys.CloseUi(ScoreBoard.EntityName);
             TurnCounter.Pause().Recount();
         }
     }

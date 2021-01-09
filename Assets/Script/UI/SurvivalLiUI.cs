@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class SurvivalLiUI : BaseUI
+    public class SurvivalLiUI : BaseUi
     {
         private float maxTime;
         private Text score;

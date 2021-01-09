@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class AimPoint : BaseUI
+    public class AimPoint : BaseUi
     {
         public static AimPoint Ins;
 

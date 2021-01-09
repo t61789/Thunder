@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Framework
 {
-    public class Joystick : PanelUI
+    public class Joystick : PanelUi
     {
         public string CtrKey;
         public bool StablePanel;
@@ -15,19 +15,19 @@ namespace Framework
         public float ShowTime = 0.1f;
 
         private float _AlphaCount;
-        private EventUI _Cap;
+        private EventUi _Cap;
         private float _CurAlpha;
         private bool _Dragging;
         private float _FadeCount;
         private Material _ImageMaterial;
-        private BaseUI _Panel;
+        private BaseUi _Panel;
         private Image _PanelImage;
         private ControlInfo _CurControlInfo;
 
         protected void Start()
         {
-            _Cap = transform.Find("Cap").GetComponent<EventUI>();
-            _Panel = transform.Find("Panel").GetComponent<BaseUI>();
+            _Cap = transform.Find("Cap").GetComponent<EventUi>();
+            _Panel = transform.Find("Panel").GetComponent<BaseUi>();
             _PanelImage = _Panel.GetComponent<Image>();
 
             _Cap.DragE.AddListener(OnCapDrag);
@@ -67,7 +67,7 @@ namespace Framework
             _CurControlInfo.DoubleClick = false;
         }
 
-        public void OnCapBeginDrag(EventUI ui, PointerEventData eventData)
+        public void OnCapBeginDrag(EventUi ui, PointerEventData eventData)
         {
             var pos = eventData.position;
             if ((pos - (Vector2) _Cap.RectTrans.position).magnitude < CapRadius)
@@ -84,7 +84,7 @@ namespace Framework
             }
         }
 
-        public void OnCapEndDrag(EventUI ui, PointerEventData eventData)
+        public void OnCapEndDrag(EventUi ui, PointerEventData eventData)
         {
             if (_Dragging)
             {
@@ -103,7 +103,7 @@ namespace Framework
             }
         }
 
-        public void OnCapDrag( EventUI ui, PointerEventData eventData)
+        public void OnCapDrag( EventUi ui, PointerEventData eventData)
         {
             if (_Dragging)
             {
@@ -128,7 +128,7 @@ namespace Framework
             }
         }
 
-        public void OnCapPointerClick(EventUI ui, PointerEventData eventData)
+        public void OnCapPointerClick(EventUi ui, PointerEventData eventData)
         {
             if (_Dragging) return;
 
@@ -138,13 +138,13 @@ namespace Framework
                 _CurControlInfo.DoubleClick = true;
         }
 
-        public void OnCapPointerDown(EventUI ui, PointerEventData eventData)
+        public void OnCapPointerDown(EventUi ui, PointerEventData eventData)
         {
             _CurControlInfo.Down = true;
             _CurControlInfo.Stay = true;
         }
 
-        public void OnCapPointerUp(EventUI ui, PointerEventData eventData)
+        public void OnCapPointerUp(EventUi ui, PointerEventData eventData)
         {
             _CurControlInfo.Up = true;
             _CurControlInfo.Stay = false;

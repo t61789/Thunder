@@ -1,5 +1,4 @@
 ﻿using System;
-using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
@@ -50,6 +49,7 @@ namespace Thunder.Behavior
         public override void OnEnd()
         {
             _ExecutionStatus = TaskStatus.Inactive;
+            
         }
     }
 }

@@ -3,7 +3,7 @@ using TMPro;
 
 namespace Thunder.UI
 {
-    public class AmmoPanel : BaseUI
+    public class AmmoPanel : BaseUi
     {
         private string _AmmoStr;
         private string _FireModeStr;
@@ -14,7 +14,7 @@ namespace Thunder.UI
             _Text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
             BaseWeapon.Ins.AmmoGroup.OnAmmoChanged += ammoGroup =>
             {
-                _AmmoStr = $"{ammoGroup.Magzine}/{ammoGroup.MagzineMax}  {ammoGroup.BackupAmmo}";
+                _AmmoStr = $"{ammoGroup.Magazine}/{ammoGroup.MagazineMax}  {ammoGroup.BackupAmmo}";
                 SetText();
             };
             PublicEvents.GunFireModeChange.AddListener(x =>

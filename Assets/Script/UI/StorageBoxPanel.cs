@@ -3,7 +3,7 @@
 
 namespace Thunder.UI
 {
-    public class StorageBoxPanel:PanelUI
+    public class StorageBoxPanel:PanelUi
     {
         public PackageCellAdapter PackageCellAdapter { private set; get; }
 

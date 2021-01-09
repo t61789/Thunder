@@ -572,13 +572,13 @@ public static class LuaBinder
 
 			if (count == 1)
 			{
-				Delegate arg1 = DelegateTraits<System.Action<Framework.BaseUI>>.Create(func);
+				Delegate arg1 = DelegateTraits<System.Action<Framework.BaseUi>>.Create(func);
 				ToLua.Push(L, arg1);
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<System.Action<Framework.BaseUI>>.Create(func, self);
+				Delegate arg1 = DelegateTraits<System.Action<Framework.BaseUi>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;
@@ -599,13 +599,13 @@ public static class LuaBinder
 
 			if (count == 1)
 			{
-				Delegate arg1 = DelegateTraits<System.Predicate<System.Action<Framework.BaseUI>>>.Create(func);
+				Delegate arg1 = DelegateTraits<System.Predicate<System.Action<Framework.BaseUi>>>.Create(func);
 				ToLua.Push(L, arg1);
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<System.Predicate<System.Action<Framework.BaseUI>>>.Create(func, self);
+				Delegate arg1 = DelegateTraits<System.Predicate<System.Action<Framework.BaseUi>>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;
@@ -626,13 +626,13 @@ public static class LuaBinder
 
 			if (count == 1)
 			{
-				Delegate arg1 = DelegateTraits<System.Action<System.Action<Framework.BaseUI>>>.Create(func);
+				Delegate arg1 = DelegateTraits<System.Action<System.Action<Framework.BaseUi>>>.Create(func);
 				ToLua.Push(L, arg1);
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<System.Action<System.Action<Framework.BaseUI>>>.Create(func, self);
+				Delegate arg1 = DelegateTraits<System.Action<System.Action<Framework.BaseUi>>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;
@@ -653,13 +653,13 @@ public static class LuaBinder
 
 			if (count == 1)
 			{
-				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Framework.BaseUI>>>.Create(func);
+				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Framework.BaseUi>>>.Create(func);
 				ToLua.Push(L, arg1);
 			}
 			else
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
-				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Framework.BaseUI>>>.Create(func, self);
+				Delegate arg1 = DelegateTraits<System.Comparison<System.Action<Framework.BaseUi>>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

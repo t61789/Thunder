@@ -47,11 +47,12 @@ namespace Thunder
                     tempList.Clear();
                 }
 
-                if (ItemGroup.TryParse(row[itemGroupStr], out var itemGroup))
+                if (!ItemGroup.TryParse(row[itemGroupStr], out var itemGroup))
                     throw new Exception("数据转换失败");
                 tempList.Add(new RewardUnit(itemGroup, row[weightStr]));
             }
-            _RewardDic.Add(curKey, new RandomRewardGenerator(tempList));
+            if (curKey != null)
+                _RewardDic.Add(curKey, new RandomRewardGenerator(tempList));
         }
 
         private RandomRewardGenerator(IEnumerable<RewardUnit> list)

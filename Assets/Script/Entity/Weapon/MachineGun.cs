@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Framework;
 
 using UnityEngine;
@@ -6,81 +7,72 @@ using UnityEngine.Assertions;
 
 namespace Thunder
 {
+    [RequireComponent(typeof(MachineGunFireControl))]
+    [RequireComponent(typeof(RecoliController))]
+    [RequireComponent(typeof(AimScopeController))]
     public class MachineGun : BaseWeapon
     {
+        public CtrKeyRequest FireKey;
+        public CtrKeyRequest ReloadKey;
+        public CtrKeyRequest AimKey;
+        public CtrKeyRequest SwitchFireKey;
+
         public float AimScopeFov = 20;
         public float CameraRecoliDampTime = 0.1f;
         public float Damage = 20;
         public string DrawAnimationName;
-        public float FireInterval = 0.2f;
+        public bool ScopeAllowed = false;
         public Vector3 MuzzleFirePos;
         public Sprite[] MuzzleFireSprites;
-        public bool Safety;
-        public bool ScopeAllowed = false;
-        /// <summary>
-        ///     0为无限连发模式，其余正整数为连射次数
-        /// </summary>
-        public int BurstMode = 0;
-        [SerializeField] private BulletSpread _BulletSpread;
 
         private readonly List<Vector3> _Spreads = new List<Vector3>();
         private readonly StickyInputDic _StickyInputDic = new StickyInputDic();
-        private AimScopeController _AimScope;
         private bool _AimScopeBeforeReload;
-        private Animator _Animator;
         private bool _Reloading;
-        private BurstController _Burst;
+        private Animator _Animator;
         private RecoliController _Recoli;
-        private InnerClassManager _InnerClassManager;
+        private AimScopeController _AimScope;
 
         private const string RELOAD = "Reload";
 
-        public override float OverHeatFactor => _BulletSpread.OverHeatFactor.Average();
-        public float BulletSpreadScale => _BulletSpread.SpreadScale;
+        public MachineGunFireControl MachineGunFireControl { private set; get; }
+        public override float OverHeatFactor => MachineGunFireControl.OverHeatFactor;
 
         protected override void Awake()
         {
             base.Awake();
 
             _Animator = GetComponent<Animator>();
-            _Player = Trans.parent.parent.parent.GetComponent<Player>();
-            Assert.IsNotNull(_Player,
-                $"枪械 {name} 安装位置不正确");
+            player = Trans.parent.parent.parent.GetComponent<Player>();
+            if(player==null)
+                throw new Exception($"枪械 {name} 安装位置不正确");
 
             _StickyInputDic.AddBool(RELOAD, 0.7f);
-            _Burst = new BurstController(BurstMode, FireInterval);
-            _Recoli = new RecoliController(CameraRecoliDampTime);
-            _AimScope = new AimScopeController(_Player.FpsCamera.SensitiveScale, AimScopeFov);
+            
+            _AimScope = GetComponent<AimScopeController>();
+            _AimScope.Init(player.FpsCamera.SensitiveScale);
+            MachineGunFireControl = GetComponent<MachineGunFireControl>();
+            _Recoli = GetComponent<RecoliController>();
 
-            _InnerClassManager = new InnerClassManager(this);
+            MachineGunFireControl.FireCheck = FireCheck;
         }
 
         private void Update()
         {
-            if (!Safety) return;
+            var autoReload = Fire(ControlSys.RequireKey(FireKey));
+            Reload(ControlSys.RequireKey(ReloadKey), autoReload);
 
-            var fire = ControlSys.RequireKey(Config.FireKeyName, 0);
-            var param = _Burst.FireCheck(fire, !AmmoGroup.MagzineEmpty(), out var autoReload);
-            if (param) Fire();
-
-            param = AmmoGroup.ReloadConfirm() &&
-                    !_Reloading &&
-                    (ControlSys.RequireKey(RELOAD, 0).Down || autoReload);
-            _StickyInputDic.SetBool(RELOAD, param);
-            if (param && !_Reloading)
-            {
-                _AimScopeBeforeReload = _AimScope.Enable;
-                if (_AimScope.Enable)
-                    _AimScope.Switch();
-                _Reloading = true;
-            }
+            if (ControlSys.RequireKey(AimKey).Down)
+                _AimScope.Switch();
+            if (ControlSys.RequireKey(SwitchFireKey).Down)
+                MachineGunFireControl.LoopBurstMode();
 
             _Animator.SetBool(RELOAD, _StickyInputDic.GetBool(RELOAD));
+        }
 
-            if (ControlSys.RequireKey(Config.AimScopeKeyName, 0).Down)
-                _AimScope.Switch();
-            if (ControlSys.RequireKey(Config.SwitchFireModeKeyName, 0).Down)
-                _Burst.LoopMode();
+        private void FixedUpdate()
+        {
+            _StickyInputDic.FixedUpdate();
         }
 
         public override void Reload()
@@ -94,11 +86,6 @@ namespace Thunder
             _Reloading = false;
         }
 
-        public void SetSafety(int value)
-        {
-            Safety = value != 0;
-        }
-
         public override void TakeOut()
         {
             _Animator.Play(DrawAnimationName);
@@ -106,62 +93,78 @@ namespace Thunder
 
         public override void PutBack()
         {
-            Safety = true;
-            _Recoli.Reset();
-            _Burst.Reset();
-            _AimScope.Reset();
-            _BulletSpread.Reset();
+            _Recoli.Resets();
+            MachineGunFireControl.Resets();
+            _AimScope.Resets();
             _AimScopeBeforeReload = _Reloading = false;
         }
 
         public override ItemAddData Drop()
         {
-            return new ItemAddData(AmmoGroup.Magzine);
+            return new ItemAddData(AmmoGroup.Magazine);
         }
 
         public override void ReadAdditionalData(ItemAddData add)
         {
-            add.TryGet(out AmmoGroup.Magzine);
+            add.TryGet(out AmmoGroup.Magazine);
         }
 
         public override void Fire()
         {
-            var dir = _BulletSpread.GetNextBulletDir(FireInterval);
-            dir = Camera.main.transform.localToWorldMatrix * dir;
-
-            if (Physics.Raycast(Trans.position, dir, out var hit))
+            var autoReload = Fire(ControlInfo.Open);
+            Reload(ControlInfo.Open, autoReload);
+        }
+        
+        private bool Fire(ControlInfo fireInfo)
+        {
+            var autoReload = false;
+            var shootInfo = MachineGunFireControl.TryShoot(fireInfo);
+            if (shootInfo.Shooted)
             {
-                _Spreads.Add(hit.point);
-                if (_Spreads.Count > 50)
-                    _Spreads.RemoveAt(0);
-                BulletHoleManager.Create(hit.point, hit.normal);
-                hit.transform.GetComponent<IShootable>()?.GetShoot(hit.point, dir, Damage);
+                if (shootInfo.HitSomething)
+                {
+                    var hit = shootInfo.HitInfo;
+                    _Spreads.Add(hit.point);
+                    if (_Spreads.Count > 50)
+                        _Spreads.RemoveAt(0);
+                    BulletHoleManager.Create(hit.point, hit.normal);
+                    hit.transform.GetComponent<IShootable>()?.GetShoot(hit.point, shootInfo.ShootDir, Damage);
+                }
+
+                _Recoli.Next();
+
+                AmmoGroup.Magazine--;
+                AmmoGroup.InvokeOnAmmoChanged();
+
+                PublicEvents.GunFire?.Invoke();
+            }
+            else if (!shootInfo.FireCheckPass && fireInfo.Down)
+            {
+                autoReload = true;
             }
 
-            _Recoli.TriggerRecoli(_BulletSpread.GetNextCameraShake(out var stay), stay);
-
-            AmmoGroup.Magzine--;
-            AmmoGroup.InvokeOnAmmoChanged();
-
-
-            PublicEvents.GunFire?.Invoke();
+            return autoReload;
         }
 
-        private void FixedUpdate()
+        private void Reload(ControlInfo reloadInfo,bool autoReload)
         {
-            _StickyInputDic.FixedUpdate();
+            var param = AmmoGroup.ReloadConfirm() &&
+                        !_Reloading &&
+                        (reloadInfo.Down || autoReload);
 
-            _BulletSpread.ColdDown(FireInterval);
-
-            // 设置后坐力
-            _Recoli.GetRecoli(out var addition, out var stay);
-            PublicEvents.RecoliFloat?.Invoke(addition);
-            if (stay != Vector2.zero) PublicEvents.RecoliFixed?.Invoke(stay);
+            _StickyInputDic.SetBool(RELOAD, param);
+            if (param && !_Reloading)
+            {
+                _AimScopeBeforeReload = _AimScope.Enable;
+                if (_AimScope.Enable)
+                    _AimScope.Switch();
+                _Reloading = true;
+            }
         }
 
-        private void OnDestroy()
+        private bool FireCheck()
         {
-            _InnerClassManager.InvokeDestroyed();
+            return !AmmoGroup.MagazineEmpty();
         }
 
         private void OnDrawGizmos()
@@ -171,148 +174,118 @@ namespace Thunder
         }
     }
 
-    public class BurstController
+    public class RecoliController : MonoBehaviour
     {
-        private readonly SimpleCounter _FireCounter;
-        private readonly int[] _FireModeLoop = {0, 1, 3};
+        public Vector2 RecoliBaseDir = Vector2.up;
+        public float RecoliAngle = 30;
+        public Range RecoliIntensity = (0.1f, 0.2f);
+        public float RecoliForwardTime = 0.1f;
+        public float RecoliBackTime = 0.7f;
 
-        private int _BurstCount;
-        public int BurstMode;
+        private FpsCamera _Camera;
+        private float _RecoliAngleHalf;
+        private Vector2 _RecoliTarget;
+        private bool _Back;
+        private SemiAutoCounter _RecoliCounter;
 
-        public BurstController(int burstMode, float fireInterval)
+        public Vector2 CurFloatRecoli
         {
-            BurstMode = burstMode;
-            _FireCounter = new SimpleCounter(fireInterval).Complete();
-        }
-
-        public float FireInterval
-        {
-            get => _FireCounter.TimeLimit;
-            set => _FireCounter.Recount(value);
-        }
-
-        public void Reset()
-        {
-            _BurstCount = 0;
-            _FireCounter.Complete();
-            BurstMode = _FireModeLoop[0];
-        }
-
-        public void LoopMode()
-        {
-            var index = _FireModeLoop.FindIndex(x => BurstMode == x);
-            index++;
-            index %= _FireModeLoop.Length;
-            BurstMode = _FireModeLoop[index];
-            PublicEvents.GunFireModeChange?.Invoke(BurstMode);
-        }
-
-        public bool FireCheck(ControlInfo input, bool hasAmmo, out bool autoReload)
-        {
-            autoReload = false;
-            if (!_FireCounter.Completed) return false;
-            var result = false;
-            var param = true;
-            if (!hasAmmo)
+            get
             {
-                if (input.Down)
-                    autoReload = true;
-                param = false;
+                var start = _Back ? _RecoliTarget : Vector2.zero;
+                var end = _Back ? Vector2.zero : _RecoliTarget;
+                return Vector2.Lerp(start, end, _RecoliCounter.Interpolant);
             }
-            else if (BurstMode == 0 && input.Stay)
+        }
+
+        private void Awake()
+        {
+            RecoliBaseDir = RecoliBaseDir.normalized;
+            _RecoliAngleHalf = RecoliAngle / 2;
+            _RecoliCounter = new SemiAutoCounter(RecoliForwardTime).OnComplete(SwitchDir);
+            _Camera = GetPlayerCamera();
+        }
+
+        private void FixedUpdate()
+        {
+            _RecoliCounter.FixedUpdate();
+            _Camera.ViewRotAddition(CurFloatRecoli);
+        }
+
+        /// <summary>
+        /// 产生一次后坐力
+        /// </summary>
+        /// <returns>当前浮动后坐力位置</returns>
+        public void Next()
+        {
+            _Camera.ViewRotTargetAddition(CurFloatRecoli);
+
+            float angle = Tools.RandomFloat(-_RecoliAngleHalf, _RecoliAngleHalf);
+            _RecoliTarget = Quaternion.AngleAxis(angle, Vector3.forward) *
+                   RecoliBaseDir *
+                   Tools.RandomFloat(RecoliIntensity.Min, RecoliIntensity.Max);
+            _Back = false;
+            _RecoliCounter.Recount(RecoliForwardTime);
+        }
+
+        public void Resets()
+        {
+            _Back = false;
+            _RecoliCounter.Complete(false);
+            _RecoliTarget = Vector2.zero;
+        }
+
+        private void SwitchDir()
+        {
+            if (!_Back)
             {
-                result = true;
-            }
-            else if (input.Down || _BurstCount > 0)
-            {
-                if (_BurstCount == 0)
-                    _BurstCount = BurstMode;
-                _BurstCount--;
-                result = true;
+                _Back = true;
+                _RecoliCounter.Recount(RecoliBackTime);
             }
             else
             {
-                param = false;
+                _Back = false;
             }
+        }
 
-            if (param)
-                _FireCounter.Recount();
-
-            return result;
+        private static FpsCamera GetPlayerCamera()
+        {
+            return Player.Ins.FpsCamera;
         }
     }
 
-    public class RecoliController
+    public class AimScopeController:MonoBehaviour
     {
-        private readonly SimpleCounter _RecoliCounter;
-        private Vector2 _CameraEnd;
-        private Vector2 _CameraStart;
-        private Vector2 _SaveStay;
-
-        public RecoliController(float recoliTime)
-        {
-            _RecoliCounter = new SimpleCounter(recoliTime);
-        }
-
-        public void Reset()
-        {
-            _RecoliCounter.Complete();
-            _CameraEnd = _CameraStart = _SaveStay = Vector2.zero;
-        }
-
-        public void GetRecoli(out Vector2 addition, out Vector2 stay)
-        {
-            var x = _RecoliCounter.Interpolant;
-            addition = Vector2.zero;
-            if (x >= 1 && _CameraEnd != Vector2.zero)
-            {
-                _RecoliCounter.Recount();
-                _CameraStart = _CameraEnd;
-                _CameraEnd = Vector2.zero;
-            }
-            else
-            {
-                addition = Vector2.Lerp(_CameraStart, _CameraEnd,
-                    Mathf.Sin(x * Mathf.PI / 2));
-            }
-
-            stay = _SaveStay;
-            _SaveStay = Vector2.zero;
-        }
-
-        public void TriggerRecoli(Vector2 addition, Vector2 stay)
-        {
-            _SaveStay += stay;
-            _CameraStart = Vector2.Lerp(_CameraStart, _CameraEnd,
-                Mathf.Sin(_RecoliCounter.Interpolant * Mathf.PI / 2));
-            _CameraEnd = addition;
-            _RecoliCounter.Recount();
-        }
-    }
-
-    public class AimScopeController:IHostDestroyed
-    {
-        private const string AIM_POINT_UI_NAME = "aimPoint";
-        private readonly BuffData _AimScopeSensitiveScale;
-        private readonly float _BaseFOV;
-
-        private readonly float _EnableFOV;
-        private readonly Camera _MainCamera;
-        private readonly BuffData _PlayerSensitive;
+        public float EnableFOV;
         public bool Allowed = true;
 
-        public AimScopeController(BuffData playerSensitive, float fov)
+        private BuffData _PlayerSensitive;
+        private Camera _MainCamera;
+        private float _BaseFOV;
+        private BuffData _AimScopeSensitiveScale;
+
+        private const string AIM_POINT_UI_NAME = "aimPoint";
+
+        private void Awake()
+        {
+            _BaseFOV = _MainCamera.fieldOfView;
+            _AimScopeSensitiveScale = new BuffData(EnableFOV / _BaseFOV);
+            _MainCamera = Camera.main;
+        }
+
+        private void OnDestroy()
+        {
+            _AimScopeSensitiveScale.Destroy();
+        }
+
+        public void Init(BuffData playerSensitive)
         {
             _PlayerSensitive = playerSensitive;
-            _MainCamera = Camera.main;
-            _BaseFOV = _MainCamera.fieldOfView;
-            _EnableFOV = fov;
-            _AimScopeSensitiveScale = new BuffData(_EnableFOV / _BaseFOV);
         }
 
         public bool Enable { private set; get; }
 
-        public void Reset()
+        public void Resets()
         {
             if (Enable)
                 Switch();
@@ -324,9 +297,9 @@ namespace Thunder
 
             if (!Enable)
             {
-                _MainCamera.fieldOfView = _EnableFOV;
+                _MainCamera.fieldOfView = EnableFOV;
                 PostProcessingController.Instance.AimScope.Enable = true;
-                UISys.CloseUI(AIM_POINT_UI_NAME);
+                UiSys.CloseUi(AIM_POINT_UI_NAME);
                 _PlayerSensitive.AddBuff(_AimScopeSensitiveScale, Operator.Mul, 0);
                 PostProcessingController.Instance.DepthOfField.Enable = true;
             }
@@ -334,17 +307,12 @@ namespace Thunder
             {
                 _MainCamera.fieldOfView = _BaseFOV;
                 PostProcessingController.Instance.AimScope.Enable = false;
-                UISys.OpenUI(AIM_POINT_UI_NAME);
+                UiSys.OpenUi(AIM_POINT_UI_NAME);
                 _PlayerSensitive.RemoveBuff(_AimScopeSensitiveScale);
                 PostProcessingController.Instance.DepthOfField.Enable = false;
             }
 
             Enable = !Enable;
-        }
-
-        public void HostDestroyed(object host)
-        {
-            _AimScopeSensitiveScale.Destroy();
         }
     }
 }

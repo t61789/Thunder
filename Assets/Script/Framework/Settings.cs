@@ -38,7 +38,7 @@ namespace Framework
             var root = XDocument.Load(path).Root;
 
             // 反射填充bundle名
-            var t = typeof(Path);
+            var t = typeof(Paths);
             foreach (var e in root.Element("SysBundleName").Elements())
                 t.GetField(e.Name.ToString(), BindingFlags.Static | BindingFlags.Public)
                     .SetValue(null, e.Attribute("name").Value);
@@ -72,10 +72,10 @@ namespace Framework
             // 处理强制路径
             el = root.Element(nameof(BundleBasePath));
             if (el.Attribute("enable").Value == "true")
-                BundleBasePath = el.Attribute("path").Value.Replace(Div, Path.PathSeparator);
+                BundleBasePath = el.Attribute("path").Value.Replace(Div, Path.DirectorySeparatorChar);
             el = root.Element(nameof(LogPath));
             if (el.Attribute("enable").Value == "true")
-                LogPath = el.Attribute("path").Value.Replace(Div, Path.PathSeparator);
+                LogPath = el.Attribute("path").Value.Replace(Div, Path.DirectorySeparatorChar);
         }
     }
     public class Platform
@@ -91,16 +91,16 @@ namespace Framework
         {
             CurPlatform = 0;
 #if UNITY_EDITOR
-            CurPlatform &= Platforms.Editor;
+            CurPlatform |= Platforms.Editor;
 #endif
 #if UNITY_ANDROID
-            CurPlatform &= Platforms.Android;
+            CurPlatform |= Platforms.Android;
 #endif
 #if UNITY_STANDALONE
-            CurPlatform &= Platforms.Standalone;
+            CurPlatform |= Platforms.Standalone;
 #endif
 #if UNITY_STANDALONE_WIN
-            CurPlatform &= Platforms.StandaloneWin;
+            CurPlatform |= Platforms.StandaloneWin;
 #endif
         }
 

@@ -43,7 +43,7 @@ namespace Thunder
 
         public override void Fire()
         {
-            if (AmmoGroup.MagzineEmpty())
+            if (AmmoGroup.MagazineEmpty())
             {
                 _StickyInputDic.SetBool(AUTO_RELOAD, true);
                 return;
@@ -51,7 +51,7 @@ namespace Thunder
 
             _Arrow.Launch(LaunchForce, Damage);
             _Arrow = null;
-            AmmoGroup.Magzine--;
+            AmmoGroup.Magazine--;
             AmmoGroup.InvokeOnAmmoChanged();
             _Animator.SetTrigger(FIRE);
         }
@@ -81,16 +81,16 @@ namespace Thunder
 
         public override ItemAddData Drop()
         {
-            return new ItemAddData(AmmoGroup.Magzine);
+            return new ItemAddData(AmmoGroup.Magazine);
         }
 
         public override void ReadAdditionalData(ItemAddData add)
         {
             if (!add.TryGet(out int data)) return;
-            if (data != 1 || AmmoGroup.Magzine != 0) return;
+            if (data != 1 || AmmoGroup.Magazine != 0) return;
             _Arrow = ObjectPool.Get<CrossbowArrow>(Config.CrossbowArrowAssetPath);
             _Arrow.Install(Trans, ArrowPos);
-            AmmoGroup.Magzine = 1;
+            AmmoGroup.Magazine = 1;
             AmmoGroup.InvokeOnAmmoChanged();
         }
     }

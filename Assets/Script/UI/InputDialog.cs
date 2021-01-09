@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class InputDialog : PanelUI
+    public class InputDialog : PanelUi
     {
         public DialogResult dialogResult;
 
@@ -31,13 +31,13 @@ namespace Thunder.UI
         public void InputEndOK()
         {
             dialogResult = DialogResult.Ok;
-            UISys.CloseUI(EntityName);
+            UiSys.CloseUi(EntityName);
         }
 
         public void InputEndCancel()
         {
             dialogResult = DialogResult.Cancel;
-            UISys.CloseUI(EntityName);
+            UiSys.CloseUi(EntityName);
         }
 
         public override void OpReset()

@@ -6,13 +6,13 @@ using UnityEngine.Assertions;
 
 namespace Framework
 {
-    public class UISys : IBaseSys
+    public class UiSys : IBaseSys
     {
         public static readonly string DefaultUIBundle = Paths.PrefabBundle.PCombine(Paths.Normal);
 
-        private static readonly List<PanelUI> _ActiveUI = new List<PanelUI>();
-        private static readonly Stack<PanelUI> _CloseStack = new Stack<PanelUI>();
-        private static readonly List<PanelUI> _HideStableUI = new List<PanelUI>();
+        private static readonly List<PanelUi> _ActiveUI = new List<PanelUi>();
+        private static readonly Stack<PanelUi> _CloseStack = new Stack<PanelUi>();
+        private static readonly List<PanelUi> _HideStableUI = new List<PanelUi>();
 
         private static Transform _UIContainer;
         private static Transform _UIRecycleContainer;
@@ -30,7 +30,7 @@ namespace Framework
             var move = new List<Transform>();
             foreach (Transform item in _UIContainer.transform)
             {
-                var newui = item.GetComponent<PanelUI>();
+                var newui = item.GetComponent<PanelUi>();
                 if (item.gameObject.activeSelf)
                 {
                     _ActiveUI.Add(newui);
@@ -46,39 +46,39 @@ namespace Framework
                 item.SetParent(_UIRecycleContainer);
         }
 
-        public static PanelUI OpenUI(string uiName, UiInitType act = 0)
+        public static PanelUi OpenUi(string uiName, UiInitType act = 0)
         {
-            return OpenUI<PanelUI>(uiName, act);
+            return OpenUi<PanelUi>(uiName, act);
         }
 
-        public static PanelUI OpenUI(string uiName, string after, bool dialog = true, UiInitType act = 0)
+        public static PanelUi OpenUi(string uiName, string after, bool dialog = true, UiInitType act = 0)
         {
-            return OpenUI<PanelUI>(uiName, after, dialog, act);
+            return OpenUi<PanelUi>(uiName, after, dialog, act);
         }
 
-        public static T OpenUI<T>(string uiName, UiInitType act = 0) where T : PanelUI
+        public static T OpenUi<T>(string uiName, UiInitType act = 0) where T : PanelUi
         {
-            return OpenUI<T>(new OpenParam(uiName, _UIContainer.childCount, null, act));
+            return OpenUi<T>(new OpenParam(uiName, _UIContainer.childCount, null, act));
         }
 
-        public static T OpenUI<T>(string uiName, string after, bool dialog = true, UiInitType act = 0)
-            where T : PanelUI
+        public static T OpenUi<T>(string uiName, string after, bool dialog = true, UiInitType act = 0)
+            where T : PanelUi
         {
             var index = _ActiveUI.FindIndex(x => x.EntityName == after);
 
             if (index != _ActiveUI.Count)
-                return OpenUI<T>(new OpenParam(uiName, index + 1, dialog ? _ActiveUI[index] : null, act));
+                return OpenUi<T>(new OpenParam(uiName, index + 1, dialog ? _ActiveUI[index] : null, act));
             Debug.LogWarning($"未找到after名为 {after} 的UI");
             return null;
         }
 
-        private static T OpenUI<T>(OpenParam param) where T : PanelUI
+        private static T OpenUi<T>(OpenParam param) where T : PanelUi
         {
             var panel = _HideStableUI.FirstOrDefault(x => x.EntityName == param.UiName);
             if (panel != null)
                 _HideStableUI.Remove(panel);
 
-            panel = panel ?? ObjectPool.Get<PanelUI>(new AssetId(DefaultUIBundle, param.UiName));
+            panel = panel ?? ObjectPool.Get<PanelUi>(new AssetId(DefaultUIBundle, param.UiName));
 
             panel.transform.SetParent(_UIContainer);
             panel.transform.SetSiblingIndex(param.SiblingIndex);
@@ -96,14 +96,14 @@ namespace Framework
             return panel as T;
         }
 
-        public static void CloseUI(string uiName, bool force = false)
+        public static void CloseUi(string uiName, bool force = false)
         {
             var baseUi = _ActiveUI.FirstOrDefault(x => x.EntityName == uiName);
             Assert.IsNotNull(baseUi, $"没有名为 {uiName} 的UI");
-            CloseUI(baseUi, force);
+            CloseUi(baseUi, force);
         }
 
-        private static void CloseUI(PanelUI panelUI, bool force = false)
+        private static void CloseUi(PanelUi panelUI, bool force = false)
         {
             if (!force && panelUI.Dialog != null) return;
 
@@ -145,30 +145,30 @@ namespace Framework
             }
         }
 
-        public static bool IsUIOpened(PanelUI panelUI)
+        public static bool IsUiOpened(PanelUi panelUI)
         {
-            return GetUI(panelUI.EntityName) != null;
+            return GetUi(panelUI.EntityName) != null;
         }
 
-        public static bool IsUIOpened(string uiName)
+        public static bool IsUiOpened(string uiName)
         {
-            return GetUI(uiName) != null;
+            return GetUi(uiName) != null;
         }
 
-        public static void SwitchUI(string uiName)
+        public static void SwitchUi(string uiName)
         {
-            if (IsUIOpened(uiName))
-                CloseUI(uiName);
+            if (IsUiOpened(uiName))
+                CloseUi(uiName);
             else
-                OpenUI(uiName);
+                OpenUi(uiName);
         }
 
-        public static bool DialogOpened(PanelUI dialog)
+        public static bool DialogOpened(PanelUi dialog)
         {
             return dialog != null && dialog.gameObject.activeSelf;
         }
 
-        private static PanelUI GetUI(string uiName)
+        private static PanelUi GetUi(string uiName)
         {
             return _ActiveUI.FirstOrDefault(x => x.EntityName == uiName);
         }
@@ -185,11 +185,11 @@ namespace Framework
         private readonly struct OpenParam
         {
             public readonly string UiName;
-            public readonly PanelUI Dialog;
+            public readonly PanelUi Dialog;
             public readonly UiInitType InitType;
             public readonly int SiblingIndex;
 
-            public OpenParam(string uiName, int siblingIndex, PanelUI dialog, UiInitType initType)
+            public OpenParam(string uiName, int siblingIndex, PanelUi dialog, UiInitType initType)
             {
                 Assert.IsNotNull(uiName, "UI名不能为null");
                 UiName = uiName;

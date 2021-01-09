@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class SurvivalNoliUI : BaseUI
+    public class SurvivalNoliUI : BaseUi
     {
         private Text score;
         private string scorePreText = "";

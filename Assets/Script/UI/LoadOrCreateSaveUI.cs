@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Thunder.UI
 {
-    public class LoadOrCreateSaveUi : BaseUI
+    public class LoadOrCreateSaveUi : BaseUi
     {
         //public void StartLoadSave()
         //{

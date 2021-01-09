@@ -1443,4 +1443,39 @@ namespace Framework
             }
         }
     }
+
+    /// <summary>
+    /// 表示一个自然数的范围
+    /// </summary>
+    [Serializable]
+    public class Range
+    {
+        public float Min;
+        public float Max;
+
+        public Range(float min, float max)
+        {
+            CheckParam(min, max);
+            Min = min;
+            Max = max;
+        }
+
+        public Range((float min, float max) range)
+        {
+            CheckParam(range.min,range.max);
+            Min = range.min;
+            Max = range.max;
+        }
+
+        private static void CheckParam(float min, float max)
+        {
+            if(min>max)
+                throw new Exception($"最小值 {min} 不得大于最大值 {max}");
+        }
+
+        public static implicit operator Range((float min, float max) range)
+        {
+            return new Range(range);
+        }
+    }
 }
