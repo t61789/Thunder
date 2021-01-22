@@ -15,7 +15,6 @@ namespace Framework
         public float ClearTime = 5;
 
         private static readonly Dictionary<AssetId, Pool> _Pools = new Dictionary<AssetId, Pool>();
-        private static readonly string _DefaultBundle = Paths.PrefabBundle.PCombine(Paths.Normal);
         private static ObjectPool _Ins;
 
         private void Awake()
@@ -40,7 +39,7 @@ namespace Framework
         /// <returns></returns>
         public static T Get<T>(string assetPath) where T : MonoBehaviour
         {
-            return Get<T>(AssetId.Parse(assetPath,_DefaultBundle));
+            return Get<T>(AssetId.Parse(assetPath));
         }
 
         /// <summary>
@@ -93,7 +92,7 @@ namespace Framework
 
         public static GameObject GetPrefab(string assetPath)
         {
-            return GetPool(AssetId.Parse(assetPath,_DefaultBundle)).Prefab;
+            return GetPool(AssetId.Parse(assetPath)).Prefab;
         }
 
         private static Pool GetPool(AssetId id)

@@ -5,50 +5,34 @@ using UnityEngine;
 
 namespace Thunder
 {
-    public abstract class FireControl
+    public abstract class RangedWeaponLauncher:MonoBehaviour
     {
-        protected RangedWeaponLauncher _RangedWeaponLauncher;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fireCtrInfo"></param>
-        /// <returns>射击状态</returns>
-        public abstract object TryFire(ControlInfo fireCtrInfo);
-
-        protected FireControl(RangedWeaponLauncher launcher)
-        {
-            _RangedWeaponLauncher = launcher;
-        }
-    }
-
-    public abstract class RangedWeaponLauncher
-    {
-        public event Action<object> OnHit;
-
-        protected BulletSpread BulletSpread;
+        public Action<HitInfo> OnHit;
 
         public float OverHeat => BulletSpread.OverHeat;
 
-        protected RangedWeaponLauncher(BulletSpread bulletSpread)
+        protected BulletSpread BulletSpread;
+
+        protected virtual void Awake()
         {
-            BulletSpread = bulletSpread;
+            BulletSpread = GetComponent<BulletSpread>();
+            var baseWeapon = GetComponent<BaseWeapon>();
+            baseWeapon.SetLauncher(this);
+            OnHit = baseWeapon.GetBulletHitHook();
         }
 
         public abstract void FireOnce(Vector3 pos,Vector3 dir);
 
-        protected void HitSomething(object hitInfo)
+        protected void HitSomething(HitInfo hitInfo)
         {
             OnHit?.Invoke(hitInfo);
         }
     }
 
-    public struct ShootInfo
+    public struct HitInfo
     {
-        public bool IntervalPass;
-        public bool FireCheckPass;
-        public bool FireRequirePass;
-        public bool SafetyPass;
-        public bool Shooted;
+        public Vector3 HitPos;
+        public Vector3 HitDir;
+        public Collider Collider;
     }
 }

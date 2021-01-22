@@ -14,13 +14,13 @@ namespace Thunder
         protected override void Awake()
         {
             base.Awake();
-            _Package = new Package(Size);
+            _Package = new CommonPackage(Size);
         }
 
         public void Interactive(ControlInfo info)
         {
             if (!info.Down) return;
-            ControlSys.ShieldValue.Request(OperationPanel);
+            ControlSys.ShieldValue.Request(OperationPanel,1);
             var panel = UiSys.OpenUi<StorageBoxPanel>(OperationPanel);
             panel.PackageCellAdapter.SetPackage(_Package);
         }

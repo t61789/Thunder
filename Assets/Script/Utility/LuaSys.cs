@@ -16,8 +16,6 @@ Utility.GetEmptyTable = function()
     return {}
 end";
 
-        private static readonly string _DefaultBundle = Paths.LuaBundle.PCombine(Paths.Normal);
-
         private static LuaTable _UtilityScope;
 
         private readonly HashSet<AssetId> _Executed = new HashSet<AssetId>();
@@ -111,12 +109,7 @@ end";
 
         public void ExecuteFile(string path, bool require = true)
         {
-            ExecuteFile(AssetId.Parse(path, _DefaultBundle), require);
-        }
-
-        public void ExecuteFile(string bundle, string name, bool require = true)
-        {
-            ExecuteFile(new AssetId(bundle?? _DefaultBundle, name), require);
+            ExecuteFile(AssetId.Parse(path), require);
         }
 
         public void ExecuteFile(AssetId id, bool require = true)

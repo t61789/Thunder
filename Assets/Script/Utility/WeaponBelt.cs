@@ -1,72 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Framework;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Thunder
 {
-    public class WeaponBelt
+    public class WeaponBelt : Package
     {
+        public BaseWeapon CurrentWeapon => _CurWeapon == -1 ? _Unarmed : _Belt[_CurWeapon].Weapon;
+
         private const int SHIELD_VALUE = 0;
+
         private readonly WeaponBeltCell[] _Belt;
+        private readonly WeaponBeltCell[] _TempBelt;
         private readonly Dictionary<string, int> _Keys;
         private readonly BaseWeapon _Unarmed;
-
-        // todo 亟待测试，bug可能很多
         private readonly Transform _WeaponContainer;
-        private readonly Dictionary<int, WeaponInfo> _WeaponInfoDic;
         private int _CurWeapon = -1;
         private int _PreWeapon = -1;
 
-        public WeaponBelt(string[] cellTypes, Transform weaponContainer)
+        private static Dictionary<ItemId, WeaponInfo> _WeaponInfoDic;
+
+        public WeaponBelt(Transform weaponContainer)
         {
-            var builder = new StringBuilder();
-            const string switc = "Switch";
-            _Keys = new Dictionary<string, int>();
-            _Belt = new WeaponBeltCell[cellTypes.Length];
-            var preStr = "";
-            var repeatCount = 1;
-            for (var i = 0; i < cellTypes.Length; i++)
-            {
-                _Belt[i].Type = cellTypes[i];
-
-                builder.Clear();
-                builder.Append(switc);
-                var str = cellTypes[i];
-
-                if (str == preStr)
-                {
-                    repeatCount++;
-                }
-                else
-                {
-                    repeatCount = 1;
-                    preStr = str;
-                }
-
-                if (str.Length > 0 && str[0] >= 'a' && str[0] <= 'z')
-                {
-                    builder.Append(str[0] - ('a' - 'A'));
-                    if (str.Length > 1)
-                        builder.Append(str.Substring(1));
-                }
-                else
-                {
-                    builder.Append(str);
-                }
-
-                builder.Append(repeatCount);
-                _Keys.Add(builder.ToString(), i);
-            }
-
-            _Unarmed = CreateWeapon(Config.UnarmedId);
-
+            _Belt = InitBelt(Config.WeaponBeltTypes);
+            _TempBelt = InitBelt(Config.WeaponBeltTypes);
+            _Keys = BuildSwitchKeyMapping(Config.WeaponBeltTypes);
             _WeaponContainer = weaponContainer;
-            _WeaponInfoDic = QueryDic();
+            if (_WeaponInfoDic == null)
+                _WeaponInfoDic = QueryDic(DataBaseSys.GetTable(Config.WeaponInfoTableName));
+            _Unarmed = CreateWeaponObj(Config.UnarmedId);
+            _Unarmed.TakeOut();
         }
-
-        public BaseWeapon CurrentWeapon => _CurWeapon == -1 ? _Unarmed : _Belt[_CurWeapon].Weapon;
 
         /// <summary>
         ///     切换为目标单元格内的武器
@@ -88,33 +56,6 @@ namespace Thunder
         {
             if (_PreWeapon == -1) return;
             SwitchWeapon(_PreWeapon);
-        }
-
-        /// <summary>
-        ///     顺序查找第一个可以放入的单元格
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>是否成功放入</returns>
-        public bool AddWeapon(ItemId id)
-        {
-            var info = _WeaponInfoDic[id];
-            var type = info.Type;
-            var index = -1;
-            for (var i = 0; i < _Belt.Length; i++)
-                if (_Belt[i].Type == type && _Belt[i].Weapon == null)
-                {
-                    index = i;
-                    break;
-                }
-
-            if (index == -1) return false;
-
-            var newWeapon = CreateWeapon(id);
-            newWeapon.Trans.SetParent(_WeaponContainer);
-            _Belt[index].Weapon = newWeapon;
-            if (_CurWeapon == -1)
-                SwitchWeapon(index);
-            return true;
         }
 
         /// <summary>
@@ -143,7 +84,8 @@ namespace Thunder
             else
                 result = _Belt[index].Weapon.ItemId;
             if (index == _CurWeapon) DestroyWeapon(index);
-            _Belt[index].Weapon = CreateWeapon(id);
+            _Belt[index].Weapon = CreateWeaponObj(id);
+            _Belt[index].Weapon.TakeOut();
             return result;
         }
 
@@ -154,10 +96,9 @@ namespace Thunder
         {
             if (_CurWeapon == -1) return;
 
-
             var index = _CurWeapon;
             var saveId = _Belt[_CurWeapon].Weapon.ItemId;
-            saveId.Add = _Belt[_CurWeapon].Weapon.Drop();
+            saveId.Add = _Belt[_CurWeapon].Weapon.CompressItem();
             DestroyWeapon(_CurWeapon);
             if (_PreWeapon != -1)
             {
@@ -201,22 +142,29 @@ namespace Thunder
                 DropCurrentWeapon();
         }
 
+        public void Destroy()
+        {
+            Object.Destroy(_Unarmed.gameObject);
+            for (int i = 0; i < _Belt.Length; i++)
+                DestroyWeapon(i);
+        }
+
         /// <summary>
         /// 判断指定id的物品是不是武器
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool IsWeapon(ItemId id)
+        public static bool IsWeapon(ItemId id)
         {
             return _WeaponInfoDic.TryGetValue(id, out _);
         }
 
         private void TakeOutWeapon(int index)
         {
-            if (index == _CurWeapon) return;
             var weapon = index == -1 ? _Unarmed : _Belt[index].Weapon;
             weapon.gameObject.SetActive(true);
             weapon.TakeOut();
+            PublicEvents.TakeOutWeapon?.Invoke(weapon);
         }
 
         private void PutBackWeapon(int index)
@@ -224,11 +172,12 @@ namespace Thunder
             var weapon = index == -1 ? _Unarmed : _Belt[index].Weapon;
             weapon.PutBack();
             weapon.gameObject.SetActive(false);
+            PublicEvents.PutBackWeapon?.Invoke(weapon);
         }
 
         private void DestroyWeapon(int index)
         {
-            if (index == -1) return;
+            if (_Belt[index].Group.Id == 0 || index == -1) return;
 
             if (_CurWeapon == index)
             {
@@ -238,53 +187,287 @@ namespace Thunder
 
             Object.Destroy(_Belt[index].Weapon.gameObject);
             _Belt[index].Weapon = null;
+            _Belt[index].Group = new ItemGroup();
         }
 
-        private BaseWeapon CreateWeapon(ItemId id)
+        public override PackageOperation PutItem(ItemGroup itemGroup, bool putOnlySpaceEnough)
         {
-            var weapon =  ObjectPool.GetPrefab(_WeaponInfoDic[id].PrefabPath)
+            var result = PackageOperation.Take();
+            result.RemainingNum = itemGroup.Count;
+
+            if (!_WeaponInfoDic.TryGetValue(itemGroup.Id, out var info) ||
+                itemGroup.Id != 0 && itemGroup.Count == 0)
+                return result;
+
+
+            var belt = _Belt;
+            if (putOnlySpaceEnough)
+            {
+                for (int i = 0; i < _Belt.Length; i++)
+                    _TempBelt[i] = _Belt[i];
+                belt = _TempBelt;
+            }
+
+            var maxStack = ItemSys.GetInfo(itemGroup.Id).MaxStackNum;
+            for (var i = 0; i < belt.Length; i++)
+                if (belt[i].Type == info.Type &&
+                    (belt[i].Group.Id == 0 || belt[i].Group.Id == itemGroup.Id))
+                {
+                    belt[i].Group.Id = itemGroup.Id;
+
+                    var take = Mathf.Min(itemGroup.Count, maxStack - belt[i].Group.Count);
+                    if (take == 0) continue;
+
+                    belt[i].Group.Count += take;
+                    result.RemainingNum -= take;
+
+                    result.ItemChangeList.Add(i);
+
+                    if (result.RemainingNum == 0)
+                        break;
+                }
+
+            if (putOnlySpaceEnough && result.RemainingNum != 0)
+            {
+                if (result.RemainingNum != 0)
+                {
+                    result.RemainingNum = itemGroup.Count;
+                    result.ItemChangeList.Clear();
+                }
+                else
+                {
+                    foreach (var i in result.ItemChangeList)
+                        _Belt[i] = _TempBelt[i];
+                    for (int i = 0; i < _TempBelt.Length; i++)
+                        _TempBelt[i] = new WeaponBeltCell();
+                }
+            }
+
+            foreach (var i in result.ItemChangeList)
+            {
+                if (_Belt[i].Weapon != null)
+                    continue;
+
+                _Belt[i].Weapon = CreateWeaponObj(itemGroup.Id);
+                if (i == _CurWeapon)
+                    _Belt[i].Weapon.TakeOut();
+            }
+
+            if (_CurWeapon == -1)
+            {
+                // todo 切换第一个可用武器
+            }
+
+            return result;
+        }
+
+        public override ItemGroup PutItemInto(int index, ItemGroup itemGroup)
+        {
+            var result = _Belt[index].Group;
+            if (itemGroup.IsEmpty())
+            {
+                DestroyWeapon(index);
+                return result;
+            }
+
+            var preId = result.Id;
+            var maxStack = ItemSys.GetInfo(itemGroup.Id).MaxStackNum;
+
+            // 源物品组数据非法不能添加
+            // 交换操作无法完成不能添加
+            // 源物品非武器不能添加
+            // 目标单元格类型不正确不能添加
+            if (itemGroup.IsInvalid() ||
+                _Belt[index].Group.Id != 0 && _Belt[index].Group.Id != itemGroup.Id && itemGroup.Count > maxStack ||
+                !_WeaponInfoDic.TryGetValue(itemGroup.Id, out var info) ||
+                info.Type != _Belt[index].Type)
+                return itemGroup;
+
+            if (_Belt[index].Group.Id != itemGroup.Id)
+            {
+                _Belt[index].Group.Id = itemGroup.Id;
+                _Belt[index].Group.Count = 0;
+            }
+
+            var take = Mathf.Min(maxStack - _Belt[index].Group.Count, itemGroup.Count);
+            _Belt[index].Group.Count += take;
+
+            if(itemGroup.Count > take)
+                result.Id = itemGroup.Id;
+            if (result.Id == 0 || result.Id == itemGroup.Id)
+                result.Count = itemGroup.Count - take;
+
+            if (preId != _Belt[index].Group.Id)
+            {
+                DestroyWeapon(index);
+                _Belt[index].Weapon = CreateWeaponObj(_Belt[index].Group.Id);
+                if(_CurWeapon==index)
+                    TakeOutWeapon(index);
+            }
+
+            return result;
+        }
+
+        public override void SetItemAt(int index, ItemGroup itemGroup)
+        {
+            if (itemGroup.Count == 0)
+            {
+                if (itemGroup.Id != 0) return;
+
+                DestroyWeapon(index);
+                _Belt[index].Group = new ItemGroup();
+                return;
+            }
+
+            if (!_WeaponInfoDic.TryGetValue(itemGroup.Id, out var info) ||
+                info.Type != _Belt[index].Type)
+                return;
+
+            DestroyWeapon(index);
+            _Belt[index].Group = itemGroup;
+            _Belt[index].Weapon = CreateWeaponObj(itemGroup.Id);
+            if (index == _CurWeapon)
+                TakeOutWeapon(index);
+        }
+
+        public override IEnumerable<ItemGroup> GetAllItemInfo()
+        {
+            return from cell in _Belt
+                select cell.Group;
+        }
+
+        public override ItemGroup GetItemInfoFrom(int index)
+        {
+            return _Belt[index].Group;
+        }
+
+        public override PackageOperation CostItem(ItemGroup itemGroup, bool costOnlyItemEnough)
+        {
+            var result = PackageOperation.Take();
+            if (costOnlyItemEnough)
+            {
+                var count = 0;
+                foreach (var weaponBowCell in _Belt)
+                    if (weaponBowCell.Group.Id == itemGroup.Id)
+                        count += weaponBowCell.Group.Count;
+                if (count < itemGroup.Count)
+                {
+                    
+                    result.RemainingNum = itemGroup.Count;
+                    return result;
+                }
+            }
+
+            result.RemainingNum = itemGroup.Count;
+            for (int i = 0; i < _Belt.Length; i++)
+            {
+                if (_Belt[i].Group.Id != itemGroup.Id) continue;
+
+                var take = Mathf.Min(_Belt[i].Group.Count, result.RemainingNum);
+                _Belt[i].Group.Count -= take;
+                result.RemainingNum -= take;
+
+                result.ItemChangeList.Add(i);
+
+                if (_Belt[i].Group.Count == 0)
+                    DestroyWeapon(i);
+                if (result.RemainingNum == 0)
+                    break;
+            }
+
+            return result;
+        }
+
+        public override void SortItem()
+        {
+            throw new NotImplementedException();
+        }
+
+        private BaseWeapon CreateWeaponObj(ItemId id)
+        {
+            var weapon = ObjectPool.GetPrefab(_WeaponInfoDic[id].PrefabPath)
                 .GetInstantiate()
                 .GetComponent<BaseWeapon>();
-            weapon.ReadAdditionalData(id.Add);
-            weapon.ItemId = id;
+            weapon.Init(_WeaponContainer,id.Add);
+            weapon.gameObject.SetActive(false);
             return weapon;
         }
 
-        private static Dictionary<int, WeaponInfo> QueryDic()
+        private static Dictionary<ItemId, WeaponInfo> QueryDic(Table weaponTable)
         {
             var selected1 =
-                from info in ItemSys.Ins.ItemInfos
-                where info.Flag.HasFlag(ItemFlag.Weapon)
+                from info in ItemSys.GetInfos()
+                where info.IsWeapon
                 select info;
             var selected2 =
-                from row in DataBaseSys.GetTable("weapon_info")
+                from row in weaponTable
                 join info in selected1 on row["id"] equals info.Id.Id
-                select new { Id = (int)info.Id, weaponInfo = new WeaponInfo(row["type"], info.WeaponPrefabPath)};
+                select new {info.Id, weaponInfo = new WeaponInfo((WeaponType)Enum.Parse(typeof(WeaponType), row["type"]), info.WeaponPrefabPath) };
             return selected2.ToDictionary(x => x.Id, x => x.weaponInfo);
+        }
+
+        private static Dictionary<string, int> BuildSwitchKeyMapping(WeaponType[] beltTypes)
+        {
+            var builder = new StringBuilder();
+            const string switchStr = "Switch";
+            var result = new Dictionary<string, int>();
+            var preStr = (WeaponType)int.MaxValue;
+            var repeatCount = 0;
+            for (var i = 0; i < beltTypes.Length; i++)
+            {
+                builder.Clear();
+                builder.Append(switchStr);
+                var curType = beltTypes[i];
+
+                if (curType == preStr)
+                {
+                    repeatCount++;
+                }
+                else
+                {
+                    repeatCount = 0;
+                    preStr = curType;
+                }
+
+                builder.Append(curType);
+                builder.Append(repeatCount);
+                result.Add(builder.ToString(), i);
+            }
+
+            return result;
+        }
+
+        private static WeaponBeltCell[] InitBelt(WeaponType[] beltTypes)
+        {
+            var result = new WeaponBeltCell[beltTypes.Length];
+            for (var i = 0; i < result.Length; i++)
+                result[i].Type = beltTypes[i];
+            return result;
         }
 
         private readonly struct WeaponInfo
         {
-            public readonly string Type;
+            public readonly WeaponType Type;
             public readonly string PrefabPath;
 
-            public WeaponInfo(string type, string prefabPath)
+            public WeaponInfo(WeaponType type, string prefabPath)
             {
                 Type = type;
                 PrefabPath = prefabPath;
             }
         }
-    }
-
-    public struct WeaponBeltCell
-    {
-        public string Type;
-        public BaseWeapon Weapon;
-
-        public WeaponBeltCell(string type, BaseWeapon weapon)
+        public struct WeaponBeltCell
         {
-            Type = type;
-            Weapon = weapon;
+            public WeaponType Type;
+            public BaseWeapon Weapon;
+            public ItemGroup Group;
+
+            public WeaponBeltCell(WeaponType type, BaseWeapon weapon, ItemGroup group)
+            {
+                Type = type;
+                Weapon = weapon;
+                Group = group;
+            }
         }
     }
 }

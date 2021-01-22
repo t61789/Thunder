@@ -9,19 +9,23 @@ namespace Thunder
     /// Mover-Pivot/Weapon-Camera
     /// 脚本挂载于Mover之上
     /// </summary>
-    public class FpsCamera:MonoBehaviour
+    [RequireComponent(typeof(FpsMover))]
+    public class FpsCamera : MonoBehaviour
     {
         public Vector2 WalkShakeRange;
         public float WalkShakeTime = 0.1f;
+        public float WalkShakeDampTime = 0.7f;
         public float WalkSpeed = 0.1f;
         public Vector2 WeaponWalkShakeRange;
-        public float SquattingOffset;
         public float JumpWeaponOffsetAngle;
         [Range(0, 1)] public float ViewDampFactor = 0.7f;
-        [Range(0, 1)] public float WalkShakeDampFactor = 0.5f;
+        [Range(0, 1)] public float WalkShakeDampFactor = 0.2f;
         [Range(0, 1)] public float SmoothFactor = 0.2f;
-        [SerializeField] private Vector2 _Sensitive;
+        [SerializeField] private Vector2 _Sensitive = new Vector2(0.3f,0.3f);
 
+        public static FpsCamera Ins { private set; get; }
+
+        private Camera _Camera;
         private Transform _Trans;
         private Rigidbody _Rb;
         private Vector2 _TargetRot;
@@ -30,14 +34,14 @@ namespace Thunder
         private Vector3 _PivotOffset;
         private Transform _PivotTrans;
         private SimpleCounter _ShakeCounter;
-        private bool _Moving;
+        private BaseWeapon _Weapon;
         private bool _Dangling;
         private bool _Squatting;
+        private FpsMover _Mover;
         [HideInInspector] public BuffData SensitiveScale = new BuffData(1);
 
         private const float PI_3D2 = 3 * Mathf.PI / 2;
         private const float PI_7D2 = 7 * Mathf.PI / 2;
-        private const float PI_2 = 2 * Mathf.PI;
 
         public Vector2 Sensitive
         {
@@ -47,51 +51,76 @@ namespace Thunder
 
         private void Awake()
         {
+            Ins = this;
+
             _Trans = transform;
             _Rb = GetComponent<Rigidbody>();
             _PivotTrans = _Trans.Find("Pivot");
+            _Camera = _PivotTrans.Find("PlayerCamera").GetComponent<Camera>();
             _PivotOffset = _PivotTrans.localPosition;
             _WeaponAttachPoint = _PivotTrans.Find("Weapon");
+            _Mover = GetComponent<FpsMover>();
 
             _TargetRot.y = _Trans.localEulerAngles.y;
             _TargetRot.x = _PivotTrans.localEulerAngles.x;
 
             _ShakeCounter = new SimpleCounter(WalkShakeTime);
 
-            PublicEvents.RecoliFloat.AddListener(ViewRotAddition);
-            PublicEvents.RecoliFixed.AddListener(ViewRotTargetAddition);
+            PublicEvents.PlayerDangling.AddListener(SetDangling);
+            PublicEvents.PlayerSquat.AddListener(SetSquatting);
 
-            PublicEvents.PlayerMove.AddListener(x=>_Moving=x);
-            PublicEvents.PlayerDangling.AddListener(x => _Dangling = x);
-            PublicEvents.PlayerSquat.AddListener(x => _Squatting = x);
-        }
+            PublicEvents.TakeOutWeapon.AddListener(BindWeapon);
+            PublicEvents.PutBackWeapon.AddListener(UnBindWeapon);
 
-        private void FixedUpdate()
-        {
-            //视角，读取输入
-            Vector2 ctrlDir = ControlSys.RequireKey("Axis2", 0).Axis;
-
-            var ctrlEuler = MoveToEuler(ctrlDir);
-            if (ctrlDir != Vector2.zero)
-                _TargetRot = EulerAdd(_TargetRot, ctrlEuler);
+            PublicEvents.StartingBuildingMode.AddListener(SwitchEnable);
+            PublicEvents.EndBuildingMode.AddListener(SwitchEnable);
         }
 
         private void Update()
         {
+            Vector2 ctrlDir = ControlSys.RequireKey("Axis2", 0).Axis;
+            var ctrlEuler = MoveToEuler(ctrlDir);
+            if (ctrlDir != Vector2.zero)
+                _TargetRot = EulerAdd(_TargetRot, ctrlEuler);
+
             SetViewRot();
 
-            SetPivotWeaponWalkShakeOffset(GetWalkShakeOffset());
+            SetPivotWeaponWalkShakeOffset();
 
-            _WeaponAttachPoint.localEulerAngles = new Vector3(GetWeaponVerticalPitch(),0);
+            _WeaponAttachPoint.localEulerAngles = new Vector3(GetWeaponVerticalPitch(), 0);
 
             if (ControlSys.RequireKey("LockCursor", 0).Down)
                 SwitchLockCursor();
         }
 
+        private void FixedUpdate()
+        {
+            if (_Weapon != null)
+            {
+                _AdditionTargetRot = MoveToEuler(_Weapon.GetFloatRecoil());
+            }
+        }
+
         private void OnDestroy()
         {
-            PublicEvents.RecoliFloat.RemoveListener(ViewRotAddition);
-            PublicEvents.RecoliFixed.RemoveListener(ViewRotTargetAddition);
+            PublicEvents.PlayerDangling.RemoveListener(SetDangling);
+            PublicEvents.PlayerSquat.RemoveListener(SetSquatting);
+
+            PublicEvents.TakeOutWeapon.RemoveListener(BindWeapon);
+            PublicEvents.PutBackWeapon.RemoveListener(UnBindWeapon);
+
+            PublicEvents.StartingBuildingMode.RemoveListener(SwitchEnable);
+            PublicEvents.EndBuildingMode.RemoveListener(SwitchEnable);
+        }
+
+        private void SwitchEnable()
+        {
+            _Camera.enabled = !_Camera.enabled;
+        }
+
+        private void SwitchEnable(Process p)
+        {
+            _Camera.enabled = !_Camera.enabled;
         }
 
         private void SetViewRot()
@@ -105,26 +134,31 @@ namespace Thunder
                     0, 0);
         }
 
-        private Vector3 GetWalkShakeOffset()
+        private void SetPivotWeaponWalkShakeOffset()
         {
-            if (!_Moving || _Dangling)
+            float curSpeed = _Mover.CurSpeed;
+            if (_Dangling || Tools.IfApproximate(0,curSpeed,0.001))
                 _ShakeCounter.Recount();
 
             float t = Tools.LerpUc(PI_3D2, PI_7D2, _ShakeCounter.InterpolantUc);
-            t = t.Repeat(PI_2);
 
             //lemniscate of Gerono
-            return new Vector3(Mathf.Cos(t),
+            var walkShakeOffset = new Vector3(Mathf.Cos(t),
                 Mathf.Sin(t * 2) / 2);
-        }
 
-        private void SetPivotWeaponWalkShakeOffset(Vector3 walkShakeOffset)
-        {
-            var shakeTarget = Vector3.down * (_Squatting ? SquattingOffset : 0) + walkShakeOffset.Mul(WalkShakeRange) +
-                              _PivotOffset;
-            _PivotTrans.localPosition = Vector3.Lerp(_PivotTrans.localPosition, shakeTarget, WalkShakeDampFactor);
-            _WeaponAttachPoint.localPosition = Vector3.Lerp(_WeaponAttachPoint.localPosition,
-                walkShakeOffset.Mul(WeaponWalkShakeRange), WalkShakeDampFactor);
+            var shakeTarget = Vector3.down * (_Squatting ? _Mover.SquattingOffset : 0) + walkShakeOffset;
+            var lerp = Tools.InLerp(0, _Mover.WalkSpeed, curSpeed);
+            shakeTarget = Tools.Lerp(Vector3.zero, shakeTarget, lerp);
+
+            _PivotTrans.localPosition = Tools.Lerp(
+                _PivotTrans.localPosition, 
+                shakeTarget.Mul(WalkShakeRange) + _PivotOffset,
+                WalkShakeDampFactor);
+
+            _WeaponAttachPoint.localPosition = Tools.Lerp(
+                _WeaponAttachPoint.localPosition,
+                -shakeTarget.Mul(WeaponWalkShakeRange),
+                  WalkShakeDampFactor);
         }
 
         private float GetWeaponVerticalPitch()
@@ -136,12 +170,7 @@ namespace Thunder
             return Mathf.LerpAngle(_WeaponAttachPoint.localEulerAngles.x, tempX, WalkShakeDampFactor);
         }
 
-        public void ViewRotAddition(Vector2 rot)
-        {
-            _AdditionTargetRot = MoveToEuler(rot);
-        }
-
-        public void ViewRotTargetAddition(Vector2 rot)
+        private void AddFixedRecoil(Vector2 rot)
         {
             _TargetRot = EulerAdd(_TargetRot, MoveToEuler(rot));
         }
@@ -149,6 +178,29 @@ namespace Thunder
         private Vector2 MoveToEuler(Vector2 move)
         {
             return new Vector2(-move.y, move.x) * Sensitive;
+        }
+
+        private void SetDangling(bool dangling)
+        {
+            _Dangling = dangling;
+        }
+
+        private void SetSquatting(bool squatting)
+        {
+            _Squatting = squatting;
+        }
+
+        private void BindWeapon(BaseWeapon weapon)
+        {
+            _Weapon = weapon;
+            _Weapon.OnFixedRecoil += AddFixedRecoil;
+        }
+
+        private void UnBindWeapon(BaseWeapon weapon)
+        {
+            if (_Weapon == null) return;
+            _Weapon.OnFixedRecoil -= AddFixedRecoil;
+            _Weapon = null;
         }
 
         private static Vector2 EulerAdd(Vector2 e1, Vector2 e2)

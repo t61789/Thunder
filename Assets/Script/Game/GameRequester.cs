@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Thunder.Game
 {
-    public class GameRequester : BaseEntity, IShootable
+    public class GameRequester : BaseEntity, IHitAble
     {
         private Color _BaseColor;
 
@@ -18,7 +18,7 @@ namespace Thunder.Game
         public Color RequestedColor = Color.red;
         public float ReRequestTime = 3;
 
-        public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
+        public void GetHit(Vector3 hitPos, Vector3 hitDir, float damage)
         {
             if (!_ReRequestSimpleCounter.Completed || _Started) return;
 

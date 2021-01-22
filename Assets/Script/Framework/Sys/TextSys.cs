@@ -12,7 +12,7 @@ namespace Framework
         {
 
             var dic = (
-                    from row in DataBaseSys.GetTable("text")
+                    from row in DataBaseSys.GetTable("database/normal/text")
                     select new { key = (string)row["key"], text = (string)row["text"] })
                 .ToDictionary(x => x.key, x => x.text);
             SetStrValues(dic);

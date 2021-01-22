@@ -8,19 +8,19 @@ namespace Thunder.Behavior
 {
     public class DelegateInvoke : Action
     {
-        private NoArgMethod method;
+        private NoArgMethod _Method;
 
-        public string methodName;
-        public SharedObject sharedObject;
+        public string MethodName;
+        public SharedObject Component;
 
         public override TaskStatus OnUpdate()
         {
             try
             {
-                if (method == null)
-                    method = (NoArgMethod) Delegate.CreateDelegate(typeof(NoArgMethod), sharedObject.Value, methodName);
+                if (_Method == null)
+                    _Method = CreateDelegate();
 
-                return method();
+                return _Method();
             }
             catch (Exception e)
             {
@@ -30,5 +30,37 @@ namespace Thunder.Behavior
         }
 
         private delegate TaskStatus NoArgMethod();
+
+        private NoArgMethod CreateDelegate()
+        {
+            return (NoArgMethod)Delegate.CreateDelegate(typeof(NoArgMethod), Component.Value, MethodName);
+        }
+
+        public void TestProperties()
+        {
+            var hasError = false;
+            if (Component.Value == null)
+            {
+                Debug.LogError($"[{FriendlyName}] Component is null");
+                hasError = true;
+            }
+
+            if (string.IsNullOrEmpty(MethodName))
+            {
+                Debug.LogError($"[{FriendlyName}] MethodName is null or empty");
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            try
+            {
+                var a = (NoArgMethod) Delegate.CreateDelegate(typeof(NoArgMethod), Component.Value, MethodName);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[{FriendlyName}] {e}");
+            }
+        }
     }
 }

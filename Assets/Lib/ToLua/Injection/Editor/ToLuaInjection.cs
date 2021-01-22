@@ -22,7 +22,7 @@ class InjectedMethodInfo
     public string methodFullSignature;
     public string methodOverloadSignature;
     public string methodPublishedName;
-    public string methodName;
+    public string MethodName;
     public int methodIndex;
 }
 
@@ -820,14 +820,14 @@ public static class ToLuaInjection
     {
         bool bRequireResult = prototypeMethod.GotPassedByReferenceParam()
             || (!bIgnoreReturnValue && !prototypeMethod.ReturnVoid());
-        string methodName = bRequireResult ? "Invoke" : "Call";
+        string MethodName = bRequireResult ? "Invoke" : "Call";
         int paramCount = prototypeMethod.Parameters.Count;
         int paramExtraCount = prototypeMethod.HasThis ? 1 : 0;
         paramExtraCount = bAppendCoroutineState ? paramExtraCount + 1 : paramExtraCount;
         paramCount += paramExtraCount;
         invoker = luaFunctionTypeDef.Methods.FirstOrDefault(method =>
         {
-            return method.Name == methodName && method.Parameters.Count == paramCount && bRequireResult == !method.ReturnVoid();
+            return method.Name == MethodName && method.Parameters.Count == paramCount && bRequireResult == !method.ReturnVoid();
         });
 
         if (invoker == null)
@@ -946,7 +946,7 @@ public static class ToLuaInjection
 
             if (existInfo == null)
             {
-                existInfo = typeMethodIndexGroup.Find(info => info.methodName == method.Name);
+                existInfo = typeMethodIndexGroup.Find(info => info.MethodName == method.Name);
                 if (existInfo != null)
                 {
                     newInfo.methodPublishedName = methodSignature;
@@ -969,7 +969,7 @@ public static class ToLuaInjection
             }
         }
 
-        newInfo.methodName = method.Name;
+        newInfo.MethodName = method.Name;
         newInfo.methodOverloadSignature = methodSignature;
         newInfo.methodFullSignature = methodFullSignature;
         newInfo.methodIndex = ++methodCounter;
@@ -1014,7 +1014,7 @@ public static class ToLuaInjection
             foreach (var method in sortedMethodsGroup)
             {
                 XmlElement typeMethodNode = doc.CreateElement("Method");
-                typeMethodNode.SetAttribute("Name", method.methodName);
+                typeMethodNode.SetAttribute("Name", method.MethodName);
                 typeMethodNode.SetAttribute("PublishedName", method.methodPublishedName);
                 typeMethodNode.SetAttribute("Signature", method.methodOverloadSignature);
                 typeMethodNode.SetAttribute("FullSignature", method.methodFullSignature);
@@ -1054,7 +1054,7 @@ public static class ToLuaInjection
             foreach (XmlNode methodChild in typeChild.ChildNodes)
             {
                 InjectedMethodInfo info = new InjectedMethodInfo();
-                info.methodName = methodChild.FindAttributeByName("Name").Value;
+                info.MethodName = methodChild.FindAttributeByName("Name").Value;
                 info.methodPublishedName = methodChild.FindAttributeByName("PublishedName").Value;
                 info.methodOverloadSignature = methodChild.FindAttributeByName("Signature").Value;
                 info.methodFullSignature = methodChild.FindAttributeByName("FullSignature").Value;

@@ -21,15 +21,6 @@ namespace Thunder
         All = Directed | UnDirected
     }
 
-    [Flags]
-    public enum ItemFlag
-    {
-        Weapon = 0x1,
-        Packageable = 0x2,
-        Stackable = 0x4,
-        Food = 0x8
-    }
-
     public enum GameType
     {
         FlyingSaucer,

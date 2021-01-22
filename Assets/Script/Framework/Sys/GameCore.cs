@@ -49,6 +49,7 @@ namespace Framework
                 new UiSys(),
                 new ValueSys(),
                 new TextSys(),
+                new ItemSys()
             };
             var customSys = Config.Init();
             _Sys = new IBaseSys[sys.Length+customSys.Length];

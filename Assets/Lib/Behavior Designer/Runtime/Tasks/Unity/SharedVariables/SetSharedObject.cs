@@ -1,10 +1,10 @@
 namespace BehaviorDesigner.Runtime.Tasks.Unity.SharedVariables
 {
     [TaskCategory("Unity/SharedVariable")]
-    [TaskDescription("Sets the SharedObject variable to the specified object. Returns Success.")]
+    [TaskDescription("Sets the Component variable to the specified object. Returns Success.")]
     public class SetSharedObject : Action
     {
-        [Tooltip("The value to set the SharedObject to")]
+        [Tooltip("The value to set the Component to")]
         public SharedObject targetValue;
         [RequiredField]
         [Tooltip("The SharedTransform to set")]

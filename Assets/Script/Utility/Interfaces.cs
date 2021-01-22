@@ -8,9 +8,9 @@ namespace Thunder
         ItemId ItemId { get; set; }
     }
 
-    public interface IShootable
+    public interface IHitAble
     {
-        void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage);
+        void GetHit(Vector3 hitPos, Vector3 hitDir, float damage);
     }
 
     public interface IInteractive

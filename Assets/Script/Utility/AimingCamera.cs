@@ -115,11 +115,11 @@ namespace Thunder
         {
             Target = trans;
             if (trans == null) return;
-            //_TargetDir = (Trans.position - Target.position - TargetOffset).ProjectToxz().normalized * Radius;
+            //_TargetDir = (Trans.position - Target.position - TargetOffset).ProjectToXz().normalized * Radius;
             //Vector3 dir = Vector3.Cross(_TargetDir, Vector3.up);
             //dir = Quaternion.AngleAxis(OffsetAngle, Vector3.up) * dir;
             //Trans.rotation = Quaternion.LookRotation(dir, Vector3.up);
-            _TargetDir = (Trans.position - Target.position - TargetOffset).ProjectToxz().normalized;
+            _TargetDir = (Trans.position - Target.position - TargetOffset).ProjectToXz().normalized;
             _TargetRot = Trans.eulerAngles;
         }
 

@@ -10,15 +10,4 @@ namespace Framework
         Stackable = 0x4,
         Food = 0x8
     }
-
-    public struct ItemInfo
-    {
-        public ItemId Id;
-        public string Name;
-        public ItemFlag Flag;
-        public string PickPrefabPath;
-        public string WeaponPrefabPath;
-        public int MaxStackNum;
-        public string PackageCellTexturePath;
-    }
 }

@@ -99,17 +99,17 @@ public static class LuaBinder
 		L.RegFunction("Action_string", System_Action_string);
 		L.RegFunction("Func_bool", System_Func_bool);
 		L.RegFunction("Action_UnityEngine_AsyncOperation", System_Action_UnityEngine_AsyncOperation);
-		L.RegFunction("Action_Framework_BaseUI", System_Action_Framework_BaseUI);
-		L.RegFunction("Predicate_System_Action_Framework_BaseUI", System_Predicate_System_Action_Framework_BaseUI);
-		L.RegFunction("Action_System_Action_Framework_BaseUI", System_Action_System_Action_Framework_BaseUI);
-		L.RegFunction("Comparison_System_Action_Framework_BaseUI", System_Comparison_System_Action_Framework_BaseUI);
+		L.RegFunction("Action_Framework_BaseUi", System_Action_Framework_BaseUi);
+		L.RegFunction("Predicate_System_Action_Framework_BaseUi", System_Predicate_System_Action_Framework_BaseUi);
+		L.RegFunction("Action_System_Action_Framework_BaseUi", System_Action_System_Action_Framework_BaseUi);
+		L.RegFunction("Comparison_System_Action_Framework_BaseUi", System_Comparison_System_Action_Framework_BaseUi);
 		L.BeginModule("IO");
 		System_IO_DirectoryWrap.Register(L);
 		System_IO_PathWrap.Register(L);
 		L.EndModule();
 		L.BeginModule("Collections");
 		L.BeginModule("Generic");
-		System_Collections_Generic_List_System_Action_Framework_BaseUIWrap.Register(L);
+		System_Collections_Generic_List_System_Action_Framework_BaseUiWrap.Register(L);
 		L.EndModule();
 		L.EndModule();
 		L.EndModule();
@@ -563,7 +563,7 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int System_Action_Framework_BaseUI(IntPtr L)
+	static int System_Action_Framework_BaseUi(IntPtr L)
 	{
 		try
 		{
@@ -590,7 +590,7 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int System_Predicate_System_Action_Framework_BaseUI(IntPtr L)
+	static int System_Predicate_System_Action_Framework_BaseUi(IntPtr L)
 	{
 		try
 		{
@@ -617,7 +617,7 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int System_Action_System_Action_Framework_BaseUI(IntPtr L)
+	static int System_Action_System_Action_Framework_BaseUi(IntPtr L)
 	{
 		try
 		{
@@ -644,7 +644,7 @@ public static class LuaBinder
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int System_Comparison_System_Action_Framework_BaseUI(IntPtr L)
+	static int System_Comparison_System_Action_Framework_BaseUi(IntPtr L)
 	{
 		try
 		{

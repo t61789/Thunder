@@ -1,12 +1,14 @@
 ﻿
 
+using System;
 using Framework;
+using UnityEngine;
 
 namespace Thunder
 {
     public class Unarmed : BaseWeapon
     {
-        public override float OverHeatFactor => 0;
+        public override float OverHeatFactor { get; }
 
         public override void Fire()
         {
@@ -24,14 +26,18 @@ namespace Thunder
         {
         }
 
-        public override ItemAddData Drop()
+        public override string CompressItem()
         {
-            return new ItemAddData(AmmoGroup.Magazine);
+            return default;
         }
 
-        public override void ReadAdditionalData(ItemAddData add)
+        public override void DecompressItem(string add)
         {
-            
+        }
+
+        public override Action<HitInfo> GetBulletHitHook()
+        {
+            return null;
         }
     }
 }

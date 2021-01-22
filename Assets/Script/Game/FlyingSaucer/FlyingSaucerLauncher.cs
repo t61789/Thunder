@@ -55,7 +55,7 @@ namespace Thunder.Game.FlyingSaucer
             var targetDir = Quaternion.AngleAxis(limit, Vector3.forward) * LaunchBaseDir;
             perlin = _LaunchForceNoise.Next();
             targetDir = targetDir.normalized * Mathf.Lerp(LaunchForce.x, LaunchForce.y, perlin);
-            targetDir = Tools.BuildTransferMatrix(playerFaceDir.ProjectToxz()) * targetDir;
+            targetDir = Tools.BuildTransferMatrix(playerFaceDir.ProjectToXz()) * targetDir;
 
             return targetDir;
         }

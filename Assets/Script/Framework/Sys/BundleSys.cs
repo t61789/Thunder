@@ -14,15 +14,15 @@ namespace Framework
     public class BundleSys : IBaseSys
     {
         private static Dictionary<string, BundleUnit> _Bundles;
-        private static AssetBundle _MainfestBundle;
-        private static AssetBundleManifest _Mainfest;
+        private static AssetBundle _ManifestBundle;
+        private static AssetBundleManifest _Manifest;
         private static readonly Queue<string> _LoadQueue = new Queue<string>();    // 用于加载bundle的队列
 
         public BundleSys()
         {
             // 读取Mainfest文件，用于获取依赖信息
-            _MainfestBundle = AssetBundle.LoadFromFile(Paths.BundleBasePath.PCombine(Path.GetFileName(Paths.BundleBasePath)));
-            _Mainfest = _MainfestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+            _ManifestBundle = AssetBundle.LoadFromFile(Paths.BundleBasePath.PCombine(Path.GetFileName(Paths.BundleBasePath)));
+            _Manifest = _ManifestBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
 
             _Bundles = new Dictionary<string, BundleUnit>();
         }
@@ -85,8 +85,8 @@ namespace Framework
         public static void Clear()
         {
             ReleaseAllBundles();
-            _Mainfest = null;
-            _MainfestBundle.Unload(true);
+            _Manifest = null;
+            _ManifestBundle.Unload(true);
         }
 
         private static BundleUnit GetBundle(string bundle)
@@ -114,7 +114,7 @@ namespace Framework
                     first = false;
                     _Bundles.Add(curBundle, newBundle);
 
-                    foreach (var item in _Mainfest.GetAllDependencies(curBundle))
+                    foreach (var item in _Manifest.GetAllDependencies(curBundle))
                     {
                         _LoadQueue.Enqueue(item);
                         newBundle.Dependencies.Add(item);
@@ -176,22 +176,24 @@ namespace Framework
         }
 
         /// <summary>
-        ///     格式 [bundle|]asset
+        /// 格式 [bundle/]asset
         /// </summary>
         /// <param name="assetPath"></param>
-        /// <param name="defaultBundle"></param>
         /// <returns></returns>
-        public static AssetId Parse(string assetPath, string defaultBundle = null)
+        public static AssetId Parse(string assetPath)
         {
             if (_Cache.Contains(assetPath)) return _Cache.Get(assetPath);
+
             if (string.IsNullOrEmpty(assetPath))
                 throw AssetPathInvalidException.Default;
 
-            var split = assetPath.Split('|');
+            var lastDiv = assetPath.LastIndexOf('/');
+            if(lastDiv==-1)
+                throw AssetPathInvalidException.Default;
 
-            var result = split.Length == 1 ?
-                new AssetId(defaultBundle, split[0]) :
-                new AssetId(split[0], split[1]);
+            var result = new AssetId(
+                assetPath.Substring(0,lastDiv),
+                assetPath.Substring(lastDiv+1));
 
             _Cache.Add(assetPath, result);
             return result;
@@ -201,7 +203,7 @@ namespace Framework
         {
             _StringBuilder.Clear();
             _StringBuilder.Append(bundle);
-            _StringBuilder.Append('|');
+            _StringBuilder.Append('/');
             _StringBuilder.Append(name);
             return _StringBuilder.ToString();
         }

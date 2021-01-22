@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -7,70 +9,119 @@ namespace Framework
 {
     public class ValueSys : IBaseSys
     {
-        private static readonly string _DefaultBundle = Paths.ValuesBundle.PCombine(Paths.Normal);
-        private static readonly Dictionary<AssetId, ValueUnit> _Values = new Dictionary<AssetId, ValueUnit>();
+        private static readonly Dictionary<AssetId, string> _Values = new Dictionary<AssetId, string>();
 
-        public static T GetValue<T>(string valuePath)
+        public static string GetRawValue(string assetPath)
         {
-            return GetValue<T>(AssetId.Parse(valuePath, _DefaultBundle));
+            return GetRawValue(AssetId.Parse(assetPath));
         }
 
-        public static T GetValue<T>(string bundle, string name)
+        public static string GetRawValue(AssetId id)
         {
-            return GetValue<T>(new AssetId(bundle??_DefaultBundle, name));
+            if (_Values.TryGetValue(id, out var result)) return result;
+
+            throw new Exception($"未在 {id.Bundle} 内找到名为 {id.Name} 的value");
+        }
+
+        public static T GetValue<T>(string assetPath)
+        {
+            return GetValue<T>(AssetId.Parse(assetPath));
         }
 
         private static T GetValue<T>(AssetId id)
         {
-            for (var i = 0; i < 2; i++)
-            {
-                if (_Values.TryGetValue(id, out var value) && value.UnDes == null) return (T) value.Des;
+            if (_Values.TryGetValue(id, out var value))return JsonConvert.DeserializeObject<T>(value);
 
-                if (value.UnDes != null)
-                {
-                    var result = JsonConvert.DeserializeObject<T>(value.UnDes);
-                    value.Des = result;
-                    value.UnDes = null;
-                    _Values[id] = value;
-                    return result;
-                }
+            LoadBundle(id);
 
-                LoadBundle(id);
+            if (_Values.TryGetValue(id, out value)) return JsonConvert.DeserializeObject<T>(value);
 
-                Assert.IsTrue(_Values.TryGetValue(id, out _),
-                    $"未在 {id.Bundle} 内找到名为 {id.Name} 的table");
-            }
-
-            return default;
+            throw new Exception($"未在 {id.Bundle} 内找到名为 {id.Name} 的value");
         }
 
         private static void LoadBundle(AssetId id)
         {
-            foreach (var asset in BundleSys.GetAllAsset<TextAsset>( id.Bundle))
+            foreach (var asset in BundleSys.GetAllAsset<TextAsset>(id.Bundle))
             {
                 id.Name = asset.name;
                 if (_Values.ContainsKey(id)) continue;
-                _Values.Add(id, new ValueUnit(asset.text));
+                _Values.Add(id, asset.text);
             }
         }
-        
+
         public void OnSceneEnter(string preScene, string curScene) { }
 
         public void OnSceneExit(string curScene) { }
 
         public void OnApplicationExit() { }
 
-        private struct ValueUnit
-        {
-            public string UnDes;
-            public object Des;
+        //private static readonly string _DefaultBundle = Paths.ValuesBundle.PCombine(Paths.Normal);
+        //private static readonly Dictionary<AssetId, ValueUnit> _Values = new Dictionary<AssetId, ValueUnit>();
 
-            public ValueUnit(string unDes)
-            {
-                UnDes = unDes;
-                Des = null;
-            }
-        }
+        //public static T GetValue<T>(string valuePath)
+        //{
+        //    return GetValue<T>(AssetId.Parse(valuePath, _DefaultBundle));
+        //}
+
+        //public static T GetValue<T>(string bundle, string name)
+        //{
+        //    return GetValue<T>(new AssetId(bundle ?? _DefaultBundle, name));
+        //}
+
+        //private static T GetValue<T>(AssetId id)
+        //{
+        //    for (var i = 0; i < 2; i++)
+        //    {
+        //        if (_Values.TryGetValue(id, out var value) && value.UnDes == null)
+        //        {
+        //            return (T)value.Des;
+        //        }
+
+        //        if (value.UnDes != null)
+        //        {
+        //            var result = JsonConvert.DeserializeObject<T>(value.UnDes);
+        //            value.Des = result;
+        //            value.UnDes = null;
+        //            _Values[id] = value;
+        //            return result;
+        //        }
+
+        //        LoadBundle(id);
+
+        //        if (!_Values.TryGetValue(id, out _))
+        //            throw new Exception($"未在 {id.Bundle} 内找到名为 {id.Name} 的table");
+        //    }
+
+        //    return default;
+        //}
+
+        //private static void LoadBundle(AssetId id)
+        //{
+        //    foreach (var asset in BundleSys.GetAllAsset<TextAsset>(id.Bundle))
+        //    {
+        //        id.Name = asset.name;
+        //        if (_Values.ContainsKey(id)) continue;
+        //        _Values.Add(id, new ValueUnit(asset.text));
+        //    }
+        //}
+
+        //public void OnSceneEnter(string preScene, string curScene) { }
+
+        //public void OnSceneExit(string curScene) { }
+
+        //public void OnApplicationExit() { }
+
+        //private struct ValueUnit
+        //{
+        //    public string UnDes;
+        //    public object Des;
+
+        //    public ValueUnit(string unDes)
+        //    {
+        //        UnDes = unDes;
+        //        Des = null;
+        //    }
+        //}
 
         #region xml
 

@@ -19,9 +19,9 @@ namespace Framework
 
         public static void Init()
         {
-            _UIContainer = GameObject.Find(Config.UiFramworkBaseObjName).transform.Find("UI");
+            _UIContainer = GameObject.Find(Config.UiFrameworkBaseObjName).transform.Find("UI");
 
-            _UIRecycleContainer = GameObject.Find(Config.UiFramworkBaseObjName).transform.Find("Recycle");
+            _UIRecycleContainer = GameObject.Find(Config.UiFrameworkBaseObjName).transform.Find("Recycle");
 
             _ActiveUI.Clear();
             _HideStableUI.Clear();

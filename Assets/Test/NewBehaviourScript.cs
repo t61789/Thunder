@@ -1,22 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
+using FairyGUI;
+using Framework;
 using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    private BehaviorTree _Tree;
 
-    private void Awake()
+    private void Start()
     {
-        _Tree = GetComponent<BehaviorTree>();
+        var btn = GetComponent<UIPanel>().ui.GetChild("n0").asButton;
+        btn.onClick.Add(()=>Debug.Log(123));
+
     }
 
-    private void OnGUI()
+    private void Update()
     {
-        if (GUI.Button(new Rect(0, 0, 300, 200), "123"))
-        {
-            _Tree.SetVariableValue("Check",false);
-        }
     }
 }

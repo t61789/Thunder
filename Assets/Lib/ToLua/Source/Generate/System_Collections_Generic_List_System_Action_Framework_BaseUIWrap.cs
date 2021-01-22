@@ -2,11 +2,11 @@
 using System;
 using LuaInterface;
 
-public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
+public class System_Collections_Generic_List_System_Action_Framework_BaseUiWrap
 {
 	public static void Register(LuaState L)
 	{
-		L.BeginClass(typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>), typeof(System.Object), "List_System_Action_Framework_BaseUI");
+		L.BeginClass(typeof(System.Collections.Generic.List<System.Action<Framework.BaseUi>>), typeof(System.Object), "List_System_Action_Framework_BaseUi");
 		L.RegFunction(".geti", get_Item);
 		L.RegFunction("get_Item", get_Item);
 		L.RegFunction(".seti", set_Item);
@@ -40,7 +40,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 		L.RegFunction("ToArray", ToArray);
 		L.RegFunction("TrimExcess", TrimExcess);
 		L.RegFunction("TrueForAll", TrueForAll);
-		L.RegFunction("New", _CreateSystem_Collections_Generic_List_System_Action_Framework_BaseUI);
+		L.RegFunction("New", _CreateSystem_Collections_Generic_List_System_Action_Framework_BaseUi);
 		L.RegVar("this", _this, null);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("Capacity", get_Capacity, set_Capacity);
@@ -49,7 +49,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int _CreateSystem_Collections_Generic_List_System_Action_Framework_BaseUI(IntPtr L)
+	static int _CreateSystem_Collections_Generic_List_System_Action_Framework_BaseUi(IntPtr L)
 	{
 		try
 		{
@@ -77,7 +77,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: System.Collections.Generic.List<System.Action<Framework.BaseUI>>.New");
+				return LuaDLL.luaL_throw(L, "invalid arguments to ctor method: System.Collections.Generic.List<System.Action<Framework.BaseUi>>.New");
 			}
 		}
 		catch (Exception e)
@@ -263,7 +263,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUI>>.BinarySearch");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUi>>.BinarySearch");
 			}
 		}
 		catch (Exception e)
@@ -340,7 +340,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUI>>.CopyTo");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUi>>.CopyTo");
 			}
 		}
 		catch (Exception e)
@@ -439,7 +439,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUI>>.FindIndex");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUi>>.FindIndex");
 			}
 		}
 		catch (Exception e)
@@ -502,7 +502,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUI>>.FindLastIndex");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUi>>.FindLastIndex");
 			}
 		}
 		catch (Exception e)
@@ -600,7 +600,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUI>>.IndexOf");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUi>>.IndexOf");
 			}
 		}
 		catch (Exception e)
@@ -681,7 +681,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUI>>.LastIndexOf");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUi>>.LastIndexOf");
 			}
 		}
 		catch (Exception e)
@@ -784,7 +784,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUI>>.Reverse");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUi>>.Reverse");
 			}
 		}
 		catch (Exception e)
@@ -831,7 +831,7 @@ public class System_Collections_Generic_List_System_Action_Framework_BaseUIWrap
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUI>>.Sort");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: System.Collections.Generic.List<System.Action<Framework.BaseUi>>.Sort");
 			}
 		}
 		catch (Exception e)

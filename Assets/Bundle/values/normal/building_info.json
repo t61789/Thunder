@@ -1,0 +1,26 @@
+[{
+	"Id": 0,
+	"ModelPath": "",
+	"PrefabPath":"",
+	"Coords": [
+		{"X": 0,"Y": 0}
+	]
+},
+{
+	"Id": 1,
+	"ModelPath": "model/lucia/lucia",
+	"Coords": [
+		{"X": 0,"Y": 0}
+	]
+},
+{
+	"Id": 2,
+	"ModelPath": "model/normal/miningMachine",
+	"PrefabPath":"prefabs/building/miningMachine",
+	"Coords": [
+		{"X": 0,"Y": 0},
+		{"X": 1,"Y": 0},
+		{"X": 0,"Y": 1},
+		{"X": 1,"Y": 1}
+	]
+}]

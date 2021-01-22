@@ -67,7 +67,7 @@ namespace Framework
                 if (_PresetUiActionComponent == null)
                     _PresetUiActionComponent = GetComponent<PresetUiAction>();
 
-                PresetUiAction.AvaliablePresetUi.TryGetValue(PresetUiActionName, out Type type);
+                PresetUiAction.AvailablePresetUi.TryGetValue(PresetUiActionName, out Type type);
 
                 if (_PresetUiActionComponent != null && _PresetUiActionComponent.GetType() != type)
                 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,9 +23,21 @@ namespace Framework
 
         public static Vector2 FarPosition = new Vector2(int.MaxValue, int.MaxValue);
 
+        public static readonly Matrix4x4 ClockwiseRot = new Matrix4x4(
+            new Vector4(Cos(-90), 0, -Sin(-90), 0),
+            new Vector4(0, 1, 0, 0),
+            new Vector4(Sin(-90), 0, Cos(-90), 0),
+            new Vector4(0, 0, 0, 1));
+
+        public static readonly Matrix4x4 CounterClockwiseRot = new Matrix4x4(
+            new Vector4(Cos(90), 0, -Sin(90), 0),
+            new Vector4(0, 1, 0, 0),
+            new Vector4(Sin(90), 0, Cos(90), 0),
+            new Vector4(0, 0, 0, 1));
+
         private static readonly Random _Random;
 
-        private static readonly LRUCache<string,object> _JsonCache 
+        private static readonly LRUCache<string, object> _JsonCache
             = new LRUCache<string, object>(20);
 
         static Tools()
@@ -38,15 +51,17 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取鼠标世界坐标
+        /// 获取鼠标世界坐标
         /// </summary>
         public static Vector3 GetMousePosition()
         {
-            return (Vector2) Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            return Camera.allCamerasCount == 0 ?
+                Vector3.zero :
+                Camera.allCameras[0].ScreenToWorldPoint(Input.mousePosition);
         }
 
         /// <summary>
-        ///     将向量source的方向转至direction的方向
+        /// 将向量source的方向转至direction的方向
         /// </summary>
         public static Vector2 ChangeVectorDirection(Vector2 source, Vector2 direction)
         {
@@ -54,7 +69,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     将origin的长度转为length
+        /// 将origin的长度转为length
         /// </summary>
         public static Vector3 ChangeVectorLength(Vector3 origin, float length)
         {
@@ -62,27 +77,27 @@ namespace Framework
         }
 
         /// <summary>
-        ///     判断两个向量是否近似相似，精确到0.1^precision
+        /// 判断两个向量是否近似相似，精确到0.1^precision
         /// </summary>
-        public static bool IfVectorAppromxiate(Vector3 v1, Vector3 v2, int n)
+        public static bool IfVectorApproximate(Vector3 v1, Vector3 v2, int n)
         {
             var precisionF = Mathf.Pow(0.1f, n);
 
             return Mathf.Abs(v1.x - v2.x) < precisionF && Mathf.Abs(v1.y - v2.y) < precisionF;
         }
 
-        public static bool IfVectorAppromxiate(Vector3 v1, Vector3 v2, double precision)
+        public static bool IfVectorApproximate(Vector3 v1, Vector3 v2, double precision)
         {
             return Mathf.Abs(v1.x - v2.x) < precision && Mathf.Abs(v1.y - v2.y) < precision;
         }
 
         /// <summary>
-        ///     判断两个向量是否近似相似
+        /// 判断两个向量是否近似相似
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-        public static bool IfVectorAppromxiate(Vector3 v1, Vector3 v2)
+        public static bool IfVectorApproximate(Vector3 v1, Vector3 v2)
         {
             return
                 Mathf.Approximately(v1.x, v2.x) &&
@@ -91,19 +106,19 @@ namespace Framework
         }
 
         /// <summary>
-        ///     判断两个数是否近似相似，精确到0.1^precision
+        /// 判断两个数是否近似相似，相差小于precision
         /// </summary>
         /// <param name="n1"></param>
         /// <param name="n2"></param>
         /// <param name="precision"></param>
         /// <returns></returns>
-        public static bool IfAppromxiate(float n1, float n2, double precision)
+        public static bool IfApproximate(float n1, float n2, double precision)
         {
             return Mathf.Abs(n1 - n2) <= precision;
         }
 
         /// <summary>
-        ///     如果按下任意键
+        /// 如果按下任意键
         /// </summary>
         public static bool IfKeyboardAny()
         {
@@ -117,7 +132,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     如果鼠标任意键正在按住
+        /// 如果鼠标任意键正在按住
         /// </summary>
         public static bool IfMouseButtonAny()
         {
@@ -125,7 +140,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     如果按下鼠标任意键
+        /// 如果按下鼠标任意键
         /// </summary>
         public static bool IfMouseButtonDownAny()
         {
@@ -133,7 +148,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     向量转欧拉角，针对2D
+        /// 向量转欧拉角，针对2D
         /// </summary>
         public static Vector3 Vec2Eul(Vector2 source)
         {
@@ -145,17 +160,17 @@ namespace Framework
         }
 
         /// <summary>
-        ///     欧拉角转向量，针对2D
+        /// 欧拉角转向量，针对2D
         /// </summary>
         public static Vector3 Eul2Vec(Vector3 source)
         {
             return new Vector3(
                 Mathf.Cos(source.z * Mathf.Deg2Rad),
-                (float) Math.Sin(source.z * Mathf.Deg2Rad), 0).normalized;
+                (float)Math.Sin(source.z * Mathf.Deg2Rad), 0).normalized;
         }
 
         /// <summary>
-        ///     获取游戏物体的所有子物体，包括子物体的子物体
+        /// 获取游戏物体的所有子物体，包括子物体的子物体
         /// </summary>
         public static Transform[] GetAllGameObject(Transform target)
         {
@@ -170,7 +185,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     在半径为radius的球内产生随机向量
+        /// 在半径为radius的球内产生随机向量
         /// </summary>
         public static Vector3 RandomVectorInSphere(float radius)
         {
@@ -185,7 +200,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     在半径为radius的圆内产生随机向量
+        /// 在半径为radius的圆内产生随机向量
         /// </summary>
         public static Vector3 RandomVectorInCircle(float radius)
         {
@@ -193,7 +208,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     关闭游戏
+        /// 关闭游戏
         /// </summary>
         public static void ExitGame()
         {
@@ -201,9 +216,9 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取所有组件
+        /// 获取所有组件
         /// </summary>
-        public static T[] GetAllComponents<T>(Transform[] target) where T:Component
+        public static T[] GetAllComponents<T>(Transform[] target) where T : Component
         {
             var spriteT = new List<T>();
 
@@ -228,7 +243,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     格式化报错
+        /// 格式化报错
         /// </summary>
         public static void LogError(GameObject go, string message)
         {
@@ -236,7 +251,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     格式化报错
+        /// 格式化报错
         /// </summary>
         public static void LogError(string scriptName, string message)
         {
@@ -244,7 +259,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     格式化报错
+        /// 格式化报错
         /// </summary>
         public static void LogError(GameObject go, string scriptName, string message)
         {
@@ -252,9 +267,9 @@ namespace Framework
         }
 
         /// <summary>
-        ///     检测游戏物体上是否有某组件，若无则报错
+        /// 检测游戏物体上是否有某组件，若无则报错
         /// </summary>
-        public static void DetectCompement<T>(GameObject go) where T : Component
+        public static void DetectComponent<T>(GameObject go) where T : Component
         {
             var compement = go.GetComponent<T>();
             if (compement == null)
@@ -262,7 +277,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     两点间检测所有碰撞射线的物体
+        /// 两点间检测所有碰撞射线的物体
         /// </summary>
         public static RaycastHit2D[] Raycast2DBetween(Vector3 from, Vector3 to)
         {
@@ -270,7 +285,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取当前帧率
+        /// 获取当前帧率
         /// </summary>
         public static float GetFps()
         {
@@ -278,7 +293,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     从path路径的分割精灵中获取指定段内的sprite数组
+        /// 从path路径的分割精灵中获取指定段内的sprite数组
         /// </summary>
         /// <param name="path"></param>
         /// <param name="from"></param>
@@ -294,7 +309,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     向target向量添加add向量，限制长度为limit
+        /// 向target向量添加add向量，限制长度为limit
         /// </summary>
         /// <param name="target"></param>
         /// <param name="add"></param>
@@ -309,7 +324,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取指定区间内的整数集合
+        /// 获取指定区间内的整数集合
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -325,13 +340,13 @@ namespace Framework
                 from = from - to;
             }
 
-            for (var i = (int) from; i < to; i++) result.Add(i);
+            for (var i = (int)from; i < to; i++) result.Add(i);
 
             return result.ToArray();
         }
 
         /// <summary>
-        ///     解决分段问题
+        /// 解决分段问题
         /// </summary>
         /// <param name="unitLength">单元长度</param>
         /// <param name="length">总长度</param>
@@ -367,7 +382,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     将字符串数组组合为一个字符串，用,隔开
+        /// 将字符串数组组合为一个字符串，用,隔开
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
@@ -381,7 +396,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     判断某点是否在两点构成的直线上
+        /// 判断某点是否在两点构成的直线上
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -389,13 +404,13 @@ namespace Framework
         /// <returns></returns>
         public static bool IfPointOnLine(Vector3 line1, Vector3 line2, Vector3 point)
         {
-            if (IfVectorAppromxiate(point, line1, 3) || IfVectorAppromxiate(point, line2, 3))
+            if (IfVectorApproximate(point, line1, 3) || IfVectorApproximate(point, line2, 3))
                 return true;
 
             var temp1 = (line1 - line2).normalized;
             var temp2 = (point - line2).normalized;
 
-            return IfVectorAppromxiate(temp1, temp2, 3) || IfVectorAppromxiate(temp1, -temp2, 3);
+            return IfVectorApproximate(temp1, temp2, 3) || IfVectorApproximate(temp1, -temp2, 3);
         }
 
         public static bool IfPointOnLine(Vector3 line1, Vector3 line2, Vector3 point, double precision)
@@ -406,7 +421,7 @@ namespace Framework
 
             float distance = -1;
 
-            if (IfAppromxiate(a, 0, 3) && IfAppromxiate(b, 0, 3))
+            if (IfApproximate(a, 0, 3) && IfApproximate(b, 0, 3))
                 distance = Mathf.Abs(point.y - distance);
             else
                 distance = Mathf.Abs((a * point.x + b * point.y + c) / Mathf.Sqrt(a * a + b * b));
@@ -416,7 +431,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     判断某点是否在两点构成的线段上
+        /// 判断某点是否在两点构成的线段上
         /// </summary>
         /// <param name="line1"></param>
         /// <param name="line2"></param>
@@ -425,13 +440,13 @@ namespace Framework
         /// <returns></returns>
         public static bool IfPointOnSegment(Vector3 line1, Vector3 line2, Vector3 point, bool avoidEndpoint)
         {
-            if ((IfVectorAppromxiate(point, line1, 3) || IfVectorAppromxiate(point, line2, 3)) && !avoidEndpoint)
+            if ((IfVectorApproximate(point, line1, 3) || IfVectorApproximate(point, line2, 3)) && !avoidEndpoint)
                 return true;
 
             var temp1 = line1 - line2;
             var temp2 = point - line2;
 
-            var sameDir = IfVectorAppromxiate(temp1.normalized, temp2.normalized, 3);
+            var sameDir = IfVectorApproximate(temp1.normalized, temp2.normalized, 3);
 
             var inRange = temp1.magnitude > temp2.magnitude;
 
@@ -443,7 +458,7 @@ namespace Framework
         {
             if (!IfPointOnLine(line1, line2, point, precision)) return false;
 
-            if (IfVectorAppromxiate(point, line1, precision) || IfVectorAppromxiate(point, line2, precision))
+            if (IfVectorApproximate(point, line1, precision) || IfVectorApproximate(point, line2, precision))
             {
                 if (avoidEndpoint)
                     return false;
@@ -454,7 +469,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取GUID
+        /// 获取GUID
         /// </summary>
         /// <returns></returns>
         public static string GetGuid()
@@ -463,7 +478,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取哈希表中的所有值，存入list
+        /// 获取哈希表中的所有值，存入list
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="hash"></param>
@@ -471,12 +486,12 @@ namespace Framework
         public static List<T> HashTableValueToList<T>(Hashtable hash)
         {
             var result = new List<T>();
-            foreach (var value in hash.Values) result.Add((T) value);
+            foreach (var value in hash.Values) result.Add((T)value);
             return result;
         }
 
         /// <summary>
-        ///     获取哈希表中的所有键，存入list
+        /// 获取哈希表中的所有键，存入list
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="hash"></param>
@@ -484,19 +499,19 @@ namespace Framework
         public static List<T> HashTableKeyToList<T>(Hashtable hash)
         {
             var result = new List<T>();
-            foreach (var value in hash.Keys) result.Add((T) value);
+            foreach (var value in hash.Keys) result.Add((T)value);
             return result;
         }
 
         /// <summary>
-        ///     获取所有文件
+        /// 获取所有文件
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public static string[] GetAllFiles(string path)
         {
             if (File.Exists(path))
-                return new[] {path};
+                return new[] { path };
 
             if (!Directory.Exists(path))
                 return new string[0];
@@ -511,7 +526,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取所有文件夹
+        /// 获取所有文件夹
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -531,7 +546,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     范围内随机的大量点
+        /// 范围内随机的大量点
         /// </summary>
         /// <param name="center"></param>
         /// <param name="radius"></param>
@@ -545,7 +560,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     from向to增加一定的量
+        /// from向to增加一定的量
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -573,7 +588,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     向量from向to增加一定的量
+        /// 向量from向to增加一定的量
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -592,7 +607,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     向量转向的lerp
+        /// 向量转向的lerp
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -605,7 +620,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     list转string
+        /// list转string
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="t"></param>
@@ -619,7 +634,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     向量转过一定的角度
+        /// 向量转过一定的角度
         /// </summary>
         /// <param name="source"></param>
         /// <param name="degree"></param>
@@ -632,19 +647,19 @@ namespace Framework
         }
 
         /// <summary>
-        ///     离散化坐标
+        /// 离散化坐标
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
         public static Vector2 Discretization(Vector2 source)
         {
-            source.x = (int) (source.x + (source.x >= 0 ? 0.5f : -0.5f));
-            source.y = (int) (source.y + (source.y >= 0 ? 0.5f : -0.5f));
+            source.x = (int)(source.x + (source.x >= 0 ? 0.5f : -0.5f));
+            source.y = (int)(source.y + (source.y >= 0 ? 0.5f : -0.5f));
             return source;
         }
 
         /// <summary>
-        ///     欧拉角平滑移动
+        /// 欧拉角平滑移动
         /// </summary>
         /// <param name="origin"></param>
         /// <param name="target"></param>
@@ -672,7 +687,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     字符串转向量，形如：x_y_z
+        /// 字符串转向量，形如：x_y_z
         /// </summary>
         /// <param name="vector"></param>
         /// <returns></returns>
@@ -683,7 +698,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     首字母大写
+        /// 首字母大写
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -696,7 +711,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     首字母小写
+        /// 首字母小写
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -715,7 +730,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     创建一个圆环mesh，宽度1，半径1
+        /// 创建一个圆环mesh，宽度1，半径1
         /// </summary>
         /// <param name="detail"></param>
         /// <returns></returns>
@@ -733,7 +748,7 @@ namespace Framework
                 vertex.Add(temp * 1.5f);
             }
 
-            var baseSqu = new[] {0, 2, 1, 2, 3, 1};
+            var baseSqu = new[] { 0, 2, 1, 2, 3, 1 };
             var triangles = new List<int>();
             for (var i = 0; i < detail; i++)
                 triangles.AddRange(baseSqu.Select(t => (i * 2 + t) % (detail * 2)));
@@ -745,7 +760,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     判断该类型是否有指定特性
+        /// 判断该类型是否有指定特性
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="type"></param>
@@ -757,7 +772,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     判断该属性是否有指定特性
+        /// 判断该属性是否有指定特性
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="type"></param>
@@ -769,7 +784,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     判断该字段是否有指定特性
+        /// 判断该字段是否有指定特性
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="type"></param>
@@ -781,7 +796,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     对词典添加键值对，若键已经存在，则修改对应的值
+        /// 对词典添加键值对，若键已经存在，则修改对应的值
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
@@ -802,7 +817,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     从词典中获取值，若键不存在，则添加键和空值并返回
+        /// 从词典中获取值，若键不存在，则添加键和空值并返回
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
@@ -826,7 +841,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     三维向量转四维，w值为1，表示坐标
+        /// 三维向量转四维，w值为1，表示坐标
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
@@ -836,7 +851,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     三维向量转四维，w值为0，表示方向
+        /// 三维向量转四维，w值为0，表示方向
         /// </summary>
         /// <param name="dir"></param>
         /// <returns></returns>
@@ -846,7 +861,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     思维向量转三维，使用正交除法，即xyz值均除以w。若w值为0则返回零向量
+        /// 思维向量转三维，使用正交除法，即xyz值均除以w。若w值为0则返回零向量
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
@@ -857,7 +872,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     判断指定坐标是否在摄像机的视野内
+        /// 判断指定坐标是否在摄像机的视野内
         /// </summary>
         /// <param name="pos"></param>
         /// <param name="camera"></param>
@@ -872,7 +887,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     精确地Log一个向量
+        /// 精确地Log一个向量
         /// </summary>
         /// <param name="v"></param>
         public static void LogVector(Vector3 v)
@@ -881,7 +896,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     将y轴旋转角转向由target向量指定的方向
+        /// 将y轴旋转角转向由target向量指定的方向
         /// </summary>
         /// <param name="preLocalEulerAngleY">之前的旋转角</param>
         /// <param name="target">目标向量</param>
@@ -896,7 +911,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     递归地查找指定名称的物体，包括根物体
+        /// 递归地查找指定名称的物体，包括根物体
         /// </summary>
         /// <param name="root"></param>
         /// <param name="name"></param>
@@ -918,40 +933,40 @@ namespace Framework
         }
 
         /// <summary>
-        ///     将向量投影到xz平面上
+        /// 将向量投影到xz平面上
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static Vector3 ProjectToxz(this Vector3 source)
+        public static Vector3 ProjectToXz(this Vector3 source)
         {
             source.y = 0;
             return source;
         }
 
         /// <summary>
-        ///     将向量投影到xy平面上
+        /// 将向量投影到xy平面上
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static Vector3 ProjectToxy(this Vector3 source)
+        public static Vector3 ProjectToXy(this Vector3 source)
         {
             source.z = 0;
             return source;
         }
 
         /// <summary>
-        ///     将向量投影到yz平面上
+        /// 将向量投影到yz平面上
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static Vector3 ProjectToyz(this Vector3 source)
+        public static Vector3 ProjectToYz(this Vector3 source)
         {
             source.x = 0;
             return source;
         }
 
         /// <summary>
-        ///     判断下标是否超出数组范围
+        /// 判断下标是否超出数组范围
         /// </summary>
         /// <param name="arr"></param>
         /// <param name="index"></param>
@@ -962,7 +977,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获得形如 {x,y} 的字符串
+        /// 获得形如 {x,y} 的字符串
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -972,7 +987,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获得形如 {x,y,z} 的字符串
+        /// 获得形如 {x,y,z} 的字符串
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -982,7 +997,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获得形如 {x,y,z,w} 的字符串
+        /// 获得形如 {x,y,z,w} 的字符串
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -992,7 +1007,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取指定的低维向量
+        /// 获取指定的低维向量
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1002,7 +1017,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取指定的低维向量
+        /// 获取指定的低维向量
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1012,7 +1027,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取指定的低维向量
+        /// 获取指定的低维向量
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1022,7 +1037,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取指定的低维向量
+        /// 获取指定的低维向量
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1032,7 +1047,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     对所有的分量取平均值
+        /// 对所有的分量取平均值
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1042,7 +1057,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     对所有的分量取平均值
+        /// 对所有的分量取平均值
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1052,7 +1067,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     对所有的分量取平均值
+        /// 对所有的分量取平均值
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -1062,7 +1077,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     限定于360内
+        /// 限定于360内
         /// </summary>
         public static float LerpAngle(float a, float b, float t)
         {
@@ -1071,7 +1086,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     返回给定范围内的随机float值
+        /// 返回给定范围内的随机float值
         /// </summary>
         public static float RandomFloat(float min, float max)
         {
@@ -1080,7 +1095,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     返回给定范围内的随机int值，闭区间
+        /// 返回给定范围内的随机int值，闭区间
         /// </summary>
         public static int RandomInt(int min, int max)
         {
@@ -1088,15 +1103,15 @@ namespace Framework
         }
 
         /// <summary>
-        ///     返回0，1之间的float值
+        /// 返回0，1之间的float值
         /// </summary>
         public static float RandomNormal()
         {
-            return (float) _Random.NextDouble();
+            return (float)_Random.NextDouble();
         }
 
         /// <summary>
-        ///     施密特正交化，获取新左手坐标系的三个轴
+        /// 施密特正交化，获取新左手坐标系的三个轴
         /// </summary>
         /// <param name="z"></param>
         /// <param name="auxiliary">辅助向量，用于构造坐标系</param>
@@ -1110,7 +1125,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     施密特正交化，获取新左手坐标系的变换矩阵
+        /// 施密特正交化，获取新左手坐标系的变换矩阵
         /// </summary>
         /// <param name="z"></param>
         /// <param name="auxiliary">辅助向量，用于构造坐标系</param>
@@ -1123,7 +1138,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     根据三个坐标轴以及坐标原点构造变换矩阵
+        /// 根据三个坐标轴以及坐标原点构造变换矩阵
         /// </summary>
         /// <param name="x">轴x</param>
         /// <param name="y">轴y</param>
@@ -1139,7 +1154,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     构造简单坐标变换矩阵，坐标系的y轴与世界坐标系平行
+        /// 构造简单坐标变换矩阵，坐标系的y轴与世界坐标系平行
         /// </summary>
         /// <param name="z">轴z</param>
         /// <param name="o">坐标原点</param>
@@ -1153,7 +1168,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     插值，经过clamp处理
+        /// 插值，经过clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1165,7 +1180,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     插值，未经clamp处理
+        /// 插值，未经clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1177,7 +1192,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     插值，经过clamp处理
+        /// 插值，经过clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1185,13 +1200,13 @@ namespace Framework
         /// <returns></returns>
         public static Vector3 Lerp(Vector3 a, Vector3 b, float value)
         {
-            return new Vector3(Lerp(a.x, b.y, value),
+            return new Vector3(Lerp(a.x, b.x, value),
                 Lerp(a.y, b.y, value),
                 Lerp(a.z, b.z, value));
         }
 
         /// <summary>
-        ///     插值，未经clamp处理
+        /// 插值，未经clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1199,13 +1214,13 @@ namespace Framework
         /// <returns></returns>
         public static Vector3 LerpUc(Vector3 a, Vector3 b, float value)
         {
-            return new Vector3(LerpUc(a.x, b.y, value),
+            return new Vector3(LerpUc(a.x, b.x, value),
                 LerpUc(a.y, b.y, value),
                 LerpUc(a.z, b.z, value));
         }
 
         /// <summary>
-        ///     插值，经过clamp处理
+        /// 插值，经过clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1220,7 +1235,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     插值，未经clamp处理
+        /// 插值，未经clamp处理
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1235,7 +1250,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     反插值，经过clamp处理。ab不可相等
+        /// 反插值，经过clamp处理。ab不可相等
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1248,7 +1263,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     反插值，未经clamp处理。ab不可相等
+        /// 反插值，未经clamp处理。ab不可相等
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -1261,7 +1276,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取rect的尺寸
+        /// 获取rect的尺寸
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
@@ -1271,7 +1286,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取rect的坐标
+        /// 获取rect的坐标
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
@@ -1281,7 +1296,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     设置rectTransform的长宽
+        /// 设置rectTransform的长宽
         /// </summary>
         /// <param name="rt"></param>
         /// <param name="size"></param>
@@ -1292,7 +1307,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     clamp函数的扩展方法形式
+        /// clamp函数的扩展方法形式
         /// </summary>
         /// <param name="f"></param>
         /// <param name="a"></param>
@@ -1304,7 +1319,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     clamp01函数的扩展方法形式
+        /// clamp01函数的扩展方法形式
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
@@ -1314,7 +1329,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     clamp函数的扩展方法形式
+        /// clamp函数的扩展方法形式
         /// </summary>
         /// <param name="i"></param>
         /// <param name="a"></param>
@@ -1326,7 +1341,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     创建一个src尺寸/downSample大小的renderTexture
+        /// 创建一个src尺寸/downSample大小的renderTexture
         /// </summary>
         /// <param name="src"></param>
         /// <param name="downSample"></param>
@@ -1337,7 +1352,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     RenderTexture.ReleaseTemporary的扩展方法形式
+        /// RenderTexture.ReleaseTemporary的扩展方法形式
         /// </summary>
         /// <param name="src"></param>
         public static void ReleaseTemporary(this RenderTexture src)
@@ -1346,7 +1361,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     独立一个新材质并赋给目标渲染器
+        /// 独立一个新材质并赋给目标渲染器
         /// </summary>
         /// <param name="re"></param>
         /// <returns></returns>
@@ -1358,7 +1373,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     随机获取数组内的一个元素
+        /// 随机获取数组内的一个元素
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1370,7 +1385,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     在数组的指定范围内随机获取一个元素
+        /// 在数组的指定范围内随机获取一个元素
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1384,7 +1399,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取数组最后一个元素的下标
+        /// 获取数组最后一个元素的下标
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1395,7 +1410,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     向量全相乘
+        /// 向量全相乘
         /// </summary>
         /// <param name="v"></param>
         /// <param name="other"></param>
@@ -1406,7 +1421,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     查找第一个符合条件的对象，返回其下标
+        /// 查找第一个符合条件的对象，返回其下标
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1425,7 +1440,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     遍历目标迭代器，对于每个元素执行foreachAction
+        /// 遍历目标迭代器，对于每个元素执行foreachAction
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1437,7 +1452,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     交换数组中的两个元素
+        /// 交换数组中的两个元素
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="arr"></param>
@@ -1451,7 +1466,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     获取目标物体的一个克隆
+        /// 获取目标物体的一个克隆
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -1461,7 +1476,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     在一个区间内循环
+        /// 在一个区间内循环
         /// </summary>
         /// <param name="val"></param>
         /// <param name="length"></param>
@@ -1475,7 +1490,7 @@ namespace Framework
         }
 
         /// <summary>
-        ///     在一个区间内循环
+        /// 在一个区间内循环
         /// </summary>
         /// <param name="val"></param>
         /// <param name="length"></param>
@@ -1492,21 +1507,21 @@ namespace Framework
         /// <param name="obj"></param>
         /// <param name="cast">转型后的对象</param>
         /// <returns></returns>
-        public static bool TypeCheck<T>(this object obj,out T cast)
+        public static bool TypeCheck<T>(this object obj, out T cast)
         {
             cast = default;
             if (!(obj is T))
             {
                 if (obj is string str)
                 {
-                    if (cast is ValueType && _JsonCache.TryGet(str,out obj))
+                    if (cast is ValueType && _JsonCache.TryGet(str, out obj))
                     {
-                        cast = (T) obj;
+                        cast = (T)obj;
                         return true;
                     }
                     cast = JsonConvert.DeserializeObject<T>(str);
-                    if(cast is ValueType)
-                        _JsonCache.Add(str,cast);
+                    if (cast is ValueType)
+                        _JsonCache.Add(str, cast);
                     return true;
                 }
 
@@ -1514,7 +1529,7 @@ namespace Framework
                 return false;
             }
 
-            cast = (T) obj;
+            cast = (T)obj;
             return true;
         }
 
@@ -1527,7 +1542,7 @@ namespace Framework
         public static bool RectCross(this Rect r1, Rect r2)
         {
             Vector2 differ = r1.center - r2.center;
-            return r1.width + r2.width <= Mathf.Abs(differ.x) && 
+            return r1.width + r2.width <= Mathf.Abs(differ.x) &&
                    r1.height + r2.height <= Mathf.Abs(differ.y);
         }
 
@@ -1546,6 +1561,18 @@ namespace Framework
         }
 
         /// <summary>
+        /// 遍历指定区间内的整数
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static IEnumerable<int> GetIndexEnum(int start, int length)
+        {
+            for (int i = 0; i < length; i++)
+                yield return i + start;
+        }
+
+        /// <summary>
         /// Path.Combine的扩展方法形式
         /// </summary>
         /// <param name="str"></param>
@@ -1554,6 +1581,118 @@ namespace Framework
         public static string PCombine(this string str, string other)
         {
             return Path.Combine(str, other);
+        }
+
+        /// <summary>
+        /// 获取Sin值，角度
+        /// </summary>
+        /// <param name="degree"></param>
+        /// <returns></returns>
+        public static float Sin(float degree)
+        {
+            return Mathf.Sin(degree * Mathf.Deg2Rad);
+        }
+
+        /// <summary>
+        /// 获取Cos值，角度
+        /// </summary>
+        /// <param name="degree"></param>
+        /// <returns></returns>
+        public static float Cos(float degree)
+        {
+            return Mathf.Cos(degree * Mathf.Deg2Rad);
+        }
+
+        /// <summary>
+        /// 二维向量转三维向量
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector3 ToVector3(this Vector2 v)
+        {
+            return new Vector3(v.x, v.y);
+        }
+
+        /// <summary>
+        /// 放倒坐标，将二维XY平面上的坐标放倒在XZ平面上
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector3 PutDown(this Vector3 v)
+        {
+            v.z = v.y;
+            v.y = 0;
+            return v;
+        }
+        public static Vector3 PutDown(this Vector2 v)
+        {
+            return new Vector3(v.x, 0, v.y);
+        }
+
+        /// <summary>
+        /// 提起坐标，将XZ平面上的坐标提起到XY平面上
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector2 GetUp(this Vector3 v)
+        {
+            return new Vector2(v.x, v.z);
+        }
+
+        /// <summary>
+        /// 返回最接近该数的整数
+        /// </summary>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public static int Round(float f)
+        {
+            var floor = (int)f;
+            if (Mathf.Abs(f - floor) < 0.5f)
+                return floor;
+            return f < 0 ? floor - 1 : floor + 1;
+        }
+
+        /// <summary>
+        /// 判断字符串是否为null或空
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static bool IsNullOrEmpty(this string s)
+        {
+            return string.IsNullOrEmpty(s);
+        }
+
+        /// <summary>
+        /// 尝试从字典中获取值，若没获取到则抛出异常
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="dic"></param>
+        /// <param name="key"></param>
+        /// <param name="error">异常提示</param>
+        /// <returns></returns>
+        public static V TryGetAndAlert<K, V>(this Dictionary<K, V> dic, K key, string error)
+        {
+            if (dic.TryGetValue(key, out var result)) return result;
+
+            throw new Exception(error);
+        }
+
+        /// <summary>
+        /// 尝试从字典中获取值，若没获取到则抛出错误
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <typeparam name="E">异常类型</typeparam>
+        /// <param name="dic"></param>
+        /// <param name="key"></param>
+        /// <param name="error">需要抛出的异常对象</param>
+        /// <returns></returns>
+        public static V TryGetAndAlert<K, V, E>(this Dictionary<K, V> dic, K key, E error) where E : Exception, new()
+        {
+            if (dic.TryGetValue(key, out var result)) return result;
+
+            throw new E();
         }
     }
 }

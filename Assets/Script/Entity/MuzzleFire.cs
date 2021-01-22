@@ -7,38 +7,59 @@ namespace Thunder
     {
         private Light _FireLight;
 
-        private AutoCounter _LifeTimeCounter;
+        private SemiAutoCounter _LifeTimeCounter;
         private SpriteRenderer _SpriteRenderer;
         public float LifeTime;
-        public Sprite[] Sprites = new Sprite[0];
 
-        private void Start()
+        private Sprite[] _Sprites = new Sprite[0];
+
+        private void Awake()
         {
+            PublicEvents.GunFire.AddListener(Fire);
+            PublicEvents.TakeOutWeapon.AddListener(Install);
+            PublicEvents.PutBackWeapon.AddListener(UnInstall);
+
             _SpriteRenderer = GetComponent<SpriteRenderer>();
             _FireLight = transform.Find("fireLight").GetComponent<Light>();
             _FireLight.enabled = false;
-            PublicEvents.GunFire.AddListener(Fire);
-            _LifeTimeCounter = new AutoCounter(this, LifeTime).OnComplete(() =>
+            _LifeTimeCounter = new SemiAutoCounter(LifeTime).OnComplete(() =>
             {
                 _SpriteRenderer.sprite = null;
                 _FireLight.enabled = false;
             });
-            Install();
         }
 
-        private void Install()
+        private void OnDestroy()
         {
-            var gun = (MachineGun) BaseWeapon.Ins;
+            PublicEvents.GunFire.RemoveListener(Fire);
+            PublicEvents.TakeOutWeapon.RemoveListener(Install);
+            PublicEvents.PutBackWeapon.RemoveListener(UnInstall);
+        }
+
+        private void FixedUpdate()
+        {
+            _LifeTimeCounter.FixedUpdate();
+        }
+
+        private void Install(BaseWeapon weapon)
+        {
+            var gun = weapon as MachineGun;
+            if (gun == null) return;
             transform.localPosition = gun.MuzzleFirePos;
-            Sprites = gun.MuzzleFireSprites;
+            _Sprites = gun.MuzzleFireSprites;
+        }
+
+        private void UnInstall(BaseWeapon weapon)
+        {
+            _Sprites = null;
         }
 
         private void Fire()
         {
-            if (Sprites.Length == 0) return;
-            _SpriteRenderer.sprite = Sprites.RandomTake();
-            if (_LifeTimeCounter.Completed)
-                _LifeTimeCounter.Recount();
+            if (_Sprites.Length == 0) return;
+            _LifeTimeCounter.Recount();
+
+            _SpriteRenderer.sprite = _Sprites.RandomTake();
             _FireLight.enabled = true;
         }
     }

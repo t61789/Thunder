@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -9,31 +10,30 @@ namespace Framework
 {
     public class DataBaseSys : IBaseSys
     {
-        public static readonly HashSet<string> AvaliableDataType = new HashSet<string>()
+        public static readonly HashSet<Type> AvailableDataType = new HashSet<Type>()
         {
-            "int",
-            "string",
-            "bool",
-            "float"
+            typeof(int),
+            typeof(string),
+            typeof(bool),
+            typeof(float)
         };
-        private static readonly string _DefaultBundle = Paths.DatabaseBundle.PCombine(Paths.Normal);
         private static readonly Dictionary<AssetId, TableUnit> _Tables = new Dictionary<AssetId, TableUnit>();
 
         /// <summary>
-        ///     谨慎使用，若删除表后再获取会引起大量的重复载入
+        /// 谨慎使用，若删除表后再获取会引起大量的重复载入
         /// </summary>
         public static bool DeleteTable(string tablePath)
         {
-            return _Tables.Remove(AssetId.Parse(tablePath, _DefaultBundle));
+            return _Tables.Remove(AssetId.Parse(tablePath));
         }
 
         /// <summary>
-        ///     删除指定bundle的所有表
+        /// 删除指定bundle的所有表
         /// </summary>
         /// <param name="bundlePath"></param>
         public static void DeleteAllTable(string bundlePath)
         {
-            var id = AssetId.Parse(bundlePath, _DefaultBundle);
+            var id = AssetId.Parse(bundlePath);
             var keys = _Tables.Keys.Where(x => x.Bundle == id.Bundle).ToArray();
 
             foreach (var tableId in keys)
@@ -42,15 +42,15 @@ namespace Framework
 
         public static Table GetTable(string tablePath)
         {
-            var id = AssetId.Parse(tablePath, _DefaultBundle);
+            var id = AssetId.Parse(tablePath);
             for (var i = 0; i < 2; i++)
             {
-                if (_Tables.TryGetValue(id, out var value) && value.UnDeserialized == null) return value.Deserialized;
+                if (_Tables.TryGetValue(id, out var value) && string.IsNullOrEmpty(value.UnDeserialized)) return value.Deserialized;
 
                 if (value.UnDeserialized != null)
                 {
                     value.Deserialized =
-                        new Table(JsonConvert.DeserializeObject<JsonTableReciever>(value.UnDeserialized));
+                        new Table(JsonConvert.DeserializeObject<JsonTableReceiver>(value.UnDeserialized));
                     value.UnDeserialized = null;
                     _Tables[id] = value;
                     return value.Deserialized;
@@ -58,8 +58,8 @@ namespace Framework
 
                 LoadBundle(id);
 
-                Assert.IsTrue(_Tables.TryGetValue(id, out _),
-                    $"未在 {id.Bundle} 内找到名为 {id.Name} 的table");
+                if(!_Tables.TryGetValue(id, out _))
+                    throw new Exception($"未在 {id.Bundle} 内找到名为 {id.Name} 的table");
             }
 
             return default;
@@ -67,7 +67,7 @@ namespace Framework
 
         public static void LoadBundle(string bundlePath)
         {
-            LoadBundle(AssetId.Parse(bundlePath, _DefaultBundle));
+            LoadBundle(AssetId.Parse(bundlePath));
         }
 
         private static void LoadBundle(AssetId id)
@@ -103,7 +103,7 @@ namespace Framework
         }
     }
 
-    public struct JsonTableReciever
+    public struct JsonTableReceiver
     {
         public string[] Fields;
         public object[][] Rows;
@@ -114,7 +114,7 @@ namespace Framework
         private readonly Dictionary<string, int> _FieldsDic;
         private readonly Row[] _Rows;
 
-        public Table(JsonTableReciever json)
+        public Table(JsonTableReceiver json)
         {
             Fields = json.Fields ?? new string[0];
             _FieldsDic = new Dictionary<string, int>();

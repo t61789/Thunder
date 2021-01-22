@@ -22,7 +22,7 @@ namespace Thunder
 
             if (!_TakeAmmoCounter.Completed || _Used) return;
             var ammoId = Player.WeaponBelt.CurrentWeapon.AmmoGroup.AmmoId;
-            Player.Package.AddOneGroupItem(ammoId, out _);
+            Player.Package.PutItem((ammoId, ItemSys.GetInfo(ammoId).MaxStackNum), false);
             _Used = true;
         }
 

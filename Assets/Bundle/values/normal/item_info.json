@@ -1,0 +1,10 @@
+{
+    "Id":-1,
+    "Name":"undefined",
+    "CanPackage":true,
+    "MaxStackNum":1,
+    "IsWeapon":false,
+    "WeaponPrefabPath":"",
+    "PickprefabPath":"",
+    "PackageCellTexturePath":""
+}

@@ -50,6 +50,8 @@ namespace Thunder.Game.FlyingSaucer
 
         private void Start()
         {
+            // todo 
+            return;
             string message = (
                 from row in DataBaseSys.GetTable("message")
                 where row["Key"] == "flyingSaucerWelcome"

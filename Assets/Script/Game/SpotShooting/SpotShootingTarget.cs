@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Thunder.Game.SpotShooting
 {
-    public class SpotShootingTarget : BaseEntity, IShootable
+    public class SpotShootingTarget : BaseEntity, IHitAble
     {
         private Collider _Collider;
         private AutoCounter _LifeCounter;
@@ -19,7 +19,7 @@ namespace Thunder.Game.SpotShooting
         public float RiseTime = 0.7f;
         public float UnRiseAngle = -90;
 
-        public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
+        public void GetHit(Vector3 hitPos, Vector3 hitDir, float damage)
         {
             PublicEvents.SpotShootingTargetHit?.Invoke(this);
         }

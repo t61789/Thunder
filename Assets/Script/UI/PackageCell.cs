@@ -36,10 +36,10 @@ namespace Thunder
         public virtual void Init(Package package,int packageIndex,RectTransform floatUiContainer)
         {
             _FloatContainer = floatUiContainer;
-            var group = package.GetCell(packageIndex);
+            var group = package.GetItemInfoFrom(packageIndex);
             _PackageIndex = packageIndex;
             _Package = package;
-            _RawImage.texture = BundleSys.GetAsset<Texture>(ItemSys.Ins[group.Id].PackageCellTexturePath);
+            _RawImage.texture = BundleSys.GetAsset<Texture>(ItemSys.GetInfo(group.Id).PackageCellTexturePath);
             _CountText.text = ShowCount ? group.Count.ToString():string.Empty;
             PackageIndex = packageIndex;
             PackageIndex = -1;

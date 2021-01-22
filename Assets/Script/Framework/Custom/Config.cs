@@ -1,11 +1,12 @@
 ﻿using Thunder;
 using Tool;
+// ReSharper disable InconsistentNaming
 
 namespace Framework
 {
     public static class Config
     {
-        public static string UiFramworkBaseObjName = "Canvas";
+        public static string UiFrameworkBaseObjName = "Canvas";
         public static string ConfigXmlPath = "E:\\UnityProjects\\Thunder\\Assets\\Script\\Framework\\Custom\\Config.xml";
 
         public const string DefaultCamp = "Unknown";
@@ -14,11 +15,7 @@ namespace Framework
         public const int CampNeutralValue = 30;
         public const int AssetIdCacheSize = 20;
         public const int PackageItemInfoBuffer = 10;
-
-        public const string MainWeaponType = "mainWeapon";
-        public const string SecondaryWeaponType = "secondaryWeapon";
-        public const string MeleeWeaponType = "meleeWeapon";
-        public const string ThrowingWeaponType = "throwingWeapon";
+        
         public const string PreWeaponKeyName = "SwitchPreWeapon";
         public const string DropWeaponKeyName = "DropWeapon";
 
@@ -27,32 +24,27 @@ namespace Framework
         public const string SwitchFireModeKeyName = "SwitchFireMode";
         public const string InteractiveKeyName = "Interactive";
 
-        public const string CrossbowArrowAssetPath = "crossbowArrow";
-        public const string UnarmedAssetPath = "unarmed";
-        public const string MeleeAttackAreaAssetPath = "meleeAttackArea";
-        public const string PackageCellPrefabAssetPath = "packageCell";
+        public const string UnarmedAssetPath = "prefabs/weapon/unarmed";
+        public const string DefaultPickupableItemAssetPath = "prefabs/normal/pickupableItem";
 
-        public const string ItemInfoTableName = "item_info";
+        public const string BuildingInfoValueAssetPath = "values/normal/building_info";
+        public const string ItemInfoValueName = "values/normal/item_info";
+
+        public const string ItemInfoTableName = "database/normal/item_info";
+        public const string WeaponInfoTableName = "database/normal/weapon_info";
 
         public const int UnarmedId = 1;
 
-        public static string[] WeaponTypes =
-        {
-            MainWeaponType,
-            SecondaryWeaponType,
-            MeleeWeaponType,
-            ThrowingWeaponType
-        };
+        public const string StableLayerName = "Stable";
 
-        // 切换按键命名规则：Switch+首字母大写的weapontype，在尾部添加初始为0的数字
-        // 重复则+1
-        public static string[] WeaponBeltCellTypes =
+        public const float DefaultDropForce = 10;
+
+        public static WeaponType[] WeaponBeltTypes =
         {
-            MainWeaponType,
-            MainWeaponType,
-            SecondaryWeaponType,
-            MeleeWeaponType,
-            ThrowingWeaponType
+            WeaponType.MainWeapon,
+            WeaponType.SecondaryWeapon,
+            WeaponType.MeleeWeapon,
+            WeaponType.ThrowingWeapon,
         };
 
         /// <summary>
@@ -62,7 +54,7 @@ namespace Framework
         public static IBaseSys[] Init()
         {
             // 在这里进行初始化
-            RandomRewardGenerator.ResolveDic(DataBaseSys.GetTable("reward"));
+            RandomRewardGenerator.ResolveDic(DataBaseSys.GetTable("database/normal/reward"));
 
             return new IBaseSys[]
             {
@@ -71,5 +63,16 @@ namespace Framework
                 new CampSys(), 
             };
         }
+    }
+
+
+    // 切换按键命名规则：Switch+首字母大写的weapontype，在尾部添加初始为0的数字
+    // 重复则+1
+    public enum WeaponType
+    {
+        MainWeapon,
+        SecondaryWeapon,
+        MeleeWeapon,
+        ThrowingWeapon,
     }
 }

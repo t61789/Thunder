@@ -22,7 +22,9 @@ namespace Thunder.UI
 
         public void SetPackage(Package package)
         {
-            _Package.OnItemChanged -= RefreshCell;
+            // todo 背包提交器
+
+            //_Package.OnItemChanged -= RefreshCell;
             _Package = package;
             for (int i = 0; i < _PackageCells.Length; i++)
             {
@@ -30,22 +32,22 @@ namespace Thunder.UI
                 ObjectPool.Put(_PackageCells[i]);
                 _PackageCells[i] = null;
             }
-            RefreshCell(Tools.GetIndexArr(0, _Package.Size));
-            _Package.OnItemChanged += RefreshCell;
+            //RefreshCell(Tools.GetIndexArr(0, _Package.Capacity));
+            //_Package.OnItemChanged += RefreshCell;
         }
 
         private void RefreshCell(IEnumerable<int> indexs)
         {
             foreach (var index in indexs)
             {
-                var item = _Package.GetCell(index);
+                var item = _Package.GetItemInfoFrom(index);
                 if (_PackageCells[index] != null)
                 {
                     ObjectPool.Put(_PackageCells[index]);
                     _PackageCells = null;
                 }
                 if (item.Id == 0) continue;
-                var cell = ObjectPool.Get<PackageCell>(Config.PackageCellPrefabAssetPath);
+                PackageCell cell = null;//ObjectPool.Get<PackageCell>(Config.PackageCellPrefabAssetPath);
                 cell.Init(_Package,index, _FloatContainer);
                 cell.RectTrans.SetParent(_CellContainers[index]);
                 _PackageCells[index] = cell;

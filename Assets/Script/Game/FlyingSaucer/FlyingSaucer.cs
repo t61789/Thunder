@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Thunder.Game.FlyingSaucer
 {
-    public class FlyingSaucer : BaseEntity, IShootable, IObjectPool
+    public class FlyingSaucer : BaseEntity, IHitAble, IObjectPool
     {
         protected float _LifeTimeCount;
 
@@ -27,7 +27,7 @@ namespace Thunder.Game.FlyingSaucer
 
         public AssetId AssetId { get; set; }
 
-        public void GetShoot(Vector3 hitPos, Vector3 hitDir, float damage)
+        public void GetHit(Vector3 hitPos, Vector3 hitDir, float damage)
         {
             _Rb.AddForceAtPosition(hitDir.normalized * damage * ForceScale, hitPos, ForceMode.Impulse);
             ObjectPool.Get<SelfDestroyPartical>("hitParticle")

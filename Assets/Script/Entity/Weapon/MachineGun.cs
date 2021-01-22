@@ -7,54 +7,44 @@ using UnityEngine.Assertions;
 
 namespace Thunder
 {
-    [RequireComponent(typeof(MachineGunFireControl))]
-    [RequireComponent(typeof(RecoliController))]
+    [RequireComponent(typeof(RecoilController))]
     [RequireComponent(typeof(AimScopeController))]
     public class MachineGun : BaseWeapon
     {
-        public CtrKeyRequest FireKey;
-        public CtrKeyRequest ReloadKey;
-        public CtrKeyRequest AimKey;
-        public CtrKeyRequest SwitchFireKey;
+        public CtrlKey FireKey;
+        public CtrlKey ReloadKey;
+        public CtrlKey AimKey;
+        public CtrlKey SwitchFireKey;
 
-        public float AimScopeFov = 20;
-        public float CameraRecoliDampTime = 0.1f;
+        public float CameraRecoilDampTime = 0.1f;
         public float Damage = 20;
         public string DrawAnimationName;
-        public bool ScopeAllowed = false;
         public Vector3 MuzzleFirePos;
         public Sprite[] MuzzleFireSprites;
+
+        [SerializeField] private RecoilController _Recoil;
+        [SerializeField] private AimScopeController _AimScope;
 
         private readonly List<Vector3> _Spreads = new List<Vector3>();
         private readonly StickyInputDic _StickyInputDic = new StickyInputDic();
         private bool _AimScopeBeforeReload;
         private bool _Reloading;
         private Animator _Animator;
-        private RecoliController _Recoli;
-        private AimScopeController _AimScope;
 
         private const string RELOAD = "Reload";
+        private const string FIRE = "Fire";
 
-        public MachineGunFireControl MachineGunFireControl { private set; get; }
-        public override float OverHeatFactor => MachineGunFireControl.OverHeatFactor;
+        public override float OverHeatFactor => 0;
 
-        protected override void Awake()
+        public override void Init(Transform weaponContainer, string addData)
         {
-            base.Awake();
-
+            base.Init(weaponContainer, addData);
             _Animator = GetComponent<Animator>();
-            player = Trans.parent.parent.parent.GetComponent<Player>();
-            if(player==null)
-                throw new Exception($"枪械 {name} 安装位置不正确");
-
             _StickyInputDic.AddBool(RELOAD, 0.7f);
-            
-            _AimScope = GetComponent<AimScopeController>();
+            _Recoil.Init();
             _AimScope.Init(player.FpsCamera.SensitiveScale);
-            MachineGunFireControl = GetComponent<MachineGunFireControl>();
-            _Recoli = GetComponent<RecoliController>();
 
-            MachineGunFireControl.FireCheck = FireCheck;
+            _Recoil.OnFixedRecoil += InvokeOnFixedRecoil;
         }
 
         private void Update()
@@ -64,8 +54,8 @@ namespace Thunder
 
             if (ControlSys.RequireKey(AimKey).Down)
                 _AimScope.Switch();
-            if (ControlSys.RequireKey(SwitchFireKey).Down)
-                MachineGunFireControl.LoopBurstMode();
+            if (ControlSys.RequireKey(SwitchFireKey).Down) { }
+            //MachineGunFireControl.LoopBurstMode();
 
             _Animator.SetBool(RELOAD, _StickyInputDic.GetBool(RELOAD));
         }
@@ -73,12 +63,19 @@ namespace Thunder
         private void FixedUpdate()
         {
             _StickyInputDic.FixedUpdate();
+            _Recoil.FixedUpdate();
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            _AimScope.OnDestroy();
+            _Recoil.OnFixedRecoil -= InvokeOnFixedRecoil;
         }
 
         public override void Reload()
         {
             AmmoGroup.Reload();
-            AmmoGroup.InvokeOnAmmoChanged();
 
             if (_AimScopeBeforeReload)
                 _AimScope.Switch();
@@ -93,20 +90,25 @@ namespace Thunder
 
         public override void PutBack()
         {
-            _Recoli.Resets();
-            MachineGunFireControl.Resets();
+            _Recoil.Resets();
             _AimScope.Resets();
             _AimScopeBeforeReload = _Reloading = false;
         }
 
-        public override ItemAddData Drop()
+        public override string CompressItem()
         {
-            return new ItemAddData(AmmoGroup.Magazine);
+            return AmmoGroup.Magazine.ToString();
         }
 
-        public override void ReadAdditionalData(ItemAddData add)
+        public override void DecompressItem(string add)
         {
-            add.TryGet(out AmmoGroup.Magazine);
+            if (string.IsNullOrEmpty(add)) return;
+            AmmoGroup.Magazine = int.Parse(add);
+        }
+
+        public override Action<HitInfo> GetBulletHitHook()
+        {
+            return BulletHit;
         }
 
         public override void Fire()
@@ -114,36 +116,31 @@ namespace Thunder
             var autoReload = Fire(ControlInfo.Open);
             Reload(ControlInfo.Open, autoReload);
         }
-        
+
+        public override Vector2 GetFloatRecoil()
+        {
+            return _Recoil.CurFloatRecoil;
+        }
+
         private bool Fire(ControlInfo fireInfo)
         {
-            var autoReload = false;
-            var shootInfo = MachineGunFireControl.TryShoot(fireInfo);
-            if (shootInfo.Shooted)
+            using (FireInfo shootInfo = ShootTrigger(Trans, fireInfo.Down, fireInfo.Stay))
             {
-                if (shootInfo.HitSomething)
+                _Animator.SetBool(FIRE, shootInfo.HasShot);
+
+                if (shootInfo.HasShot)
                 {
-                    var hit = shootInfo.HitInfo;
-                    _Spreads.Add(hit.point);
-                    if (_Spreads.Count > 50)
-                        _Spreads.RemoveAt(0);
-                    BulletHoleManager.Create(hit.point, hit.normal);
-                    hit.transform.GetComponent<IShootable>()?.GetShoot(hit.point, shootInfo.ShootDir, Damage);
+                    PublicEvents.GunFire?.Invoke();
+                    _Recoil.Next();
                 }
 
-                _Recoli.Next();
-
-                AmmoGroup.Magazine--;
-                AmmoGroup.InvokeOnAmmoChanged();
-
-                PublicEvents.GunFire?.Invoke();
+                return shootInfo.FireCheckPass &&
+                       shootInfo.BurstRequirePass &&
+                       shootInfo.IntervalPass &&
+                       shootInfo.SafetyPass &&
+                       !shootInfo.AmmoPass &&
+                       fireInfo.Down;
             }
-            else if (!shootInfo.FireCheckPass && fireInfo.Down)
-            {
-                autoReload = true;
-            }
-
-            return autoReload;
         }
 
         private void Reload(ControlInfo reloadInfo,bool autoReload)
@@ -162,9 +159,12 @@ namespace Thunder
             }
         }
 
-        private bool FireCheck()
+        private void BulletHit(HitInfo hitInfo)
         {
-            return !AmmoGroup.MagazineEmpty();
+            hitInfo.Collider.GetComponent<IHitAble>().GetHit(
+                hitInfo.HitPos,
+                hitInfo.HitDir,
+                Damage);
         }
 
         private void OnDrawGizmos()
@@ -174,42 +174,45 @@ namespace Thunder
         }
     }
 
-    public class RecoliController : MonoBehaviour
+    [Serializable]
+    public class RecoilController
     {
-        public Vector2 RecoliBaseDir = Vector2.up;
-        public float RecoliAngle = 30;
-        public Range RecoliIntensity = (0.1f, 0.2f);
-        public float RecoliForwardTime = 0.1f;
-        public float RecoliBackTime = 0.7f;
+        public Vector2 BaseDir = Vector2.up;
+        public float Angle = 30;
+        public Range Intensity = (0.1f, 0.2f);
+        public float ForwardTime = 0.1f;
+        public float BackTime = 0.7f;
+        [Range(0,1)]
+        public float FixedPercent = 0.2f;
+        public event Action<Vector2> OnFixedRecoil;
 
-        private FpsCamera _Camera;
-        private float _RecoliAngleHalf;
-        private Vector2 _RecoliTarget;
+        private float _RecoilAngleHalf;
+        private Vector2 _RecoilTarget;
         private bool _Back;
-        private SemiAutoCounter _RecoliCounter;
+        private SemiAutoCounter _RecoilCounter;
 
-        public Vector2 CurFloatRecoli
+        public Vector2 CurFloatRecoil
         {
             get
             {
-                var start = _Back ? _RecoliTarget : Vector2.zero;
-                var end = _Back ? Vector2.zero : _RecoliTarget;
-                return Vector2.Lerp(start, end, _RecoliCounter.Interpolant);
+                var start = _Back ? _RecoilTarget : Vector2.zero;
+                var end = _Back ? Vector2.zero : _RecoilTarget;
+
+                return Vector2.Lerp(start, end, _RecoilCounter.Interpolant);
             }
         }
 
-        private void Awake()
+        public void Init()
         {
-            RecoliBaseDir = RecoliBaseDir.normalized;
-            _RecoliAngleHalf = RecoliAngle / 2;
-            _RecoliCounter = new SemiAutoCounter(RecoliForwardTime).OnComplete(SwitchDir);
-            _Camera = GetPlayerCamera();
+            _Back = true;
+            BaseDir = BaseDir.normalized;
+            _RecoilAngleHalf = Angle / 2;
+            _RecoilCounter = new SemiAutoCounter(ForwardTime).OnComplete(SwitchDir);
         }
 
-        private void FixedUpdate()
+        public void FixedUpdate()
         {
-            _RecoliCounter.FixedUpdate();
-            _Camera.ViewRotAddition(CurFloatRecoli);
+            _RecoilCounter.FixedUpdate();
         }
 
         /// <summary>
@@ -218,45 +221,38 @@ namespace Thunder
         /// <returns>当前浮动后坐力位置</returns>
         public void Next()
         {
-            _Camera.ViewRotTargetAddition(CurFloatRecoli);
+            OnFixedRecoil?.Invoke(CurFloatRecoil * FixedPercent);
 
-            float angle = Tools.RandomFloat(-_RecoliAngleHalf, _RecoliAngleHalf);
-            _RecoliTarget = Quaternion.AngleAxis(angle, Vector3.forward) *
-                   RecoliBaseDir *
-                   Tools.RandomFloat(RecoliIntensity.Min, RecoliIntensity.Max);
+            float angle = Tools.RandomFloat(-_RecoilAngleHalf, _RecoilAngleHalf);
+            _RecoilTarget = Quaternion.AngleAxis(angle, Vector3.forward) *
+                   BaseDir *
+                   Tools.RandomFloat(Intensity.Min, Intensity.Max);
             _Back = false;
-            _RecoliCounter.Recount(RecoliForwardTime);
+            _RecoilCounter.Recount(ForwardTime);
+
+            //OnFixedRecoil?.Invoke(_RecoilTarget*FixedPercent);
         }
 
         public void Resets()
         {
             _Back = false;
-            _RecoliCounter.Complete(false);
-            _RecoliTarget = Vector2.zero;
+            _RecoilCounter.Complete(false);
+            _RecoilTarget = Vector2.zero;
         }
 
         private void SwitchDir()
         {
-            if (!_Back)
-            {
-                _Back = true;
-                _RecoliCounter.Recount(RecoliBackTime);
-            }
-            else
-            {
-                _Back = false;
-            }
-        }
+            if (_Back) return;
 
-        private static FpsCamera GetPlayerCamera()
-        {
-            return Player.Ins.FpsCamera;
+            _Back = true;
+            _RecoilCounter.Recount(BackTime);
         }
     }
-
-    public class AimScopeController:MonoBehaviour
+    
+    [Serializable]
+    public class AimScopeController
     {
-        public float EnableFOV;
+        public float EnableFOV = 20;
         public bool Allowed = true;
 
         private BuffData _PlayerSensitive;
@@ -266,21 +262,17 @@ namespace Thunder
 
         private const string AIM_POINT_UI_NAME = "aimPoint";
 
-        private void Awake()
-        {
-            _BaseFOV = _MainCamera.fieldOfView;
-            _AimScopeSensitiveScale = new BuffData(EnableFOV / _BaseFOV);
-            _MainCamera = Camera.main;
-        }
-
-        private void OnDestroy()
-        {
-            _AimScopeSensitiveScale.Destroy();
-        }
-
         public void Init(BuffData playerSensitive)
         {
+            _MainCamera = Camera.main;
+            _BaseFOV = _MainCamera.fieldOfView;
+            _AimScopeSensitiveScale = new BuffData(EnableFOV / _BaseFOV);
             _PlayerSensitive = playerSensitive;
+        }
+
+        public void OnDestroy()
+        {
+            _AimScopeSensitiveScale.Destroy();
         }
 
         public bool Enable { private set; get; }

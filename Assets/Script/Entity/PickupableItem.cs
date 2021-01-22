@@ -4,68 +4,66 @@ using UnityEngine;
 
 namespace Thunder
 {
-    public class PickupableItem : BaseEntity, IObjectPool, IInteractive,IItem
+    public class PickupableItem : BaseEntity, IObjectPool, IInteractive
     {
         public PickupItemAction Action = PickupItemAction.All;
-        public float DropProtectedTime = 2;
-        public int Count=1;
+        public float DropProtectedTime = 1.5f;
+        public ItemGroup ItemGroup;
 
-        protected bool CanPickup;
+        private Transform _Model;
         private Rigidbody _Rb;
-        private AutoCounter _DropCounter;
-
-        public void Interactive(ControlInfo info)
-        {
-            if (!info.Down || (Action & PickupItemAction.Directed) == 0) return;
-                Pickup();
-        }
-
-        public AssetId AssetId { get; set; }
-
-        public virtual void OpReset()
-        {
-        }
-
-        public virtual void OpPut()
-        {
-        }
-
-        public virtual void OpDestroy()
-        {
-        }
-
-        public ItemId ItemId { get; set; }
+        private SimpleCounter _DropCounter;
 
         protected override void Awake()
         {
             base.Awake();
-            _DropCounter = new AutoCounter(this, DropProtectedTime).OnComplete(() => CanPickup = true).Complete(false);
+            _DropCounter = new SimpleCounter(DropProtectedTime);
             _Rb = GetComponent<Rigidbody>();
         }
 
-        private void OnTriggerEnter(Collider collider)
+        private void FixedUpdate()
         {
-            var player = collider.GetComponent<Player>();
-            if (player == null || !CanPickup || (Action & PickupItemAction.UnDirected) == 0) return;
-            Pickup();
+            CheckPlayer();
         }
 
-        public void Launch(Vector3 pos, Quaternion rot, Vector3 force,int count)
+        private void CheckPlayer()
+        {
+            if (!_DropCounter.Completed || 
+                Player.Ins==null ||
+                !Action.HasFlag(PickupItemAction.UnDirected)) return;
+            
+            if((Trans.position - Player.Ins.Trans.position).sqrMagnitude <= Player.Ins.PickupRange* Player.Ins.PickupRange)
+                Pickup();
+        }
+
+        public void Launch(Vector3 pos, Quaternion rot, Vector3 force,ItemGroup group)
         {
             _DropCounter.Recount();
-            CanPickup = false;
             Trans.position = pos;
             Trans.rotation = rot;
+            ItemGroup = group;
             _Rb.AddForce(force, ForceMode.Impulse);
-            Count = count;
         }
 
         protected virtual void Pickup()
         {
-            PublicEvents.PickupItem?.Invoke((ItemId, Count));
-            CanPickup = false;
+            Player.Ins.ReceiveItem(ItemGroup);
             ObjectPool.Put(this);
+            PublicEvents.PickupItem?.Invoke(ItemGroup);
         }
 
+        public void Interactive(ControlInfo info)
+        {
+            if (!info.Down || (Action & PickupItemAction.Directed) == 0) return;
+            Pickup();
+        }
+
+        public AssetId AssetId { get; set; }
+
+        public virtual void OpReset() { }
+
+        public virtual void OpPut() { }
+
+        public virtual void OpDestroy() { }
     }
 }

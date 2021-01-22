@@ -18,7 +18,7 @@ namespace Thunder
         {
             Ins = this;
 
-            foreach (var row in DataBaseSys.GetTable("camp"))
+            foreach (var row in DataBaseSys.GetTable("database/normal/camp"))
             {
                 var campName = (string) row["camp_name"];
                 if (!_KeyMap.ContainsKey(campName))

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 using UnityEngine;
@@ -69,9 +70,9 @@ namespace Framework
         /// 获取指定key对应的输入
         /// </summary>
         /// <returns></returns>
-        public static ControlInfo RequireKey(CtrKeyRequest ctrKeyRequest)
+        public static ControlInfo RequireKey(CtrlKey ctrlKey)
         {
-            return RequireKey(ctrKeyRequest.KeyName, ctrKeyRequest.ShieldValue);
+            return RequireKey(ctrlKey.KeyName, ctrlKey.ShieldValue);
         }
 
         /// <summary>
@@ -202,38 +203,53 @@ namespace Framework
             Click = false;
             DoubleClick = false;
         }
+
+        public void HandleRawAxis()
+        {
+            Axis.z = Axis.y;
+            Axis.y = 0;
+        }
     }
 
     public class ShieldValue
     {
         private float _Value;
-        private readonly HashSet<string> _Regist = new HashSet<string>();
+        private readonly Dictionary<string,float> _Register 
+            = new Dictionary<string, float>();
 
-        public void Request(string key)
+        public void Request(string shieldName,float addValue)
         {
-            _Regist.Add(key);
-            _Value++;
+            if (addValue <= 0)
+                throw new Exception($"遮蔽值设置不正确 {addValue}");
+            _Register.Add(shieldName,addValue);
+            _Value += addValue;
         }
 
-        public void Release(string key)
+        public void Release(string shieldName)
         {
-            _Regist.Remove(key);
-            _Value--;
+            var value = _Register[shieldName];
+            _Register.Remove(shieldName);
+            _Value -= value;
         }
 
         public static implicit operator float(ShieldValue s)
         {
             return s._Value;
         }
+
+        public override string ToString()
+        {
+            return _Value.ToString(CultureInfo.CurrentCulture);
+        }
     }
 
     [Serializable]
-    public struct CtrKeyRequest
+    public struct CtrlKey
     {
         public string KeyName;
         public float ShieldValue;
 
-        public CtrKeyRequest(string keyName, float shieldValue)
+        public CtrlKey(string keyName, float shieldValue)
         {
             KeyName = keyName;
             ShieldValue = shieldValue;

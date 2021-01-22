@@ -33,10 +33,10 @@ public class DelegateFactory
 		dict.Add(typeof(UnityEngine.AudioClip.PCMReaderCallback), factory.UnityEngine_AudioClip_PCMReaderCallback);
 		dict.Add(typeof(UnityEngine.AudioClip.PCMSetPositionCallback), factory.UnityEngine_AudioClip_PCMSetPositionCallback);
 		dict.Add(typeof(System.Action<UnityEngine.AsyncOperation>), factory.System_Action_UnityEngine_AsyncOperation);
-		dict.Add(typeof(System.Action<Framework.BaseUi>), factory.System_Action_Framework_BaseUI);
-		dict.Add(typeof(System.Predicate<System.Action<Framework.BaseUi>>), factory.System_Predicate_System_Action_Framework_BaseUI);
-		dict.Add(typeof(System.Action<System.Action<Framework.BaseUi>>), factory.System_Action_System_Action_Framework_BaseUI);
-		dict.Add(typeof(System.Comparison<System.Action<Framework.BaseUi>>), factory.System_Comparison_System_Action_Framework_BaseUI);
+		dict.Add(typeof(System.Action<Framework.BaseUi>), factory.System_Action_Framework_BaseUi);
+		dict.Add(typeof(System.Predicate<System.Action<Framework.BaseUi>>), factory.System_Predicate_System_Action_Framework_BaseUi);
+		dict.Add(typeof(System.Action<System.Action<Framework.BaseUi>>), factory.System_Action_System_Action_Framework_BaseUi);
+		dict.Add(typeof(System.Comparison<System.Action<Framework.BaseUi>>), factory.System_Comparison_System_Action_Framework_BaseUi);
 
 		DelegateTraits<System.Action>.Init(factory.System_Action);
 		DelegateTraits<UnityEngine.Events.UnityAction>.Init(factory.UnityEngine_Events_UnityAction);
@@ -54,10 +54,10 @@ public class DelegateFactory
 		DelegateTraits<UnityEngine.AudioClip.PCMReaderCallback>.Init(factory.UnityEngine_AudioClip_PCMReaderCallback);
 		DelegateTraits<UnityEngine.AudioClip.PCMSetPositionCallback>.Init(factory.UnityEngine_AudioClip_PCMSetPositionCallback);
 		DelegateTraits<System.Action<UnityEngine.AsyncOperation>>.Init(factory.System_Action_UnityEngine_AsyncOperation);
-		DelegateTraits<System.Action<Framework.BaseUi>>.Init(factory.System_Action_Framework_BaseUI);
-		DelegateTraits<System.Predicate<System.Action<Framework.BaseUi>>>.Init(factory.System_Predicate_System_Action_Framework_BaseUI);
-		DelegateTraits<System.Action<System.Action<Framework.BaseUi>>>.Init(factory.System_Action_System_Action_Framework_BaseUI);
-		DelegateTraits<System.Comparison<System.Action<Framework.BaseUi>>>.Init(factory.System_Comparison_System_Action_Framework_BaseUI);
+		DelegateTraits<System.Action<Framework.BaseUi>>.Init(factory.System_Action_Framework_BaseUi);
+		DelegateTraits<System.Predicate<System.Action<Framework.BaseUi>>>.Init(factory.System_Predicate_System_Action_Framework_BaseUi);
+		DelegateTraits<System.Action<System.Action<Framework.BaseUi>>>.Init(factory.System_Action_System_Action_Framework_BaseUi);
+		DelegateTraits<System.Comparison<System.Action<Framework.BaseUi>>>.Init(factory.System_Comparison_System_Action_Framework_BaseUi);
 
 		TypeTraits<System.Action>.Init(factory.Check_System_Action);
 		TypeTraits<UnityEngine.Events.UnityAction>.Init(factory.Check_UnityEngine_Events_UnityAction);
@@ -75,10 +75,10 @@ public class DelegateFactory
 		TypeTraits<UnityEngine.AudioClip.PCMReaderCallback>.Init(factory.Check_UnityEngine_AudioClip_PCMReaderCallback);
 		TypeTraits<UnityEngine.AudioClip.PCMSetPositionCallback>.Init(factory.Check_UnityEngine_AudioClip_PCMSetPositionCallback);
 		TypeTraits<System.Action<UnityEngine.AsyncOperation>>.Init(factory.Check_System_Action_UnityEngine_AsyncOperation);
-		TypeTraits<System.Action<Framework.BaseUi>>.Init(factory.Check_System_Action_Framework_BaseUI);
-		TypeTraits<System.Predicate<System.Action<Framework.BaseUi>>>.Init(factory.Check_System_Predicate_System_Action_Framework_BaseUI);
-		TypeTraits<System.Action<System.Action<Framework.BaseUi>>>.Init(factory.Check_System_Action_System_Action_Framework_BaseUI);
-		TypeTraits<System.Comparison<System.Action<Framework.BaseUi>>>.Init(factory.Check_System_Comparison_System_Action_Framework_BaseUI);
+		TypeTraits<System.Action<Framework.BaseUi>>.Init(factory.Check_System_Action_Framework_BaseUi);
+		TypeTraits<System.Predicate<System.Action<Framework.BaseUi>>>.Init(factory.Check_System_Predicate_System_Action_Framework_BaseUi);
+		TypeTraits<System.Action<System.Action<Framework.BaseUi>>>.Init(factory.Check_System_Action_System_Action_Framework_BaseUi);
+		TypeTraits<System.Comparison<System.Action<Framework.BaseUi>>>.Init(factory.Check_System_Comparison_System_Action_Framework_BaseUi);
 
 		StackTraits<System.Action>.Push = factory.Push_System_Action;
 		StackTraits<UnityEngine.Events.UnityAction>.Push = factory.Push_UnityEngine_Events_UnityAction;
@@ -96,10 +96,10 @@ public class DelegateFactory
 		StackTraits<UnityEngine.AudioClip.PCMReaderCallback>.Push = factory.Push_UnityEngine_AudioClip_PCMReaderCallback;
 		StackTraits<UnityEngine.AudioClip.PCMSetPositionCallback>.Push = factory.Push_UnityEngine_AudioClip_PCMSetPositionCallback;
 		StackTraits<System.Action<UnityEngine.AsyncOperation>>.Push = factory.Push_System_Action_UnityEngine_AsyncOperation;
-		StackTraits<System.Action<Framework.BaseUi>>.Push = factory.Push_System_Action_Framework_BaseUI;
-		StackTraits<System.Predicate<System.Action<Framework.BaseUi>>>.Push = factory.Push_System_Predicate_System_Action_Framework_BaseUI;
-		StackTraits<System.Action<System.Action<Framework.BaseUi>>>.Push = factory.Push_System_Action_System_Action_Framework_BaseUI;
-		StackTraits<System.Comparison<System.Action<Framework.BaseUi>>>.Push = factory.Push_System_Comparison_System_Action_Framework_BaseUI;
+		StackTraits<System.Action<Framework.BaseUi>>.Push = factory.Push_System_Action_Framework_BaseUi;
+		StackTraits<System.Predicate<System.Action<Framework.BaseUi>>>.Push = factory.Push_System_Predicate_System_Action_Framework_BaseUi;
+		StackTraits<System.Action<System.Action<Framework.BaseUi>>>.Push = factory.Push_System_Action_System_Action_Framework_BaseUi;
+		StackTraits<System.Comparison<System.Action<Framework.BaseUi>>>.Push = factory.Push_System_Comparison_System_Action_Framework_BaseUi;
 	}
     
     public static Delegate CreateDelegate(Type t, LuaFunction func = null)
@@ -1135,10 +1135,10 @@ public class DelegateFactory
 		ToLua.Push(L, o);
 	}
 
-	class System_Action_Framework_BaseUI_Event : LuaDelegate
+	class System_Action_Framework_BaseUi_Event : LuaDelegate
 	{
-		public System_Action_Framework_BaseUI_Event(LuaFunction func) : base(func) { }
-		public System_Action_Framework_BaseUI_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+		public System_Action_Framework_BaseUi_Event(LuaFunction func) : base(func) { }
+		public System_Action_Framework_BaseUi_Event(LuaFunction func, LuaTable self) : base(func, self) { }
 
 		public void Call(Framework.BaseUi param0)
 		{
@@ -1158,7 +1158,7 @@ public class DelegateFactory
 		}
 	}
 
-	public System.Action<Framework.BaseUi> System_Action_Framework_BaseUI(LuaFunction func, LuaTable self, bool flag)
+	public System.Action<Framework.BaseUi> System_Action_Framework_BaseUi(LuaFunction func, LuaTable self, bool flag)
 	{
 		if (func == null)
 		{
@@ -1168,34 +1168,34 @@ public class DelegateFactory
 
 		if(!flag)
 		{
-			System_Action_Framework_BaseUI_Event target = new System_Action_Framework_BaseUI_Event(func);
+			System_Action_Framework_BaseUi_Event target = new System_Action_Framework_BaseUi_Event(func);
 			System.Action<Framework.BaseUi> d = target.Call;
 			target.method = d.Method;
 			return d;
 		}
 		else
 		{
-			System_Action_Framework_BaseUI_Event target = new System_Action_Framework_BaseUI_Event(func, self);
+			System_Action_Framework_BaseUi_Event target = new System_Action_Framework_BaseUi_Event(func, self);
 			System.Action<Framework.BaseUi> d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}
 	}
 
-	bool Check_System_Action_Framework_BaseUI(IntPtr L, int pos)
+	bool Check_System_Action_Framework_BaseUi(IntPtr L, int pos)
 	{
 		return TypeChecker.CheckDelegateType(typeof(System.Action<Framework.BaseUi>), L, pos);
 	}
 
-	void Push_System_Action_Framework_BaseUI(IntPtr L, System.Action<Framework.BaseUi> o)
+	void Push_System_Action_Framework_BaseUi(IntPtr L, System.Action<Framework.BaseUi> o)
 	{
 		ToLua.Push(L, o);
 	}
 
-	class System_Predicate_System_Action_Framework_BaseUI_Event : LuaDelegate
+	class System_Predicate_System_Action_Framework_BaseUi_Event : LuaDelegate
 	{
-		public System_Predicate_System_Action_Framework_BaseUI_Event(LuaFunction func) : base(func) { }
-		public System_Predicate_System_Action_Framework_BaseUI_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+		public System_Predicate_System_Action_Framework_BaseUi_Event(LuaFunction func) : base(func) { }
+		public System_Predicate_System_Action_Framework_BaseUi_Event(LuaFunction func, LuaTable self) : base(func, self) { }
 
 		public bool Call(System.Action<Framework.BaseUi> param0)
 		{
@@ -1219,7 +1219,7 @@ public class DelegateFactory
 		}
 	}
 
-	public System.Predicate<System.Action<Framework.BaseUi>> System_Predicate_System_Action_Framework_BaseUI(LuaFunction func, LuaTable self, bool flag)
+	public System.Predicate<System.Action<Framework.BaseUi>> System_Predicate_System_Action_Framework_BaseUi(LuaFunction func, LuaTable self, bool flag)
 	{
 		if (func == null)
 		{
@@ -1229,34 +1229,34 @@ public class DelegateFactory
 
 		if(!flag)
 		{
-			System_Predicate_System_Action_Framework_BaseUI_Event target = new System_Predicate_System_Action_Framework_BaseUI_Event(func);
+			System_Predicate_System_Action_Framework_BaseUi_Event target = new System_Predicate_System_Action_Framework_BaseUi_Event(func);
 			System.Predicate<System.Action<Framework.BaseUi>> d = target.Call;
 			target.method = d.Method;
 			return d;
 		}
 		else
 		{
-			System_Predicate_System_Action_Framework_BaseUI_Event target = new System_Predicate_System_Action_Framework_BaseUI_Event(func, self);
+			System_Predicate_System_Action_Framework_BaseUi_Event target = new System_Predicate_System_Action_Framework_BaseUi_Event(func, self);
 			System.Predicate<System.Action<Framework.BaseUi>> d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}
 	}
 
-	bool Check_System_Predicate_System_Action_Framework_BaseUI(IntPtr L, int pos)
+	bool Check_System_Predicate_System_Action_Framework_BaseUi(IntPtr L, int pos)
 	{
 		return TypeChecker.CheckDelegateType(typeof(System.Predicate<System.Action<Framework.BaseUi>>), L, pos);
 	}
 
-	void Push_System_Predicate_System_Action_Framework_BaseUI(IntPtr L, System.Predicate<System.Action<Framework.BaseUi>> o)
+	void Push_System_Predicate_System_Action_Framework_BaseUi(IntPtr L, System.Predicate<System.Action<Framework.BaseUi>> o)
 	{
 		ToLua.Push(L, o);
 	}
 
-	class System_Action_System_Action_Framework_BaseUI_Event : LuaDelegate
+	class System_Action_System_Action_Framework_BaseUi_Event : LuaDelegate
 	{
-		public System_Action_System_Action_Framework_BaseUI_Event(LuaFunction func) : base(func) { }
-		public System_Action_System_Action_Framework_BaseUI_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+		public System_Action_System_Action_Framework_BaseUi_Event(LuaFunction func) : base(func) { }
+		public System_Action_System_Action_Framework_BaseUi_Event(LuaFunction func, LuaTable self) : base(func, self) { }
 
 		public void Call(System.Action<Framework.BaseUi> param0)
 		{
@@ -1276,7 +1276,7 @@ public class DelegateFactory
 		}
 	}
 
-	public System.Action<System.Action<Framework.BaseUi>> System_Action_System_Action_Framework_BaseUI(LuaFunction func, LuaTable self, bool flag)
+	public System.Action<System.Action<Framework.BaseUi>> System_Action_System_Action_Framework_BaseUi(LuaFunction func, LuaTable self, bool flag)
 	{
 		if (func == null)
 		{
@@ -1286,34 +1286,34 @@ public class DelegateFactory
 
 		if(!flag)
 		{
-			System_Action_System_Action_Framework_BaseUI_Event target = new System_Action_System_Action_Framework_BaseUI_Event(func);
+			System_Action_System_Action_Framework_BaseUi_Event target = new System_Action_System_Action_Framework_BaseUi_Event(func);
 			System.Action<System.Action<Framework.BaseUi>> d = target.Call;
 			target.method = d.Method;
 			return d;
 		}
 		else
 		{
-			System_Action_System_Action_Framework_BaseUI_Event target = new System_Action_System_Action_Framework_BaseUI_Event(func, self);
+			System_Action_System_Action_Framework_BaseUi_Event target = new System_Action_System_Action_Framework_BaseUi_Event(func, self);
 			System.Action<System.Action<Framework.BaseUi>> d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}
 	}
 
-	bool Check_System_Action_System_Action_Framework_BaseUI(IntPtr L, int pos)
+	bool Check_System_Action_System_Action_Framework_BaseUi(IntPtr L, int pos)
 	{
 		return TypeChecker.CheckDelegateType(typeof(System.Action<System.Action<Framework.BaseUi>>), L, pos);
 	}
 
-	void Push_System_Action_System_Action_Framework_BaseUI(IntPtr L, System.Action<System.Action<Framework.BaseUi>> o)
+	void Push_System_Action_System_Action_Framework_BaseUi(IntPtr L, System.Action<System.Action<Framework.BaseUi>> o)
 	{
 		ToLua.Push(L, o);
 	}
 
-	class System_Comparison_System_Action_Framework_BaseUI_Event : LuaDelegate
+	class System_Comparison_System_Action_Framework_BaseUi_Event : LuaDelegate
 	{
-		public System_Comparison_System_Action_Framework_BaseUI_Event(LuaFunction func) : base(func) { }
-		public System_Comparison_System_Action_Framework_BaseUI_Event(LuaFunction func, LuaTable self) : base(func, self) { }
+		public System_Comparison_System_Action_Framework_BaseUi_Event(LuaFunction func) : base(func) { }
+		public System_Comparison_System_Action_Framework_BaseUi_Event(LuaFunction func, LuaTable self) : base(func, self) { }
 
 		public int Call(System.Action<Framework.BaseUi> param0, System.Action<Framework.BaseUi> param1)
 		{
@@ -1339,7 +1339,7 @@ public class DelegateFactory
 		}
 	}
 
-	public System.Comparison<System.Action<Framework.BaseUi>> System_Comparison_System_Action_Framework_BaseUI(LuaFunction func, LuaTable self, bool flag)
+	public System.Comparison<System.Action<Framework.BaseUi>> System_Comparison_System_Action_Framework_BaseUi(LuaFunction func, LuaTable self, bool flag)
 	{
 		if (func == null)
 		{
@@ -1349,26 +1349,26 @@ public class DelegateFactory
 
 		if(!flag)
 		{
-			System_Comparison_System_Action_Framework_BaseUI_Event target = new System_Comparison_System_Action_Framework_BaseUI_Event(func);
+			System_Comparison_System_Action_Framework_BaseUi_Event target = new System_Comparison_System_Action_Framework_BaseUi_Event(func);
 			System.Comparison<System.Action<Framework.BaseUi>> d = target.Call;
 			target.method = d.Method;
 			return d;
 		}
 		else
 		{
-			System_Comparison_System_Action_Framework_BaseUI_Event target = new System_Comparison_System_Action_Framework_BaseUI_Event(func, self);
+			System_Comparison_System_Action_Framework_BaseUi_Event target = new System_Comparison_System_Action_Framework_BaseUi_Event(func, self);
 			System.Comparison<System.Action<Framework.BaseUi>> d = target.CallWithSelf;
 			target.method = d.Method;
 			return d;
 		}
 	}
 
-	bool Check_System_Comparison_System_Action_Framework_BaseUI(IntPtr L, int pos)
+	bool Check_System_Comparison_System_Action_Framework_BaseUi(IntPtr L, int pos)
 	{
 		return TypeChecker.CheckDelegateType(typeof(System.Comparison<System.Action<Framework.BaseUi>>), L, pos);
 	}
 
-	void Push_System_Comparison_System_Action_Framework_BaseUI(IntPtr L, System.Comparison<System.Action<Framework.BaseUi>> o)
+	void Push_System_Comparison_System_Action_Framework_BaseUi(IntPtr L, System.Comparison<System.Action<Framework.BaseUi>> o)
 	{
 		ToLua.Push(L, o);
 	}

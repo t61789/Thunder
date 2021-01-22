@@ -7,11 +7,11 @@ namespace Thunder
 {
     public class ItemCombiner
     {
-        private readonly Package _Package;
+        private readonly CommonPackage _Package;
         private readonly CombineExpression[] _Expressions;
         private readonly Dictionary<ItemId, List<int>> _OutputIndexer;
 
-        public ItemCombiner(Package package, Table expressionTable)
+        public ItemCombiner(CommonPackage package, Table expressionTable)
         {
             _Package = package;
             _Expressions = ReadExpressions(expressionTable);
@@ -62,7 +62,7 @@ namespace Thunder
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public bool ExpressionAvaliable(CombineExpression expression)
+        public bool ExpressionAvailable(CombineExpression expression)
         {
             return expression.Input.All(item => _Package.GetItemNum(item.Id) >= item.Count);
         }
@@ -75,11 +75,11 @@ namespace Thunder
         public ItemGroup[] ApplyExpression(CombineExpression expression)
         {
             foreach (var costItem in expression.Input)
-                _Package.CostItem(costItem, out _);
+                _Package.CostItem(costItem, false);
 
             return (
                 from createdItem in expression.Output
-                let overflow = _Package.AddItem(createdItem, out _)
+                let overflow = _Package.PutItem(createdItem, false).RemainingNum
                 where overflow > 0
                 select (createdItem.Id, overflow))
                 .Select(dummy => (ItemGroup)dummy).ToArray();
@@ -87,12 +87,12 @@ namespace Thunder
 
         private static CombineExpression[] ReadExpressions(Table expressionTable)
         {
-            const string outstr = "out";
+            const string outStr = "out";
 
-            int maxInputNum = 0;
-            int maxOutputNum = 0;
+            var maxInputNum = 0;
+            var maxOutputNum = 0;
             foreach (var field in expressionTable.Fields)
-                if (field.StartsWith(outstr))
+                if (field.StartsWith(outStr))
                     maxInputNum++;
                 else
                     maxOutputNum++;
@@ -106,7 +106,7 @@ namespace Thunder
             {
                 var expression = new CombineExpression();
                 unitList.Clear();
-                for (int i = 0; i < len; i++)
+                for (var i = 0; i < len; i++)
                 {
                     if (i == maxOutputNum)
                     {
@@ -116,14 +116,14 @@ namespace Thunder
 
                     var strs = ((string)row[i]).Split('|');
 
-                    int id = int.Parse(strs[0]);
+                    var id = int.Parse(strs[0]);
                     if (id == 0) continue;
-                    string add = strs[2];
+                    var add = strs[2];
                     if (string.IsNullOrEmpty(add))
                         add = null;
                     var itemId = new ItemId(id, add);
 
-                    int count = int.Parse(strs[1]);
+                    var count = int.Parse(strs[1]);
 
                     unitList.Add(new ItemGroup(itemId, count));
                 }

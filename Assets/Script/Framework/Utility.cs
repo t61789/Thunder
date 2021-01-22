@@ -65,7 +65,7 @@ namespace Framework
         private int _Head;
         private int _Tail;
         private int _Version;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -1462,20 +1462,167 @@ namespace Framework
 
         public Range((float min, float max) range)
         {
-            CheckParam(range.min,range.max);
+            CheckParam(range.min, range.max);
             Min = range.min;
             Max = range.max;
         }
 
         private static void CheckParam(float min, float max)
         {
-            if(min>max)
+            if (min > max)
                 throw new Exception($"最小值 {min} 不得大于最大值 {max}");
         }
 
         public static implicit operator Range((float min, float max) range)
         {
             return new Range(range);
+        }
+    }
+
+    /// <summary>
+    /// 一种对象池，用于定义需要高速读写的类，例如击中信息类。通过继承该类并定义新的字段来使用。可以使用GC、using关键字或是Recycle()方法来回收使用完毕的对象
+    /// </summary>
+    /// <typeparam name="T">需与子类一致</typeparam>
+    public abstract class ObjectQueueItem<T>:IDisposable where T : ObjectQueueItem<T>, new()
+    {
+        /// <summary>
+        /// 是否启用对象池
+        /// </summary>
+        public static bool EnablePool { get; set; } = true;
+
+        private static readonly Queue<T> _InnerQueue
+            = new Queue<T>();
+
+        private bool _Kill;
+
+        /// <summary>
+        /// 获取一个对象
+        /// </summary>
+        /// <returns></returns>
+        public static T Take()
+        {
+            if (EnablePool && _InnerQueue.Count != 0)
+            {
+                return _InnerQueue.Dequeue();
+            }
+
+            return new T();
+        }
+
+        public void Dispose()
+        {
+            Recycle();
+        }
+
+        /// <summary>
+        /// 回收对象
+        /// </summary>
+        private void Recycle()
+        {
+            if (!EnablePool) return;
+            _InnerQueue.Enqueue(this as T);
+            Reset();
+        }
+
+        /// <summary>
+        /// 清空对象池里的对象
+        /// </summary>
+        public void ClearBuffer()
+        {
+            while (_InnerQueue.Count != 0)
+            {
+                var obj = _InnerQueue.Dequeue();
+                obj._Kill = true;
+            }
+        }
+
+        /// <summary>
+        /// 将对象字段还原
+        /// </summary>
+        protected abstract void Reset();
+
+        ~ObjectQueueItem()
+        {
+            if (!_Kill)
+            {
+                Recycle();
+            }
+        }
+    }
+
+    [Serializable]
+    public struct Coord2:IComparable<Coord2>
+    {
+        public int x;
+        public int y;
+
+        public Coord2(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        public Coord2(Vector2 v)
+        {
+            x = (int) v.x;
+            y = (int) v.y;
+        }
+
+        public Vector2 ToVector2()
+        {
+            return new Vector2(x, y);
+        }
+
+        public static Coord2 operator +(Coord2 l,Coord2 r)
+        {
+            return new Coord2(l.x + r.x, l.y + r.y);
+        }
+
+        public static Coord2 operator -(Coord2 l, Coord2 r)
+        {
+            return new Coord2(l.x - r.x, l.y - r.y);
+        }
+
+        public static Coord2 operator /(Coord2 l, int r)
+        {
+            return new Coord2(l.x / r, l.y / r);
+        }
+
+        public int CompareTo(Coord2 other)
+        {
+            if (x < other.x)
+                return 1; 
+            if (x > other.x)
+                return -1;
+            if (y < other.y)
+                return 1;
+            if (y > other.y)
+                return -1;
+            return 0;
+        }
+
+        public override string ToString()
+        {
+            return $"({x},{y})";
+        }
+    }
+
+    public class Process
+    {
+        private int _TaskCount=0;
+
+        public event Action OnProcessComplete;
+
+        public void Start()
+        {
+            _TaskCount++;
+        }
+
+        public void End()
+        {
+            _TaskCount--;
+            if(_TaskCount==0)
+                OnProcessComplete?.Invoke();
         }
     }
 }

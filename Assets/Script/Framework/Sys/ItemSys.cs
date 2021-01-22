@@ -1,50 +1,39 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using Framework;
 using Newtonsoft.Json;
+using Thunder;
+using UnityEngine;
 using Enum = System.Enum;
 
 namespace Framework
 {
-    public class ItemSys : IBaseSys, IEnumerable<KeyValuePair<int, ItemInfo>>
+    public class ItemSys : IBaseSys
     {
         public static ItemSys Ins;
 
-        private readonly Dictionary<int, ItemInfo> _ItemDic;
-
-        public ItemInfo this[int id] => _ItemDic[id];
-
-        public IEnumerable<int> ItemIds => _ItemDic.Keys;
-
-        public IEnumerable<ItemInfo> ItemInfos => _ItemDic.Values;
+        private static Dictionary<int, ItemInfo> _ItemInfo;
 
         public ItemSys()
         {
-            var pros = typeof(ItemInfo)
-                .GetFields()
-                .Where(x => DataBaseSys.AvaliableDataType.Contains(x.FieldType.Name))
-                .ToArray();
+            Ins = this;
+            _ItemInfo = new Dictionary<int, ItemInfo>();
+            QueryDicFromTable(_ItemInfo,Config.ItemInfoTableName);
+            QueryDicFromJson(_ItemInfo,Config.ItemInfoValueName);
+        }
 
-            _ItemDic = new Dictionary<int, ItemInfo>();
+        public static ItemInfo GetInfo(int id)
+        {
+            return _ItemInfo.TryGetAndAlert(id, $"未找到id为 {id} 的物品信息");
+        }
 
-            var flagType = typeof(ItemFlag);
-            foreach (var row in DataBaseSys.GetTable(Config.ItemInfoTableName))
-            {
-                var info = new ItemInfo();
-                foreach (var field in pros)
-                    field.SetValue(info, row[field.Name].Data);
-
-                //HandleSpecialData
-
-                info.Id = (int)row["Id"];
-                string flag = row["Flag"];
-                if (!string.IsNullOrEmpty(flag))
-                    info.Flag = (ItemFlag)Enum.Parse(flagType, flag);
-
-                _ItemDic.Add(info.Id, info);
-            }
+        public static IEnumerable<ItemInfo> GetInfos()
+        {
+            return _ItemInfo.Values;
         }
 
         public void OnSceneEnter(string preScene, string curScene)
@@ -59,26 +48,75 @@ namespace Framework
         {
         }
 
-        IEnumerator<KeyValuePair<int, ItemInfo>> IEnumerable<KeyValuePair<int, ItemInfo>>.GetEnumerator()
+        private static void QueryDicFromTable(Dictionary<int, ItemInfo> dic,string tablePath)
         {
-            return _ItemDic.GetEnumerator();
+            var pros = typeof(ItemInfo)
+                .GetFields()
+                .Where(x => DataBaseSys.AvailableDataType.Contains(x.FieldType))
+                .ToArray();
+
+            const string idStr = "Id";
+            foreach (var row in DataBaseSys.GetTable(tablePath))
+            {
+                var info = new ItemInfo();
+                foreach (var field in pros)
+                    field.SetValue(info, row[field.Name].Data);
+
+                //HandleSpecialData
+                info.Id = new ItemId(row[idStr]);
+                dic.Add(info.Id, info);
+            }
         }
 
-        public IEnumerator GetEnumerator()
+        private static void QueryDicFromJson(Dictionary<int, ItemInfo> dic, string valuePath)
         {
-            return _ItemDic.GetEnumerator();
+            var str = ValueSys.GetRawValue(valuePath);
+            var reader = new JsonTextReader(new StringReader(str));
+            var serializer = new JsonSerializer();
+            ItemInfo defaultInfo = null;
+            while (reader.Read())
+            {
+                if (defaultInfo == null)
+                {
+                    defaultInfo = serializer.Deserialize<ItemInfo>(reader);
+                    continue;
+                }
+
+                var curInfo = defaultInfo.GetClone();
+                serializer.Populate(reader, curInfo);
+                dic.Add(curInfo.Id, curInfo);
+            }
+        }
+    }
+    
+    [PreferenceAsset]
+    public class ItemInfo
+    {
+        public ItemId Id {  set; get; }
+        public string Name {  set; get; }
+        public bool CanPackage {  set; get; }
+        public int MaxStackNum {  set; get; }
+        public bool IsWeapon {  set; get; }
+        public string WeaponPrefabPath {  set; get; }
+        public string PickPrefabPath {  set; get; }
+        public string PackageCellTexturePath {  set; get; }
+
+        public ItemInfo GetClone()
+        {
+            return (ItemInfo) this.MemberwiseClone();
         }
     }
 
+    [Serializable]
     public struct ItemId : IComparable<ItemId>
     {
         public int Id;
-        public ItemAddData Add;
+        public string Add;
 
-        public ItemId(int id, object add = null)
+        public ItemId(int id, string add = null)
         {
             Id = id;
-            Add = new ItemAddData(add);
+            Add = add;
         }
 
         public static implicit operator int(ItemId id)
@@ -91,14 +129,14 @@ namespace Framework
             return new ItemId(id);
         }
 
-        public static implicit operator (int id, object add)(ItemId id)
+        public static implicit operator (int id, string add)(ItemId id)
         {
             return (id.Id, id.Add);
         }
 
-        public static implicit operator ItemId((int id, object add) id)
+        public static implicit operator ItemId((int id, string add) id)
         {
-            return new ItemId(id.Item1, id.Item2);
+            return new ItemId(id.id, id.add);
         }
 
         public int CompareTo(ItemId other)
@@ -107,6 +145,73 @@ namespace Framework
                 return -1;
             return other.Id < Id ? 1 : 0;
         }
+
+        public override string ToString()
+        {
+            return $"(Id:{Id} Add:{Add})";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ItemId)) return false;
+            return Equals((ItemId)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Id * 397) ^ (Add != null ? Add.GetHashCode() : 0);
+            }
+        }
+
+        public bool Equals(ItemId other)
+        {
+            var bo = Add.IsNullOrEmpty() && other.Add.IsNullOrEmpty() ||
+                     Add.Equals(other.Add);
+            return Id == other.Id && bo;
+        }
+
+        //public int Id;
+        //public ItemAddData Add;
+
+        //public ItemId(int id, object add = null)
+        //{
+        //    Id = id;
+        //    Add = new ItemAddData(add);
+        //}
+
+        //public static implicit operator int(ItemId id)
+        //{
+        //    return id.Id;
+        //}
+
+        //public static implicit operator ItemId(int id)
+        //{
+        //    return new ItemId(id);
+        //}
+
+        //public static implicit operator (int id, object add)(ItemId id)
+        //{
+        //    return (id.Id, id.Add);
+        //}
+
+        //public static implicit operator ItemId((int id, object add) id)
+        //{
+        //    return new ItemId(id.Item1, id.Item2);
+        //}
+
+        //public int CompareTo(ItemId other)
+        //{
+        //    if (other.Id > Id)
+        //        return -1;
+        //    return other.Id < Id ? 1 : 0;
+        //}
+
+        //public override string ToString()
+        //{
+        //    return $"(Id:{Id} Add:{Add})";
+        //}
     }
 
     public readonly struct ItemAddData
@@ -152,6 +257,7 @@ namespace Framework
         }
     }
 
+    [Serializable]
     public struct ItemGroup : IComparable<ItemGroup>
     {
         public ItemId Id;
@@ -164,6 +270,16 @@ namespace Framework
         {
             Id = id;
             Count = count;
+        }
+
+        public bool IsEmpty()
+        {
+            return Id == 0 && Count == 0;
+        }
+
+        public bool IsInvalid()
+        {
+            return Id != 0 && Count == 0;
         }
 
         public static implicit operator ItemGroup(ItemId id)
@@ -226,6 +342,11 @@ namespace Framework
             _ItemGroupCache.Add(str,itemGroup);
 
             return true;
+        }
+
+        public override string ToString()
+        {
+            return Id.ToString();
         }
     }
 }
