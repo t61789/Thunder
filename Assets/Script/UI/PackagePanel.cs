@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using FairyGUI;
 using Framework;
+using Thunder.UI;
+using UnityEngine;
 
 namespace Thunder
 {
-    public class PackagePanel:PanelUi
+    public class PackagePanel:FairyPanel
     {
         private GList _CellList;
         private CommonPackage _PlayerPackage;
@@ -16,18 +14,23 @@ namespace Thunder
         protected override void Awake()
         {
             base.Awake();
-            _CellList = GetComponent<UIPanel>().ui.GetChild("List").asList;
-        }
-
-        private void Start()
-        {
+            _CellList = UIPanel.ui.GetChild("List").asList;
             _PlayerPackage = Player.Ins.Package;
             _PlayerPackage.OnItemChanged += UpdateCell;
+            _CellList.numItems = _PlayerPackage.Capacity;
         }
 
         private void UpdateCell(IEnumerable<int> changeList)
         {
-            //_CellList.
+            foreach (var index in changeList)
+            {
+                var info = _PlayerPackage.GetItemInfoFrom(index);
+                var path = ItemSys.GetInfo(info.Id).PackageCellTexturePath;
+                Texture texture = null;
+                if (info.Id!=0 && !path.IsNullOrEmpty())
+                    texture = BundleSys.GetAsset<Texture>(path);
+                _CellList.GetChildAt(index).asButton.GetChild("Image").asLoader.texture = new NTexture(texture);
+            }
         }
     }
 }

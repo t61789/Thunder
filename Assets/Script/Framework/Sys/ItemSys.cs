@@ -51,20 +51,36 @@ namespace Framework
         private static void QueryDicFromTable(Dictionary<int, ItemInfo> dic,string tablePath)
         {
             var pros = typeof(ItemInfo)
-                .GetFields()
-                .Where(x => DataBaseSys.AvailableDataType.Contains(x.FieldType))
+                .GetProperties()
+                .Where(x => DataBaseSys.AvailableDataType.Contains(x.PropertyType))
                 .ToArray();
 
             const string idStr = "Id";
+            ItemInfo defaultInfo = null;
+            var stringType = typeof(string);
             foreach (var row in DataBaseSys.GetTable(tablePath))
             {
                 var info = new ItemInfo();
                 foreach (var field in pros)
-                    field.SetValue(info, row[field.Name].Data);
+                {
+                    var data = row[field.Name].Data;
+
+                    if (defaultInfo != null && (data == null || field == stringType && (data as string).IsNullOrEmpty()))
+                    {
+                        field.SetValue(info, field.GetValue(defaultInfo));
+                        continue;
+                    }
+
+                    field.SetValue(info, data);
+                }
 
                 //HandleSpecialData
                 info.Id = new ItemId(row[idStr]);
-                dic.Add(info.Id, info);
+
+                if (defaultInfo == null)
+                    defaultInfo = info;
+                else
+                    dic.Add(info.Id, info);
             }
         }
 

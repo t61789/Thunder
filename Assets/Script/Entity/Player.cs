@@ -25,8 +25,8 @@ namespace Thunder
         private Transform _PivotTrans;
         private InputSynchronizer _InteractiveSyn = new InputSynchronizer();
 
+        public WeaponBelt WeaponBelt;
         public Dropper Dropper { private set; get; }
-        public WeaponBelt WeaponBelt { private set; get; }
         public CommonPackage Package { private set; get; }
         public ItemCombiner ItemCombiner { private set; get; }
         public FpsCamera FpsCamera { private set; get; }
@@ -43,7 +43,7 @@ namespace Thunder
             _WeaponAttachPoint = _PivotTrans.Find("Weapon");
 
             Package = new CommonPackage(PackageSize);
-            WeaponBelt = new WeaponBelt(_WeaponAttachPoint);
+            WeaponBelt.Init(_WeaponAttachPoint);
             Dropper = new Dropper(DropItemForce, () => _PivotTrans.position, () => _PivotTrans.rotation);
             //ItemCombiner = new ItemCombiner(Package, DataBaseSys.GetTable("combine_expressions"));
             FpsCamera = GetComponent<FpsCamera>();

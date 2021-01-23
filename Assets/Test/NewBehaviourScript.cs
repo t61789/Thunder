@@ -9,14 +9,11 @@ using UnityEngine;
 public class NewBehaviourScript : MonoBehaviour
 {
 
-    private void Start()
+    private void OnGUI()
     {
-        var btn = GetComponent<UIPanel>().ui.GetChild("n0").asButton;
-        btn.onClick.Add(()=>Debug.Log(123));
-
-    }
-
-    private void Update()
-    {
+        if (GUI.Button(new Rect(0, 0, 200, 100), "Test"))
+        {
+            UiSys.OpenUi("packagePanel");
+        }
     }
 }

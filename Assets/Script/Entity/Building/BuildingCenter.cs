@@ -1,25 +1,35 @@
 ﻿using Framework;
+using Thunder.UI;
 using UnityEngine;
 
 namespace Thunder
 {
     public class BuildingCenter:BaseEntity,IInteractive
     {
+        public static BuildingCenter Ins;
+
         public int CtrlShield=10;
 
         private readonly Process _Process = new Process();
 
+        protected override void Awake()
+        {
+            base.Awake();
+            Ins = this;
+        }
+
         private void OnGUI()
         {
-            if (GUI.Button(new Rect(0, 0, 500, 200), "Start"))
-            {
-                VirtualBuilding.Ins.Show(2);
-            }
+            //if (GUI.Button(new Rect(0, 0, 500, 200), "Start"))
+            //{
+                //VirtualBuilding.Ins.Show(2);
+                //FairyPanel.OpenPanel("packagePanel");
+            //}
 
-            if (GUI.Button(new Rect(0, 200, 500, 200), "End"))
-            {
-                EndingBuildingMode();
-            }
+            //if (GUI.Button(new Rect(0, 200, 500, 200), "End"))
+            //{
+               // EndingBuildingMode();
+            //}
         }
 
         public void Interactive(ControlInfo info)

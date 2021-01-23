@@ -20,6 +20,10 @@ namespace Framework
         {
             if (_Values.TryGetValue(id, out var result)) return result;
 
+            LoadBundle(id);
+
+            if (_Values.TryGetValue(id, out result)) return result;
+
             throw new Exception($"未在 {id.Bundle} 内找到名为 {id.Name} 的value");
         }
 
@@ -30,13 +34,7 @@ namespace Framework
 
         private static T GetValue<T>(AssetId id)
         {
-            if (_Values.TryGetValue(id, out var value))return JsonConvert.DeserializeObject<T>(value);
-
-            LoadBundle(id);
-
-            if (_Values.TryGetValue(id, out value)) return JsonConvert.DeserializeObject<T>(value);
-
-            throw new Exception($"未在 {id.Bundle} 内找到名为 {id.Name} 的value");
+            return JsonConvert.DeserializeObject<T>(GetRawValue(id));
         }
 
         private static void LoadBundle(AssetId id)

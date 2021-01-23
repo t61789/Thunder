@@ -8,36 +8,39 @@ using Object = UnityEngine.Object;
 
 namespace Thunder
 {
+    [Serializable]
     public class WeaponBelt : Package
     {
+        public CtrlKey DropWeaponKey = new CtrlKey("DropWeapon",0);
+        public CtrlKey PreWeaponKey = new CtrlKey("SwitchPreWeapon", 0);
+
         public BaseWeapon CurrentWeapon => _CurWeapon == -1 ? _Unarmed : _Belt[_CurWeapon].Weapon;
 
         private const int SHIELD_VALUE = 0;
 
-        private readonly WeaponBeltCell[] _Belt;
-        private readonly WeaponBeltCell[] _TempBelt;
-        private readonly Dictionary<string, int> _Keys;
-        private readonly BaseWeapon _Unarmed;
-        private readonly Transform _WeaponContainer;
+        private WeaponBeltCell[] _Belt;
+        private WeaponBeltCell[] _TempBelt;
+        private Dictionary<string, int> _Keys;
+        private BaseWeapon _Unarmed;
+        private Transform _WeaponContainer;
         private int _CurWeapon = -1;
         private int _PreWeapon = -1;
 
-        private static Dictionary<ItemId, WeaponInfo> _WeaponInfoDic;
+        private static Dictionary<int, WeaponInfo> _WeaponInfoDic;
 
-        public WeaponBelt(Transform weaponContainer)
+        public void Init(Transform weaponContainer)
         {
             _Belt = InitBelt(Config.WeaponBeltTypes);
             _TempBelt = InitBelt(Config.WeaponBeltTypes);
             _Keys = BuildSwitchKeyMapping(Config.WeaponBeltTypes);
             _WeaponContainer = weaponContainer;
-            if (_WeaponInfoDic == null)
-                _WeaponInfoDic = QueryDic(DataBaseSys.GetTable(Config.WeaponInfoTableName));
+            _WeaponInfoDic = _WeaponInfoDic ?? QueryDic(DataBaseSys.GetTable(Config.WeaponInfoTableName));
             _Unarmed = CreateWeaponObj(Config.UnarmedId);
             _Unarmed.TakeOut();
         }
 
         /// <summary>
-        ///     切换为目标单元格内的武器
+        /// 切换为目标单元格内的武器
         /// </summary>
         /// <param name="index"></param>
         public void SwitchWeapon(int index)
@@ -50,7 +53,7 @@ namespace Thunder
         }
 
         /// <summary>
-        ///     切换为之前所持的武器
+        /// 切换为之前所持的武器
         /// </summary>
         public void SwitchWeaponToPre()
         {
@@ -59,7 +62,7 @@ namespace Thunder
         }
 
         /// <summary>
-        ///     设定指定位置的武器
+        /// 设定指定位置的武器
         /// </summary>
         /// <param name="id"></param>
         /// <param name="offset">若有多个相同类型的槽位，offset指示第几个槽位，从0开始</param>
@@ -90,40 +93,7 @@ namespace Thunder
         }
 
         /// <summary>
-        ///     丢弃当前所持的武器
-        /// </summary>
-        public void DropCurrentWeapon()
-        {
-            if (_CurWeapon == -1) return;
-
-            var index = _CurWeapon;
-            var saveId = _Belt[_CurWeapon].Weapon.ItemId;
-            saveId.Add = _Belt[_CurWeapon].Weapon.CompressItem();
-            DestroyWeapon(_CurWeapon);
-            if (_PreWeapon != -1)
-            {
-                TakeOutWeapon(_PreWeapon);
-            }
-            else
-            {
-                do
-                {
-                    index = (index + 1).Repeat(_Belt.Length);
-                } while (_Belt[index].Weapon == null && index != _CurWeapon);
-
-                if (index == _CurWeapon) index = -1;
-            }
-
-            _PreWeapon = -1;
-            TakeOutWeapon(index);
-
-            PublicEvents.DropItem?.Invoke(saveId);
-
-            _CurWeapon = index;
-        }
-
-        /// <summary>
-        ///     检测玩家输入，做出相应操作
+        /// 检测玩家输入，做出相应操作
         /// </summary>
         public void InputCheck()
         {
@@ -150,6 +120,23 @@ namespace Thunder
         }
 
         /// <summary>
+        /// 丢弃当前所持的武器
+        /// </summary>
+        public void DropCurrentWeapon()
+        {
+            if (_CurWeapon == -1) return;
+
+            var add = _Belt[_CurWeapon].Weapon.CompressItem();
+            var id = _Belt[_CurWeapon].Group;
+            id.Id.Add = add;
+            DestroyWeapon(_CurWeapon);
+
+            TakeOutWeapon(FindFirstAvailableWeapon(0));
+
+            Player.Ins.Drop(id);
+        }
+
+        /// <summary>
         /// 判断指定id的物品是不是武器
         /// </summary>
         /// <param name="id"></param>
@@ -162,6 +149,7 @@ namespace Thunder
         private void TakeOutWeapon(int index)
         {
             var weapon = index == -1 ? _Unarmed : _Belt[index].Weapon;
+            _CurWeapon = index;
             weapon.gameObject.SetActive(true);
             weapon.TakeOut();
             PublicEvents.TakeOutWeapon?.Invoke(weapon);
@@ -198,7 +186,6 @@ namespace Thunder
             if (!_WeaponInfoDic.TryGetValue(itemGroup.Id, out var info) ||
                 itemGroup.Id != 0 && itemGroup.Count == 0)
                 return result;
-
 
             var belt = _Belt;
             if (putOnlySpaceEnough)
@@ -254,9 +241,7 @@ namespace Thunder
             }
 
             if (_CurWeapon == -1)
-            {
-                // todo 切换第一个可用武器
-            }
+                TakeOutWeapon(FindFirstAvailableWeapon(0));
 
             return result;
         }
@@ -292,7 +277,7 @@ namespace Thunder
             var take = Mathf.Min(maxStack - _Belt[index].Group.Count, itemGroup.Count);
             _Belt[index].Group.Count += take;
 
-            if(itemGroup.Count > take)
+            if (itemGroup.Count > take)
                 result.Id = itemGroup.Id;
             if (result.Id == 0 || result.Id == itemGroup.Id)
                 result.Count = itemGroup.Count - take;
@@ -301,7 +286,7 @@ namespace Thunder
             {
                 DestroyWeapon(index);
                 _Belt[index].Weapon = CreateWeaponObj(_Belt[index].Group.Id);
-                if(_CurWeapon==index)
+                if (_CurWeapon == index)
                     TakeOutWeapon(index);
             }
 
@@ -333,7 +318,7 @@ namespace Thunder
         public override IEnumerable<ItemGroup> GetAllItemInfo()
         {
             return from cell in _Belt
-                select cell.Group;
+                   select cell.Group;
         }
 
         public override ItemGroup GetItemInfoFrom(int index)
@@ -352,7 +337,7 @@ namespace Thunder
                         count += weaponBowCell.Group.Count;
                 if (count < itemGroup.Count)
                 {
-                    
+
                     result.RemainingNum = itemGroup.Count;
                     return result;
                 }
@@ -383,17 +368,44 @@ namespace Thunder
             throw new NotImplementedException();
         }
 
+        public string GetItemStr()
+        {
+            var sb = new StringBuilder();
+            foreach (var weaponBeltCell in _Belt)
+                sb.Append(weaponBeltCell.Group);
+
+            return sb.ToString();
+        }
+
         private BaseWeapon CreateWeaponObj(ItemId id)
         {
             var weapon = ObjectPool.GetPrefab(_WeaponInfoDic[id].PrefabPath)
                 .GetInstantiate()
                 .GetComponent<BaseWeapon>();
-            weapon.Init(_WeaponContainer,id.Add);
+            weapon.Init(_WeaponContainer, id.Add);
             weapon.gameObject.SetActive(false);
             return weapon;
         }
 
-        private static Dictionary<ItemId, WeaponInfo> QueryDic(Table weaponTable)
+        private int FindFirstAvailableWeapon(int startIndex)
+        {
+            var i = startIndex;
+            do
+            {
+                if (_Belt[i].Group.Id.Id == 0)
+                {
+                    i = (i + 1) % _Belt.Length;
+                    continue;
+                }
+
+                return i;
+
+            } while (i != startIndex);
+            
+            return -1;
+        }
+
+        private static Dictionary<int, WeaponInfo> QueryDic(Table weaponTable)
         {
             var selected1 =
                 from info in ItemSys.GetInfos()
@@ -401,9 +413,9 @@ namespace Thunder
                 select info;
             var selected2 =
                 from row in weaponTable
-                join info in selected1 on row["id"] equals info.Id.Id
-                select new {info.Id, weaponInfo = new WeaponInfo((WeaponType)Enum.Parse(typeof(WeaponType), row["type"]), info.WeaponPrefabPath) };
-            return selected2.ToDictionary(x => x.Id, x => x.weaponInfo);
+                join info in selected1 on (int)row["id"].Data equals info.Id.Id
+                select new { info.Id, weaponInfo = new WeaponInfo((WeaponType)Enum.Parse(typeof(WeaponType), row["type"]), info.WeaponPrefabPath) };
+            return selected2.ToDictionary(x => x.Id.Id, x => x.weaponInfo);
         }
 
         private static Dictionary<string, int> BuildSwitchKeyMapping(WeaponType[] beltTypes)
@@ -456,6 +468,7 @@ namespace Thunder
                 PrefabPath = prefabPath;
             }
         }
+
         public struct WeaponBeltCell
         {
             public WeaponType Type;

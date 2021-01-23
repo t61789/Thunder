@@ -294,6 +294,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Transform\GetChild.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_TextureWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Math\BoolOperator.cs" />
+    <Compile Include="Assets\Script\UI\PackagePanel.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_AnimationStateWrap.cs" />
     <Compile Include="Assets\Script\Framework\UI\EventUi.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Rigidbody2D\AddTorque.cs" />
@@ -424,6 +425,7 @@
     <Compile Include="Assets\Lib\ToLua\Misc\LuaResLoader.cs" />
     <Compile Include="Assets\Lib\ConsolePro\Remote\LiteNetLib\NetDebug.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Vector2\Distance.cs" />
+    <Compile Include="Assets\Script\Utility\FairyPanel.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Animator\SetApplyRootMotion.cs" />
     <Compile Include="Assets\Lib\ToLua\Source\Generate\UnityEngine_ColliderWrap.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\Light\SetShadowSoftness.cs" />
@@ -1093,7 +1095,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Runtime\Tasks\Unity\NavMeshAgent\IsStopped.cs" />
     <Compile Include="Assets\Lib\ToLua\Reflection\LuaField.cs" />
     <Compile Include="Assets\Lib\ToLua\BaseType\System_NullObjectWrap.cs" />
-    <Compile Include="Assets\Script\UI\PackagePanel.cs" />
+    <Compile Include="Assets\Script\UI\TestButtonPanel.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Lib\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
