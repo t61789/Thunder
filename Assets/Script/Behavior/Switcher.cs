@@ -6,11 +6,18 @@ namespace Thunder.Behavior
 {
     public class Switcher : Decorator
     {
+        public bool StartValue;
         public bool SuccessWhenToSuccess;
         public bool SuccessWhenToFailure;
 
-        private TaskStatus _PreTaskStatus = TaskStatus.Failure;
+        private TaskStatus _PreTaskStatus;
         private TaskStatus _ExecutionStatus = TaskStatus.Inactive;
+
+        public override void OnAwake()
+        {
+            base.OnAwake();
+            _PreTaskStatus = StartValue ? TaskStatus.Success : TaskStatus.Failure;
+        }
 
         public override bool CanExecute()
         {
@@ -26,14 +33,17 @@ namespace Thunder.Behavior
         {
             try
             {
-                if (SuccessWhenToSuccess && 
-                    _PreTaskStatus == TaskStatus.Failure && 
-                    status == TaskStatus.Success||
+                if (SuccessWhenToSuccess &&
+                    _PreTaskStatus == TaskStatus.Failure &&
+                    status == TaskStatus.Success ||
 
-                    SuccessWhenToFailure && 
-                    _PreTaskStatus == TaskStatus.Success && 
+                    SuccessWhenToFailure &&
+                    _PreTaskStatus == TaskStatus.Success &&
                     status == TaskStatus.Failure)
+                {
+                    _PreTaskStatus = status;
                     return TaskStatus.Success;
+                }
             }
             catch (Exception e)
             {
@@ -41,9 +51,7 @@ namespace Thunder.Behavior
                 return TaskStatus.Failure;
             }
 
-            _PreTaskStatus = status;
-
-            return status;
+            return TaskStatus.Failure;
         }
 
         public override void OnEnd()

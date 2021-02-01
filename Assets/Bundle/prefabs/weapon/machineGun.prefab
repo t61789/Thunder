@@ -1272,18 +1272,10 @@ MonoBehaviour:
     Triggerable: 1
     BurstMode: 0
     FireModeLoop: 000000000100000003000000
-  FireKey:
-    KeyName: Fire1
-    ShieldValue: 0
-  ReloadKey:
-    KeyName: Reload
-    ShieldValue: 0
-  AimKey:
-    KeyName: Fire2
-    ShieldValue: 0
-  SwitchFireKey:
-    KeyName: v
-    ShieldValue: 0
+  FireKey: machine_gun_fire_key
+  ReloadKey: machine_gun_reload_key
+  AimKey: machine_gun_aim_key
+  SwitchFireKey: machine_gun_switch_fire_key
   CameraRecoilDampTime: 0.1
   Damage: 20
   DrawAnimationName: draw

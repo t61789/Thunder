@@ -30,9 +30,7 @@ namespace Thunder
         {
             if (_ProduceCounter.Completed)
             {
-                int remaining;
-                using (var info = _Package.PutItem(Product, false))
-                    remaining = info.RemainingNum;
+                int remaining = _Package.PutItem(Product).Remaining.FirstOrDefault().Count;
                 Debug.Log(_Package.GetItemStr());
                 if (remaining != 0)
                 {

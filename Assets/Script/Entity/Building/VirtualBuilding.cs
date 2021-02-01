@@ -1,18 +1,15 @@
-﻿using System;
+﻿using Framework;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Framework;
+using Thunder.UI;
 using UnityEngine;
 
 namespace Thunder
 {
     public class VirtualBuilding : MonoBehaviour
     {
-        public CtrlKey RotateKey = new CtrlKey("RotateVirtualBuilding", 10);
-        public CtrlKey PutKey = new CtrlKey("PutVirtualBuilding", 10);
-        public CtrlKey CancelKey = new CtrlKey("CancelVirtualBuilding", 10);
+        public string RotateKey = "virtual_building_rotate_key";
+        public string PutKey = "virtual_building_put_key";
+        public string CancelKey = "virtual_building_cancel_key";
 
         public bool CanPut { private set; get; }
         public static VirtualBuilding Ins { private set; get; }
@@ -42,7 +39,7 @@ namespace Thunder
             if (newPos == Vector3.positiveInfinity)
                 return;
 
-            newPos = Map.Ins.SnapToGrid(newPos-_CenterOffset);
+            newPos = Map.Ins.SnapToGrid(newPos - _CenterOffset);
             _Trans.position = newPos + _CenterOffset;
 
             if (newPos.x != _PrePos.x || newPos.z != _PrePos.z)
@@ -52,19 +49,24 @@ namespace Thunder
             }
         }
 
+        private void OnDestroy()
+        {
+            Ins = null;
+        }
+
         private void PlayerCtrl()
         {
-            if (ControlSys.RequireKey(PutKey).Down)
+            if (ControlSys.RequireKey(CtrlKeys.GetKey(PutKey)).Down)
             {
-                if(Put())Debug.Log("Success");
+                if (Put()) Debug.Log("Success");
             }
 
-            if (ControlSys.RequireKey(RotateKey).Down)
+            if (ControlSys.RequireKey(CtrlKeys.GetKey(RotateKey)).Down)
             {
                 Rotate(true);
             }
 
-            if (ControlSys.RequireKey(CancelKey).Down)
+            if (ControlSys.RequireKey(CtrlKeys.GetKey(CancelKey)).Down)
             {
                 Cancel();
             }
@@ -93,7 +95,7 @@ namespace Thunder
 
             if (!string.IsNullOrEmpty(_BuildingInfo.ModelPath))
             {
-                _Model = ObjectPool.GetPrefab(_BuildingInfo.ModelPath).GetInstantiate();
+                _Model = GameObjectPool.GetPrefab(_BuildingInfo.ModelPath).GetInstantiate();
                 _Model.transform.SetParent(_Trans);
                 _Model.transform.localPosition = Vector3.zero;
                 _Model.transform.localRotation = Quaternion.identity;
@@ -140,10 +142,16 @@ namespace Thunder
         public bool Put()
         {
             if (!CanPut) return false;
-            Map.Ins.PutBuilding(_BuildingInfo.Id, _Rotation, Map.Ins.GetCoord(_PrePos));
-            ObjectPool.GetPrefab(_BuildingInfo.PrefabPath).GetInstantiate().GetComponent<BaseBuilding>().Install(_PrePos + _CenterOffset, _Trans.rotation);
-            gameObject.SetActive(false);
-            return true;
+            if (Map.Ins.PutBuilding(_BuildingInfo.Id, _Rotation, Map.Ins.GetCoord(_PrePos)))
+            {
+                gameObject.SetActive(false);
+                return true;
+            }
+            else
+            {
+                LogPanel.Ins.LogSystem($"Resource doesn't enough");
+                return false;
+            }
         }
     }
 }

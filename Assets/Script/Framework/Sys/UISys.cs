@@ -78,7 +78,7 @@ namespace Framework
             if (panel != null)
                 _HideStableUI.Remove(panel);
 
-            panel = panel ?? ObjectPool.Get<PanelUi>(new AssetId(DefaultUIBundle, param.UiName));
+            panel = panel ?? GameObjectPool.Get<PanelUi>(new AssetId(DefaultUIBundle, param.UiName));
 
             panel.transform.SetParent(_UIContainer);
             panel.transform.SetSiblingIndex(param.SiblingIndex);
@@ -132,7 +132,7 @@ namespace Framework
                     }
                     else
                     {
-                        ObjectPool.Put(curUi);
+                        GameObjectPool.Put(curUi);
                     }
 
                     continue;

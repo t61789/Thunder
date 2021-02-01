@@ -11,10 +11,10 @@ namespace Thunder
     [RequireComponent(typeof(AimScopeController))]
     public class MachineGun : BaseWeapon
     {
-        public CtrlKey FireKey;
-        public CtrlKey ReloadKey;
-        public CtrlKey AimKey;
-        public CtrlKey SwitchFireKey;
+        public string FireKey = "machine_gun_fire_key";
+        public string ReloadKey = "machine_gun_reload_key";
+        public string AimKey = "machine_gun_aim_key";
+        public string SwitchFireKey = "machine_gun_switch_fire_key";
 
         public float CameraRecoilDampTime = 0.1f;
         public float Damage = 20;
@@ -30,6 +30,9 @@ namespace Thunder
         private bool _AimScopeBeforeReload;
         private bool _Reloading;
         private Animator _Animator;
+        private Transform _WeaponContainer;
+        private HashSet<GameObject> _ProcessedGoSet 
+            = new HashSet<GameObject>();
 
         private const string RELOAD = "Reload";
         private const string FIRE = "Fire";
@@ -39,6 +42,7 @@ namespace Thunder
         public override void Init(Transform weaponContainer, string addData)
         {
             base.Init(weaponContainer, addData);
+            _WeaponContainer = weaponContainer;
             _Animator = GetComponent<Animator>();
             _StickyInputDic.AddBool(RELOAD, 0.7f);
             _Recoil.Init();
@@ -49,12 +53,12 @@ namespace Thunder
 
         private void Update()
         {
-            var autoReload = Fire(ControlSys.RequireKey(FireKey));
-            Reload(ControlSys.RequireKey(ReloadKey), autoReload);
+            var autoReload = Fire(ControlSys.RequireKey(CtrlKeys.GetKey(FireKey)));
+            Reload(ControlSys.RequireKey(CtrlKeys.GetKey(ReloadKey)), autoReload);
 
-            if (ControlSys.RequireKey(AimKey).Down)
+            if (ControlSys.RequireKey(CtrlKeys.GetKey(AimKey)).Down)
                 _AimScope.Switch();
-            if (ControlSys.RequireKey(SwitchFireKey).Down) { }
+            if (ControlSys.RequireKey(CtrlKeys.GetKey(SwitchFireKey)).Down) { }
             //MachineGunFireControl.LoopBurstMode();
 
             _Animator.SetBool(RELOAD, _StickyInputDic.GetBool(RELOAD));
@@ -106,11 +110,6 @@ namespace Thunder
             AmmoGroup.Magazine = int.Parse(add);
         }
 
-        public override Action<HitInfo> GetBulletHitHook()
-        {
-            return BulletHit;
-        }
-
         public override void Fire()
         {
             var autoReload = Fire(ControlInfo.Open);
@@ -124,7 +123,7 @@ namespace Thunder
 
         private bool Fire(ControlInfo fireInfo)
         {
-            using (FireInfo shootInfo = ShootTrigger(Trans, fireInfo.Down, fireInfo.Stay))
+            using (FireInfo shootInfo = ShootTrigger(_WeaponContainer, fireInfo.Down, fireInfo.Stay))
             {
                 _Animator.SetBool(FIRE, shootInfo.HasShot);
 
@@ -159,12 +158,20 @@ namespace Thunder
             }
         }
 
-        private void BulletHit(HitInfo hitInfo)
+        protected override void OnHit(IEnumerable<HitInfo> hitInfo)
         {
-            hitInfo.Collider.GetComponent<IHitAble>().GetHit(
-                hitInfo.HitPos,
-                hitInfo.HitDir,
-                Damage);
+            foreach (var info in hitInfo)
+            {
+                var go = info.Collider.gameObject;
+                if (_ProcessedGoSet.Contains(go))continue;
+                _ProcessedGoSet.Add(go);
+
+                info.Collider.GetComponent<BaseCharacter>()?.GetHit(
+                    info.HitPos,
+                    info.HitDir,
+                    Damage);
+            }
+            _ProcessedGoSet.Clear();
         }
 
         private void OnDrawGizmos()

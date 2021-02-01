@@ -58,7 +58,7 @@ namespace Thunder.UI
 
         private static FairyPanel FindPanel(string uiName)
         {
-            return _PanelDic.TryGetAndAlert(uiName, $"未找到名为 {uiName} 的fairyUiPanel");
+            return _PanelDic.TryGetAndException(uiName, $"未找到名为 {uiName} 的fairyUiPanel");
         }
 
         private static void Clear(Scene scene)

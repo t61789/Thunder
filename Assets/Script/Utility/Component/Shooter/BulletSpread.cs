@@ -8,11 +8,11 @@ namespace Thunder
     {
         [Tooltip("噪声平滑度，越小越平滑")]
         [Range(0,1)]
-        public float NoiseSmooth;
+        public float NoiseSmooth = 0.2f;
         [Tooltip("散射中心偏移的方向")]
-        public Vector2 OffsetDir;
+        public Vector2 OffsetDir = Vector3.up;
         [Tooltip("缩放参数")]
-        public float ScaleFactor;
+        public float ScaleFactor = 1;
 
         public Spread SpreadX;
         public Spread SpreadY;
@@ -108,13 +108,13 @@ namespace Thunder
         public class Spread
         {
             [Tooltip("散射的上下限")]
-            public Range SpreadValue;
+            public Range SpreadValue = new Range(0,0.5f);
             [Tooltip("过热速度，越大过热越快")]
-            public float OverHeatIntensity;
+            public float OverHeatIntensity = 1;
             [Tooltip("需要花多久从完全过热冷却到完全不过热")]
-            public float ColdDownTime;
+            public float ColdDownTime = 1;
             [Tooltip("在一次触发后在进入冷却状态前的空档期")]
-            public float ColdDownStayTime;
+            public float ColdDownStayTime = 0.2f;
 
             private SimpleCounter _StayCounter;
             private PerlinNoise _SpreadNoise;

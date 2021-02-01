@@ -1,0 +1,28 @@
+{
+    "Settings":{
+		"RelationMax" 		: 100,
+		"RelationMin" 		: -100,
+		"FriendlyThreshold" : 30,
+		"AllyThreshold" 	: 60,
+		"DislikeThreshold"	: -30,
+		"HateThreshold"		: -60
+	},
+	"Camps":[{
+		"Name"		:"example",
+		"Relations":{
+			"":0
+		}
+	},{
+		"Name"		:"player",
+		"Relations":{
+			"player":100,
+			"enemy":-100
+		}
+	},{
+		"Name"		:"enemy",
+		"Relations":{
+			"enemy":100,
+			"player":-100
+		}
+	}]
+}

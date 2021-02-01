@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Framework;
-
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -8,110 +9,115 @@ namespace Thunder
 {
     public class CampSys : IBaseSys
     {
-        private readonly float[,] _FriendlinessMap = new float[Config.CampMapSize, Config.CampMapSize];
+        public static CampSys Ins { get; private set; }
 
-        private readonly Dictionary<string, int> _KeyMap = new Dictionary<string, int>();
+        public static Settings RelationThreshold;
 
-        private int _InsertIndex;
+        private static Dictionary<string, Camp> _CampDic;
 
         public CampSys()
         {
             Ins = this;
 
-            foreach (var row in DataBaseSys.GetTable("database/normal/camp"))
+            if (RelationThreshold == null)
+                LoadInfo(Config.CampInfoValuePath);
+        }
+
+        public static float GetRelation(string from, string to)
+        {
+            return _CampDic[from].Relations.TryGetAndDefault(to, 0);
+        }
+
+        public static bool IsNeutral(string from, string to)
+        {
+            var relation = GetRelation(from, to);
+            return relation > RelationThreshold.DislikeThreshold && relation < RelationThreshold.FriendlyThreshold;
+        }
+
+        public static bool IsFriendly(string from, string to)
+        {
+            var relation = GetRelation(from, to);
+            return relation >= RelationThreshold.FriendlyThreshold && relation < RelationThreshold.AllyThreshold;
+        }
+
+        public static bool IsAlly(string from, string to)
+        {
+            var relation = GetRelation(from, to);
+            return relation >= RelationThreshold.AllyThreshold;
+        }
+
+        public static bool IsDislike(string from, string to)
+        {
+            var relation = GetRelation(from, to);
+            return relation <= RelationThreshold.DislikeThreshold && relation > RelationThreshold.HateThreshold;
+        }
+
+        public static bool IsHate(string from, string to)
+        {
+            var relation = GetRelation(from, to);
+            return relation <= RelationThreshold.HateThreshold;
+        }
+
+        private static void LoadInfo(string campInfoValuePath)
+        {
+            _CampDic = new Dictionary<string, Camp>();
+
+            var value = ValueSys.GetRawValue(campInfoValuePath);
+            var info = JsonConvert.DeserializeObject<CampInfo>(value);
+
+            var first = true;
+            foreach (var camp in info.Camps)
             {
-                var campName = (string) row["camp_name"];
-                if (!_KeyMap.ContainsKey(campName))
-                    AddCamp(campName);
-                var targetName = (string) row["camp_target"];
-                if (string.IsNullOrEmpty(targetName)) continue;
-                if (!_KeyMap.ContainsKey(targetName))
-                    AddCamp(targetName);
-                SetFriendliness(campName, targetName, row["friendliness"]);
+                if (first)
+                {
+                    first = false;
+                    continue;// example
+                }
+
+                camp.Init();
+                _CampDic.Add(camp.Name, camp);
+            }
+
+            RelationThreshold = info.Settings;
+        }
+
+        public void OnSceneEnter(string preScene, string curScene) { }
+
+        public void OnSceneExit(string curScene) { }
+
+        public void OnApplicationExit() { }
+
+        private class CampInfo
+        {
+            public Settings Settings;
+            public IEnumerable<Camp> Camps;
+        }
+
+        public class Settings
+        {
+            [JsonRequired] public float RelationMax;
+            [JsonRequired] public float RelationMin;
+            [JsonRequired] public float FriendlyThreshold;
+            [JsonRequired] public float AllyThreshold;
+            [JsonRequired] public float DislikeThreshold;
+            [JsonRequired] public float HateThreshold;
+        }
+
+        public class Camp
+        {
+            [JsonRequired] public string Name;
+
+            public Dictionary<string, float> Relations;
+
+            public void Init()
+            {
+                Relations = Relations ?? new Dictionary<string, float>();
             }
         }
+    }
 
-        public static CampSys Ins { get; private set; }
-
-        public void OnSceneEnter(string preScene, string curScene)
-        {
-        }
-
-        public void OnSceneExit(string curScene)
-        {
-        }
-
-        public void OnApplicationExit()
-        {
-        }
-
-        public void AddCamp(string campName)
-        {
-            var finding = 0;
-            while (_FriendlinessMap[_InsertIndex, _InsertIndex] == Config.CampMaxFriendliness)
-            {
-                _InsertIndex = (_InsertIndex + 1) % Config.CampMapSize;
-                Assert.IsTrue(++finding <= Config.CampMapSize, "阵营表已满，不可添加阵营");
-            }
-
-            _KeyMap.Add(campName, _InsertIndex);
-
-            _FriendlinessMap[_InsertIndex, _InsertIndex] = Config.CampMaxFriendliness;
-        }
-
-        public void RemoveCamp(string campName)
-        {
-            var index = 0;
-            Assert.IsTrue(_KeyMap.TryGetValue(campName, out index), $"不存在名为 {campName} 的阵营");
-
-            for (var i = 0; i < Config.CampMapSize; i++)
-            {
-                _FriendlinessMap[i, index] = 0;
-                _FriendlinessMap[index, i] = 0;
-            }
-
-            _KeyMap.Remove(campName);
-        }
-
-        public bool IsHostile(Controller c1, Controller c2)
-        {
-            return GetFriendliness(c1, c2) < -Config.CampNeutralValue;
-        }
-
-        public bool IsNeutral(Controller c1, Controller c2)
-        {
-            return Mathf.Abs(GetFriendliness(c1, c2)) < Config.CampNeutralValue;
-        }
-
-        public bool IsAlly(Controller c1, Controller c2)
-        {
-            return GetFriendliness(c1, c2) > Config.CampNeutralValue;
-        }
-
-        public float GetFriendliness(Controller c1, Controller c2)
-        {
-            return GetFriendliness(c1.Camp, c2.Camp);
-        }
-
-        public float GetFriendliness(string c1, string c2)
-        {
-            int i1 = 0, i2 = 0;
-            Assert.IsTrue(_KeyMap.TryGetValue(c1, out i1), $"未找到名为 {c1} 的Camp");
-            Assert.IsTrue(_KeyMap.TryGetValue(c2, out i2), $"未找到名为 {c2} 的Camp");
-            return _FriendlinessMap[i1, i2];
-        }
-
-        public void SetFriendliness(Controller c1, Controller c2, float friendliness)
-        {
-            SetFriendliness(c1.Camp, c2.Camp, friendliness);
-        }
-
-        public void SetFriendliness(string c1, string c2, float friendliness)
-        {
-            int i1 = 0, i2 = 0;
-            Assert.IsTrue(_KeyMap.TryGetValue(c1, out i1), $"未找到名为 {c1} 的Camp");
-            Assert.IsTrue(_KeyMap.TryGetValue(c2, out i2), $"未找到名为 {c2} 的Camp");
-            _FriendlinessMap[i1, i2] = friendliness;
-        }
+    public interface ICamp
+    {
+        string GetCamp();
     }
 }

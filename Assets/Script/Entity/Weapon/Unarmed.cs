@@ -1,6 +1,7 @@
 ﻿
 
 using System;
+using System.Collections.Generic;
 using Framework;
 using UnityEngine;
 
@@ -35,9 +36,9 @@ namespace Thunder
         {
         }
 
-        public override Action<HitInfo> GetBulletHitHook()
+        protected override void OnHit(IEnumerable<HitInfo> hitInfos)
         {
-            return null;
+            
         }
     }
 }

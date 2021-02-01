@@ -44,7 +44,7 @@ namespace Framework
                 new BundleSys(),
                 new DataBaseSys(),
                 gameObject.AddComponent<ControlSys>(),
-                gameObject.AddComponent<ObjectPool>(),
+                gameObject.AddComponent<GameObjectPool>(),
                 gameObject.AddComponent<InstructionBalancing>(),
                 new UiSys(),
                 new ValueSys(),

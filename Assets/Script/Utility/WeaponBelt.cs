@@ -11,15 +11,14 @@ namespace Thunder
     [Serializable]
     public class WeaponBelt : Package
     {
-        public CtrlKey DropWeaponKey = new CtrlKey("DropWeapon",0);
-        public CtrlKey PreWeaponKey = new CtrlKey("SwitchPreWeapon", 0);
+        public string DropWeaponKey = "DropWeapon";
+        public string PreWeaponKey = "SwitchPreWeapon";
 
         public BaseWeapon CurrentWeapon => _CurWeapon == -1 ? _Unarmed : _Belt[_CurWeapon].Weapon;
 
         private const int SHIELD_VALUE = 0;
 
         private WeaponBeltCell[] _Belt;
-        private WeaponBeltCell[] _TempBelt;
         private Dictionary<string, int> _Keys;
         private BaseWeapon _Unarmed;
         private Transform _WeaponContainer;
@@ -28,10 +27,16 @@ namespace Thunder
 
         private static Dictionary<int, WeaponInfo> _WeaponInfoDic;
 
+        private readonly Dictionary<ItemId, int> _ItemChangedDic
+            = new Dictionary<ItemId, int>();
+        private readonly List<int> _ItemCellChangedList
+            = new List<int>();
+        private readonly List<ItemGroup> _RemainingList
+            = new List<ItemGroup>();
+
         public void Init(Transform weaponContainer)
         {
             _Belt = InitBelt(Config.WeaponBeltTypes);
-            _TempBelt = InitBelt(Config.WeaponBeltTypes);
             _Keys = BuildSwitchKeyMapping(Config.WeaponBeltTypes);
             _WeaponContainer = weaponContainer;
             _WeaponInfoDic = _WeaponInfoDic ?? QueryDic(DataBaseSys.GetTable(Config.WeaponInfoTableName));
@@ -97,7 +102,7 @@ namespace Thunder
         /// </summary>
         public void InputCheck()
         {
-            if (ControlSys.RequireKey(Config.PreWeaponKeyName, SHIELD_VALUE).Down)
+            if (ControlSys.RequireKey(CtrlKeys.GetKey(PreWeaponKey)).Down)
                 SwitchWeaponToPre();
             else
                 foreach (var pairs in
@@ -108,7 +113,7 @@ namespace Thunder
                     break;
                 }
 
-            if (ControlSys.RequireKey(Config.DropWeaponKeyName, SHIELD_VALUE).Down)
+            if (ControlSys.RequireKey(CtrlKeys.GetKey(DropWeaponKey)).Down)
                 DropCurrentWeapon();
         }
 
@@ -178,64 +183,122 @@ namespace Thunder
             _Belt[index].Group = new ItemGroup();
         }
 
-        public override PackageOperation PutItem(ItemGroup itemGroup, bool putOnlySpaceEnough)
+        public override int GetItemNum(ItemId id)
         {
-            var result = PackageOperation.Take();
-            result.RemainingNum = itemGroup.Count;
+            throw new NotImplementedException();
+        }
 
-            if (!_WeaponInfoDic.TryGetValue(itemGroup.Id, out var info) ||
-                itemGroup.Id != 0 && itemGroup.Count == 0)
-                return result;
-
-            var belt = _Belt;
-            if (putOnlySpaceEnough)
+        public override bool PutItemCheck(params ItemGroup[] groups)
+        {
+            _ItemChangedDic.Clear();
+            _RemainingList.Clear();
+            for (int i = 0; i < groups.Length; i++)
             {
-                for (int i = 0; i < _Belt.Length; i++)
-                    _TempBelt[i] = _Belt[i];
-                belt = _TempBelt;
+                var g = groups[i].ToValid();
+                if (!IsWeapon(g.Id)) return false;
+                if (g.Id == 0) continue;
+                _RemainingList.Add(g);
+                _ItemChangedDic.Add(g.Id, _RemainingList.Count - 1);
             }
 
-            var maxStack = ItemSys.GetInfo(itemGroup.Id).MaxStackNum;
-            for (var i = 0; i < belt.Length; i++)
-                if (belt[i].Type == info.Type &&
-                    (belt[i].Group.Id == 0 || belt[i].Group.Id == itemGroup.Id))
+            if (_RemainingList.Count == 0)
+                return true;
+
+            var remainingCount = _RemainingList.Count;
+            foreach (var c in _Belt)
+            {
+                var curCell = c;
+
+                var curSrcItemIndex = FindAvailableGroup(_RemainingList, curCell.Type);
+                if (curSrcItemIndex == -1) continue;
+                if (curCell.Group.Id == 0)
+                    curCell.Group.Id = _RemainingList[curSrcItemIndex].Id;
+
+                if (!_ItemChangedDic.TryGetValue(curCell.Group.Id, out curSrcItemIndex))
+                    continue;
+
+                var maxStack = ItemSys.GetInfo(curCell.Group.Id).MaxStackNum;
+                var g = _RemainingList[curSrcItemIndex];
+                if (g.Count != 0)
                 {
-                    belt[i].Group.Id = itemGroup.Id;
+                    var take = Mathf.Min(g.Count, maxStack - curCell.Group.Count);
+                    g.Count -= take;
+                    _RemainingList[curSrcItemIndex] = g;
+                    if (g.Count != 0) continue;
 
-                    var take = Mathf.Min(itemGroup.Count, maxStack - belt[i].Group.Count);
-                    if (take == 0) continue;
-
-                    belt[i].Group.Count += take;
-                    result.RemainingNum -= take;
-
-                    result.ItemChangeList.Add(i);
-
-                    if (result.RemainingNum == 0)
+                    remainingCount --;
+                    if (remainingCount <= 0)
                         break;
                 }
+            }
 
-            if (putOnlySpaceEnough && result.RemainingNum != 0)
+
+            return remainingCount <= 0;
+        }
+
+        public override PackageOperation PutItem(params ItemGroup[] groups)
+        {
+            _ItemChangedDic.Clear();
+            _ItemCellChangedList.Clear();
+            _RemainingList.Clear();
+            for (int i = 0; i < groups.Length; i++)
             {
-                if (result.RemainingNum != 0)
+                var g = groups[i].ToValid();
+                if (g.Id == 0 || !IsWeapon(g.Id)) continue;
+                _RemainingList.Add(g);
+                _ItemChangedDic.Add(g.Id, _RemainingList.Count - 1);
+            }
+
+            var result = new PackageOperation(
+                JumpOverInvalidItem(_RemainingList),
+                _ItemCellChangedList,
+                ToChangedItemGroups(_ItemChangedDic));
+
+            var remainingCount = _RemainingList.Count;
+            for (int curCellIndex = 0; curCellIndex < _RemainingList.Count; curCellIndex++)
+            {
+                var curCell = _Belt[curCellIndex];
+
+                var curSrcItemIndex = FindAvailableGroup(_RemainingList, curCell.Type);
+                if (curSrcItemIndex == -1) continue;
+                if (curCell.Group.Id == 0)
+                    curCell.Group.Id = _RemainingList[curSrcItemIndex].Id;
+
+                if (_ItemChangedDic.TryGetValue(curCell.Group.Id, out curSrcItemIndex))
                 {
-                    result.RemainingNum = itemGroup.Count;
-                    result.ItemChangeList.Clear();
-                }
-                else
-                {
-                    foreach (var i in result.ItemChangeList)
-                        _Belt[i] = _TempBelt[i];
-                    for (int i = 0; i < _TempBelt.Length; i++)
-                        _TempBelt[i] = new WeaponBeltCell();
+                    var maxStack = ItemSys.GetInfo(curCell.Group.Id).MaxStackNum;
+                    var curSrcItem = _RemainingList[curSrcItemIndex];
+                    if (curSrcItem.Count != 0)
+                    {
+                        var take = Mathf.Min(curSrcItem.Count, maxStack - curCell.Group.Count);
+                        curSrcItem.Count -= take;
+                        curCell.Group.Count += take;
+
+                        if (take != 0)
+                        {
+                            _ItemCellChangedList.Add(curCellIndex);
+                            _ItemChangedDic.ModifyIntDic(curCell.Group.Id, take);
+                        }
+
+                        _Belt[curCellIndex] = curCell;
+                        _RemainingList[curSrcItemIndex] = curSrcItem;
+
+                        if (curSrcItem.Count == 0)
+                        {
+                            remainingCount--;
+                            if (remainingCount == 0)
+                                break;
+                        }
+                    }
                 }
             }
 
-            foreach (var i in result.ItemChangeList)
+            foreach (var i in _ItemCellChangedList)
             {
                 if (_Belt[i].Weapon != null)
                     continue;
 
-                _Belt[i].Weapon = CreateWeaponObj(itemGroup.Id);
+                _Belt[i].Weapon = CreateWeaponObj(_Belt[i].Group.Id);
                 if (i == _CurWeapon)
                     _Belt[i].Weapon.TakeOut();
             }
@@ -243,11 +306,106 @@ namespace Thunder
             if (_CurWeapon == -1)
                 TakeOutWeapon(FindFirstAvailableWeapon(0));
 
+            if(_ItemCellChangedList.Count!=0)
+                InvokeOnItemCellChanged(result.PackageItemChangedInfo);
+            return result;
+        }
+
+        public override bool CostItemCheck(params ItemGroup[] groups)
+        {
+            _ItemChangedDic.Clear();
+            _RemainingList.Clear();
+            for (int i = 0; i < groups.Length; i++)
+            {
+                var g = groups[i].ToValid();
+                if (g.Id == 0) continue;
+                _RemainingList.Add(g);
+                _ItemChangedDic.Add(g.Id, _RemainingList.Count - 1);
+            }
+
+            var remainingCount = _RemainingList.Count;
+            foreach (var curCell in _Belt)
+            {
+                if (_ItemChangedDic.TryGetValue(curCell.Group.Id,out var curSrcItemIndex))
+                {
+                    var curSrcItem = _RemainingList[curSrcItemIndex];
+                    var take = Mathf.Min(curCell.Group.Count, curSrcItem.Count);
+                    curSrcItem.Count -= take;
+                    _RemainingList[curSrcItemIndex] = curSrcItem;
+                    if (curSrcItem.Count == 0)
+                    {
+                        remainingCount--;
+                        if (remainingCount == 0)
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public override PackageOperation CostItem(params ItemGroup[] groups)
+        {
+            _ItemChangedDic.Clear();
+            _ItemCellChangedList.Clear();
+            _RemainingList.Clear();
+            for (int i = 0; i < groups.Length; i++)
+            {
+                var g = groups[i].ToValid();
+                if (g.Id == 0 || !IsWeapon(g.Id)) continue;
+                _RemainingList.Add(g);
+                _ItemChangedDic.Add(g.Id, _RemainingList.Count - 1);
+            }
+
+            var result = new PackageOperation(
+                JumpOverInvalidItem(_RemainingList), 
+                _ItemCellChangedList, 
+                ToChangedItemGroups(_ItemChangedDic));
+
+            var remainingCount = _RemainingList.Count;
+            for (int i = 0; i < _Belt.Length; i++)
+            {
+                var curCell = _Belt[i];
+                if (_ItemChangedDic.TryGetValue(curCell.Group.Id, out var curSrcItemIndex))
+                {
+                    var curSrcItem = _RemainingList[curSrcItemIndex];
+                    if(curSrcItem.Count==0)
+                        continue;
+
+                    var take = Mathf.Min(curCell.Group.Count, curSrcItem.Count);
+                    curSrcItem.Count -= take;
+                    curCell.Group.Count -= take;
+                    _RemainingList[curSrcItemIndex] = curSrcItem;
+
+                    if (curSrcItem.Count == 0)
+                    {
+                        remainingCount--;
+                        if (remainingCount == 0)
+                            break;
+                    }
+
+                    if (take != 0)
+                    {
+                        _ItemCellChangedList.Add(i);
+                        _ItemChangedDic.ModifyIntDic(curSrcItem.Id,-take);
+                    }
+                }
+            }
+
+            foreach (var index in _ItemCellChangedList)
+                if (_Belt[index].Group.Count == 0)
+                    DestroyWeapon(index);
+
+            if(_ItemCellChangedList.Count!=0)
+                InvokeOnItemCellChanged(result.PackageItemChangedInfo);
+
             return result;
         }
 
         public override ItemGroup PutItemInto(int index, ItemGroup itemGroup)
         {
+            itemGroup = itemGroup.ToValid();
+
             var result = _Belt[index].Group;
             if (itemGroup.IsEmpty())
             {
@@ -255,32 +413,42 @@ namespace Thunder
                 return result;
             }
 
-            var preId = result.Id;
-            var maxStack = ItemSys.GetInfo(itemGroup.Id).MaxStackNum;
-
-            // 源物品组数据非法不能添加
-            // 交换操作无法完成不能添加
             // 源物品非武器不能添加
             // 目标单元格类型不正确不能添加
-            if (itemGroup.IsInvalid() ||
-                _Belt[index].Group.Id != 0 && _Belt[index].Group.Id != itemGroup.Id && itemGroup.Count > maxStack ||
-                !_WeaponInfoDic.TryGetValue(itemGroup.Id, out var info) ||
+            if (!_WeaponInfoDic.TryGetValue(itemGroup.Id, out var info) ||
                 info.Type != _Belt[index].Type)
                 return itemGroup;
 
+            var preId = result.Id;
+            var maxStack = ItemSys.GetInfo(itemGroup.Id).MaxStackNum;
+
+            if (_Belt[index].Group.Id != 0)
+                _Belt[index].Group.Id = itemGroup.Id;
+
+            _ItemCellChangedList.Clear();
+            _ItemChangedDic.Clear();
             if (_Belt[index].Group.Id != itemGroup.Id)
             {
-                _Belt[index].Group.Id = itemGroup.Id;
-                _Belt[index].Group.Count = 0;
+                // 交换操作无法完成不能添加
+                if (itemGroup.Count > maxStack)
+                    return itemGroup;
+
+                result = _Belt[index].Group;
+                _ItemChangedDic.ModifyIntDic(result.Id,-result.Count);
+                _Belt[index].Group = itemGroup;
+
+                _ItemCellChangedList.Add(index);
             }
+            else
+            {
+                var take = Mathf.Min(maxStack - _Belt[index].Group.Count, itemGroup.Count);
+                _Belt[index].Group.Count += take;
+                itemGroup.Count -= take;
 
-            var take = Mathf.Min(maxStack - _Belt[index].Group.Count, itemGroup.Count);
-            _Belt[index].Group.Count += take;
-
-            if (itemGroup.Count > take)
-                result.Id = itemGroup.Id;
-            if (result.Id == 0 || result.Id == itemGroup.Id)
-                result.Count = itemGroup.Count - take;
+                _ItemChangedDic.ModifyIntDic(itemGroup.Id,take);
+                if(take!=0)
+                    _ItemCellChangedList.Add(index);
+            }
 
             if (preId != _Belt[index].Group.Id)
             {
@@ -290,29 +458,54 @@ namespace Thunder
                     TakeOutWeapon(index);
             }
 
+            if(_ItemCellChangedList.Count!=0)
+                InvokeOnItemCellChanged(
+                    new PackageItemChangedInfo(
+                        _ItemCellChangedList,
+                        ToChangedItemGroups(_ItemChangedDic)));
+
             return result;
         }
 
         public override void SetItemAt(int index, ItemGroup itemGroup)
         {
-            if (itemGroup.Count == 0)
-            {
-                if (itemGroup.Id != 0) return;
+            itemGroup = itemGroup.ToValid();
 
-                DestroyWeapon(index);
-                _Belt[index].Group = new ItemGroup();
+            _ItemCellChangedList.Clear();
+            _ItemChangedDic.Clear();
+
+            if (itemGroup.Id != 0 &&
+                (!_WeaponInfoDic.TryGetValue(itemGroup.Id, out var info) ||
+                 info.Type != _Belt[index].Type))
                 return;
+
+            if (!_Belt[index].Group.Equals(itemGroup))
+                _ItemCellChangedList.Add(index);
+            else
+                return;
+
+            if (_Belt[index].Group.Id != 0)
+            {
+                DestroyWeapon(index);
+                var group = _Belt[index].Group;
+                
+                _ItemChangedDic.ModifyIntDic(group.Id,-group.Count);
             }
 
-            if (!_WeaponInfoDic.TryGetValue(itemGroup.Id, out var info) ||
-                info.Type != _Belt[index].Type)
-                return;
-
-            DestroyWeapon(index);
             _Belt[index].Group = itemGroup;
-            _Belt[index].Weapon = CreateWeaponObj(itemGroup.Id);
+            if (itemGroup.Id != 0)
+            {
+                _ItemChangedDic.ModifyIntDic(itemGroup.Id, itemGroup.Count);
+                _Belt[index].Weapon = CreateWeaponObj(_Belt[index].Group.Id);
+            }
             if (index == _CurWeapon)
                 TakeOutWeapon(index);
+
+            if(_ItemCellChangedList.Count!=0)
+                InvokeOnItemCellChanged(
+                    new PackageItemChangedInfo(
+                        _ItemCellChangedList,
+                        ToChangedItemGroups(_ItemChangedDic)));
         }
 
         public override IEnumerable<ItemGroup> GetAllItemInfo()
@@ -321,46 +514,9 @@ namespace Thunder
                    select cell.Group;
         }
 
-        public override ItemGroup GetItemInfoFrom(int index)
+        public override ItemGroup GetItemInfo(int index)
         {
             return _Belt[index].Group;
-        }
-
-        public override PackageOperation CostItem(ItemGroup itemGroup, bool costOnlyItemEnough)
-        {
-            var result = PackageOperation.Take();
-            if (costOnlyItemEnough)
-            {
-                var count = 0;
-                foreach (var weaponBowCell in _Belt)
-                    if (weaponBowCell.Group.Id == itemGroup.Id)
-                        count += weaponBowCell.Group.Count;
-                if (count < itemGroup.Count)
-                {
-
-                    result.RemainingNum = itemGroup.Count;
-                    return result;
-                }
-            }
-
-            result.RemainingNum = itemGroup.Count;
-            for (int i = 0; i < _Belt.Length; i++)
-            {
-                if (_Belt[i].Group.Id != itemGroup.Id) continue;
-
-                var take = Mathf.Min(_Belt[i].Group.Count, result.RemainingNum);
-                _Belt[i].Group.Count -= take;
-                result.RemainingNum -= take;
-
-                result.ItemChangeList.Add(i);
-
-                if (_Belt[i].Group.Count == 0)
-                    DestroyWeapon(i);
-                if (result.RemainingNum == 0)
-                    break;
-            }
-
-            return result;
         }
 
         public override void SortItem()
@@ -379,7 +535,7 @@ namespace Thunder
 
         private BaseWeapon CreateWeaponObj(ItemId id)
         {
-            var weapon = ObjectPool.GetPrefab(_WeaponInfoDic[id].PrefabPath)
+            var weapon = GameObjectPool.GetPrefab(_WeaponInfoDic[id].PrefabPath)
                 .GetInstantiate()
                 .GetComponent<BaseWeapon>();
             weapon.Init(_WeaponContainer, id.Add);
@@ -402,6 +558,18 @@ namespace Thunder
 
             } while (i != startIndex);
             
+            return -1;
+        }
+
+        private int FindAvailableGroup(IList<ItemGroup> groups, WeaponType weaponType)
+        {
+            for (int i = 0; i < groups.Count; i++)
+            {
+                if (groups[i].Count <= 0) continue;
+                if (!_WeaponInfoDic.TryGetValue(groups[i].Id, out var info)) continue;
+                if (info.Type == weaponType) return i;
+            }
+
             return -1;
         }
 
@@ -456,7 +624,21 @@ namespace Thunder
                 result[i].Type = beltTypes[i];
             return result;
         }
+        
+        private static IEnumerable<ItemGroup> ToChangedItemGroups(Dictionary<ItemId, int> dic)
+        {
+            foreach (var i in dic)
+                yield return new ItemGroup(i.Key, i.Value);
+        }
 
+        private static IEnumerable<ItemGroup> JumpOverInvalidItem(IEnumerable<ItemGroup> groups)
+        {
+            foreach (var itemGroup in groups)
+            {
+                if (itemGroup.Count != 0)
+                    yield return itemGroup;
+            }
+        }
         private readonly struct WeaponInfo
         {
             public readonly WeaponType Type;

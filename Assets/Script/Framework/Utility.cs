@@ -13,6 +13,7 @@ using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Action = System.Action;
 
 namespace Framework
 {
@@ -1107,12 +1108,6 @@ namespace Framework
 
     public class SimpleCounter : Counter
     {
-        public SimpleCounter(float timeLimit, bool countAtStart = true) : base(timeLimit)
-        {
-            if (countAtStart) return;
-            TimeCountStart -= TimeLimit;
-        }
-
         public override float TimeCount =>
             Time.time - TimeCountStart;
 
@@ -1138,6 +1133,8 @@ namespace Framework
             TimeCountStart = Time.time - TimeLimit;
             return this;
         }
+
+        public SimpleCounter(float timeLimit) : base(timeLimit) { }
     }
 
     public class SimpleCounterQueue
@@ -1607,9 +1604,14 @@ namespace Framework
         }
     }
 
+    /// <summary>
+    /// 表示一个过程
+    /// </summary>
     public class Process
     {
         private int _TaskCount=0;
+
+        public bool Running => _TaskCount > 0;
 
         public event Action OnProcessComplete;
 
@@ -1623,6 +1625,174 @@ namespace Framework
             _TaskCount--;
             if(_TaskCount==0)
                 OnProcessComplete?.Invoke();
+        }
+    }
+
+    /// <summary>
+    /// 数字类型的资源，例如健康值、电力值
+    /// </summary>
+    public class NumericResource
+    {
+        public float Max;
+        public float Cur;
+        public float Min;
+
+        /// <summary>
+        /// 是否在资源原本就是最大值并添加资源时触发ReachMax
+        /// </summary>
+        public bool TriggerMaxToMax;
+        /// <summary>
+        /// 是否在资源原本就是最小值并消耗资源时触发ReachMin
+        /// </summary>
+        public bool TriggerMinToMin;
+
+        /// <summary>
+        /// 当前资源达到最小值时触发
+        /// </summary>
+        public event Action ReachMin;
+        /// <summary>
+        /// 当前资源达到最大值时触发
+        /// </summary>
+        public event Action ReachMax;
+
+        public AdapterEvent<float> OnChanged;
+
+        public NumericResource(float min, float cur, float max)
+        {
+            Max = max;
+            Cur = cur;
+            Min = min;
+            OnChanged = new AdapterEvent<float>(() => Cur);
+        }
+
+        /// <summary>
+        /// 判断当前资源是否能够满足消耗
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public bool CostCheck(float amount)
+        {
+            return Cur - amount >= Min;
+        }
+
+        /// <summary>
+        /// 消耗指定数量的资源
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="costOnlyEnough">是否仅当资源足够时消耗</param>
+        /// <returns>缺少多少资源</returns>
+        public float Cost(float amount, bool costOnlyEnough = false)
+        {
+            if (amount == 0)
+                return 0;
+
+            var left = Cur - amount;
+            if (left < Min && costOnlyEnough)
+                return amount;
+
+            if (left > Min)
+            {
+                Cur = left;
+                OnChanged.Invoke(Cur);
+                return 0;
+            }
+
+            if (Cur != Min || TriggerMinToMin)
+                ReachMin?.Invoke();
+
+            Cur = Min;
+            OnChanged.Invoke(Cur);
+            return left < Min ? Min - left : 0;
+        }
+
+        /// <summary>
+        /// 添加指定数量的资源
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="addOnlyEnough">是否仅当空间足够时添加</param>
+        /// <returns>有多少资源未被添加</returns>
+        public float Add(float amount, bool addOnlyEnough = false)
+        {
+            if (amount == 0)
+                return 0;
+
+            var after = Cur + amount;
+            if (after > Max && addOnlyEnough)
+                return amount;
+
+            if (after < Max)
+            {
+                Cur = after;
+                OnChanged.Invoke(Cur);
+                return 0;
+            }
+
+            if (Cur != Max || TriggerMaxToMax)
+                ReachMax?.Invoke();
+
+            Cur = Max;
+            OnChanged.Invoke(Cur);
+            return after > Max ? after - Max : 0;
+        }
+    }
+
+    /// <summary>
+    /// 提交事件，一般用于更新ui数据，在监听者注册时自动触发事件
+    /// </summary>
+    public class AdapterEvent
+    {
+        private event Action Event;
+
+        public void Invoke()
+        {
+            Event?.Invoke();
+        }
+
+        public void AddListener(Action act)
+        {
+            Event += act;
+            Invoke();
+        }
+
+        public void RemoveListener(Action act)
+        {
+            Event -= act;
+        }
+    }
+
+    /// <summary>
+    /// 提交事件，一般用于更新ui数据，在监听者注册时自动触发事件
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class AdapterEvent<T>
+    {
+        public Func<T> OnAddListener;
+
+        private event Action<T> Event;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="onAddListener">当有新的监听者注册时该触发数据</param>
+        public AdapterEvent(Func<T> onAddListener)
+        {
+            OnAddListener = onAddListener;
+        }
+
+        public void Invoke(T obj)
+        {
+            Event?.Invoke(obj);
+        }
+
+        public void AddListener(Action<T> act)
+        {
+            Event += act;
+            Invoke(OnAddListener == null ? default : OnAddListener());
+        }
+
+        public void RemoveListener(Action<T> act)
+        {
+            Event -= act;
         }
     }
 }

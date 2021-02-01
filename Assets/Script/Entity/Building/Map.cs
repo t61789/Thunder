@@ -25,6 +25,12 @@ namespace Thunder
             _MapCenter = MapSize / 2;
             if (_BuildingInfos == null)
                 LoadBuildingInfos();
+            PutBaseBuildings();
+        }
+
+        private void OnDestroy()
+        {
+            Ins = null;
         }
 
         public bool GroundEmpty(IEnumerable<Coord2> coords)
@@ -42,11 +48,22 @@ namespace Thunder
         /// <param name="buildingId"></param>
         /// <param name="rotation">向某方向旋转多次，大于0为逆时针，小于0为顺时针</param>
         /// <param name="center">建筑的中心点</param>
-        public void PutBuilding(int buildingId, int rotation, Coord2 center)
+        public bool PutBuilding(int buildingId, int rotation, Coord2 center)
         {
-            if (buildingId == 0) return;
+            if (buildingId == 0) return false;
+            var buildingInfo = _BuildingInfos[buildingId];
 
-            foreach (var coord in _BuildingInfos[buildingId].GetRotatedCoords(rotation))
+            if (!GlobalResource.Ins.CostCheck(buildingInfo.Cost)) return false;
+
+            var offsetPos = buildingInfo.GetRotatedCenterPos(rotation);
+            var rot = Quaternion.AngleAxis(-90 * rotation, Vector3.up);
+
+            GameObjectPool.GetPrefab(buildingInfo.PrefabPath)
+                .GetInstantiate()
+                .GetComponent<BaseBuilding>()
+                .Install(GetPos(center) + offsetPos, rot);
+
+            foreach (var coord in buildingInfo.GetRotatedCoords(rotation))
             {
                 var newCoord = coord + center;
                 var cell = new Cell()
@@ -56,6 +73,9 @@ namespace Thunder
 
                 SetCell(newCoord,cell);
             }
+
+            GlobalResource.Ins.Cost(buildingInfo.Cost);
+            return true;
         }
 
         public BuildingInfo GetBuildingInfo(int buildingId)
@@ -70,9 +90,19 @@ namespace Thunder
             return new Coord2(Tools.Round(xzPos.x / GridSize), Tools.Round(xzPos.z / GridSize));
         }
 
+        public Vector3 GetPos(Coord2 coord)
+        {
+            return new Vector3(coord.x * GridSize + Center.x, 0, coord.y * GridSize + Center.z);
+        }
+
         public Vector3 SnapToGrid(Vector3 xzOrigin)
         {
             return new Vector3(SnapToGrid(xzOrigin.x, true), xzOrigin.y, SnapToGrid(xzOrigin.z, false));
+        }
+
+        public void PutBaseBuildings()
+        {
+            PutBuilding(5,0,new Coord2());
         }
 
         private float SnapToGrid(float origin, bool x)
@@ -126,6 +156,7 @@ namespace Thunder
         public string ModelPath;
         public string PrefabPath;
         public Coord2[] Coords;
+        public GlobalResourceCost Cost;
 
         [JsonIgnore] public Coord2 RotateCenterCoord;
         [JsonIgnore] public Vector3 CenterPosOffset;
@@ -150,6 +181,19 @@ namespace Thunder
 
                 yield return new Coord2(Tools.Round(vector.x), Tools.Round(vector.z));
             }
+        }
+
+        public Vector3 GetRotatedCenterPos(int rotation)
+        {
+            rotation %= 4;
+            var matrix = rotation > 0 ? Tools.CounterClockwiseRot : Tools.ClockwiseRot;
+            rotation = Mathf.Abs(rotation);
+
+            var result = CenterPosOffset;
+            for (int i = 0; i < rotation; i++)
+                result = matrix * result;
+
+            return result;
         }
 
         private void SortCoords(float gridSize)

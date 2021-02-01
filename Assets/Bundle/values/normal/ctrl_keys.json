@@ -1,0 +1,19 @@
+[
+{"Name":	"machine_gun_fire_key",						"keyName":	"Fire1",						"shieldValue":	0},
+{"Name":	"machine_gun_reload_key",					"keyName":	"Reload",						"shieldValue":	0},
+{"Name":	"machine_gun_aim_key",						"keyName":	"Fire2",						"shieldValue":	0},
+{"Name":	"machine_gun_switch_fire_key",				"keyName":	"v",							"shieldValue":	0},
+{"Name":	"fps_mover_move_key",						"keyName":	"Axis1",						"shieldValue":	0},
+{"Name":	"fps_mover_jump_key",						"keyName":	"Jump",							"shieldValue":	0},
+{"Name":	"fps_mover_squat_key",						"keyName":	"Squat",						"shieldValue":	0},
+{"Name":	"weapon_belt_drop_weapon_key",				"keyName":	"DropWeapon",					"shieldValue":	0},
+{"Name":	"weapon_belt_pre_weapon_key",				"keyName":	"SwitchPreWeapon",				"shieldValue":	0},
+{"Name":	"building_mode_camera_move_key",			"keyName":	"Axis1",						"shieldValue":	10},
+{"Name":	"building_mode_camera_scroll_height_key",	"keyName":	"ScaleBuildingModeCamera",		"shieldValue":	10},
+{"Name":	"building_mode_camera_fast_move_key",		"keyName":	"FastMoveBuildingModeCamera",	"shieldValue":	10},
+{"Name":	"virtual_building_rotate_key",				"keyName":	"RotateVirtualBuilding",		"shieldValue":	10},
+{"Name":	"virtual_building_put_key",					"keyName":	"PutVirtualBuilding",			"shieldValue":	10},
+{"Name":	"virtual_building_cancel_key",				"keyName":	"CancelVirtualBuilding",		"shieldValue":	10},
+{"Name":	"building_mode_start_key",					"keyName":	"BuildingModeStart",			"shieldValue":	0},
+{"Name":	"building_mode_end_key",					"keyName":	"BuildingModeEnd",				"shieldValue":	10}
+]

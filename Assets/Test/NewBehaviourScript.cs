@@ -4,16 +4,24 @@ using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
 using FairyGUI;
 using Framework;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
+    private Shit Ss;
 
-    private void OnGUI()
+    private void Awake()
     {
-        if (GUI.Button(new Rect(0, 0, 200, 100), "Test"))
+        Ss = new Shit();
+        NewBehaviourScript1.Say += Ss.Say;
+    }
+
+    private class Shit
+    {
+        public void Say()
         {
-            UiSys.OpenUi("packagePanel");
+            Debug.Log(123);
         }
     }
 }

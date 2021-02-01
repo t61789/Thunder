@@ -24,18 +24,18 @@ namespace Thunder
 
         public static void Create(Vector3 pos, Vector3 normal)
         {
-            var hole = ObjectPool.Get<BulletHole>("bulletHole");
+            var hole = GameObjectPool.Get<BulletHole>("bulletHole");
             hole.Init(pos, normal, Instance.Sprites.RandomTake());
             hole = Instance._BulletHoles.Enqueue(hole);
             if (hole != null)
-                ObjectPool.Put(hole);
+                GameObjectPool.Put(hole);
         }
 
         private void Clear()
         {
             var hole = _BulletHoles.Dequeue();
             if (hole != null)
-                ObjectPool.Put(hole);
+                GameObjectPool.Put(hole);
             _ClearCounter.Recount();
         }
     }

@@ -5,7 +5,7 @@ namespace Thunder.UI
 {
     public class StorageBoxPanel:PanelUi
     {
-        public PackageCellAdapter PackageCellAdapter { private set; get; }
+        //public PackageCellAdapter PackageCellAdapter { private set; get; }
 
         protected override void Awake()
         {

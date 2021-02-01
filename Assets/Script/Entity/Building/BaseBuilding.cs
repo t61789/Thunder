@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Thunder
 {
-    public class BaseBuilding:BaseEntity
+    public class BaseBuilding:BaseCharacter
     {
         public int BuildingId;
 

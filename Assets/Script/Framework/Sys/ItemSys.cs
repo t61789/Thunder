@@ -23,12 +23,12 @@ namespace Framework
             Ins = this;
             _ItemInfo = new Dictionary<int, ItemInfo>();
             QueryDicFromTable(_ItemInfo,Config.ItemInfoTableName);
-            QueryDicFromJson(_ItemInfo,Config.ItemInfoValueName);
+            QueryDicFromJson(_ItemInfo,Config.ItemInfoValuePath);
         }
 
         public static ItemInfo GetInfo(int id)
         {
-            return _ItemInfo.TryGetAndAlert(id, $"未找到id为 {id} 的物品信息");
+            return _ItemInfo.TryGetAndException(id, $"未找到id为 {id} 的物品信息");
         }
 
         public static IEnumerable<ItemInfo> GetInfos()
@@ -293,9 +293,24 @@ namespace Framework
             return Id == 0 && Count == 0;
         }
 
+        /// <summary>
+        /// 以下两种情况为不合法组：1.Id为0而数量不为0 2.数量为0而Id不为0
+        /// </summary>
+        /// <returns></returns>
         public bool IsInvalid()
         {
-            return Id != 0 && Count == 0;
+            return Id.Id == 0 && Count != 0 || Id != 0 && Count == 0;
+        }
+
+        /// <summary>
+        /// 转换成合法组
+        /// </summary>
+        /// <returns></returns>
+        public ItemGroup ToValid()
+        {
+            if (Id.Id == 0 || Count == 0)
+                return new ItemGroup();
+            return this;
         }
 
         public static implicit operator ItemGroup(ItemId id)

@@ -1,33 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Framework;
+﻿using Framework;
 using UnityEngine;
-using Action = BehaviorDesigner.Runtime.Tasks.Action;
 using TaskStatus = BehaviorDesigner.Runtime.Tasks.TaskStatus;
 
 namespace Thunder
 {
+    [RequireComponent(typeof(Enemy))]
     public class AIMover : Mover
     {
         private Vector3 _MoveDir;
         private bool _Jump;
         private bool _Squat;
+        private Enemy _Enemy;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _Enemy = GetComponent<Enemy>();
+        }
+
+        protected override void FixedUpdate()
+        {
+            base.FixedUpdate();
+            var moveTarget = GetMoveTargetTrans();
+            var dir = (moveTarget.position - Trans.position).ProjectToXz().normalized;
+            Trans.rotation = Quaternion.LookRotation(dir, Vector3.up);
+        }
+
+        public void Clear()
+        {
+            _MoveDir = Vector3.zero;
+            _Jump = false;
+            _Squat = false;
+        }
 
         public void Move(Vector3 dir)
         {
             _MoveDir = dir;
         }
 
-        public TaskStatus MoveTowardsPlayer()
+        public TaskStatus Move()
         {
-            if (Player.Ins == null) return TaskStatus.Success;
-            var dir = (Player.Ins.Trans.position - Trans.position).ProjectToXz().normalized;
+            var moveTarget = GetMoveTargetTrans();
+            var pos = moveTarget == null ? Trans.position : moveTarget.position;
+            var dir = (pos - Trans.position).ProjectToXz().normalized;
             Move(dir);
-            Trans.rotation = Quaternion.LookRotation(dir, Vector3.up);
-
             return TaskStatus.Success;
         }
 
@@ -41,6 +57,12 @@ namespace Thunder
         {
             _Squat = true;
             return TaskStatus.Success;
+        }
+
+        public Transform GetMoveTargetTrans()
+        {
+            var target = _Enemy.GetTarget();
+            return target == null ? GlobalResource.Ins.GetFinalTarget() : target.Trans;
         }
 
         protected override ControlInfo GetMoveControl()

@@ -47,7 +47,7 @@ namespace Thunder.UI
             scrollbar.x.value = 0;
 
             foreach (var item in elements)
-                ObjectPool.Put(item);
+                GameObjectPool.Put(item);
             elements.Clear();
 
             foreach (RectTransform item in elementsTrans)
@@ -144,7 +144,7 @@ namespace Thunder.UI
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parameters.elementSize.x);
                 elementContainer.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parameters.elementSize.y);
 
-                var item = ObjectPool.Get<T>(new AssetId(UiSys.DefaultUIBundle, parameters.elementName));
+                var item = GameObjectPool.Get<T>(new AssetId(UiSys.DefaultUIBundle, parameters.elementName));
                 inits[i]?.Invoke(item);
                 var rectTransform = item.GetComponent<RectTransform>();
                 rectTransform.SetParent(elementContainer);

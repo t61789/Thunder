@@ -50,7 +50,8 @@ namespace Thunder
             _ShootCounter = new SimpleCounter(FireInterval);
             _Burst.Init();
             AmmoGroup.Init(player.Package);
-            
+            SetLauncher(GetComponent<RangedWeaponLauncher>());
+
             DecompressItem(addData);
         }
 
@@ -102,7 +103,16 @@ namespace Thunder
         /// <param name="launcher"></param>
         public void SetLauncher(RangedWeaponLauncher launcher)
         {
+            if(_RangedWeaponLauncher==null)
+            {
+                if (launcher == null)
+                    Debug.Log($"{name} 未指定发射器");
+                return;
+            }
+            Destroy(_RangedWeaponLauncher);
+
             _RangedWeaponLauncher = launcher;
+            _RangedWeaponLauncher.OnHit = OnHit;
         }
 
         /// <summary>
@@ -138,12 +148,6 @@ namespace Thunder
         public abstract void DecompressItem(string add);
 
         /// <summary>
-        /// 获取处理击中信息的钩子函数
-        /// </summary>
-        /// <returns></returns>
-        public abstract Action<HitInfo> GetBulletHitHook();
-
-        /// <summary>
         /// 获取当前的浮动后坐力
         /// </summary>
         /// <returns></returns>
@@ -151,6 +155,12 @@ namespace Thunder
         {
             return Vector2.zero;
         }
+
+        /// <summary>
+        /// 子弹击中时触发
+        /// </summary>
+        /// <returns></returns>
+        protected abstract void OnHit(IEnumerable<HitInfo> hitInfos);
 
         /// <summary>
         /// 操作一次扳机
@@ -335,7 +345,7 @@ namespace Thunder
             add
             {
                 _OnAmmoChanged += value;
-                InvokeOnAmmoChanged(null);
+                InvokeOnAmmoCellChanged(default);
             }
 
             remove => _OnAmmoChanged -= value;
@@ -351,12 +361,12 @@ namespace Thunder
         {
             _AmmoIdInMagazine = _AmmoId;
             Package = package;
-            Package.OnItemChanged += InvokeOnAmmoChanged;
+            Package.OnItemChanged += InvokeOnAmmoCellChanged;
         }
 
         public void Destroy()
         {
-            Package.OnItemChanged -= InvokeOnAmmoChanged;
+            Package.OnItemChanged -= InvokeOnAmmoCellChanged;
         }
 
         /// <summary>
@@ -377,7 +387,7 @@ namespace Thunder
         {
             if (_AmmoIdInMagazine != AmmoId)
             {
-                Package.PutItem((_AmmoIdInMagazine, Magazine), false);
+                Package.PutItem((_AmmoIdInMagazine, Magazine));
                 Magazine = 0;
                 _AmmoIdInMagazine = AmmoId;
             }
@@ -385,8 +395,8 @@ namespace Thunder
 
             var ammoDiff = Mathf.Min(MagazineMax - Magazine, BackupAmmo);
             Magazine += ammoDiff;
-            Package.CostItem((AmmoId, ammoDiff), false);
-            InvokeOnAmmoChanged(null);
+            Package.CostItem((AmmoId, ammoDiff));
+            InvokeOnAmmoCellChanged(default);
             return true;
         }
 
@@ -412,12 +422,12 @@ namespace Thunder
             {
                 if (!costOnlyAmmoEnough)
                     Magazine = 0;
-                InvokeOnAmmoChanged(null);
+                InvokeOnAmmoCellChanged(default);
                 return -temp;
             }
 
             Magazine = temp;
-            InvokeOnAmmoChanged(null);
+            InvokeOnAmmoCellChanged(default);
             return 0;
         }
 
@@ -443,7 +453,7 @@ namespace Thunder
         {
             if (magazineMax < 0)
                 throw new Exception($"弹容量设置错误 {magazineMax}");
-            InvokeOnAmmoChanged(null);
+            InvokeOnAmmoCellChanged(default);
             MagazineMax = magazineMax;
             if (discardExtraPart && Magazine > MagazineMax)
                 Magazine = MagazineMax;
@@ -456,10 +466,10 @@ namespace Thunder
         public void SetAmmoId(int ammoId)
         {
             AmmoId = ammoId;
-            InvokeOnAmmoChanged(null);
+            InvokeOnAmmoCellChanged(default);
         }
 
-        public void InvokeOnAmmoChanged(IEnumerable<int> a)
+        public void InvokeOnAmmoCellChanged(PackageItemChangedInfo a)
         {
             _OnAmmoChanged?.Invoke(this);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Framework;
 using Thunder.UI;
 using UnityEngine;
@@ -9,12 +10,10 @@ namespace Thunder
     [RequireComponent(typeof(FpsCamera))]
     [RequireComponent(typeof(FpsMover))]
     [RequireComponent(typeof(Starvation))]
-    public class Player : BaseEntity, IHitAble
+    public class Player : BaseCharacter
     {
         public static Player Ins;
-
-        public float MaxHealth = 100;
-        public float CurHealth = 100;
+        
         public int PackageSize = 30;
         public float DropItemForce = 2;
         public float InteractiveRange = 2;
@@ -51,8 +50,6 @@ namespace Thunder
             Starvation = GetComponent<Starvation>();
 
             PublicEvents.DropItem.AddListener(Drop);
-
-
         }
 
         private void Update()
@@ -74,6 +71,7 @@ namespace Thunder
         {
             Dropper.Destroy();
             WeaponBelt.Destroy();
+
             PublicEvents.DropItem.RemoveListener(Drop);
         }
 
@@ -91,15 +89,12 @@ namespace Thunder
 
         public void ReceiveItem(ItemGroup group)
         {
-            int remaining;
-            using (var info = WeaponBelt.PutItem(group, false))
-                remaining = info.RemainingNum;
+            int remaining = WeaponBelt.PutItem(group).Remaining.FirstOrDefault().Count;
             if (remaining == 0)
                 return;
             group.Count = remaining;
 
-            using (var info = Package.PutItem(group, false))
-                remaining = info.RemainingNum;
+            remaining = Package.PutItem(group).Remaining.FirstOrDefault().Count;
             if (remaining == 0)
                 return;
             group.Count = remaining;
@@ -107,20 +102,14 @@ namespace Thunder
             Drop(group);
         }
 
-        public void GetHit(Vector3 hitPos, Vector3 hitDir, float damage)
+        public override void GetHit(Vector3 hitPos, Vector3 hitDir, float damage)
         {
-            CurHealth -= damage;
-            if (CurHealth <= 0)
-            {
-                CurHealth = 0;
-                Dead();
-            }
-
-            Debug.Log(CurHealth);
+            Health.Cost(damage);
         }
 
-        private void Dead()
+        protected override void Dead()
         {
+            base.Dead();
             LogPanel.Ins.LogSystem("Game Over");
             Destroy(gameObject);
             PublicEvents.PlayerDead?.Invoke();
@@ -146,7 +135,7 @@ namespace Thunder
             if (prefabPath.IsNullOrEmpty())
                 prefabPath = Config.DefaultPickupableItemAssetPath;
 
-            var item = ObjectPool.Get<PickupableItem>(prefabPath);
+            var item = GameObjectPool.Get<PickupableItem>(prefabPath);
             var rot = _Rot();
             var force = rot * Vector3.forward * _LaunchForce;
             item.Launch(_Pos(), rot, force, group);
@@ -181,12 +170,12 @@ namespace Thunder
         {
             if (WeaponBelt.IsWeapon(group.Id))
             {
-                _WeaponBelt.PutItem((group.Id, 1), false);
+                _WeaponBelt.PutItem((group.Id, 1));
                 return;
             }
 
             if (!_Package.CanPackage(group.Id)) return;
-            _Package.PutItem(group, false);
+            _Package.PutItem(group);
         }
     }
 }

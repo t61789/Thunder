@@ -9,13 +9,13 @@ namespace Thunder
         public static BuildingModeCamera Ins { private set; get; }
 
         public int StartMoveShieldValue = 15;
-        public Vector3 StartOffsetPos;
+        public Vector3 StartOffsetPos = new Vector3(0,10,0);
         public Vector3 StartRotVec = Vector3.down;
         public float Height = 10;
         public float MoveToStartPosTime = 1f;
-        public CtrlKey MoveKey = new CtrlKey("Axis1", 10);
-        public CtrlKey ScrollHeightKey = new CtrlKey("ScaleBuildingModeCamera", 10);
-        public CtrlKey FastMoveKey = new CtrlKey("FastMoveBuildingModeCamera", 10);
+        public string MoveKey = "building_mode_camera_move_key";
+        public string ScrollHeightKey = "building_mode_camera_scroll_height_key";
+        public string FastMoveKey = "building_mode_camera_fast_move_key";
         public float MoveDamp = 0.3f;
         public float MoveSpeed = 0.1f;
         public float ScrollHeightSpeed = 2;
@@ -70,6 +70,8 @@ namespace Thunder
 
         private void OnDestroy()
         {
+            Ins = null;
+
             PublicEvents.StartingBuildingMode.RemoveListener(StartingBuildingMode);
             PublicEvents.StartBuildingMode.RemoveListener(StartBuildingMode);
             PublicEvents.EndingBuildingMode.RemoveListener(EndingBuildingMode);
@@ -78,14 +80,14 @@ namespace Thunder
 
         private void MoveCtrl()
         {
-            var ctrlInfo = ControlSys.RequireKey(MoveKey);
+            var ctrlInfo = ControlSys.RequireKey(CtrlKeys.GetKey(MoveKey));
             ctrlInfo.HandleRawAxis();
             _MoveSyner.Set(ctrlInfo);
 
-            ctrlInfo = ControlSys.RequireKey(FastMoveKey);
+            ctrlInfo = ControlSys.RequireKey(CtrlKeys.GetKey(FastMoveKey));
             _FastMoveSyner.Set(ctrlInfo);
 
-            ctrlInfo = ControlSys.RequireKey(ScrollHeightKey);
+            ctrlInfo = ControlSys.RequireKey(CtrlKeys.GetKey(ScrollHeightKey));
             _ScrollHeightSyner.Set(ctrlInfo);
         }
 

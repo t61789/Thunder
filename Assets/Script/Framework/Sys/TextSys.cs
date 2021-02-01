@@ -6,22 +6,22 @@ using UnityEngine;
 
 namespace Framework
 {
-    public partial class TextSys : IBaseSys
+    public class TextSys : IBaseSys
     {
+        private static Dictionary<string, string> _Dic 
+            = new Dictionary<string, string>();
+
         public TextSys()
         {
-
-            var dic = (
-                    from row in DataBaseSys.GetTable("database/normal/text")
+            _Dic = (
+                    from row in DataBaseSys.GetTable(Config.TextTableName)
                     select new { key = (string)row["key"], text = (string)row["text"] })
                 .ToDictionary(x => x.key, x => x.text);
-            SetStrValues(dic);
         }
 
-        private static void SetStrValues(IReadOnlyDictionary<string, string> dic)
+        public static string GetText(string key)
         {
-            foreach (var field in typeof(TextSys).GetFields(BindingFlags.Static | BindingFlags.Public))
-                field.SetValue(null, dic[field.Name]);
+            return _Dic.TryGetAndLog(key,$"未找到指定文本 \"{key}\"");
         }
 
         public void OnSceneEnter(string preScene, string curScene) { }

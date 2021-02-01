@@ -64,12 +64,14 @@
     <Compile Include="Assets\Lib\FairyGUI\Scripts\Editor\StageCameraEditor.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Editor\BehaviorTreeInspector.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_UnityEngine_Input.cs" />
+    <Compile Include="Assets\Lib\UnityChanToon\Editor\RemoveUnusedMaterialProperties.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_LuaInterface_LuaMethod.cs" />
     <Compile Include="Assets\Editor\BehaviorDesignerCheck.cs" />
     <Compile Include="Assets\Lib\ToLua\Injection\Editor\ToluaInjectionBlackListPanel.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_System_String.cs" />
     <Compile Include="Assets\Lib\Behavior Designer\Editor\ExternalBehaviorTreeInspector.cs" />
     <Compile Include="Assets\Editor\Custom\CustomSettings.cs" />
+    <Compile Include="Assets\Lib\UnityChanToon\Editor\CopyMaterialParameter.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_System_Enum.cs" />
     <Compile Include="Assets\Editor\Combine\AnimationCombine.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_UnityEngine_RectTransform.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="Assets\Editor\Tool\ControllerProp.cs" />
     <Compile Include="Assets\Lib\FairyGUI\Scripts\Editor\UIContentScalerEditor.cs" />
     <Compile Include="Assets\Lib\FairyGUI\Scripts\Editor\DisplayObjectEditor.cs" />
+    <Compile Include="Assets\Editor\GetChildPos.cs" />
     <Compile Include="Assets\Lib\ToLua\Injection\Editor\ToLuaInjectionHelper.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_UnityEngine_Object.cs" />
     <Compile Include="Assets\Lib\FairyGUI\Scripts\Editor\UIConfigEditor.cs" />
@@ -85,6 +88,7 @@
     <Compile Include="Assets\Lib\Behavior Designer\Editor\Object Drawers\FloatSliderDrawer.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_LuaInterface_LuaField.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_UnityEngine_GameObject.cs" />
+    <Compile Include="Assets\Lib\UnityChanToon\Editor\UTS2GUI.cs" />
     <Compile Include="Assets\Lib\ToLua\Injection\Editor\CustomCecilRocks\MethodBodyRocks.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\ToLuaExport.cs" />
     <Compile Include="Assets\Lib\FairyGUI\Scripts\Editor\UIPanelEditor.cs" />
@@ -92,6 +96,7 @@
     <Compile Include="Assets\Lib\FairyGUI\Scripts\Editor\UIPainterEditor.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_LuaInterface_LuaProperty.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_System_Delegate.cs" />
+    <Compile Include="Assets\Lib\UnityChanToon\Editor\RemoveUnusedShaderKeywordsFromUTS2Material.cs" />
     <Compile Include="Assets\Lib\ToLua\Injection\Editor\ToLuaText.cs" />
     <Compile Include="Assets\Lib\FairyGUI\Scripts\Editor\PackagesWindow.cs" />
     <Compile Include="Assets\Lib\ToLua\Editor\Extend\ToLua_LuaInterface_LuaConstructor.cs" />

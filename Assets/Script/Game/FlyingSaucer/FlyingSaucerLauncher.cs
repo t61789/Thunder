@@ -89,7 +89,7 @@ namespace Thunder.Game.FlyingSaucer
             _Launcher.position = Trans.position + force.normalized;
             _Launcher.rotation = Quaternion.LookRotation(force);
 
-            var saucer = ObjectPool.Get<FlyingSaucer>("flyingSaucer");
+            var saucer = GameObjectPool.Get<FlyingSaucer>("flyingSaucer");
             saucer.transform.position = _Launcher.position;
             saucer.Launch(force);
         }
@@ -105,7 +105,7 @@ namespace Thunder.Game.FlyingSaucer
             _LaunchCounter.Recount();
             Vector3 force = Trans.localToWorldMatrix * dir.normalized * LaunchSpeed;
 
-            var saucer = ObjectPool.Get<FlyingSaucer>("flyingSaucer");
+            var saucer = GameObjectPool.Get<FlyingSaucer>("flyingSaucer");
             saucer.transform.position = _Launcher.position;
             saucer.Launch(force);
         }

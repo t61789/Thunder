@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BehaviorDesigner.Runtime.Tasks;
 using Framework;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace Thunder
 {
     public abstract class RangedWeaponLauncher:MonoBehaviour
     {
-        public Action<HitInfo> OnHit;
+        public Action<IEnumerable<HitInfo>> OnHit;
 
         public float OverHeat => BulletSpread.OverHeat;
 
@@ -16,14 +17,11 @@ namespace Thunder
         protected virtual void Awake()
         {
             BulletSpread = GetComponent<BulletSpread>();
-            var baseWeapon = GetComponent<BaseWeapon>();
-            baseWeapon.SetLauncher(this);
-            OnHit = baseWeapon.GetBulletHitHook();
         }
 
         public abstract void FireOnce(Vector3 pos,Vector3 dir);
 
-        protected void HitSomething(HitInfo hitInfo)
+        protected void HitSomething(IEnumerable<HitInfo> hitInfo)
         {
             OnHit?.Invoke(hitInfo);
         }

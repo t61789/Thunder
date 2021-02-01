@@ -40,6 +40,8 @@ namespace Framework
         private static readonly LRUCache<string, object> _JsonCache
             = new LRUCache<string, object>(20);
 
+        private static StringBuilder _StringBuilder = new StringBuilder();
+
         static Tools()
         {
             _Random = new Random(Guid.NewGuid().GetHashCode());
@@ -1671,7 +1673,7 @@ namespace Framework
         /// <param name="key"></param>
         /// <param name="error">异常提示</param>
         /// <returns></returns>
-        public static V TryGetAndAlert<K, V>(this Dictionary<K, V> dic, K key, string error)
+        public static V TryGetAndException<K, V>(this Dictionary<K, V> dic, K key, string error)
         {
             if (dic.TryGetValue(key, out var result)) return result;
 
@@ -1679,7 +1681,7 @@ namespace Framework
         }
 
         /// <summary>
-        /// 尝试从字典中获取值，若没获取到则抛出错误
+        /// 尝试从字典中获取值，若没获取到则抛出异常
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <typeparam name="V"></typeparam>
@@ -1688,11 +1690,186 @@ namespace Framework
         /// <param name="key"></param>
         /// <param name="error">需要抛出的异常对象</param>
         /// <returns></returns>
-        public static V TryGetAndAlert<K, V, E>(this Dictionary<K, V> dic, K key, E error) where E : Exception, new()
+        public static V TryGetAndException<K, V, E>(this Dictionary<K, V> dic, K key, E error) where E : Exception, new()
         {
             if (dic.TryGetValue(key, out var result)) return result;
 
             throw new E();
+        }
+
+        /// <summary>
+        /// 尝试从字典中获取值，若没获取到则Log
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="dic"></param>
+        /// <param name="key"></param>
+        /// <param name="message"></param>
+        /// <param name="logType"></param>
+        /// <returns></returns>
+        public static V TryGetAndLog<K, V>(this Dictionary<K, V> dic, K key, object message,LogType logType = LogType.Warning)
+        {
+            if (dic.TryGetValue(key, out var result)) return result;
+
+            switch (logType)
+            {
+                case LogType.Log:
+                    Debug.Log(message);
+                    break;
+                case LogType.Error:
+                    Debug.LogError(message);
+                    break;
+                default:
+                    Debug.LogWarning(message);
+                    break;
+            }
+
+            return default;
+        }
+
+        /// <summary>
+        /// 尝试从字典中获取值，若没获取到则返回指定默认值
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="dic"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static V TryGetAndDefault<K, V>(this Dictionary<K, V> dic, K key,V defaultValue)
+        {
+            return dic.TryGetValue(key, out var result) ? result : defaultValue;
+        }
+
+        /// <summary>
+        /// GetComponent的拓展方法形式
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="com"></param>
+        /// <param name="result"></param>
+        /// <returns>是否获取到了组件</returns>
+        public static bool GetComponent<T>(this Component com,out T result)
+        {
+            result = com.GetComponent<T>();
+            return result != null;
+        }
+        
+        /// <summary>
+        /// 尝试获取组件，若没获取到则Log
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="com"></param>
+        /// <param name="message"></param>
+        /// <param name="logType"></param>
+        /// <returns></returns>
+        public static T GetComponentAndLog<T>(this Component com, object message, LogType logType = LogType.Warning)
+        {
+            if (com.TryGetComponent<T>(out var result)) return result;
+
+            switch (logType)
+            {
+                case LogType.Log:
+                    Debug.Log(message);
+                    break;
+                case LogType.Error:
+                    Debug.LogError(message);
+                    break;
+                default:
+                    Debug.LogWarning(message);
+                    break;
+            }
+
+            return default;
+        }
+
+        /// <summary>
+        /// 将集合内的所有元素转换成字符串
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="dic"></param>
+        /// <returns></returns>
+        public static string ToAllString<K,V>(this Dictionary<K,V> dic)
+        {
+            _StringBuilder.Clear();
+            _StringBuilder.Append('[');
+            foreach (var v in dic)
+            {
+                _StringBuilder.Append('(');
+                _StringBuilder.Append(v.Key);
+                _StringBuilder.Append(',');
+                _StringBuilder.Append(v.Value);
+                _StringBuilder.Append(')');
+            }
+            _StringBuilder.Append(']');
+            return _StringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 将集合内的所有元素转换成字符串
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static string ToAllString<T>(this List<T> list)
+        {
+            _StringBuilder.Clear();
+            _StringBuilder.Append('[');
+            var len = list.Count;
+            foreach (var v in list)
+            {
+                _StringBuilder.Append(v);
+                len--;
+                if (len != 0)
+                    _StringBuilder.Append(',');
+            }
+            _StringBuilder.Append(']');
+            return _StringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 向量的叉乘，遵循右手定则，四指从from绕到to
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public static Vector3 Cross(Vector3 from, Vector3 to)
+        {
+            return Vector3.Cross(to, from);
+        }
+
+        /// <summary>
+        /// 将单个对象转换成可迭代对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetEnumerable<T>(this T obj)
+        {
+            yield return obj;
+        }
+
+        /// <summary>
+        /// 若key存在，则将其value改变change，改变后的value则将键值对移除。若不存在则添加key，并将其value设为change
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dic"></param>
+        /// <param name="key"></param>
+        /// <param name="change"></param>
+        public static void ModifyIntDic<T>(this Dictionary<T,int> dic,T key,int change)
+        {
+            if (change == 0) return;
+
+            if (!dic.ContainsKey(key))
+            {
+                dic.Add(key, change);
+                return;
+            }
+
+            var val = dic[key];
+            val += change;
+            if (val == 0)
+                dic.Remove(key);
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Thunder.Game
 {
-    public class GameRequester : BaseEntity, IHitAble
+    public class GameRequester : BaseEntity
     {
         private Color _BaseColor;
 
@@ -26,9 +26,9 @@ namespace Thunder.Game
             _Mat.SetColor("_Light", _Requested ? RequestedColor : _BaseColor);
             PublicEvents.GameRequest?.Invoke(GameType, _Requested);
             _ReRequestSimpleCounter.Recount();
-            LogPanel.Ins.LogSystem(_Requested
-                ? TextSys.RequestGameSuccess
-                : TextSys.CancelGameRequest);
+            //LogPanel.Ins.LogSystem(_Requested
+               // ? TextSys.RequestGameSuccess
+                //: TextSys.CancelGameRequest);
         }
 
         protected override void Awake()
@@ -40,7 +40,7 @@ namespace Thunder.Game
                     _Started = true;
             });
             PublicEvents.GameEnd.AddListener(GameEnd);
-            _ReRequestSimpleCounter = new SimpleCounter(ReRequestTime, false);
+            _ReRequestSimpleCounter = new SimpleCounter(ReRequestTime).Complete();
             _Mat = GetComponent<MeshRenderer>().StandaloneMaterial();
             _BaseColor = _Mat.GetColor("_Light");
         }

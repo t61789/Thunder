@@ -8,11 +8,6 @@ namespace Thunder
         ItemId ItemId { get; set; }
     }
 
-    public interface IHitAble
-    {
-        void GetHit(Vector3 hitPos, Vector3 hitDir, float damage);
-    }
-
     public interface IInteractive
     {
         void Interactive(ControlInfo info);

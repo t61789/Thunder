@@ -22,7 +22,7 @@ namespace Thunder
             if (!info.Down) return;
             ControlSys.ShieldValue.Request(OperationPanel,1);
             var panel = UiSys.OpenUi<StorageBoxPanel>(OperationPanel);
-            panel.PackageCellAdapter.SetPackage(_Package);
+            //panel.PackageCellAdapter.SetPackage(_Package);
         }
     }
 }

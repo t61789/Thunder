@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Thunder.Game.FlyingSaucer
 {
-    public class FlyingSaucer : BaseEntity, IHitAble, IObjectPool
+    public class FlyingSaucer : BaseEntity, IObjectPool
     {
         protected float _LifeTimeCount;
 
@@ -30,9 +30,9 @@ namespace Thunder.Game.FlyingSaucer
         public void GetHit(Vector3 hitPos, Vector3 hitDir, float damage)
         {
             _Rb.AddForceAtPosition(hitDir.normalized * damage * ForceScale, hitPos, ForceMode.Impulse);
-            ObjectPool.Get<SelfDestroyPartical>("hitParticle")
+            GameObjectPool.Get<SelfDestroyPartical>("hitParticle")
                 .transform.position = Trans.position;
-            ObjectPool.Put(this);
+            GameObjectPool.Put(this);
             PublicEvents.FlyingSaucerHit?.Invoke();
         }
 
@@ -55,7 +55,7 @@ namespace Thunder.Game.FlyingSaucer
             Trans.rotation =
                 Quaternion.Lerp(Trans.rotation, Quaternion.LookRotation(_Rb.velocity), flyingForceFactor);
             if (Time.time - _LifeTimeCount > LifeTime)
-                ObjectPool.Put(this);
+                GameObjectPool.Put(this);
         }
 
         public void Launch(Vector3 force)

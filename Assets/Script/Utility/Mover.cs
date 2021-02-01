@@ -28,7 +28,7 @@ namespace Thunder
         private InputSynchronizer _JumpSyner = new InputSynchronizer();
         private InputSynchronizer _SquatSyner = new InputSynchronizer();
 
-        private void Awake()
+        protected virtual void Awake()
         {
             Trans = transform;
             _CapsuleCol = GetComponent<CapsuleCollider>();
@@ -45,7 +45,7 @@ namespace Thunder
             _SquatSyner.Set(GetSquatControl());
         }
 
-        private void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             var groundRayhit = GroundDetect();
             _Dangling.Check(groundRayhit.normal == Vector3.zero);

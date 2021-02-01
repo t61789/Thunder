@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Thunder.Game.SpotShooting
 {
-    public class SpotShootingTarget : BaseEntity, IHitAble
+    public class SpotShootingTarget : BaseEntity
     {
         private Collider _Collider;
         private AutoCounter _LifeCounter;

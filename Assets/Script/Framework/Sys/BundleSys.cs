@@ -185,11 +185,11 @@ namespace Framework
             if (_Cache.Contains(assetPath)) return _Cache.Get(assetPath);
 
             if (string.IsNullOrEmpty(assetPath))
-                throw AssetPathInvalidException.Default;
+                throw new Exception("素材路径为空");
 
             var lastDiv = assetPath.LastIndexOf('/');
             if(lastDiv==-1)
-                throw AssetPathInvalidException.Default;
+                throw new Exception($"未指定bundle {assetPath}");
 
             var result = new AssetId(
                 assetPath.Substring(0,lastDiv),

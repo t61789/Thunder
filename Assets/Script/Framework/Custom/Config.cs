@@ -8,8 +8,7 @@ namespace Framework
     {
         public static string UiFrameworkBaseObjName = "Canvas";
         public static string ConfigXmlPath = "E:\\UnityProjects\\Thunder\\Assets\\Script\\Framework\\Custom\\Config.xml";
-
-        public const string DefaultCamp = "Unknown";
+        
         public const int CampMapSize = 64;
         public const int CampMaxFriendliness = 100;
         public const int CampNeutralValue = 30;
@@ -26,18 +25,28 @@ namespace Framework
 
         public const string UnarmedAssetPath = "prefabs/weapon/unarmed";
         public const string DefaultPickupableItemAssetPath = "prefabs/normal/pickupableItem";
+        public const string RespawnerAssetPath = "prefabs/normal/respawner";
 
         public const string BuildingInfoValueAssetPath = "values/normal/building_info";
-        public const string ItemInfoValueName = "values/normal/item_info";
+        public const string ItemInfoValuePath = "values/normal/item_info";
+        public const string CampInfoValuePath = "values/normal/camp_info";
+        public const string CtrlKeysValuePath = "values/normal/ctrl_keys";
+        public const string CombineExpressionValuePath = "values/normal/combine_expression";// todo
 
         public const string ItemInfoTableName = "database/normal/item_info";
         public const string WeaponInfoTableName = "database/normal/weapon_info";
+        public const string TextTableName = "database/normal/text";
 
         public const int UnarmedId = 1;
 
         public const string StableLayerName = "Stable";
 
         public const float DefaultDropForce = 10;
+
+        public const string PlayerCamp = "player";
+        public const string NeutralCamp = "neutral";
+        public const string EnemyCamp = "enemy";
+        public const string DefaultCamp = NeutralCamp;
 
         public static WeaponType[] WeaponBeltTypes =
         {
@@ -55,6 +64,7 @@ namespace Framework
         {
             // 在这里进行初始化
             RandomRewardGenerator.ResolveDic(DataBaseSys.GetTable("database/normal/reward"));
+            CtrlKeys.Init();
 
             return new IBaseSys[]
             {

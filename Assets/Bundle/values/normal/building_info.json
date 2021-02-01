@@ -2,8 +2,19 @@
 	"Id": 0,
 	"ModelPath": "",
 	"PrefabPath":"",
+	"ItemCost":{
+		"Power":0.0,
+		"Psionic":0.0,
+		"ItemCost":{
+			"1":1,
+			"2":28
+		}
+	},
 	"Coords": [
-		{"X": 0,"Y": 0}
+		{"X": 0,"Y": 0},
+		{"X": 1,"Y": 0},
+		{"X": 0,"Y": 1},
+		{"X": 1,"Y": 1}
 	]
 },
 {
@@ -17,6 +28,67 @@
 	"Id": 2,
 	"ModelPath": "model/normal/miningMachine",
 	"PrefabPath":"prefabs/building/miningMachine",
+	"Coords": [
+		{"X": 0,"Y": 0},
+		{"X": 1,"Y": 0},
+		{"X": 0,"Y": 1},
+		{"X": 1,"Y": 1}
+	]
+},
+{
+	"Id": 3,
+	"ModelPath": "model/normal/turret",
+	"PrefabPath":"prefabs/building/turret",
+	"Coords": [
+		{"X": 0,"Y": 0},
+		{"X": 1,"Y": 0},
+		{"X": 0,"Y": 1},
+		{"X": 1,"Y": 1}
+	]
+},
+{
+	"Id": 4,
+	"ModelPath": "model/normal/turret",
+	"PrefabPath":"prefabs/building/turret",
+	"Coords": [
+		{"X": 0,"Y": 0},
+		{"X": 1,"Y": 0},
+		{"X": 0,"Y": 1},
+		{"X": 1,"Y": 1},
+		{"X": 0,"Y": 2},
+		{"X": 1,"Y": 2},
+		{"X": 2,"Y": 2},
+		{"X": 2,"Y": 1},
+		{"X": 2,"Y": 0}
+	]
+},
+{
+	"Id": 5,
+	"ModelPath": "model/normal/radioBaseStation",
+	"PrefabPath":"prefabs/building/radioBaseStation",
+	"Coords": [
+		{"X": 0,"Y": 0},
+		{"X": 1,"Y": 0},
+		{"X": 0,"Y": 1},
+		{"X": 1,"Y": 1},
+		{"X": 0,"Y": 2},
+		{"X": 1,"Y": 2},
+		{"X": 2,"Y": 2},
+		{"X": 2,"Y": 1},
+		{"X": 2,"Y": 0},
+		{"X": 0,"Y": 3},
+		{"X": 1,"Y": 3},
+		{"X": 2,"Y": 3},
+		{"X": 3,"Y": 3},
+		{"X": 2,"Y": 3},
+		{"X": 1,"Y": 3},
+		{"X": 0,"Y": 3}
+	]
+},
+{
+	"Id": 6,
+	"ModelPath": "model/normal/smallPowerGenerator",
+	"PrefabPath":"prefabs/building/smallPowerGenerator",
 	"Coords": [
 		{"X": 0,"Y": 0},
 		{"X": 1,"Y": 0},

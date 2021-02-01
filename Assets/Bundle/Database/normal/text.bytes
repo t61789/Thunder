@@ -1,1 +1,1 @@
-{"Fields":["key","text"],"Rows":[["RequestGameSuccess","You have request the game, please stand on the shoot point to start."],["CancelGameRequest","You have cancel the game."]]}
+{"Fields":["key","text"],"Rows":[["game_start_count_wait_title","Interactive with radio station to start the game"],["game_start_count_processing_title","The game will start in"],["game_over","Game Over"]]}

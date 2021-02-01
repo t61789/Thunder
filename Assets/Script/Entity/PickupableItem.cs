@@ -48,7 +48,7 @@ namespace Thunder
         protected virtual void Pickup()
         {
             Player.Ins.ReceiveItem(ItemGroup);
-            ObjectPool.Put(this);
+            GameObjectPool.Put(this);
             PublicEvents.PickupItem?.Invoke(ItemGroup);
         }
 

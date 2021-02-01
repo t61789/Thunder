@@ -27,7 +27,7 @@ namespace Framework
         private void FixedUpdate()
         {
             if (!_Particle.isPlaying)
-                ObjectPool.Put(this);
+                GameObjectPool.Put(this);
         }
     }
 }
